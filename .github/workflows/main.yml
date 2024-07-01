@@ -24,10 +24,11 @@ jobs:
           echo "git_hash=$git_hash" >> $GITHUB_ENV
           echo "snapshotVersion=5.5-SNAPSHOT" >> $GITHUB_ENV
           echo "artifactPath=$(pwd)/builds" >> $GITHUB_ENV
+          echo "artifactName=AywenCraft-${git_hash}.jar" >> $GITHUB_ENV
       - name: Upload Plugin jar
         uses: actions/upload-artifact@v3
         with:
-          name: AywenCraft-${{ env.git_hash }}.jar
+          name: ${{ env.artifactName }}
           path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
 
   create_release:
@@ -38,7 +39,7 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
-          name: AywenCraft-${{ env.git_hash }}.jar
+          name: ${{ env.artifactName }}
           path: ./artifacts
       - name: Create GitHub Release
         uses: actions/create-release@v1
@@ -56,6 +57,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./artifacts/AywenCraft-${{ env.git_hash }}.jar
-          asset_name: AywenCraft-${{ env.git_hash }}.jar
+          asset_path: ./artifacts/core-1.0-SNAPSHOT.jar
+          asset_name: ${{ env.artifactName }}
           asset_content_type: application/java-archive
