@@ -9,5 +9,6 @@ Plugin collaboratif pour un serveur.
 IP DU SERVEUR : `à venir` (1.20.6 Java Edition)
 ## 📃 License
 Projet sous [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
+
 ---
 Merci à @ri1ongithub 🥛 pour la configuration (bancale) du repo.
