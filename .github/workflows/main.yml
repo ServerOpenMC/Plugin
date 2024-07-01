@@ -4,6 +4,7 @@ jobs:
   build_dev_jars:
     name: Build DEV jars
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - uses: actions/checkout@v2
         with:
