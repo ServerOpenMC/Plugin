@@ -29,6 +29,7 @@ jobs:
           path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
       - name: Create GitHub Release
         uses: actions/create-release@v1
+        id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -42,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
           asset_name: AywenCraft-${{ env.git_hash }}.jar
           asset_content_type: application/java-archive
