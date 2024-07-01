@@ -7,7 +7,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getServer().getLogger().info("Hello le monde ! Je suis démarré !");
+        Bukkit.getServer().getLogger().info("Hello le monde !");
     }
 
     @Override
