@@ -27,23 +27,12 @@ jobs:
         with:
           name: AywenCraft-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to mc (sftp)
+        uses: Dylan700/sftp-upload-action@latest
         with:
-          tag_name: ${{ env.git_hash }}
-          release_name: Release ${{ env.git_hash }}
-          draft: false
-          prerelease: true
-          generate_release_notes: true
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
-          asset_name: AywenCraft-${{ env.git_hash }}.jar
-          asset_content_type: application/java-archive
+          server: ${{secrets.IP}}
+          username: ${{secrets.USER}}
+          password: ${{secrets.PASSWD}}
+          port: 2022
+          uploads: |
+            ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar => ./plugins/AywenCraft.jar
