@@ -1,0 +1,4 @@
+name: AywenCraftPlugin
+version: '${version}'
+main: fr.communaywen.core.AywenCraftPlugin
+api-version: '1.20'
