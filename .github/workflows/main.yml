@@ -27,12 +27,13 @@ jobs:
         with:
           name: AywenCraft-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
-      - name: Upload to mc (sftp)
-        uses: Dylan700/sftp-upload-action@latest
+      - name: Deploy to mc (sftp)
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{secrets.IP}}
-          username: ${{secrets.USER}}
-          password: ${{secrets.PASSWD}}
-          port: 2022
-          uploads: |
-            ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar => ./plugins/AywenCraft.jar
+            username: ${{secrets.USER}}
+            server: ${{secrets.IP}}
+            port: 2022
+            local_path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
+            remote_path: '/plugins'
+            sftp_only: true
+            password: ${{secrets.PASSWD}}
