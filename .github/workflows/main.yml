@@ -27,13 +27,21 @@ jobs:
         with:
           name: AywenCraft-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
-      - name: Deploy to mc (sftp)
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Deploy to server
+        uses: rexlmanu/pterodactyl-upload-action@v2.1
         with:
-            username: ${{secrets.USER}}
-            server: ${{secrets.IP}}
-            port: 2022
-            local_path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
-            remote_path: '/plugins'
-            sftp_only: true
-            password: ${{secrets.PASSWD}}
+          panel-host: ${{ secrets.PANEL_HOST }}
+          api-key: ${{ secrets.API_KEY }}
+          server-id: ${{ secrets.SERVER_ID }}
+          #   server-ids: |
+          #     5f095019
+          #     7f095019
+          source: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
+          #   sources: |
+          #     hello.txt
+          #     hello2.txt
+          target: "./plugins/AywenCraft.jar"
+          # If you want to restart the servers after successful upload
+          # restart: true
+          # If you want to decompress the files after successful upload
+          # decompress-target: true
