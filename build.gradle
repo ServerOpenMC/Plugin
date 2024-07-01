@@ -43,3 +43,8 @@ processResources {
         expand props
     }
 }
+
+
+jar {
+    destinationDirectory.set(file("./builds/"))
+}
