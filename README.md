@@ -2,7 +2,7 @@
 Plugin collaboratif pour un serveur.
 
 ## 🤝 Rejoindre le développement.
-1. Commencez par forker le dépôt.
+1. Commencez par forker le dépôt et rejoindre le [Discord](https://discord.gg/aywen-communaute-1161296442577653802)
 2. Une fois qu'une fonctionnalité est implémentée et fonctionnelle, créez une pull request.
 3. Après approbation, elle sera disponible sur le serveur de développement pour les tests.
 
