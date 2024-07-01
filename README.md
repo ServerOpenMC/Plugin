@@ -1,7 +1,7 @@
 # AywenCraft
-Plugin colaboratif pour un serveur.
+Plugin collaboratif pour un serveur.
 
-## 🤝 Rejoindre the Development
+## 🤝 Rejoindre le développement.
 1. Commencez par forker le dépôt.
 2. Une fois qu'une fonctionnalité est implémentée et fonctionnelle, créez une pull request.
 3. Après approbation, elle sera disponible sur le serveur de développement pour les tests.
