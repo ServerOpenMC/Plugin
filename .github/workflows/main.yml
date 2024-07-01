@@ -42,6 +42,6 @@ jobs:
           #     hello2.txt
           target: "./plugins/AywenCraft.jar"
           # If you want to restart the servers after successful upload
-          # restart: true
+          restart: true
           # If you want to decompress the files after successful upload
           # decompress-target: true
