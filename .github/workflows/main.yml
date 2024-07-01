@@ -18,7 +18,8 @@ jobs:
           java-version: '21'
       - name: Build with Gradle
         run: |
-         ./gradlew jar
+          chmod 777 gradlew
+          ./gradlew jar
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           echo "git_hash=$git_hash" >> $GITHUB_ENV
           echo "snapshotVersion=5.5-SNAPSHOT" >> $GITHUB_ENV
