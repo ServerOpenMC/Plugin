@@ -28,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Plugin-${{ env.snapshotVersion }}-${{ env.git_hash }}.jar
-          path: ${{ env.artifactPath }}/Plugin-${{ env.snapshotVersion }}.jar
+          path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
