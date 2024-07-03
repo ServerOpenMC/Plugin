@@ -6,7 +6,7 @@ Plugin collaboratif pour un serveur.
 2. Une fois qu'une fonctionnalité est implémentée et fonctionnelle, créez une pull request.
 3. Après approbation, elle sera disponible sur le serveur de développement pour les tests.
 
-IP DU SERVEUR : `à venir` (1.20.6 Java Edition)
+IP DU SERVEUR : `dev.openmc.fr` (1.20.6 Java Edition)
 ## 📃 License
 Projet sous [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
 
