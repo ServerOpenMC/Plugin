@@ -1,4 +1,4 @@
-# AywenCraft
+# Plugin OpenMC
 Plugin collaboratif pour un serveur.
 
 ## 🤝 Rejoindre le développement.
