@@ -1,5 +1,6 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,7 @@ public class VersionCommand implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("version")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                if (!player.hasPermission("ayw.version")) {
+                if (!player.hasPermission(AywenCraftPlugin.formatPermission("version"))) {
                     player.sendMessage("Vous n'avez pas la permission d'utiliser cette commande.");
                     return true;
                 }
