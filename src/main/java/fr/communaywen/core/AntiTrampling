@@ -9,7 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class FarmProtect implements Listener {
+public class AntiTrampling implements Listener {
 
     @EventHandler
     public void onEntityInteract(EntityInteractEvent event) {
