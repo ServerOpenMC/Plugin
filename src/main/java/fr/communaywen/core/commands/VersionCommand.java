@@ -1,4 +1,4 @@
-package fr.communaywen.core.utils;
+package fr.communaywen.core.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

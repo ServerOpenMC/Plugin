@@ -1,7 +1,7 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.utils.MOTDChanger;
-import fr.communaywen.core.utils.VersionCommand;
+import fr.communaywen.core.commands.VersionCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
