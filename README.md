@@ -13,7 +13,7 @@ IP DU SERVEUR : `dev.openmc.fr` (1.20.6 Java Edition)
 - Être explicite dans la description de la requête.
 - Si quelqu'un commence une feature, on peut lui proposer son aide mais on ne modifie pas sans son autorisation son code.
 - Merci de respecter les [Conventionnal Commits](https://www.conventionalcommits.org/en/v1.0.0/) pour nommer vos commits.
-- Votre PR ne doit pas contenir de breaking change, sauf si documenté et argumenté.
+- Votre PR ne doit pas contenir de breaking change (modification qui n'est pas compatible avec le fonctionnement antérieur du plugin, ou qui "casse" une fonctionnalité), sauf si documenté et argumenté.
 
 ## 📃 License
 Projet sous [GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.fr.html#license-text).
