@@ -8,7 +8,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         Bukkit.getServer().getLogger().info("Hello le monde, ici le plugin AywenCraft !");
-        getServer().getPluginManager().registerEvents(new FarmProtect(),this);
+        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
     }
 
     @Override
