@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -43,7 +44,11 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setDurability(short dur) {
-        is.setDurability(dur);
+        if (is.getItemMeta() != null) {
+            Damageable damageable = (Damageable) is.getItemMeta();
+            damageable.setDamage(dur);
+            is.setItemMeta((ItemMeta) damageable);
+        }
         return this;
     }
 
