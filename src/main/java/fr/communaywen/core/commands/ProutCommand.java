@@ -96,9 +96,10 @@ public final class ProutCommand implements CommandExecutor {
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         }
 
+        final Team finalTeam = team;
         team.addEntry(player.getName());
         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0, false, false, true));
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("AywenCraftPlugin"), () -> team.removeEntry(player.getName()), 600L);
+        Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("AywenCraftPlugin"), () -> finalTeam.removeEntry(player.getName()), 600L);
     }
 }
