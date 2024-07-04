@@ -1,7 +1,7 @@
 name: AywenCraftPlugin
-version: 1.0
+version: '${version}'
 main: fr.communaywen.core.AywenCraftPlugin
-description: Plugin pour changer le MOTD toutes les 10 minutes
+api-version: '1.20'
 
 commands:
   version:
