@@ -1,11 +1,16 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public final class AywenCraftPlugin extends JavaPlugin {
 
@@ -21,6 +26,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
 
         this.getCommand("version").setExecutor(new VersionCommand(this));
+
+        final @Nullable PluginCommand proutCommand = super.getCommand("prout");
+        if (proutCommand != null)
+            proutCommand.setExecutor(new ProutCommand());
     }
 
     @Override
