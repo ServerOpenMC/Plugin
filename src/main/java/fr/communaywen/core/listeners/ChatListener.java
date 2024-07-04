@@ -1,0 +1,33 @@
+package fr.communaywen.core.listeners;
+
+import fr.communaywen.core.utils.DiscordWebhook;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.server.BroadcastMessageEvent;
+import org.bukkit.event.server.ServerCommandEvent;
+
+public class ChatListener implements Listener {
+
+    private final DiscordWebhook discordWebhook;
+
+    public ChatListener(DiscordWebhook discordWebhook) {
+        this.discordWebhook = discordWebhook;
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        String message = event.getPlayer().getName() + ": " + event.getMessage();
+        discordWebhook.sendMessage(message);
+    }
+
+    @EventHandler
+    public void onBroadcastMessage(BroadcastMessageEvent event) {
+        discordWebhook.sendMessage("Broadcast: " + event.getMessage());
+    }
+
+    @EventHandler
+    public void onServerCommand(ServerCommandEvent event) {
+        discordWebhook.sendMessage("Server Command: " + event.getCommand());
+    }
+}
