@@ -13,6 +13,7 @@ IP DU SERVEUR : `dev.openmc.fr` (1.20.6 Java Edition)
 - Être explicite dans la description de la requête.
 - Si quelqu'un commence une feature, on peut lui proposer son aide mais on ne modifie pas sans son autorisation son code.
 - Ne pas faire une PR avec 15 changements, séparé en plus petit
+- Coder en anglais, communiquer en français
 
 ## 📃 License
 Projet sous [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
