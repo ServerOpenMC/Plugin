@@ -6,3 +6,10 @@ api-version: '1.20'
 commands:
   version:
     description: Affiche la version du plugin.
+    permission: ayw.version
+    permission-message: "Vous n'avez pas la permission d'utiliser cette commande."
+
+permissions:
+  ayw.version:
+    description: Permission pour utiliser la commande /version
+    default: op
