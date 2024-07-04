@@ -42,7 +42,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @param category the permission category
      * @param suffix the permission suffix
      * @return The formatted permission.
-     * @see #PERMISSION_PREFIX
+     * @see PermissionCategory#PERMISSION_PREFIX
      */
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
