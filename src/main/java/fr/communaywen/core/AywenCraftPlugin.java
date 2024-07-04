@@ -13,21 +13,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public void onEnable() {
         Bukkit.getServer().getLogger().info("Hello le monde, ici le plugin AywenCraft !");
 
-        // Initialiser et démarrer le MOTDChanger
         motdChanger = new MOTDChanger();
-        motdChanger.onEnable();
+        motdChanger.startMOTDChanger(this);
 
-        // Enregistrer la commande /version
         this.getCommand("version").setExecutor(new VersionCommand(this));
     }
 
     @Override
     public void onDisable() {
-        // Arrêter proprement le MOTDChanger
-        if (motdChanger != null) {
-            motdChanger.onDisable();
-        }
-
-        // Plugin shutdown logic
     }
 }
