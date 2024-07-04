@@ -50,4 +50,8 @@ jar {
     destinationDirectory.set(file("./builds/"))
 }
 
+shadowJar {
+    destinationDirectory.set(file("./builds/"))
+}
+
 apply plugin: 'com.github.johnrengelman.shadow'
