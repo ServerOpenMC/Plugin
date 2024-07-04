@@ -2,18 +2,12 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.commands.VersionCommand;
+import fr.communaywen.core.utils.PermissionCategory;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-
-    /**
-     * Permission prefix.
-     * <br>
-     * Permissions in the plugin <b>SHOULD</b> be prefixed with this prefix. E.g. <code>ayw.command.prout</code>
-     */
-    public static final @NotNull String PERMISSION_PREFIX = "ayw";
 
     private MOTDChanger motdChanger;
 
@@ -36,12 +30,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
     /**
      * Format a permission with the permission prefix.
      *
-     * @param suffix The permission suffix.
+     * @param category the permission category
+     * @param suffix the permission suffix
      * @return The formatted permission.
      * @see #PERMISSION_PREFIX
      */
-    public static @NotNull String formatPermission(final @NotNull String suffix) {
-        return PERMISSION_PREFIX + "." + suffix;
+    public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
+                                                   final @NotNull String suffix) {
+        return category.formatPermission(suffix);
     }
 
 }
