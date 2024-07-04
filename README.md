@@ -7,6 +7,12 @@ Plugin collaboratif pour un serveur.
 3. Après approbation, elle sera disponible sur le serveur de développement pour les tests.
 
 IP DU SERVEUR : `dev.openmc.fr` (1.20.6 Java Edition)
+
+## ☀ Pull requests
+- Bien penser à commenter les fichiers java du repo :  on ne fait une pull request que si c'est 100% fonctionnel
+- Être explicite dans la description de la requête.
+- Si quelqu'un commence une feature, on peut lui proposer son aide mais on ne modifie pas sans son autorisation son code.
+
 ## 📃 License
 Projet sous [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
 
