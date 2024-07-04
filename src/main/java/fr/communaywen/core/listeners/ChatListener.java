@@ -17,17 +17,20 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        String message = event.getPlayer().getName() + ": " + event.getMessage();
-        discordWebhook.sendMessage(message);
+        String username = event.getPlayer().getName();
+        String avatarUrl = "https://minotar.net/helm/" + username;
+        String message = event.getMessage();
+
+        discordWebhook.sendMessage(username, avatarUrl, message);
     }
 
     @EventHandler
     public void onBroadcastMessage(BroadcastMessageEvent event) {
-        discordWebhook.sendMessage("Broadcast: " + event.getMessage());
+        discordWebhook.sendMessage("Broadcast", null, event.getMessage());
     }
 
     @EventHandler
     public void onServerCommand(ServerCommandEvent event) {
-        discordWebhook.sendMessage("Server Command: " + event.getCommand());
+        discordWebhook.sendMessage("Server Command", null, event.getCommand());
     }
 }

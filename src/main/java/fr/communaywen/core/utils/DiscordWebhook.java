@@ -1,5 +1,8 @@
 package fr.communaywen.core.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -12,7 +15,7 @@ public class DiscordWebhook {
         this.webhookUrl = webhookUrl;
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String username, String avatarUrl, String message) {
         try {
             URL url = new URL(webhookUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -20,9 +23,19 @@ public class DiscordWebhook {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            String jsonPayload = "{\"content\": \"" + message + "\"}";
+            JsonObject jsonPayload = new JsonObject();
+            jsonPayload.addProperty("username", username);
+            jsonPayload.addProperty("avatar_url", avatarUrl);
+
+            JsonObject embed = new JsonObject();
+            embed.addProperty("description", "``" + message + "``");
+            JsonArray embeds = new JsonArray();
+            embeds.add(embed);
+
+            jsonPayload.add("embeds", embeds);
+
             try (OutputStream os = connection.getOutputStream()) {
-                os.write(jsonPayload.getBytes());
+                os.write(jsonPayload.toString().getBytes());
                 os.flush();
             }
 
