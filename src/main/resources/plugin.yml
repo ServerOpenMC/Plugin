@@ -10,6 +10,6 @@ commands:
     permission-message: "Vous n'avez pas la permission d'utiliser cette commande."
 
 permissions:
-  ayw.version:
+  ayw.admin.version:
     description: Permission pour utiliser la commande /version
     default: op
