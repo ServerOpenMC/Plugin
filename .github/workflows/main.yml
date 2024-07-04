@@ -17,7 +17,7 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod 777 gradlew
-          ./gradlew jar
+          ./gradlew shadowJar
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           echo "git_hash=$git_hash" >> $GITHUB_ENV
           echo "snapshotVersion=5.5-SNAPSHOT" >> $GITHUB_ENV
@@ -26,22 +26,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: AywenCraft-${{ env.git_hash }}.jar
-          path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
+          path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
       - name: Deploy to server
         uses: rexlmanu/pterodactyl-upload-action@v2.1
         with:
           panel-host: ${{ secrets.PANEL_HOST }}
           api-key: ${{ secrets.API_KEY }}
           server-id: ${{ secrets.SERVER_ID }}
-          #   server-ids: |
-          #     5f095019
-          #     7f095019
-          source: ${{ env.artifactPath }}/core-1.0-SNAPSHOT.jar
-          #   sources: |
-          #     hello.txt
-          #     hello2.txt
+          source: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
           target: "./plugins/AywenCraft.jar"
-          # If you want to restart the servers after successful upload
           restart: true
-          # If you want to decompress the files after successful upload
-          # decompress-target: true
