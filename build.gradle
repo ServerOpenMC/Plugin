@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'fr.communaywen'
@@ -48,3 +49,5 @@ processResources {
 jar {
     destinationDirectory.set(file("./builds/"))
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
