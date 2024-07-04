@@ -11,7 +11,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getServer().getLogger().info("Hello le monde, ici le plugin AywenCraft !");
+        super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
 
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
