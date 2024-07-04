@@ -75,7 +75,7 @@ public final class ProutCommand implements CommandExecutor {
             addGlowingEffect(player);
 
             // Broadcast the message
-            String broadcastMessage = "[&c&l&ka&r] &f&lPROUT !!! &r" + player.getName() + " a &f&lpété&r. &2&lBeurk !";
+            String broadcastMessage = "[§c§l§ka§r] §f§lPROUT !!! §r" + player.getName() + " a §f§lpété§r. §2§lBeurk !";
             Bukkit.broadcastMessage(broadcastMessage);
 
             // Update cooldown
