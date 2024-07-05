@@ -27,7 +27,6 @@ public class RTPCommand implements CommandExecutor {
 
 	
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN_TIME = 60; //temps en secondes
     
     
 	@Override
@@ -40,8 +39,8 @@ public class RTPCommand implements CommandExecutor {
                 long lastUsed = cooldowns.get(playerId);
                 long timeSinceLastUse = currentTime - lastUsed;
 
-                if (timeSinceLastUse < COOLDOWN_TIME) {
-                    long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
+                if (timeSinceLastUse < AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldown")) {
+                    long timeLeft = AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldown") - timeSinceLastUse;
                     player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
                     return true;
                 }
@@ -68,7 +67,7 @@ public class RTPCommand implements CommandExecutor {
             	}
             }
             player.sendTitle(" §cErreur",null);
-            cooldowns.put(playerId, currentTime-COOLDOWN_TIME+5); //5 secondes de cooldown
+            cooldowns.put(playerId, currentTime - AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldown") + AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldownerror")); //5 secondes de cooldown
             return true;
             
         }
