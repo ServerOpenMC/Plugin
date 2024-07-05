@@ -12,11 +12,15 @@ repositories {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
+    maven {
+        name = "reposiliteRepositoryReleases"
+        url = "https://mvn.notri1.fr/releases"
+    }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
-
+    implementation 'dev.xernas:menulib:1.1.0'
     // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
 }
