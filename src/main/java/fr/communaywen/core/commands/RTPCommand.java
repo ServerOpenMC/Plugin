@@ -70,13 +70,13 @@ public class RTPCommand implements CommandExecutor {
 
                 if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
                     player.teleport(location);
-                    player.sendTitle("§aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
+                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
                     cooldowns.put(playerId, currentTime);
                     return true;
                 }
             }
 
-            player.sendTitle("§cErreur", null);
+            player.sendTitle(" §cErreur","/rtp));
             cooldowns.put(playerId, currentTime - COOLDOWN_TIME + COOLDOWN_ERROR);
             return true;
         }
