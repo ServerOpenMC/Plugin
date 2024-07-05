@@ -1,5 +1,21 @@
 name: Build DEV Jars
-on: [push, pull_request]
+on: 
+  pull_request:
+    paths-ignore:
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'CODE_OF_CONDUCT.md'
+      - 'CONTRIBUTING.md'
+      - 'README.md'
+  push:
+    paths-ignore:
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'CODE_OF_CONDUCT.md'
+      - 'CONTRIBUTING.md'
+      - 'README.md'
 jobs:
   build_dev_jars:
     name: Build DEV jars
