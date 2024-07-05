@@ -1,6 +1,5 @@
 package fr.communaywen.core.teams.menu;
 
-import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
@@ -11,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,9 +48,10 @@ public class TeamListMenu extends PaginatedMenu {
                 itemMeta.setDisplayName(ChatColor.GOLD + manager.getTeams().get(finalI).getName());
                 itemMeta.setLore(List.of(
                         ChatColor.DARK_RED + "Propriétaire: " + Bukkit.getOfflinePlayer(manager.getTeams().get(finalI).getOwner()).getName(),
-                        ChatColor.GRAY + "Membres: " + manager.getTeams().get(finalI).getPlayers().size()
+                        ChatColor.GRAY + "■ Membres: " + manager.getTeams().get(finalI).getPlayers().size(),
+                        ChatColor.GRAY + "■ Cliquez pour voir les détails"
                 ));
-            }).setNextMenu(new MemberListMenu(getOwner(), manager.getTeams().get(i))));
+            }).setNextMenu(new TeamMenu(getOwner(), manager.getTeams().get(i), true)));
         }
         return items;
     }
