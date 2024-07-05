@@ -2,43 +2,49 @@ package fr.communaywen.core.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-import org.bukkit.util.Vector;
+
+import fr.misieur.AywenCraftPlugin.AywenCraftPlugin;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class RTPCommand implements CommandExecutor {
 
-	
-	
+	private final AywenCraftPlugin plugin;
 
-    private final Configs plugin;
-    public RTPCommand(Congis plugin){
-	    this.plugin = plugin;
+    // Configuration values
+    private final int COOLDOWN_TIME;
+    private final int COOLDOWN_ERROR;
+    private final int MIN_X;
+    private final int MAX_X;
+    private final int MIN_Y;
+    private final int MAX_Y;
+    private final int MIN_Z;
+    private final int MAX_Z;
+
+    private final HashMap<UUID, Long> cooldowns = new HashMap<>();
+
+    public RTPCommand(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+
+        // Load configuration values
+        COOLDOWN_TIME = plugin.getConfig().getInt("rtp.cooldown");
+        COOLDOWN_ERROR = plugin.getConfig().getInt("rtp.cooldown-error");
+        MIN_X = plugin.getConfig().getInt("rtp.minx");
+        MAX_X = plugin.getConfig().getInt("rtp.maxx");
+        MIN_Y = plugin.getConfig().getInt("rtp.miny");
+        MAX_Y = plugin.getConfig().getInt("rtp.maxy");
+        MIN_Z = plugin.getConfig().getInt("rtp.minz");
+        MAX_Z = plugin.getConfig().getInt("rtp.maxz");
     }
 
-
-    //Merci à ri1ongithub pour le système de cooldown que j'avais la flème de refaire
-    private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN = this.plugin.getConfig().getint("rtp.cooldown"); //temps en secondes
-    private static final int COOLDOWN_ERROR = this.plugin.getConfig().getint("rtp.cooldown-error"); //temps en secondes
-    
-    
-    
-	
-	@Override
-    public boolean onCommand(final CommandSender sender,final Command command,final String label,final String[] args) {
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if (sender instanceof Player player) {
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis() / 1000;
@@ -53,33 +59,28 @@ public class RTPCommand implements CommandExecutor {
                     return true;
                 }
             }
-            int minx = this.plugin.getConfig().getint("rtp.minx");
-            int maxx = this.plugin.getConfig().getint("rtp.maxx");
-            int miny = this.plugin.getConfig().getint("rtp.miny");
-            int maxy = this.plugin.getConfig().getint("rtp.maxy");
-            int minz = this.plugin.getConfig().getint("rtp.minz");
-            int maxz = this.plugin.getConfig().getint("rtp.maxz");
-            int x = (int) ((Math.random() * (maxx - minx)) + minx);
-            int z = (int) ((Math.random() * (maxz - minz)) + minz);
+
             World world = player.getWorld();
-            Location location,belowlocation;
-            for (int y = miny; y<maxy;y++) {
-            	location = new Location(world,x,y,z);
-            	if (location.getBlock().getType().isAir()) {
-            		belowlocation = new Location(world,x,y-1,z);
-            		if (belowlocation.getBlock().getType().isBlock()) {
-            			player.teleport(location);
-            			player.sendTitle("§aRTP réussi","x: "+x+" y: "+y+" z: "+z);
-            			cooldowns.put(playerId, currentTime);
-            			return true;
-            		}
-            	}
+            int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
+            int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
+
+            for (int y = MIN_Y; y <= MAX_Y; y++) {
+                Location location = new Location(world, x, y, z);
+                Location belowLocation = new Location(world, x, y - 1, z);
+
+                if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
+                    player.teleport(location);
+                    player.sendTitle("§aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
+                    cooldowns.put(playerId, currentTime);
+                    return true;
+                }
             }
-            player.sendTitle(" §cErreur",null);
-            cooldowns.put(playerId, currentTime-COOLDOWN_TIME+COOLDOWN_ERROR); //5 secondes de cooldown
+
+            player.sendTitle("§cErreur", null);
+            cooldowns.put(playerId, currentTime - COOLDOWN_TIME + COOLDOWN_ERROR);
             return true;
-            
         }
+
         return true;
     }
 }
