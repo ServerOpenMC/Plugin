@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class Team {
@@ -85,10 +84,9 @@ public class Team {
         return true;
     }
 
-    public MethodState removePlayer(UUID player) throws SQLException {
+    public MethodState removePlayer(UUID player) {
         if (players.size() - 1 == 0) {
             players.remove(player);
-            AywenCraftPlugin.getInstance().getTeamManager().removePlayer(player);
             if (!AywenCraftPlugin.getInstance().getTeamManager().deleteTeam(this)) {
                 players.add(player);
                 return MethodState.INVALID;
