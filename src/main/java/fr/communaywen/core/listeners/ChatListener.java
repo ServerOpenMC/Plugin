@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.server.BroadcastMessageEvent;
-import org.bukkit.event.server.ServerCommandEvent;
 
 public class ChatListener implements Listener {
 
@@ -27,10 +26,5 @@ public class ChatListener implements Listener {
     @EventHandler
     public void onBroadcastMessage(BroadcastMessageEvent event) {
         discordWebhook.sendBroadcast(event.getMessage());
-    }
-
-    @EventHandler
-    public void onServerCommand(ServerCommandEvent event) {
-        discordWebhook.sendBroadcast("Server Command: " + event.getCommand());
     }
 }

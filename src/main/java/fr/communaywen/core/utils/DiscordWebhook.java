@@ -10,9 +10,13 @@ import java.net.URL;
 public class DiscordWebhook {
 
     private final String webhookUrl;
+    private final String botName;
+    private final String botAvatarUrl;
 
-    public DiscordWebhook(String webhookUrl) {
+    public DiscordWebhook(String webhookUrl, String botName, String botAvatarUrl) {
         this.webhookUrl = webhookUrl;
+        this.botName = botName;
+        this.botAvatarUrl = botAvatarUrl;
     }
 
     public void sendMessage(String username, String avatarUrl, String message) {
@@ -53,8 +57,16 @@ public class DiscordWebhook {
             connection.setDoOutput(true);
 
             JsonObject jsonPayload = new JsonObject();
+            jsonPayload.addProperty("username", botName);
+            jsonPayload.addProperty("avatar_url", botAvatarUrl);
+
             JsonObject embed = new JsonObject();
             embed.addProperty("description", removeColorCodes(message));
+            
+            if (message.startsWith("[a] PROUT !!!")) {
+                embed.addProperty("color", 65280);
+            }
+            
             JsonArray embeds = new JsonArray();
             embeds.add(embed);
             jsonPayload.add("embeds", embeds);
