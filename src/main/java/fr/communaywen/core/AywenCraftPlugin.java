@@ -49,7 +49,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
 
-        this.getCommand("rtp").setExecutor(new RTPCommand());
+        this.getCommand("rtp").setExecutor(new RTPCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         saveDefaultConfig();
         
