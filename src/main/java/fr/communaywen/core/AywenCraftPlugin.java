@@ -10,9 +10,12 @@ import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.utils.PermissionCategory;
+import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +43,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
 
         instance = this;
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            LuckPerms api = provider.getProvider();
+        }
 
         MenuLib.init(this);
 
