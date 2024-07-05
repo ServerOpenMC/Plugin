@@ -4,6 +4,7 @@ import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.RulesCommand;
 import fr.communaywen.core.commands.TeamCommand;
 import fr.communaywen.core.listeners.ChatListener;
+import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.DiscordWebhook;
@@ -69,6 +70,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
+        getServer().getPluginManager().registerEvents(new SleepListener(),this);
         saveDefaultConfig();
     }
 
