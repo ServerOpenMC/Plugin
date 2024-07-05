@@ -1,5 +1,6 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -45,10 +46,11 @@ public class RTPCommand implements CommandExecutor {
                     return true;
                 }
             }
-            int minx = -3000 ;
-            int maxx = 3000 ;
-            int minz = -3000 ;
-            int maxz = 3000 ;
+	    
+            int minx = AywenCraftPlugin.getInstance().getConfig().getint("rtp.minx");
+            int maxx = AywenCraftPlugin.getInstance().getConfig().getint("rtp.maxx");
+            int minz = AywenCraftPlugin.getInstance().getConfig().getint("rtp.minz");
+            int maxz = AywenCraftPlugin.getInstance().getConfig().getint("rtp.maxz");
             int x = (int) ((Math.random() * (maxx - minx)) + minx);
             int z = (int) ((Math.random() * (maxz - minz)) + minz);
             World world = player.getWorld();
