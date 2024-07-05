@@ -43,12 +43,9 @@ public class MemberListMenu extends Menu {
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> content = fill(Material.GRAY_STAINED_GLASS_PANE);
-        content.put(0, new ItemBuilder(this, Material.ARROW, itemMeta -> {
+        content.put(49, new ItemBuilder(this, Material.ARROW, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.GRAY + "Retour");
         }).setBackButton());
-        content.put(53, new ItemBuilder(this, Material.BARRIER, itemMeta -> {
-            itemMeta.setDisplayName(ChatColor.RED + "Fermer");
-        }).setCloseButton());
         List<OfflinePlayer> firstSixPlayers = team.getPlayers(0, 7);
         List<OfflinePlayer> secondSixPlayers = team.getPlayers(7, 14);
         List<OfflinePlayer> thirdFivePlayers = team.getPlayers(14, 20);
