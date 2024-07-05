@@ -8,28 +8,28 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.communaywen.core.AywenCraftPlugin;
+import fr.misieur.MultiTool.*;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class RTPCommand implements CommandExecutor {
 
-	private final AywenCraftPlugin plugin;
+	private final MultiTool plugin;
 
     // Configuration values
-    private final int COOLDOWN_TIME;
-    private final int COOLDOWN_ERROR;
-    private final int MIN_X;
-    private final int MAX_X;
-    private final int MIN_Y;
-    private final int MAX_Y;
-    private final int MIN_Z;
-    private final int MAX_Z;
+    private int COOLDOWN_TIME;
+    private int COOLDOWN_ERROR;
+    private int MIN_X;
+    private int MAX_X;
+    private int MIN_Y;
+    private int MAX_Y;
+    private int MIN_Z;
+    private int MAX_Z;
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
-    public RTPCommand(AywenCraftPlugin plugin) {
+    public RTPCommand(MultiTool plugin) {
         this.plugin = plugin;
         
         // Load configuration values
@@ -49,7 +49,7 @@ public class RTPCommand implements CommandExecutor {
 		    plugin.getConfig().set("rtp.maxy", 100);
 		    MAX_Y = 100;
 	    }
-	    plugin.config.options().copyDefaults(true);;
+	    plugin.getConfig().options().copyDefaults(true);
 	    plugin.saveConfig();
 	    
     }
