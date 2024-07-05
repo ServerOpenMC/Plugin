@@ -24,6 +24,8 @@ commands:
   money:
     description: Manage your money
     usage: /money [transfer <player> <amount>]
+  credit:
+    description: Affiche les crédits du plugin
 
 permissions:
   ayw.admin.version:

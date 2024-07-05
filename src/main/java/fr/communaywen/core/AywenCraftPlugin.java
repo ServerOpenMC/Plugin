@@ -57,6 +57,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
 
+        this.getCommand("credit").setExecutor(new CreditCommand());
+
         PluginCommand teamCommand = this.getCommand("team");
         teamCommand.setExecutor(new TeamCommand());
         teamCommand.setTabCompleter(new TeamCommand());
