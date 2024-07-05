@@ -4,6 +4,7 @@ import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.listeners.ChatListener;
+import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
@@ -69,6 +70,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
+        getServer().getPluginManager().registerEvents(new SleepListener(),this);
         saveDefaultConfig();
 
         // Initialiser EconomyManager et enregistrer la commande money
