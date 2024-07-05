@@ -8,7 +8,6 @@ import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
-import fr.communaywen.core.commands.RTPCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -61,10 +60,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         teamCommand.setExecutor(new TeamCommand());
         teamCommand.setTabCompleter(new TeamCommand());
 
-        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
-        this.getCommand("rtp").setExecutor(new RTPCommand());
-        saveDefaultConfig();
-        
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
