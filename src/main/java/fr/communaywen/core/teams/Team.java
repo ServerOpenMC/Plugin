@@ -1,6 +1,8 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.utils.MethodState;
+import fr.communaywen.core.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -44,8 +46,16 @@ public class Team {
         return result;
     }
 
+    public boolean isIn(UUID player) {
+        return players.contains(player);
+    }
+
     public void openInventory(Player player) {
         player.openInventory(inventory);
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public UUID getPlayerByUsername(String username) {
@@ -76,16 +86,19 @@ public class Team {
         return true;
     }
 
-    public boolean removePlayer(UUID player) {
-        players.remove(player);
-        if (players.isEmpty()) {
-            AywenCraftPlugin.getInstance().getTeamManager().deleteTeam(this);
-            return false;
+    public MethodState removePlayer(UUID player) {
+        if (players.size() - 1 == 0) {
+            players.remove(player);
+            if (!AywenCraftPlugin.getInstance().getTeamManager().deleteTeam(this)) {
+                players.add(player);
+                return MethodState.INVALID;
+            }
+            return MethodState.WARNING;
         }
         if (isOwner(player)) {
             owner = getRandomPlayer();
         }
-        return true;
+        return MethodState.VALID;
     }
 
     public boolean isOwner(UUID player) {

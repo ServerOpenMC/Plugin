@@ -1,9 +1,13 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.utils.Queue;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +29,18 @@ public class TeamManager {
         return team;
     }
 
-    public void deleteTeam(Team team) {
+    public boolean deleteTeam(Team team) {
+        int items = 0;
+        for (ItemStack item : team.getInventory().getContents()) {
+            if (item != null && item.getType() != Material.AIR) {
+                items++;
+            }
+        }
+        if (items > 0) {
+            return false;
+        }
         teams.remove(team);
+        return true;
     }
 
     public Team isInTeam(UUID player) {
