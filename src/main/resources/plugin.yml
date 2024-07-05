@@ -18,7 +18,7 @@ commands:
     permission: ayw.command.rules
     aliases: regles
   rtp:
-    description: rtp
+    description: Téléportation aléatoire
     permission: ayw.command.rtp
     aliases: randomteleportation
 
