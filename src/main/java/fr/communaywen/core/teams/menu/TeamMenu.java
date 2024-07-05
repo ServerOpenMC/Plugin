@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -65,7 +66,11 @@ public class TeamMenu extends Menu {
             content.put(46, new ItemBuilder(this, Material.RED_DYE, itemMeta -> {
                 itemMeta.setDisplayName(ChatColor.RED + "Quitter l'équipe");
             }).setNextMenu(new ConfirmationMenu(getOwner(), event -> {
-                TeamUtils.quit(team, getOwner());
+                try {
+                    TeamUtils.quit(team, getOwner());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 getOwner().closeInventory();
             })));
             content.put(53, new ItemBuilder(this, Material.CHEST, itemMeta -> {
