@@ -21,6 +21,9 @@ commands:
     description: Téléportation aléatoire
     permission: ayw.command.rtp
     aliases: randomteleportation
+  money:
+    description: Manage your money
+    usage: /money [transfer <player> <amount>]
 
 permissions:
   ayw.admin.version:
