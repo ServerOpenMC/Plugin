@@ -17,9 +17,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.DataOutput;
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
@@ -29,6 +31,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
     private EconomyManager economyManager;
+    public LuckPerms api;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -44,9 +47,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         instance = this;
 
+        OnPlayers onPlayers = new OnPlayers();
+        getServer().getPluginManager().registerEvents(onPlayers, this);
+
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
-            LuckPerms api = provider.getProvider();
+            api = provider.getProvider();
+            onPlayers.setLuckPerms(api);
         }
 
         MenuLib.init(this);
@@ -66,8 +73,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadBookConfig();
         this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
-
-        getServer().getPluginManager().registerEvents(new OnPlayers(), this);
 
         this.getCommand("credit").setExecutor(new CreditCommand());
 
