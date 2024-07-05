@@ -8,14 +8,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.misieur.MultiTool.*;
+import fr.communaywen.core.AywenCraftPlugin;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class RTPCommand implements CommandExecutor {
 
-	private final MultiTool plugin;
+	private final AywenCraftPlugin plugin;
 
     // Configuration values
     private int COOLDOWN_TIME;
@@ -29,7 +29,7 @@ public class RTPCommand implements CommandExecutor {
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
-    public RTPCommand(MultiTool plugin) {
+    public RTPCommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
         
         // Load configuration values
