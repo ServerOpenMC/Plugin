@@ -1,5 +1,6 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;

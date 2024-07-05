@@ -3,8 +3,10 @@ package fr.communaywen.core;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.RulesCommand;
 import fr.communaywen.core.commands.TeamCommand;
+import fr.communaywen.core.listeners.ChatListener;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.commands.ProutCommand;
+import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
@@ -62,7 +64,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         teamCommand.setTabCompleter(new TeamCommand());
 
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
-        this.getCommand("rtp").setExecutor(new RTPCommand());
+        // this.getCommand("rtp").setExecutor(new RTPCommand());
         saveDefaultConfig();
         
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
