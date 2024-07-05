@@ -76,7 +76,7 @@ public class RTPCommand implements CommandExecutor {
                 }
             }
 
-            player.sendTitle(" §cErreur","/rtp));
+            player.sendTitle(" §cErreur","/rtp"));
             cooldowns.put(playerId, currentTime - COOLDOWN_TIME + COOLDOWN_ERROR);
             return true;
         }
