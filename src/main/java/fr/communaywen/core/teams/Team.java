@@ -2,11 +2,9 @@ package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.utils.MethodState;
-import fr.communaywen.core.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -52,10 +50,6 @@ public class Team {
     }
 
     public void openInventory(Player player) {
-        if(true) {
-            CommandUtils.sendMessage(player, "Fonctionnalité temporairement désativée :/", true);
-            return;
-        }
         player.openInventory(inventory);
     }
 
