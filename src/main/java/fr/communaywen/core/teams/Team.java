@@ -88,6 +88,7 @@ public class Team {
     public MethodState removePlayer(UUID player) throws SQLException {
         if (players.size() - 1 == 0) {
             players.remove(player);
+            AywenCraftPlugin.getInstance().getTeamManager().removePlayer(player);
             if (!AywenCraftPlugin.getInstance().getTeamManager().deleteTeam(this)) {
                 players.add(player);
                 return MethodState.INVALID;
