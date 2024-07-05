@@ -2,12 +2,11 @@ package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.utils.MethodState;
-import fr.communaywen.core.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class Team {
@@ -86,7 +85,7 @@ public class Team {
         return true;
     }
 
-    public MethodState removePlayer(UUID player) {
+    public MethodState removePlayer(UUID player) throws SQLException {
         if (players.size() - 1 == 0) {
             players.remove(player);
             if (!AywenCraftPlugin.getInstance().getTeamManager().deleteTeam(this)) {
