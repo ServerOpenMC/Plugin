@@ -1,6 +1,7 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.utils.GitHubAPI;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,11 +24,11 @@ public class CreditCommand implements CommandExecutor {
                     player.sendMessage("Impossible de récuperer les contributeurs: " + jsonResponse);
                 } else {
                     JSONArray contributors = new JSONArray(jsonResponse);
-                    player.sendMessage("§lMerci à§r");
+                    player.sendMessage(ChatColor.BOLD+"Merci à"+ChatColor.RESET);
                     for (int i = 0; i < contributors.length(); i++) {
                         JSONObject contributor = contributors.getJSONObject(i);
                         String login = contributor.getString("login");
-                        player.sendMessage("- §6" + login + "§r");
+                        player.sendMessage("- " + ChatColor.GOLD + login + ChatColor.RESET);
                     }
                 }
             } catch (IOException e) {
