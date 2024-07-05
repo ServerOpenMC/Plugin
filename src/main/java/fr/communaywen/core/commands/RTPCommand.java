@@ -77,7 +77,8 @@ public class RTPCommand implements CommandExecutor {
             for (int y = MIN_Y; y <= MAX_Y; y++) {
                 Location location = new Location(world, x, y, z);
                 Location belowLocation = new Location(world, x, y - 1, z);
-                if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
+		Location upLocation = new Location(world, x, y + 1, z);
+                if (belowLocation.getBlock().getType().isSolid() && location.getBlock().getType().isAir() && upLocation.getBlock().getType().isAir()) {
                     player.teleport(location);
                     player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
                     cooldowns.put(playerId, currentTime);
