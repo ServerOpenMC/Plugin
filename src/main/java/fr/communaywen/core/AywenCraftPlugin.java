@@ -4,6 +4,7 @@ import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.listeners.ChatListener;
+import fr.communaywen.core.listeners.OnPlayers;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
@@ -56,6 +57,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadBookConfig();
         this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
+
+        getServer().getPluginManager().registerEvents(new OnPlayers(), this);
 
         this.getCommand("credit").setExecutor(new CreditCommand());
 
