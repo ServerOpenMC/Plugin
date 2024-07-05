@@ -6,11 +6,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class TeamUtils {
 
-    public static boolean quit(Team team, Player player) {
+    public static boolean quit(Team team, Player player) throws SQLException {
         MethodState state = team.removePlayer(player.getUniqueId());
         if (state == MethodState.WARNING || state == MethodState.VALID)
             CommandUtils.sendMessage(player, "Vous avez quitté la team !", false);
