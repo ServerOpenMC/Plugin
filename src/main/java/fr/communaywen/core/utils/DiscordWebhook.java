@@ -61,12 +61,13 @@ public class DiscordWebhook {
             jsonPayload.addProperty("avatar_url", botAvatarUrl);
 
             JsonObject embed = new JsonObject();
-            embed.addProperty("description", removeColorCodes(message));
-            
-            if (message.startsWith("[a] PROUT !!!")) {
+            String cleanedMessage = removeColorCodes(message);
+            embed.addProperty("description", cleanedMessage);
+
+            if (cleanedMessage.startsWith("[a] PROUT !!!")) {
                 embed.addProperty("color", 65280);
             }
-            
+
             JsonArray embeds = new JsonArray();
             embeds.add(embed);
             jsonPayload.add("embeds", embeds);
