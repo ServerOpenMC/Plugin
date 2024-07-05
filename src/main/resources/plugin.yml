@@ -8,3 +8,19 @@ commands:
     description: Affiche la version du plugin.
   team:
     description: Commande pour gérer les équipes
+    permission: ayw.command.teams
+    permission-message: "Vous n'avez pas la permission d'utiliser cette commande."
+  prout:
+    description: Prout !
+    permission: ayw.command.prout
+
+permissions:
+  ayw.admin.version:
+    description: Permission pour utiliser la commande /version
+    default: op
+  ayw.command.prout:
+    description: 'Prout !'
+    default: true
+  ayw.command.teams:
+    description: 'Teams'
+    default: true
