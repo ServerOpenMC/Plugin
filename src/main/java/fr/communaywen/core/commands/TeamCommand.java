@@ -8,7 +8,6 @@ import fr.communaywen.core.teams.menu.TeamListMenu;
 import fr.communaywen.core.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -78,6 +77,13 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                         CommandUtils.sendMessage(teamPlayerOnline, player.getName() + " a quitté la team !", false);
                     }
                 }
+            }
+            if (args[0].equalsIgnoreCase("inventory")) {
+                Team team = teamManager.isInTeam(player.getUniqueId());
+                if (team == null) {
+                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
+                }
+                team.openInventory(player);
             }
         }
         if (args.length >= 2) {
@@ -152,7 +158,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            return List.of("create", "list", "invite", "accept", "leave", "kick");
+            return List.of("create", "list", "invite", "accept", "leave", "kick", "inventory");
         }
         if (args.length == 2)
         {

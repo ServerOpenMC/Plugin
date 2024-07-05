@@ -2,23 +2,23 @@ package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Team {
 
-    private final String name;
     private UUID owner;
+    private final String name;
     private final List<UUID> players = new ArrayList<>();
+    private final Inventory inventory;
 
     public Team(UUID owner, String name) {
         this.owner = owner;
         this.name = name;
+        this.inventory = Bukkit.createInventory(null , 27, name + " - Inventory");
     }
 
     public String getName() {
@@ -42,6 +42,10 @@ public class Team {
             }
         }
         return result;
+    }
+
+    public void openInventory(Player player) {
+        player.openInventory(inventory);
     }
 
     public UUID getPlayerByUsername(String username) {
