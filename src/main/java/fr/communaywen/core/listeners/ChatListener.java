@@ -26,11 +26,11 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onBroadcastMessage(BroadcastMessageEvent event) {
-        discordWebhook.sendMessage("Broadcast", null, event.getMessage());
+        discordWebhook.sendBroadcast(event.getMessage());
     }
 
     @EventHandler
     public void onServerCommand(ServerCommandEvent event) {
-        discordWebhook.sendMessage("Server Command", null, event.getCommand());
+        discordWebhook.sendBroadcast("Server Command: " + event.getCommand());
     }
 }
