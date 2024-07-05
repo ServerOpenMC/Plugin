@@ -6,6 +6,7 @@ import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
 import dev.xernas.menulib.utils.StaticSlots;
 import fr.communaywen.core.teams.TeamManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -43,10 +44,10 @@ public class TeamListMenu extends PaginatedMenu {
         List<ItemStack> items = new ArrayList<>();
         for (int i = 0; i < manager.getTeams().size(); i++) {
             int finalI = i;
-            items.add(new ItemBuilder(this, ItemUtils.getPlayerSkull(manager.getTeams().get(i).getOwner().getUniqueId()), itemMeta -> {
+            items.add(new ItemBuilder(this, ItemUtils.getPlayerSkull(manager.getTeams().get(i).getOwner()), itemMeta -> {
                 itemMeta.setDisplayName(ChatColor.GOLD + manager.getTeams().get(finalI).getName());
                 itemMeta.setLore(List.of(
-                        ChatColor.DARK_RED + "Propriétaire: " + manager.getTeams().get(finalI).getOwner().getName(),
+                        ChatColor.DARK_RED + "Propriétaire: " + Bukkit.getOfflinePlayer(manager.getTeams().get(finalI).getOwner()).getName(),
                         ChatColor.GRAY + "Membres: " + manager.getTeams().get(finalI).getPlayers().size()
                 ));
             }).setNextMenu(new MemberListMenu(getOwner(), manager.getTeams().get(i))));
