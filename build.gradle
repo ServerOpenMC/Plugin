@@ -8,14 +8,13 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
     maven {
-        name = "MenuLib"
-        url = "https://maven.pkg.github.com/Xernas78/menu-lib"
+        name = "reposiliteRepositoryReleases"
+        url = "https://mvn.notri1.fr/releases"
     }
 }
 
