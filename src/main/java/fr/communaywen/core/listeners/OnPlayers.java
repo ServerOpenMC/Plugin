@@ -43,25 +43,13 @@ public class OnPlayers implements Listener {
             String discordUsername = user.getString("username");
 
             if (player.getName().equalsIgnoreCase(discordUsername)){
-                int firstDigit = Character.getNumericValue(String.valueOf(user.getInt("level")).charAt(0)); // booouuuuh c'est cracra
                 User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
-                switch(firstDigit){
-                    case 1: // Niveau 1x
-                        addPermission(lpPlayer, "ayw.levels.10");
-                        break;
-                    case 2:
-                        addPermission(lpPlayer, "ayw.levels.20");
-                        break;
-                    case 3:
-                        addPermission(lpPlayer, "ayw.levels.30");
-                        break;
-                    case 4:
-                        addPermission(lpPlayer, "ayw.levels.40");
-                        break;
-                    case 5:
-                        addPermission(lpPlayer, "ayw.levels.50");
-                        break;
-                }
+
+                int level = user.getInt("level");
+                int firstDigit = level % 10;
+
+                String permissionNode = "ayw.levels." + (firstDigit * 10);
+                addPermission(lpPlayer, permissionNode);
             }
         }
     }
