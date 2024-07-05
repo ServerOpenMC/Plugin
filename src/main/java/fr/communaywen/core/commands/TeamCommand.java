@@ -16,7 +16,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,13 +27,18 @@ import java.util.UUID;
 public class TeamCommand implements CommandExecutor, TabCompleter {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
         if (!(sender instanceof Player player)) {
             return CommandUtils.sendMessage(sender, "Vous devez être un joueur pour exécuter cette commande !", true);
         }
         if (args.length == 0) {
-            Team team = teamManager.isInTeam(player.getUniqueId());
+            Team team = null;
+            try {
+                team = teamManager.isInTeam(player.getUniqueId());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             if (team == null) {
                 return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
             }
@@ -43,17 +50,31 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 return CommandUtils.sendMessage(sender, ChatColor.WHITE + "Usage: /team create <nom de la team>", true);
             }
             if (args[0].equalsIgnoreCase("list")) {
-                Menu menu = new TeamListMenu(player, teamManager);
+                Menu menu = null;
+                try {
+                    menu = new TeamListMenu(player, teamManager);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 menu.open();
             }
             if (args[0].equalsIgnoreCase("invite")) {
                 return CommandUtils.sendMessage(sender, ChatColor.WHITE + "Usage: /team invite <joueur>", true);
             }
             if (args[0].equalsIgnoreCase("accept")) {
-                if (teamManager.isInTeam(player.getUniqueId()) != null) {
-                    return CommandUtils.sendMessage(sender, "Vous êtes déjà dans une team !", true);
+                try {
+                    if (teamManager.isInTeam(player.getUniqueId()) != null) {
+                        return CommandUtils.sendMessage(sender, "Vous êtes déjà dans une team !", true);
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
-                Team team = teamManager.acceptInvite(player.getUniqueId());
+                Team team = null;
+                try {
+                    team = teamManager.acceptInvite(player.getUniqueId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 if (team != null) {
                     CommandUtils.sendMessage(sender, ChatColor.GREEN + "Vous avez bien rejoint la team " + team.getName() + " !", false);
                     for (UUID teamPlayer : team.getPlayers()) {
@@ -70,14 +91,28 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 return CommandUtils.sendMessage(sender, ChatColor.WHITE + "Usage: /team kick <joueur>", true);
             }
             if (args[0].equalsIgnoreCase("leave")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
+                Team team = null;
+                try {
+                    team = teamManager.isInTeam(player.getUniqueId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 if (team == null) {
                     return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
                 }
-                return TeamUtils.quit(team, player);
+                try {
+                    return TeamUtils.quit(team, player);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
             if (args[0].equalsIgnoreCase("inventory")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
+                Team team = null;
+                try {
+                    team = teamManager.isInTeam(player.getUniqueId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 if (team == null) {
                     return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
                 }
@@ -90,13 +125,24 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 for (int i = 1; i < args.length; i++) {
                     teamName.append(args[i]).append(" ");
                 }
-                if (teamManager.isInTeam(player.getUniqueId()) != null) {
-                    return CommandUtils.sendMessage(sender, "Vous êtes déjà dans une team !", true);
+                try {
+                    if (teamManager.isInTeam(player.getUniqueId()) != null) {
+                        return CommandUtils.sendMessage(sender, "Vous êtes déjà dans une team !", true);
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
                 if (teamName.length() > 16) {
                     return CommandUtils.sendMessage(sender, "Le nom de la team ne doit pas dépasser 16 caractères !", true);
                 }
-                Team createdTeam = teamManager.createTeam(player.getUniqueId(), teamName.toString().trim());
+                Team createdTeam = null;
+                try {
+                    createdTeam = teamManager.createTeam(player.getUniqueId(), teamName.toString().trim());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    CommandUtils.sendMessage(sender, "Erreur lors de la création de la team !", true);
+                }
+                assert createdTeam != null;
                 boolean couldAdd = createdTeam.addPlayer(player.getUniqueId());
                 if (!couldAdd) {
                     return CommandUtils.sendMessage(sender, "La team est déjà au complet !", true);
@@ -104,7 +150,12 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 CommandUtils.sendMessage(sender, ChatColor.GREEN + "Vous avez créé la team " + createdTeam.getName() + " !", false);
             }
             if (args[0].equalsIgnoreCase("invite")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
+                Team team = null;
+                try {
+                    team = teamManager.isInTeam(player.getUniqueId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 if (team == null) {
                     return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
                 }
@@ -115,8 +166,12 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 if (target == null) {
                     return CommandUtils.sendMessage(sender, "Le joueur " + args[1] + " n'est pas en ligne !", true);
                 }
-                if (teamManager.isInTeam(target.getUniqueId()) != null) {
-                    return CommandUtils.sendMessage(sender, "Le joueur " + target.getName() + " est déjà dans une team !", true);
+                try {
+                    if (teamManager.isInTeam(target.getUniqueId()) != null) {
+                        return CommandUtils.sendMessage(sender, "Le joueur " + target.getName() + " est déjà dans une team !", true);
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
                 boolean couldInvite = teamManager.invite(target.getUniqueId(), team);
                 if (!couldInvite) {
@@ -127,7 +182,12 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 CommandUtils.sendMessage(target, "Pour accepter, faites " + ChatColor.GREEN + "/team accept", false);
             }
             if (args[0].equalsIgnoreCase("kick")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
+                Team team = null;
+                try {
+                    team = teamManager.isInTeam(player.getUniqueId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 if (team == null) {
                     return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
                 }
@@ -136,7 +196,12 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 }
                 UUID target = team.getPlayerByUsername(args[1]);
                 if (target != null) {
-                    MethodState state = team.removePlayer(target);
+                    MethodState state = null;
+                    try {
+                        state = team.removePlayer(target);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (state == MethodState.VALID || state == MethodState.WARNING) CommandUtils.sendMessage(sender, "Le joueur " + args[1] + " a été kické de la team !", false);
                     if (state == MethodState.INVALID) return CommandUtils.sendMessage(sender, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée et il reste des items dans l'inventaire !", true);
                     Player targetPlayer = Bukkit.getPlayer(target);
@@ -166,12 +231,21 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("invite")) {
                     TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
-                    Team team = teamManager.isInTeam(player.getUniqueId());
+                    Team team = null;
+                    try {
+                        team = teamManager.isInTeam(player.getUniqueId());
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (team != null) {
                         List<String> players = new ArrayList<>();
                         for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
-                            if (teamManager.isInTeam(onlinePlayer.getUniqueId()) == null) {
-                                players.add(onlinePlayer.getName());
+                            try {
+                                if (teamManager.isInTeam(onlinePlayer.getUniqueId()) == null) {
+                                    players.add(onlinePlayer.getName());
+                                }
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
                             }
                         }
                         return players;
@@ -179,7 +253,12 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
 
                 }
                 if (args[0].equalsIgnoreCase("kick")) {
-                    Team team = AywenCraftPlugin.getInstance().getTeamManager().isInTeam(player.getUniqueId());
+                    Team team = null;
+                    try {
+                        team = AywenCraftPlugin.getInstance().getTeamManager().isInTeam(player.getUniqueId());
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (team != null) {
                         List<String> players = new ArrayList<>();
                         for (UUID uuid : team.getPlayers()) {
