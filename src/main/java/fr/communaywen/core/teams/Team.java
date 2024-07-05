@@ -1,19 +1,22 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Team {
 
     private final String name;
-    private OfflinePlayer owner;
-    private final List<OfflinePlayer> players = new ArrayList<>();
+    private UUID owner;
+    private final List<UUID> players = new ArrayList<>();
 
-    public Team(OfflinePlayer owner, String name) {
+    public Team(UUID owner, String name) {
         this.owner = owner;
         this.name = name;
     }
@@ -22,18 +25,18 @@ public class Team {
         return name;
     }
 
-    public OfflinePlayer getOwner() {
+    public UUID getOwner() {
         return owner;
     }
 
-    public List<OfflinePlayer> getPlayers() {
+    public List<UUID> getPlayers() {
         return players;
     }
 
-    public List<OfflinePlayer> getPlayers(int first, int last) {
-        List<OfflinePlayer> result = new ArrayList<>();
+    public List<UUID> getPlayers(int first, int last) {
+        List<UUID> result = new ArrayList<>();
         for (int i = first; i < last; i++) {
-            OfflinePlayer player = getPlayer(i);
+            UUID player = getPlayer(i);
             if (player != null) {
                 result.add(player);
             }
@@ -41,23 +44,27 @@ public class Team {
         return result;
     }
 
-    public OfflinePlayer getPlayer(String name) {
-        for (OfflinePlayer player : players) {
-            if (Objects.equals(player.getName(), name)) {
+    public UUID getPlayerByUsername(String username) {
+        Player bukkitPlayer = Bukkit.getPlayer(username);
+        if (bukkitPlayer == null) {
+            return null;
+        }
+        for (UUID player : players) {
+            if (Objects.equals(player, bukkitPlayer.getUniqueId())) {
                 return player;
             }
         }
         return null;
     }
 
-    public OfflinePlayer getPlayer(int index) {
+    public UUID getPlayer(int index) {
         if (index < 0 || index >= players.size()) {
             return null;
         }
         return players.get(index);
     }
 
-    public boolean addPlayer(OfflinePlayer player) {
+    public boolean addPlayer(UUID player) {
         if (players.size() >= 20) {
             return false;
         }
@@ -65,7 +72,7 @@ public class Team {
         return true;
     }
 
-    public boolean removePlayer(OfflinePlayer player) {
+    public boolean removePlayer(UUID player) {
         players.remove(player);
         if (players.isEmpty()) {
             AywenCraftPlugin.getInstance().getTeamManager().deleteTeam(this);
@@ -77,11 +84,11 @@ public class Team {
         return true;
     }
 
-    public boolean isOwner(OfflinePlayer player) {
+    public boolean isOwner(UUID player) {
         return owner.equals(player);
     }
 
-    private OfflinePlayer getRandomPlayer() {
+    private UUID getRandomPlayer() {
         return players.get((int) (Math.random() * players.size()));
     }
 }
