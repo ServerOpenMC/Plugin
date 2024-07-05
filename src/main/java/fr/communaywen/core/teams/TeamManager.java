@@ -25,7 +25,7 @@ public class TeamManager {
     // Zeub - By Xernas 05/07/2024 à 00:05 (UTC+2)
     // Le createur de ce truc
 
-    // Vraiment bancale mon intégration d'la db + il y a la moitié d'copilot - By ri1_ 05/07/2024 à 22:50 (UTC+2)
+    // Vraiment bancale mon intégration d'la db + il y a la moitié fait par copilot - By ri1_ 05/07/2024 à 22:50 (UTC+2)
 
     private final Queue<UUID, Team> pendingInvites = new Queue<>(20);
 
