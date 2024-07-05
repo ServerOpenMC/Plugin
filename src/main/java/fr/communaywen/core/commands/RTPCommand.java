@@ -67,7 +67,8 @@ public class RTPCommand implements CommandExecutor {
             	}
             }
             player.sendTitle(" §cErreur",null);
-            cooldowns.put(playerId, currentTime - AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldown") + AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldownerror")); //5 secondes de cooldown
+	    int cooldownerror = AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldownerror");
+            cooldowns.put(playerId, currentTime - AywenCraftPlugin.getInstance().getConfig().getint("rtp.cooldown") + cooldownerror);
             return true;
             
         }
