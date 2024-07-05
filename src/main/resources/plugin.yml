@@ -13,6 +13,10 @@ commands:
   prout:
     description: Prout !
     permission: ayw.command.prout
+  rules:
+    description: Affiche les règles.
+    permission: ayw.command.rules
+    aliases: regles
 
 permissions:
   ayw.admin.version:
@@ -23,4 +27,7 @@ permissions:
     default: true
   ayw.command.teams:
     description: 'Teams'
+    default: true
+  ayw.command.rules:
+    description: 'Rules'
     default: true
