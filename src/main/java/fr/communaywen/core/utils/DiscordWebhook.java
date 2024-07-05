@@ -1,5 +1,6 @@
 package fr.communaywen.core.utils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.OutputStream;
@@ -56,7 +57,9 @@ public class DiscordWebhook {
 
             JsonObject embed = new JsonObject();
             embed.addProperty("description", removeColorCodes(message));
-            jsonPayload.add("embeds", embed);
+            JsonArray embeds = new JsonArray();
+            embeds.add(embed);
+            jsonPayload.add("embeds", embeds);
 
             try (OutputStream os = connection.getOutputStream()) {
                 os.write(jsonPayload.toString().getBytes());
