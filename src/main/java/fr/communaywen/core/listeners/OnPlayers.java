@@ -46,6 +46,9 @@ public class OnPlayers implements Listener {
                 User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
 
                 int level = user.getInt("level");
+
+                if (level < 10){ break; }
+
                 int firstDigit = level % 10;
 
                 String permissionNode = "ayw.levels." + (firstDigit * 10);
