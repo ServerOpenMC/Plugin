@@ -17,6 +17,10 @@ commands:
     description: Affiche les règles.
     permission: ayw.command.rules
     aliases: regles
+  rtp:
+    description: Téléportation aléatoire
+    permission: ayw.command.rtp
+    aliases: randomteleportation
 
 permissions:
   ayw.admin.version:
@@ -30,4 +34,7 @@ permissions:
     default: true
   ayw.command.rules:
     description: 'Rules'
+    default: true
+  ayw.command.rtp:
+    description: 'rtp'
     default: true
