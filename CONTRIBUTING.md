@@ -57,6 +57,12 @@ Voir aussi: #456, #789
 - **Examinez le code, pas l'auteur**, Donnez des critiques constructives
 
 ## 💅 Style de codes
-La consistence est très importentes, suivez le styles existantes, les conventions de nommages, ne pas les suivres resultera à un refus de votre PR
-
-Un jour, quelqu'un as dis: `c'est PascalCase pour les classes et camelCase pour le reste`
+Les conventions, d'après [cette page](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html) sur le site d'Oracle, sont les suivates :  
+Les noms doivent être en anglais, peu importe la chose nommée.  
+| Chose nommée | Règle | Exemple |
+|--------------|-------|---------|
+| Package | Toujours en miniscules et tous les mots sont collés sans caractère entre (pas d'`_`). Le nom doit être simple et sans caractères spéciaux (uniquement les caractères ASCII, donc pas d'accents). Le nom du package doit au possible rester un seul mot. | `fr.communaywen.commands` |
+| Classe, Interfaces, Enums, Records, Annotations | Toujours en PascalCase. Utilisez uniquement des noms. Évitez les acronymes ou abréviations. | `class SpawnManager;` |
+| Methodes | Son nom commence par un verbe. En `camelCase` | `getInstance()` `clone()` |
+| Variables | Toujous en `camelCase`, évitez les abréviations et les noms raccourcis comme `nbr`. Pas d'`_` ou de `$` au début. L'utililité de la variable devrait être devinable en regardant le nom. | `int numberOfPlayers` `String playerName` |
+| Constantes et membres d'enums | Les constantes dont la déclaration commence par `static final` sont nommées en UPPER_SNAKE_CASE, avec comme les variables, un nom qui décrit clairement leur utilité. | `static final int MIN_WIDTH = 4;` |
