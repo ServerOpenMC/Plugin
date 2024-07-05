@@ -60,9 +60,9 @@ public class TeamListMenu extends PaginatedMenu {
         map.put(49, new ItemBuilder(this, Material.BARRIER, itemMeta -> itemMeta.setDisplayName(ChatColor.GRAY + "Fermer"))
                 .setCloseButton());
         map.put(48, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Page précédente"))
-                .setPreviousPageButton());
+                    .setPreviousPageButton());
         map.put(50, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.GREEN + "Page suivante"))
-                .setNextPageButton());
+                    .setNextPageButton());
         return map;
     }
 
