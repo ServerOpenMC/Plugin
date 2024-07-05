@@ -8,7 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.misieur.AywenCraftPlugin.AywenCraftPlugin;
+import fr.communaywen.core.AywenCraftPlugin;
 
 import java.util.HashMap;
 import java.util.UUID;
