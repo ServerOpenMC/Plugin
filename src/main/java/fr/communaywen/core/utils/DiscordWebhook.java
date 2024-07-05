@@ -34,7 +34,7 @@ public class DiscordWebhook {
             }
 
             int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
+            if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
                 System.err.println("Failed to send message to Discord webhook. Response code: " + responseCode);
             }
 
@@ -53,8 +53,6 @@ public class DiscordWebhook {
             connection.setDoOutput(true);
 
             JsonObject jsonPayload = new JsonObject();
-            jsonPayload.addProperty("content", removeColorCodes(message));
-
             JsonObject embed = new JsonObject();
             embed.addProperty("description", removeColorCodes(message));
             JsonArray embeds = new JsonArray();
@@ -67,7 +65,7 @@ public class DiscordWebhook {
             }
 
             int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
+            if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
                 System.err.println("Failed to send broadcast message to Discord webhook. Response code: " + responseCode);
             }
 
