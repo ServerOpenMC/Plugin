@@ -7,11 +7,15 @@ import fr.communaywen.core.listeners.ChatListener;
 import fr.communaywen.core.listeners.OnPlayers;
 import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
+import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
+import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import fr.communaywen.core.commands.RTPCommand;
+import fr.communaywen.core.utils.database.DatabaseManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutput;
 import java.io.File;
+import java.sql.SQLException;
 
 public final class AywenCraftPlugin extends JavaPlugin {
 
@@ -32,6 +37,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private static AywenCraftPlugin instance;
     private EconomyManager economyManager;
     public LuckPerms api;
+
+    private DatabaseManager databaseManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -44,8 +51,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
+        saveDefaultConfig();
 
         instance = this;
+        databaseManager = new DatabaseManager(this);
 
         OnPlayers onPlayers = new OnPlayers();
         getServer().getPluginManager().registerEvents(onPlayers, this);
@@ -96,11 +105,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Logic to save data if necessary
+        this.databaseManager.close();
     }
 
     public TeamManager getTeamManager() {
         return teamManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     public static AywenCraftPlugin getInstance() {
