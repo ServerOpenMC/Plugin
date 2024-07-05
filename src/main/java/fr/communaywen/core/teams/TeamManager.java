@@ -126,6 +126,29 @@ public class TeamManager {
         return team;
     }
 
+    public Team removePlayer(UUID player) throws SQLException {
+        Team team = isInTeam(player);
+        if (team != null) {
+            team.removePlayer(player);
+            try (Connection connection = databaseConnection.getConnection();
+                 PreparedStatement updatePlayers = connection.prepareStatement("UPDATE teams SET players = ? WHERE name = ?")) {
+
+                String playerListString = team.getPlayers().stream()
+                        .map(UUID::toString)
+                        .collect(Collectors.joining(","));
+
+                updatePlayers.setString(1, playerListString);
+                updatePlayers.setString(2, team.getName());
+                updatePlayers.executeUpdate();
+
+                if (team.getPlayers().size() == 0) {
+                    deleteTeam(team);
+                }
+            }
+        }
+        return team;
+    }
+
     public Team getTeamByName(String name) throws SQLException {
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT owner, players FROM teams WHERE name = ?")) {
