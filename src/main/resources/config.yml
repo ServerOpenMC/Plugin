@@ -1,7 +1,9 @@
 rtp:
   cooldown: 60
-  cooldownerror: 5
+  cooldown-error: 5
   minx: -3000
   maxx: 3000
+  miny: -3000
+  maxy: 3000
   minz: -3000
   maxz: 3000
