@@ -23,6 +23,7 @@ dependencies {
     implementation 'dev.xernas:menulib:1.1.0'
     // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
+    implementation 'org.json:json:20210307'
 }
 
 def targetJavaVersion = 21

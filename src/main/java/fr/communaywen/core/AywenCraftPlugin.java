@@ -1,17 +1,14 @@
 package fr.communaywen.core;
 
 import dev.xernas.menulib.MenuLib;
-import fr.communaywen.core.commands.RulesCommand;
-import fr.communaywen.core.commands.TeamCommand;
+import fr.communaywen.core.commands.*;
+import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.listeners.ChatListener;
 import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
-import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
-import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
-import fr.communaywen.core.commands.RTPCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,6 +24,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
+    private EconomyManager economyManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -60,6 +58,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
 
+        this.getCommand("credit").setExecutor(new CreditCommand());
+
         PluginCommand teamCommand = this.getCommand("team");
         teamCommand.setExecutor(new TeamCommand());
         teamCommand.setTabCompleter(new TeamCommand());
@@ -72,10 +72,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         saveDefaultConfig();
+
+        // Initialiser EconomyManager et enregistrer la commande money
+        economyManager = new EconomyManager(getDataFolder());
+        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
     }
 
     @Override
     public void onDisable() {
+        // Logic to save data if necessary
     }
 
     public TeamManager getTeamManager() {
@@ -85,6 +90,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static AywenCraftPlugin getInstance() {
         return instance;
     }
+
     /**
      * Format a permission with the permission prefix.
      *
