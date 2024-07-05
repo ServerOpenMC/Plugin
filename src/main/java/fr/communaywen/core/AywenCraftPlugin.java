@@ -9,6 +9,7 @@ import fr.communaywen.core.listeners.ChatListener;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.utils.PermissionCategory;
+import fr.communaywen.core.commands.RTPCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +48,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
         String botAvatarUrl = "https://media.discordapp.net/attachments/1161296445169741836/1258408047412383804/image.png?ex=66889812&is=66874692&hm=4bb38f7b6460952afc21811f7145a6b289d7210861d81d91b1ca8ee264f0ab0d&=&format=webp&quality=lossless&width=1131&height=662";
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+
+        this.getCommand("rtp").setExecutor(new RTPCommand());
+        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
+        saveDefaultConfig();
+        
     }
 
     @Override
