@@ -58,7 +58,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         instance = this;
         databaseManager = new DatabaseManager(this);
 
-        LinkerAPI linkerAPI = new LinkerAPI();
+        LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
         OnPlayers onPlayers = new OnPlayers();
         getServer().getPluginManager().registerEvents(onPlayers, this);
@@ -89,6 +89,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
 
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
+        this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
         this.getCommand("credit").setExecutor(new CreditCommand());
 
         PluginCommand teamCommand = this.getCommand("team");
