@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.staff.freeze.FreezeListener;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
@@ -22,6 +23,7 @@ import fr.communaywen.core.staff.freeze.FreezeCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -118,6 +120,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         /* --------- */
 
 
@@ -127,6 +130,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         // Commandes de freeze
         this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
 
 
 

@@ -5,6 +5,7 @@ import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class FreezeListener implements WebSocket.Listener {
+public class FreezeListener implements Listener {
 
     private final AywenCraftPlugin plugin;
 
