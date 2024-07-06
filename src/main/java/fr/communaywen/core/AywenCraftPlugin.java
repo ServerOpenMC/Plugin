@@ -3,7 +3,7 @@ package fr.communaywen.core;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.economy.EconomyManager;
-import fr.communaywen.core.listeners.AntiTrampling;
+import fr.communaywen.core.AntiTrampling;
 import fr.communaywen.core.listeners.ChatListener;
 import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.quests.Quest;
