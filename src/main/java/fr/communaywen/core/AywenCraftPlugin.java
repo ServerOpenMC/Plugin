@@ -103,7 +103,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
-        this.getCommand("tprequest").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept(this));
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 

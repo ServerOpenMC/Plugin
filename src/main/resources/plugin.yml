@@ -33,6 +33,16 @@ commands:
     permission: ayw.command.manuallink
   feed:
     description: feed
+    permission: ayw.command.feed
+  tpa:
+    description: tpa
+    permission: ayw.command.tpa
+  tpaccept:
+    description: tpa
+    permission: ayw.command.tpa
+  tpdeny:
+    description: tpa
+    permission: ayw.command.tpa
 
 permissions:
   ayw.admin.version:
@@ -55,4 +65,7 @@ permissions:
     default: true
   ayw.command.feed:
     description: 'feed'
+    default: true
+  ayw.command.tpa:
+    description: 'tpa'
     default: true
