@@ -1,6 +1,5 @@
 package fr.communaywen.core.commands;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.PermissionCategory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
