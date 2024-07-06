@@ -8,10 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/*
-Créer la DB: CREATE TABLE link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(100))
-*/
-
 public class LinkerAPI {
 
     private final DatabaseManager dbmanager;
