@@ -23,7 +23,7 @@ public class LinkerAPI {
     public boolean setDatabase(Player player, String uid) throws SQLException { // Ajoute un lien à la DB
         try {
             String playerUUID = player.getUniqueId().toString();
-            Connection connection = dbmanager.getTeamConnection().getConnection();
+            Connection connection = dbmanager.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO mclink (discord_id, minecraft_uuid) VALUES (?, ?)");
 
@@ -39,7 +39,7 @@ public class LinkerAPI {
     public String getUserId(Player player) throws SQLException { // Lis la DB est retourne l'uid (discord) du joueur, "" si introuvable
         try {
             String uuid = player.getUniqueId().toString();
-            Connection connection = dbmanager.getTeamConnection().getConnection();
+            Connection connection = dbmanager.getConnection();
 
             String sql = "SELECT * FROM mclink WHERE minecraft_uuid = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
