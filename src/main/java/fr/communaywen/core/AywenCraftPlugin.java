@@ -12,17 +12,14 @@ import fr.communaywen.core.tpa.CommandTpdeny;
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.staff.freeze.FreezeCommand;
+import fr.communaywen.core.staff.freeze.FreezeListener;
 
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import fr.communaywen.core.commands.RTPCommand;
-import fr.communaywen.core.utils.database.DatabaseManager;
-import fr.communaywen.core.listeners.RTPWand;
-import fr.communaywen.core.staff.freeze.FreezeCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -104,6 +101,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
+        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
+
         PluginCommand teamCommand = this.getCommand("team");
         teamCommand.setExecutor(new TeamCommand());
         teamCommand.setTabCompleter(new TeamCommand());
@@ -122,20 +122,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         /* --------- */
 
-
-        // Initialiser EconomyManager et enregistrer la commande money
-        economyManager = new EconomyManager(getDataFolder());
-        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
-
-        // Commandes de freeze
-        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
-        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
-
-
-
-
         saveDefaultConfig();
-
     }
 
 
