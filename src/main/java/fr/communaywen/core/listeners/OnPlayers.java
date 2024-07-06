@@ -1,6 +1,7 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.utils.DraftAPI;
+import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.user.User;
@@ -17,9 +18,14 @@ import java.io.IOException;
 public class OnPlayers implements Listener {
 
     private LuckPerms luckPerms;
+    private LinkerAPI linkerAPI;
 
     public void setLuckPerms(LuckPerms luckPerms) {
         this.luckPerms = luckPerms;
+    }
+
+    public void setLinkerAPI(LinkerAPI linkerAPI) {
+        this.linkerAPI = linkerAPI;
     }
 
     public void addPermission(User user, String permission) {
@@ -40,19 +46,27 @@ public class OnPlayers implements Listener {
 
         for (int i = 0; i < users.length(); i++) {
             JSONObject user = users.getJSONObject(i);
-            String discordUsername = user.getString("username");
+            String discordId = user.getString("id");
 
-            if (player.getName().equalsIgnoreCase(discordUsername)){
+            if (this.linkerAPI.getUserId(player).equals(discordId)){
                 User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
 
                 int level = user.getInt("level");
-
                 if (level < 10){ break; }
 
-                int firstDigit = level % 10;
-
-                String permissionNode = "ayw.levels." + (firstDigit * 10);
-                addPermission(lpPlayer, permissionNode);
+                addPermission(lpPlayer, "ayw.levels.10");
+                if (level >= 20){
+                    addPermission(lpPlayer, "ayw.levels.20");
+                }
+                if (level >= 30){
+                    addPermission(lpPlayer, "ayw.levels.30");
+                }
+                if (level >= 40){
+                    addPermission(lpPlayer, "ayw.levels.40");
+                }
+                if (level >= 50) {
+                    addPermission(lpPlayer, "ayw.levels.50");
+                }
             }
         }
     }
