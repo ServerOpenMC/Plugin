@@ -48,7 +48,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         instance = this;
-        databaseManager = new DatabaseManager(this);
+        //databaseManager = new DatabaseManager(this);
 
         MenuLib.init(this);
 

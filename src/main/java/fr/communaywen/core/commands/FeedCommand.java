@@ -37,12 +37,11 @@ public class FeedCommand implements CommandExecutor {
                     player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
                     return true;
                 }
-                player.setFoodLevel(10);
-                player.sendMessage("Vous avez été nouris\uE032"); //émoji baguette
-                cooldowns.put(playerId, COOLDOWN_TIME);
-                return true;
             }
-            return false;
+            player.setFoodLevel(10);
+            player.sendMessage("Vous avez été nouris\uE032"); //émoji baguette
+            cooldowns.put(playerId, COOLDOWN_TIME);
+            return true;
         }
         return false;
     }
