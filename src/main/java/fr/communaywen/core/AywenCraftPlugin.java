@@ -21,6 +21,7 @@ import org.bukkit.Bukkit;
 import fr.communaywen.core.commands.RTPCommand;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.listeners.RTPWand;
+import fr.communaywen.core.staff.freeze.FreezeCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,10 +29,15 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
+    private final Set<UUID> frozenPlayers = new HashSet<>();
+
 
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
@@ -72,7 +78,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         MenuLib.init(this);
 
-        
+
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
@@ -116,12 +122,27 @@ public final class AywenCraftPlugin extends JavaPlugin {
         economyManager = new EconomyManager(getDataFolder());
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
 
+        // Commandes de freeze
+        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+
+
+
     }
+
 
     @Override
     public void onDisable() {
         this.databaseManager.close();
     }
+
+    public Set<UUID> getFrozenPlayers() {
+        return frozenPlayers;
+    }
+
+    public int getBanDuration() {
+        return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
+    }
+
 
     public TeamManager getTeamManager() {
         return teamManager;
