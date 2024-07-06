@@ -13,6 +13,7 @@ import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
 import fr.communaywen.core.commands.RTPCommand;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.listeners.RTPWand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -79,7 +80,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
-        getServer().getPluginManager().registerEvents(new RTPClickEvent(this), this);
+        getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
 
         // Initialiser EconomyManager et enregistrer la commande money
