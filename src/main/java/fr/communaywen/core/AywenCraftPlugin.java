@@ -3,15 +3,15 @@ package fr.communaywen.core;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.listeners.AntiTrampling;
 import fr.communaywen.core.listeners.ChatListener;
 import fr.communaywen.core.listeners.SleepListener;
+import fr.communaywen.core.quests.Quest;
+import fr.communaywen.core.quests.QuestManager;
 import fr.communaywen.core.teams.TeamManager;
-import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.MOTDChanger;
-import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
-import fr.communaywen.core.commands.RTPCommand;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.sql.SQLException;
 
 public final class AywenCraftPlugin extends JavaPlugin {
 
@@ -30,7 +29,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
     private EconomyManager economyManager;
-
+    private QuestManager questManager;
     private DatabaseManager databaseManager;
 
     private void loadBookConfig() {
@@ -76,14 +75,20 @@ public final class AywenCraftPlugin extends JavaPlugin {
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
-        
+
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
-        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
-        getServer().getPluginManager().registerEvents(new SleepListener(),this);
+        getServer().getPluginManager().registerEvents(new AntiTrampling(), this);
+        getServer().getPluginManager().registerEvents(new SleepListener(), this);
 
         // Initialiser EconomyManager et enregistrer la commande money
         economyManager = new EconomyManager(getDataFolder());
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+
+        // Initialiser QuestManager et ajouter des quêtes d'exemple
+        questManager = new QuestManager();
+        questManager.addQuest(new Quest("Chasseur de Monstres", "Tuez 10 zombies", 100));
+        questManager.addQuest(new Quest("Mineur Expert", "Minez 20 blocs de diamant", 200));
+        this.getCommand("quest").setExecutor(new QuestCommand(questManager));
     }
 
     @Override
@@ -115,5 +120,4 @@ public final class AywenCraftPlugin extends JavaPlugin {
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
     }
-
 }
