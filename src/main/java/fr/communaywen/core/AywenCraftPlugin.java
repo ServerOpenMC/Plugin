@@ -15,24 +15,34 @@ import fr.communaywen.core.utils.database.DatabaseManager;
 
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import fr.communaywen.core.commands.RTPCommand;
+import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.listeners.RTPWand;
+import fr.communaywen.core.staff.freeze.FreezeCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
+    private final Set<UUID> frozenPlayers = new HashSet<>();
+
 
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
     private EconomyManager economyManager;
-    public LuckPerms lpAPI;
+    public LuckPerms api;
 
     private DatabaseManager databaseManager;
 
@@ -60,13 +70,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
-            lpAPI = provider.getProvider();
-            onPlayers.setLuckPerms(lpAPI);
+            api = provider.getProvider();
+            onPlayers.setLuckPerms(api);
         }
 
         MenuLib.init(this);
         economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
+
 
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
@@ -108,16 +119,39 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
-        getServer().getPluginManager().registerEvents(new StarterKits(lpAPI, linkerAPI), this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         /* --------- */
 
+
+        // Initialiser EconomyManager et enregistrer la commande money
+        economyManager = new EconomyManager(getDataFolder());
+        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+
+        // Commandes de freeze
+        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
+
+
+
+
         saveDefaultConfig();
+
     }
+
 
     @Override
     public void onDisable() {
         this.databaseManager.close();
     }
+
+    public Set<UUID> getFrozenPlayers() {
+        return frozenPlayers;
+    }
+
+    public int getBanDuration() {
+        return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
+    }
+
 
     public TeamManager getTeamManager() {
         return teamManager;
