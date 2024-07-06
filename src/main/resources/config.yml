@@ -12,3 +12,5 @@ rtp:
   rtp_wand: "wand:rtpwand"
 feed:
   cooldown: 60
+
+deco_freeze_nombre_de_jours_ban: 30
