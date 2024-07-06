@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.listeners;
 
 import java.util.HashMap;
 import java.util.UUID;

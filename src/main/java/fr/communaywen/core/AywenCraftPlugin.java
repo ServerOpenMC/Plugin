@@ -79,8 +79,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
             proutCommand.setExecutor(new ProutCommand());
         
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
+        this.getCommand("feed").setExecutor(new FeedCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
+
+
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
 
         // Initialiser EconomyManager et enregistrer la commande money
