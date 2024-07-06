@@ -1,10 +1,8 @@
 package fr.communaywen.core.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -76,27 +74,25 @@ public class RTPCommand implements CommandExecutor {
             World world = player.getWorld();
             int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
             int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () ->  {
-                int y = 0;
-                Location location = new Location(world, x, y, z);
-                if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
-                    y = world.getHighestBlockAt(x,z).getY();
-                    Location belowLocation = new Location(world, x, y - 1, z);
-                    if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
-                        player.teleport(location);
-                        player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
-                        cooldowns.put(playerId, Time);
-                        return;
-                    }
-                    else {
-                        player.sendTitle(" §cErreur","/rtp");
-                        cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-                        return;
-                    }
+            int y = 0;
+            Location location = new Location(world, x, y, z);
+            if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
+                y = world.getHighestBlockAt(x,z).getY();
+                Location belowLocation = new Location(world, x, y - 1, z);
+                if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
+                    player.teleport(location);
+                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
+                    cooldowns.put(playerId, Time);
+                    return true;
                 }
-                player.sendTitle(" §cErreur","/rtp");
-                cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-            });
+                else {
+                    player.sendTitle(" §cErreur","/rtp");
+                    cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
+                    return true;
+                }
+            }
+            player.sendTitle(" §cErreur","/rtp");
+            cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
             return true;
         }
 
