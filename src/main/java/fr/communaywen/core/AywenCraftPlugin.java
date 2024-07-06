@@ -8,6 +8,9 @@ import fr.communaywen.core.listeners.OnPlayers;
 import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.commands.ProutCommand;
+import fr.communaywen.core.tpa.CommandTPA;
+import fr.communaywen.core.tpa.CommandTpaccept;
+import fr.communaywen.core.tpa.CommandTpdeny;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.LinkerAPI;
 import fr.communaywen.core.utils.MOTDChanger;
@@ -101,6 +104,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
+        this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
+        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
 
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
