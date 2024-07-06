@@ -72,6 +72,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         MenuLib.init(this);
 
+        
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
@@ -114,6 +115,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         // Initialiser EconomyManager et enregistrer la commande money
         economyManager = new EconomyManager(getDataFolder());
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+
     }
 
     @Override
