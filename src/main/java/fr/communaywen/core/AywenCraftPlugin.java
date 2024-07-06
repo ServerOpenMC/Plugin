@@ -4,25 +4,29 @@ import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.listeners.ChatListener;
+import fr.communaywen.core.listeners.OnPlayers;
 import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.DiscordWebhook;
+import fr.communaywen.core.utils.LinkerAPI;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
+import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
 import fr.communaywen.core.commands.RTPCommand;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.listeners.RTPWand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.sql.SQLException;
 
 public final class AywenCraftPlugin extends JavaPlugin {
 
@@ -31,6 +35,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
     private EconomyManager economyManager;
+    public LuckPerms api;
 
     private DatabaseManager databaseManager;
 
@@ -50,6 +55,18 @@ public final class AywenCraftPlugin extends JavaPlugin {
         instance = this;
         databaseManager = new DatabaseManager(this);
 
+        LinkerAPI linkerAPI = new LinkerAPI();
+
+        OnPlayers onPlayers = new OnPlayers();
+        getServer().getPluginManager().registerEvents(onPlayers, this);
+        onPlayers.setLinkerAPI(linkerAPI);
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            api = provider.getProvider();
+            onPlayers.setLuckPerms(api);
+        }
+
         MenuLib.init(this);
 
         motdChanger = new MOTDChanger();
@@ -68,6 +85,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
 
+        this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
         this.getCommand("credit").setExecutor(new CreditCommand());
 
         PluginCommand teamCommand = this.getCommand("team");
@@ -85,6 +103,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
 
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
+        saveDefaultConfig();
 
         // Initialiser EconomyManager et enregistrer la commande money
         economyManager = new EconomyManager(getDataFolder());
