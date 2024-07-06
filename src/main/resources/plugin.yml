@@ -26,10 +26,18 @@ commands:
     usage: /money [transfer <player> <amount>]
   credit:
     description: Affiche les crédits du plugin
+  link:
+    description: Lie un compte Minecraft à Discord
+  manuallink:
+    description: Lie un compte Minecraft à Discord manuellement (sans verif)
+    permission: ayw.command.manuallink
 
 permissions:
   ayw.admin.version:
     description: Permission pour utiliser la commande /version
+    default: op
+  ayw.command.manuallink:
+    description: Permission de lier un deux comptes manuellement
     default: op
   ayw.command.prout:
     description: 'Prout !'
