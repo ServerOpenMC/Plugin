@@ -9,6 +9,7 @@ import fr.communaywen.core.listeners.SleepListener;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.utils.DiscordWebhook;
+import fr.communaywen.core.utils.LinkerAPI;
 import fr.communaywen.core.utils.MOTDChanger;
 import fr.communaywen.core.commands.VersionCommand;
 import fr.communaywen.core.utils.PermissionCategory;
@@ -21,13 +22,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.DataOutput;
 import java.io.File;
-import java.sql.SQLException;
 
 public final class AywenCraftPlugin extends JavaPlugin {
 
@@ -54,10 +52,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         instance = this;
-        databaseManager = new DatabaseManager(this);
+        //databaseManager = new DatabaseManager(this);
+
+        LinkerAPI linkerAPI = new LinkerAPI();
 
         OnPlayers onPlayers = new OnPlayers();
         getServer().getPluginManager().registerEvents(onPlayers, this);
+        onPlayers.setLinkerAPI(linkerAPI);
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
