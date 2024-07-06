@@ -21,7 +21,7 @@ public class LinkerAPI {
             String playerUUID = player.getUniqueId().toString();
             Connection connection = dbmanager.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO mclink (discord_id, minecraft_uuid) VALUES (?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO link (discord_id, minecraft_uuid) VALUES (?, ?)");
 
             statement.setString(1, uid);
             statement.setString(2, playerUUID);
@@ -29,7 +29,10 @@ public class LinkerAPI {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){ return false; }
+        } catch (Exception e){
+            System.out.println(e.toString());
+            return false;
+        }
     }
 
     public String getUserId(Player player) throws SQLException { // Lis la DB est retourne l'uid (discord) du joueur, "" si introuvable
@@ -37,12 +40,11 @@ public class LinkerAPI {
             String uuid = player.getUniqueId().toString();
             Connection connection = dbmanager.getConnection();
 
-            String sql = "SELECT * FROM mclink WHERE minecraft_uuid = ?";
+            String sql = "SELECT * FROM link WHERE minecraft_uuid = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid);
 
             ResultSet resultSet = statement.executeQuery();
-            System.out.println(resultSet.getString("minecraft_uuid"));
             if (resultSet.next()) {
                 System.out.println("Discord ID found for "+player.getName()+": "+resultSet.getString("discord_id"));
                 return resultSet.getString("discord_id");
@@ -50,6 +52,9 @@ public class LinkerAPI {
                 return "";
             }
 
-        } catch (Exception e){ return ""; }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return "";
+        }
     }
 }
