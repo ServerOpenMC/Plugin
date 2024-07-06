@@ -1,13 +1,10 @@
 package fr.communaywen.core.utils.database;
 
-import fr.communaywen.core.AywenCraftPlugin;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-
 
     private final String url;
     private final String user;
