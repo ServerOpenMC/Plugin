@@ -1,0 +1,83 @@
+name: AywenCraftPlugin
+version: '${version}'
+main: fr.communaywen.core.AywenCraftPlugin
+api-version: '1.20'
+
+commands:
+  version:
+    description: Affiche la version du plugin.
+  team:
+    description: Commande pour gérer les équipes
+    permission: ayw.command.teams
+    permission-message: "Vous n'avez pas la permission d'utiliser cette commande."
+  prout:
+    description: Prout !
+    permission: ayw.command.prout
+  rules:
+    description: Affiche les règles.
+    permission: ayw.command.rules
+    aliases: regles
+  rtp:
+    description: Téléportation aléatoire
+    permission: ayw.command.rtp
+    aliases: randomteleportation
+  money:
+    description: Manage your money
+    usage: /money [transfer <player> <amount>]
+  credit:
+    description: Affiche les crédits du plugin
+  link:
+    description: Lie un compte Minecraft à Discord
+  manuallink:
+    description: Lie un compte Minecraft à Discord manuellement (sans verif)
+    permission: ayw.command.manuallink
+  feed:
+    description: feed
+    permission: ayw.command.feed
+  tpa:
+    description: tpa
+    permission: ayw.command.tpa
+  tpaccept:
+    description: tpa
+    permission: ayw.command.tpa
+  tpdeny:
+    description: tpa
+    permission: ayw.command.tpa
+  freeze:
+    description: Freeze un joueur
+    usage: /freeze [joueur]
+    permission: openmc.staff.freeze
+  unfreeze:
+    description: Unfreeze un joueur
+    usage: /unfreeze [joueur]
+    permission: openmc.staff.freeze
+
+permissions:
+  ayw.admin.version:
+    description: Permission pour utiliser la commande /version
+    default: op
+  ayw.command.manuallink:
+    description: Permission de lier un deux comptes manuellement
+    default: op
+  ayw.command.prout:
+    description: 'Prout !'
+    default: true
+  ayw.command.teams:
+    description: 'Teams'
+    default: true
+  ayw.command.rules:
+    description: 'Rules'
+    default: true
+  ayw.command.rtp:
+    description: 'rtp'
+    default: true
+  ayw.command.feed:
+    description: 'feed'
+    default: true
+  ayw.command.tpa:
+    description: 'tpa'
+    default: true
+  openmc.staff.freeze:
+    description: 'Ensemble de commandes pour freeze un joueur'
+    default: false
+
