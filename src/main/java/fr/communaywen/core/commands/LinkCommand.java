@@ -18,7 +18,7 @@ public class LinkCommand implements CommandExecutor {
 
     private final LinkerAPI linkerAPI;
 
-    public LinkCommand(LinkerAPI linkerAPI) { this.linkerAPI = linkerAPI}
+    public LinkCommand(LinkerAPI linkerAPI) { this.linkerAPI = linkerAPI; }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
