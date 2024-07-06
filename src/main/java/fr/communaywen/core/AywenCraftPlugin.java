@@ -85,6 +85,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
         this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
         this.getCommand("credit").setExecutor(new CreditCommand());
+        this.getCommand("exploderandom").setExecutor(new ExplodeRandomCommand());
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));

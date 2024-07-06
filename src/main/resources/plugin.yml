@@ -26,6 +26,8 @@ commands:
     usage: /money [transfer <player> <amount>]
   credit:
     description: Affiche les crédits du plugin
+  exploderandom:
+    description: Fait exploser un joueur aléatoire, côute 1 diamant
   link:
     description: Lie un compte Minecraft à Discord
   manuallink:

@@ -22,7 +22,7 @@ public class CommandTPA implements CommandExecutor {
             Player player = (Player) sender;
             Player receiver = Bukkit.getPlayerExact(args[0]);
             if (receiver == null) {
-                player.sendMessage("Impossible de trouver le joeur \""+args[0]+"\"");
+                player.sendMessage("Impossible de trouver le joueur \""+args[0]+"\"");
                 return false;
             }
             tpQueue.TPA_REQUESTS.put(receiver, new TPARequest(player));
