@@ -1,0 +1,16 @@
+database:
+  url: "jdbc:mysql://localhost:3306/openmccore"
+  user: "root"
+  password: "password"
+rtp:
+  cooldown: 60
+  cooldown-error: 5
+  minx: -3000
+  maxx: 3000
+  minz: -3000
+  maxz: 3000
+  rtp_wand: "wand:rtpwand"
+feed:
+  cooldown: 60
+
+deco_freeze_nombre_de_jours_ban: 30
