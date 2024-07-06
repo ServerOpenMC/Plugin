@@ -13,13 +13,9 @@ public class WelcomeMessage implements Listener {
     public void OnPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
-        
-
         if (player.hasPlayedBefore()) {
             player.sendTitle("Bienvenue !", "Merci de ne pas grief", 10, 70, 20);
         }
-
-
     }
 
 }
