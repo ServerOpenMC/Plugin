@@ -32,7 +32,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
     private EconomyManager economyManager;
-    public LuckPerms api;
+    public LuckPerms lpAPI;
 
     private DatabaseManager databaseManager;
 
@@ -60,8 +60,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
-            api = provider.getProvider();
-            onPlayers.setLuckPerms(api);
+            lpAPI = provider.getProvider();
+            onPlayers.setLuckPerms(lpAPI);
         }
 
         MenuLib.init(this);
@@ -108,6 +108,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+        getServer().getPluginManager().registerEvents(new StarterKits(lpAPI, linkerAPI), this);
         /* --------- */
 
         saveDefaultConfig();

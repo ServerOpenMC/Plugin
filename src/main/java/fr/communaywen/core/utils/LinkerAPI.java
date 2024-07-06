@@ -46,7 +46,7 @@ public class LinkerAPI {
             statement.setString(1, uuid);
 
             ResultSet resultSet = statement.executeQuery();
-
+            System.out.println(resultSet.getString("minecraft_uuid"));
             if (resultSet.next()) {
                 System.out.println("Discord ID found for "+player.getName()+": "+resultSet.getString("discord_id"));
                 return resultSet.getString("discord_id");
