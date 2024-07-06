@@ -52,7 +52,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         instance = this;
-        //databaseManager = new DatabaseManager(this);
+        databaseManager = new DatabaseManager(this);
 
         LinkerAPI linkerAPI = new LinkerAPI();
 
