@@ -3,10 +3,12 @@ package fr.communaywen.core.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.communaywen.core.AywenCraftPlugin;
 
@@ -54,15 +56,16 @@ public class RTPCommand implements CommandExecutor {
 	    
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if (sender instanceof Player player) {
             UUID playerId = player.getUniqueId();
-            long currentTime = System.currentTimeMillis() / 1000;
+            long Time = System.currentTimeMillis() / 1000;
 
             if (cooldowns.containsKey(playerId)) {
                 long lastUsed = cooldowns.get(playerId);
-                long timeSinceLastUse = currentTime - lastUsed;
+                long timeSinceLastUse = Time - lastUsed;
 
                 if (timeSinceLastUse < COOLDOWN_TIME) {
                     long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
@@ -74,20 +77,31 @@ public class RTPCommand implements CommandExecutor {
             World world = player.getWorld();
             int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
             int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-            for (int y = MIN_Y; y <= MAX_Y; y++) {
-                Location location = new Location(world, x, y, z);
-                Location belowLocation = new Location(world, x, y - 1, z);
-		Location upLocation = new Location(world, x, y + 1, z);
-                if (belowLocation.getBlock().getType().isSolid() && location.getBlock().getType().isAir() && upLocation.getBlock().getType().isAir()) {
-                    player.teleport(location);
-                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
-                    cooldowns.put(playerId, currentTime);
-                    return true;
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+	            	for (int y = MIN_Y; y <= MAX_Y; y++) {
+	                    Location location = new Location(world, x, y, z);
+	                    if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
+	                    	Location belowLocation = new Location(world, x, y - 1, z);
+	                        if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
+	                            player.teleport(location);
+	                            player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
+	                            cooldowns.put(playerId, Time);
+	                            return;
+	                        }
+	                    }
+	                    else {
+	                    	player.sendTitle(" §cErreur","/rtp");
+	                        cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
+	                        return;
+	                    }
+	                }
+	            	player.sendTitle(" §cErreur","/rtp");
+	                cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
+	                return;
                 }
-            }
-
-            player.sendTitle(" §cErreur","/rtp");
-            cooldowns.put(playerId, currentTime - COOLDOWN_TIME + COOLDOWN_ERROR);
+            });
             return true;
         }
 

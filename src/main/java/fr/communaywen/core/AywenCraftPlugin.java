@@ -17,6 +17,7 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import fr.communaywen.core.commands.RTPCommand;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.listeners.RTPWand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -96,7 +97,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
             proutCommand.setExecutor(new ProutCommand());
         
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
+        this.getCommand("feed").setExecutor(new FeedCommand(this));
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
+        getServer().getPluginManager().registerEvents(new RTPWand(this), this);
+
+
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         saveDefaultConfig();
 

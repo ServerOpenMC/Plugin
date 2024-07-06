@@ -31,6 +31,8 @@ commands:
   manuallink:
     description: Lie un compte Minecraft à Discord manuellement (sans verif)
     permission: ayw.command.manuallink
+  feed:
+    description: feed
 
 permissions:
   ayw.admin.version:
@@ -50,4 +52,7 @@ permissions:
     default: true
   ayw.command.rtp:
     description: 'rtp'
+    default: true
+  ayw.command.feed:
+    description: 'feed'
     default: true

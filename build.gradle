@@ -16,6 +16,9 @@ repositories {
         name = "reposiliteRepositoryReleases"
         url = "https://mvn.notri1.fr/releases"
     }
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
@@ -25,6 +28,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:24.1.0'
     implementation 'org.json:json:20210307'
     compileOnly 'net.luckperms:api:5.4'
+    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
 }
 
 def targetJavaVersion = 21
