@@ -43,8 +43,6 @@ public class RTPWand implements Listener {
         COOLDOWN_ERROR = plugin.getConfig().getInt("rtp.cooldown-error");
         MIN_X = plugin.getConfig().getInt("rtp.minx");
         MAX_X = plugin.getConfig().getInt("rtp.maxx");
-        MIN_Y = plugin.getConfig().getInt("rtp.miny");
-        MAX_Y = plugin.getConfig().getInt("rtp.maxy");
         MIN_Z = plugin.getConfig().getInt("rtp.minz");
         MAX_Z = plugin.getConfig().getInt("rtp.maxz");
         RTP_WAND_NAME = plugin.getConfig().getString("rtp.rtp_wand");
@@ -69,7 +67,7 @@ public class RTPWand implements Listener {
     	    CustomStack customStack = CustomStack.byItemStack(item);
             if (customStack != null && customStack.getNamespacedID().equals(RTP_WAND_NAME)) {
 		event.setCancelled(true);
-            	UUID playerId = player.getUniqueId();
+                UUID playerId = player.getUniqueId();
                 long Time = System.currentTimeMillis() / 1000;
 
                 if (cooldowns.containsKey(playerId)) {
@@ -82,37 +80,29 @@ public class RTPWand implements Listener {
                         return;
                     }
                 }
-    	    
                 World world = player.getWorld();
                 int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
                 int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-                Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-    	            	for (int y = MIN_Y; y <= MAX_Y; y++) {
-    	                    Location location = new Location(world, x, y, z);
-    	                    if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
-    	                    	Location belowLocation = new Location(world, x, y - 1, z);
-    	                        if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
-    	                            player.teleport(location);
-    	                            player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
-    	                            cooldowns.put(playerId, Time);
-    	                            player.setCooldown(item.getType(),COOLDOWN_TIME);
-    	                            return;
-    	                        }
-    	                    }
-    	                    else {
-    	                    	player.sendTitle(" §cErreur","réessayez");
-    	                        cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-    	                        player.setCooldown(item.getType(),COOLDOWN_ERROR);
-    	                        return;
-    	                    }
-    	                }
-    	            	player.sendTitle(" §cErreur","réessayez");
-    	                cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-    	                player.setCooldown(item.getType(),COOLDOWN_ERROR);
-    	                return;
+                Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () ->  {
+                    int y = 0;
+                    Location location = new Location(world, x, y, z);
+                    if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
+                        y = world.getHighestBlockAt(x,z).getY();
+                        Location belowLocation = new Location(world, x, y - 1, z);
+                        if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
+                            player.teleport(location);
+                            player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
+                            cooldowns.put(playerId, Time);
+                            return;
+                        }
+                        else {
+                            player.sendTitle(" §cErreur","/rtp");
+                            cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
+                            return;
+                        }
                     }
+                    player.sendTitle(" §cErreur","/rtp");
+                    cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
                 });
                 return;
             }

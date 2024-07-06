@@ -38,7 +38,7 @@ public class FeedCommand implements CommandExecutor {
                     return true;
                 }
             }
-            player.setFoodLevel(10);
+            player.setFoodLevel(20);
             player.sendMessage("Vous avez été nouris\uE032"); //émoji baguette
             cooldowns.put(playerId, COOLDOWN_TIME);
             return true;
