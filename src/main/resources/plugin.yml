@@ -11,11 +11,10 @@ commands:
     description: Téléportation aléatoire
     permission: ayw.command.rtp
     aliases: randomteleportation
-  money:
-    description: Manage your money
-    usage: /money [transfer <player> <amount>]
   credit:
     description: Affiche les crédits du plugin
+  exploderandom:
+    description: Fait exploser un joueur aléatoire, côute 32 diamants
   link:
     description: Lie un compte Minecraft à Discord
   manuallink:
@@ -40,6 +39,10 @@ commands:
     description: Freeze un joueur
     usage: /freeze [joueur]
     permission: openmc.staff.freeze
+  players:
+    description: ouvre le menu des joueurs
+    usage: /players
+    permission: openmc.staff.players
   unfreeze:
     description: Unfreeze un joueur
     usage: /unfreeze [joueur]
@@ -71,7 +74,10 @@ permissions:
     description: 'tpa'
     default: true
   openmc.staff.freeze:
-    description: 'Ensemble de commandes pour freeze un joueur'
+    description: 'freeze'
+    default: false
+  openmc.staff.players:
+    description: 'players'
     default: false
   aywencraft.antivpn.notification:
     description: 'Permission to receive VPN connection notifications'

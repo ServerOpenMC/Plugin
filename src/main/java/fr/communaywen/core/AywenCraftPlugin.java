@@ -3,6 +3,7 @@ package fr.communaywen.core;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
+import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
@@ -16,7 +17,7 @@ import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
-import fr.communaywen.core.staff.freeze.FreezeListener;
+import fr.communaywen.core.listeners.FreezeListener;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
@@ -30,8 +31,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +44,7 @@ import java.util.UUID;
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    private final Set<UUID> frozenPlayers = new HashSet<>();
+    public static ArrayList<Player> frozenPlayers = new ArrayList<>();
 
 
     private MOTDChanger motdChanger;
@@ -127,24 +132,22 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new VersionCommand(this),
                 new RulesCommand(bookConfig),
                 new TeamCommand(),
-                new ScoreboardCommand());
+                new ScoreboardCommand(),
+                new MoneyCommand(this.economyManager));
 
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
         this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
         this.getCommand("credit").setExecutor(new CreditCommand());
+        this.getCommand("exploderandom").setExecutor(new ExplodeRandomCommand());
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
-        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
-        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
         this.getCommand("tpa").setExecutor(new CommandTPA(this));
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
-        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
-        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
-
-
+        this.getCommand("freeze").setExecutor(new FreezeCommand());
+        this.getCommand("players").setExecutor(new PlayersCommand());
 
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
@@ -172,6 +175,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
+        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
         //getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
@@ -206,7 +210,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.quizManager.close();
     }
 
-    public Set<UUID> getFrozenPlayers() {
+    public ArrayList<Player> getFrozenPlayers() {
         return frozenPlayers;
     }
 
