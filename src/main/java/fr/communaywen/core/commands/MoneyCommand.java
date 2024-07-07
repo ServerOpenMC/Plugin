@@ -49,6 +49,24 @@ public class MoneyCommand {
         }
     }
 
+    @Subcommand("add")
+    @Description("Ajoute de l'argent à un joueur")
+    @CommandPermission("openmc.money.add")
+    public void add(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
+        economyManager.addBalance(target, amount);
+        player.sendMessage("§aVous venez d'ajouter §f" + amount + " §aà " + target.getName());
+        target.sendMessage("§aVous venez de recevoir §f" + amount);
+    }
+
+    @Subcommand("remove")
+    @Description("Enleve de l'argent à un joueur")
+    @CommandPermission("openmc.money.remove")
+    public void remove(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
+        economyManager.withdrawBalance(target, amount);
+        player.sendMessage("§aVous venez d'enlever §f" + amount + " §aà " + target.getName());
+        target.sendMessage("§aVous venez de perdre §f" + amount);
+    }
+
 
 
 

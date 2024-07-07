@@ -140,3 +140,5 @@ gradle-app.setting
 /builds/
 
 bin/
+
+/server/

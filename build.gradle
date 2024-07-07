@@ -71,11 +71,11 @@ processResources {
 
 
 jar {
-    destinationDirectory.set(file("./builds/"))
+    destinationDirectory.set(file("./server/plugins/"))
 }
 
 shadowJar {
-    destinationDirectory.set(file("./builds/"))
+    destinationDirectory.set(file("./server/plugins/"))
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'
