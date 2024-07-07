@@ -42,7 +42,7 @@ public class TeamCommand {
     @Description("Afficher l'aide")
     public void sendHelp(BukkitCommandActor sender, CommandHelp<Component> help, ExecutableCommand thisHelpCommand, @Default("1") @Range(min = 1) int page) {
         Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
-        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§b§lGUILD");
+        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§b§lTEAM");
     }
 
     @Subcommand("menu")
