@@ -123,7 +123,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
         this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
-        this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setExecutor(new CommandTPA(this));
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
@@ -136,8 +136,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
 
-        this.getCommand("tpa").setExecutor(new CommandTPA());
-        this.getCommand("tpa").setTabCompleter(new CommandTPA());
+        this.getCommand("tpa").setExecutor(new CommandTPA(this));
+        this.getCommand("tpa").setTabCompleter(new CommandTPA(this));
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
