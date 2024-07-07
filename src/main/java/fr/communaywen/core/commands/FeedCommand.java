@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class FeedCommand implements CommandExecutor {
-    private long COOLDOWN_TIME;
+    private final long COOLDOWN_TIME;
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
     public FeedCommand(@NotNull AywenCraftPlugin plugin) {
         COOLDOWN_TIME = plugin.getConfig().getLong("feed.cooldown");
     }
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final String[] args) {
         if (sender instanceof Player player) {
             UUID playerId = player.getUniqueId();
             long Time = System.currentTimeMillis() / 1000;
@@ -34,8 +34,10 @@ public class FeedCommand implements CommandExecutor {
                 }
             }
             player.setFoodLevel(20);
-            player.sendMessage("Vous avez été nouris\uE032"); //émoji baguette
-            cooldowns.put(playerId, COOLDOWN_TIME);
+            player.setSaturation(5);
+            player.setExhaustion(0);
+            player.sendMessage("Vous avez été nouris \uE032"); //émoji baguette
+            cooldowns.put(playerId, Time);
             return true;
         }
         return false;
