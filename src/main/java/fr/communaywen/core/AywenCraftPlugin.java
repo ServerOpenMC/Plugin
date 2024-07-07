@@ -198,6 +198,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return databaseManager;
     }
 
+    public FallingBlocksExplosionManager getFbeManager() {
+        return fbeManager;
+    }
+
     public InteractiveHelpMenu getInteractiveHelpMenu() {
         return interactiveHelpMenu;
     }
