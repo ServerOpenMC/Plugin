@@ -1,6 +1,6 @@
 # Plugin OpenMC
-Plugin collaboratif pour un serveur.
-Par VOUS !
+Plugin collaboratif pour un serveur : VOTRE serveur !
+
 ![Pdp des contribs](https://contrib.rocks/image?repo=Margouta/PluginOpenMC)
 
 ## 🤝 Rejoindre le développement.
