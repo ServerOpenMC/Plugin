@@ -132,8 +132,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("freeze").setExecutor(new FreezeCommand(this));
         this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
 
-
-
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
