@@ -1,54 +1,62 @@
 package fr.communaywen.core.economy;
 
-import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class EconomyManager {
-    private final Map<UUID, Double> balances;
-    private final EconomyData economyData;
+
+    private final Map<String, Double> balances = new HashMap<>();
+    private final File configFile;
+    private final FileConfiguration config;
 
     public EconomyManager(File dataFolder) {
-        this.economyData = new EconomyData(dataFolder);
-        this.balances = economyData.loadBalances();
+        configFile = new File(dataFolder, "economy.yml");
+        if (!configFile.exists()) {
+            try {
+                configFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        config = YamlConfiguration.loadConfiguration(configFile);
+        loadBalances();
+    }
+
+    private void loadBalances() {
+        for (String key : config.getKeys(false)) {
+            balances.put(key, config.getDouble(key));
+        }
     }
 
     public double getBalance(Player player) {
-        return balances.getOrDefault(player.getUniqueId(), 0.0);
+        return balances.getOrDefault(player.getName(), 0.0);
     }
 
-    public void addBalance(Player player, double amount) {
-        UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player) + amount);
-        saveBalances();
+    public void setBalance(Player player, double amount) {
+        balances.put(player.getName(), amount);
+        config.set(player.getName(), amount);
+        saveConfig();
     }
 
-    public boolean withdrawBalance(Player player, double amount) {
-        UUID uuid = player.getUniqueId();
-        double balance = getBalance(player);
-        if (balance >= amount) {
-            balances.put(uuid, balance - amount);
-            saveBalances();
-            return true;
-        } else {
-            return false;
+    public void withdraw(Player player, double amount) {
+        setBalance(player, getBalance(player) - amount);
+    }
+
+    public void deposit(Player player, double amount) {
+        setBalance(player, getBalance(player) + amount);
+    }
+
+    private void saveConfig() {
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
-
-    public boolean transferBalance(Player from, Player to, double amount) {
-        if (withdrawBalance(from, amount)) {
-            addBalance(to, amount);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void saveBalances() {
-        economyData.saveBalances(balances);
     }
 }

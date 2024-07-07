@@ -1,21 +1,15 @@
 package fr.communaywen.core;
 
-import fr.communaywen.core.commands.*;
-import fr.communaywen.core.listeners.*;
-import fr.communaywen.core.teams.*;
-import fr.communaywen.core.utils.*;
-
-import fr.communaywen.core.tpa.CommandTPA;
-import fr.communaywen.core.tpa.CommandTpaccept;
-import fr.communaywen.core.tpa.CommandTpcancel;
-import fr.communaywen.core.tpa.CommandTpdeny;
-
-import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.commands.*;
+import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.teams.TeamManager;
+import fr.communaywen.core.utils.*;
+import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.freeze.FreezeListener;
-
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -25,15 +19,14 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import java.io.File;
-
 public final class AywenCraftPlugin extends JavaPlugin {
     private final Set<UUID> frozenPlayers = new HashSet<>();
-
 
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
@@ -43,7 +36,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public LuckPerms api;
 
     private DatabaseManager databaseManager;
-
     public QuizManager quizManager;
 
     private void loadBookConfig() {
@@ -96,7 +88,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
 
-
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
@@ -122,6 +113,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+        this.getCommand("spawn").setExecutor(new CommandSpawn(this));
 
         this.getCommand("freeze").setExecutor(new FreezeCommand(this));
         this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
@@ -133,14 +126,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
-      
-        this.getCommand("tpa").setExecutor(new CommandTPA());
-        this.getCommand("tpa").setTabCompleter(new CommandTPA());
-        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
-        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
-        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
-        this.getCommand("spawn").setExecutor(new CommandSpawn(this));
-        /*  --------  */
 
         /* LISTENERS */
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
@@ -155,7 +140,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         saveDefaultConfig();
     }
 
-
     @Override
     public void onDisable() {
         this.databaseManager.close();
@@ -168,7 +152,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
     }
-
 
     public TeamManager getTeamManager() {
         return teamManager;
@@ -188,11 +171,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @param category the permission category
      * @param suffix the permission suffix
      * @return The formatted permission.
-     * @see PermissionCategory #PERMISSION_PREFIX
+     * @see PermissionCategory#PERMISSION_PREFIX
      */
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
     }
-
 }
