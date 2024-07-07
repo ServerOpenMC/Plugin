@@ -175,29 +175,32 @@ public final class InteractiveHelpMenu implements CommandHelpWriter<Component>, 
     ) {
         int pageCount = allEntries.getPageSize(pageSize);
         int index = coerce(page, 1, pageCount);
-        sendTopBar(target, helpCommand, prefix);
+
+        Component totalComponent = Component.empty().append(sendTopBar(target, helpCommand, prefix));
+        Component commandComponent = Component.empty();
         CommandHelp<Component> helpPage = allEntries.paginate(index, pageSize);
         for (Component component : helpPage) {
-            target.sendMessage(component);
+            commandComponent = commandComponent.append(component).append(Component.newline());
         }
-        sendBottomBar(target, index, pageCount, page, helpCommand);
+        totalComponent = totalComponent.append(commandComponent)
+                .append(sendBottomBar(target, index, pageCount, page, helpCommand));
+        target.sendMessage(totalComponent);
     }
 
-    private static void sendTopBar(Audience audience, ExecutableCommand command, String prefix) {
-        Component bar = Component.text(prefix + " §8» §fListe des commandes")
+    private static Component sendTopBar(Audience audience, ExecutableCommand command, String prefix) {
+        return Component.text(prefix + " §8» §fListe des commandes")
                 .appendNewline();
-        audience.sendMessage(bar);
     }
 
-    private static void sendBottomBar(Audience audience, int index, int pageSize, int currentPage, ExecutableCommand command) {
+    private static Component sendBottomBar(Audience audience, int index, int pageSize, int currentPage, ExecutableCommand command) {
         String previous = "/" + command.getPath().toRealString() + " " + (currentPage - 1);
         String next = "/" + command.getPath().toRealString() + " " + (currentPage + 1);
-        Component bar = Component.text()
+        return Component.text()
                 .appendNewline()
                 .append(currentPage <= 1 ? lg("§8[§7§m« Page précédente §8]")
-                                .hoverEvent(HoverEvent.showText(lg("&cCeci est la première page")))
-                                : lg("§8[§e« Page précédente §8]").clickEvent(ClickEvent.runCommand(previous))
-                                .hoverEvent(HoverEvent.showText(lg("&aPage précédente"))))
+                        .hoverEvent(HoverEvent.showText(lg("&cCeci est la première page")))
+                        : lg("§8[§e« Page précédente §8]").clickEvent(ClickEvent.runCommand(previous))
+                        .hoverEvent(HoverEvent.showText(lg("&aPage précédente"))))
                 .append(lg("&r &8■ &r"))
                 .append(
                         currentPage >= pageSize ? lg("§8[§7§mPage suivante »§8]")
@@ -206,13 +209,6 @@ public final class InteractiveHelpMenu implements CommandHelpWriter<Component>, 
                                 .hoverEvent(HoverEvent.showText(lg("&aPage suivante")))
                 )
                 .build();
-
-//        Component bar = Component.text()
-//                .append(lg("&7&m-------&a ("))
-//                .append(lg((index == pageSize ? "&2" : "&e") + index + "&7/&2" + pageSize))
-//                .append(lg("&a) &7&m-------"))
-//                .build();
-        audience.sendMessage(bar);
     }
 
     @Override

@@ -20,9 +20,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.command.ExecutableCommand;
 import revxrsal.commands.help.CommandHelp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Command({"team", "ekip", "gang", "clan", "faction", "guild", "equipe", "tribu"})

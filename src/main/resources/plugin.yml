@@ -11,9 +11,6 @@ commands:
     description: Téléportation aléatoire
     permission: ayw.command.rtp
     aliases: randomteleportation
-  money:
-    description: Manage your money
-    usage: /money [transfer <player> <amount>]
   credit:
     description: Affiche les crédits du plugin
   link:
