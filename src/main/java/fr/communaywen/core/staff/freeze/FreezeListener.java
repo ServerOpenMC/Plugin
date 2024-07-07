@@ -37,7 +37,7 @@ public class FreezeListener implements Listener {
         if (plugin.getFrozenPlayers().contains(playerUUID)) {
             int banDurationDays = plugin.getBanDuration();
             Date banDuration = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(banDurationDays));
-            Bukkit.getBanList(BanList.Type.NAME).addBan(player.getName(), "Vous avez été banni pour déconnexion en étant freeze pandant ", banDuration, "Anti Déco Freeze");
+            Bukkit.getBanList(BanList.Type.NAME).addBan(player.getName(), "Déconnexion en étant freeze !", banDuration, "Anti Déco Freeze");
             plugin.getFrozenPlayers().remove(playerUUID);
 
         }
