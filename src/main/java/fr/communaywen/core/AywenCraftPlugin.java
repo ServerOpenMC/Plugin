@@ -12,6 +12,7 @@ import fr.communaywen.core.tpa.CommandTpdeny;
 
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.freeze.FreezeListener;
@@ -46,6 +47,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public LuckPerms api;
 
     private BukkitAudiences adventure;
+    private InteractiveHelpMenu interactiveHelpMenu;
 
     private BukkitCommandHandler handler;
 
@@ -111,6 +113,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /*  COMMANDS  */
 
         this.handler = BukkitCommandHandler.create(this);
+        this.interactiveHelpMenu = InteractiveHelpMenu.create();
+        this.handler.accept(interactiveHelpMenu);
 
         this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
                 new TeamCommand());
@@ -198,6 +202,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return databaseManager;
     }
 
+    public InteractiveHelpMenu getInteractiveHelpMenu() {
+        return interactiveHelpMenu;
+    }
+
     public static AywenCraftPlugin getInstance() {
         return instance;
     }
@@ -214,5 +222,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
     }
+
+
 
 }
