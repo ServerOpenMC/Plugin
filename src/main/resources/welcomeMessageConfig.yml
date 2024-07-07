@@ -1,5 +1,33 @@
-title: "Bienvenue !"
-subtitle: "Merci de ne pas grief et de lire les règles"
-fadeIn: 30
-stay: 70
-fadeOut: 20
+# you can add/modify the configuration below to add your own message at the player's connection/modify one of the already created
+
+first_join_title:
+  type: "title"
+  execute_onfisrt_join: true
+  config:
+    title: "Bienvenue !"
+    subtitle: "Merci de ne pas grief"
+    fadeIn: 30
+    stay: 70
+    fadeOut: 20
+
+join_title:
+  type: "title"
+  execute_onfisrt_join: false
+  config:
+    title: "Bienvenue !"
+    subtitle: "Merci de ne pas grief"
+    fadeIn: 30
+    stay: 70
+    fadeOut: 20
+
+first_join_chat:
+  type: "chat"
+  execute_onfisrt_join: true
+  config:
+    content: "Bienvenue sur le serveur Open MC !\n Merci le lire les règles\n -> /rules"
+
+join_chat:
+  type: "chat"
+  execute_onfisrt_join: false
+  config:
+    content: "Bienvenue sur le serveur Open MC !"

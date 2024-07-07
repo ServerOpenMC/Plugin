@@ -16,6 +16,7 @@ import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.freeze.FreezeListener;
 
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -25,6 +26,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -39,10 +42,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
-    private EconomyManager economyManager;
+    public EconomyManager economyManager;
     public LuckPerms api;
 
+    private BukkitAudiences adventure;
+
+    private BukkitCommandHandler handler;
+
     private DatabaseManager databaseManager;
+
+    public QuizManager quizManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -71,6 +80,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
+        quizManager = new QuizManager(this, loadQuizzes());
+
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
 
@@ -88,6 +99,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
+
+        this.adventure = BukkitAudiences.create(this);
         /* ----- */
 
         String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
@@ -96,9 +109,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
 
         /*  COMMANDS  */
-        this.getCommand("version").setExecutor(new VersionCommand(this));
-        this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
-        this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
+
+        this.handler = BukkitCommandHandler.create(this);
+
+        this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
+                new TeamCommand());
+
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
         this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
         this.getCommand("credit").setExecutor(new CreditCommand());
@@ -115,14 +131,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("freeze").setExecutor(new FreezeCommand(this));
         this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
 
-        PluginCommand teamCommand = this.getCommand("team");
-        teamCommand.setExecutor(new TeamCommand());
-        teamCommand.setTabCompleter(new TeamCommand());
+
 
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
-      
+
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpa").setTabCompleter(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
@@ -134,20 +148,39 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
-        getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
+        //getServer().getPluginManager().registerEvents(new SleepListener(),this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
+        getServer().getPluginManager().registerEvents(new Insomnia(), this);
+        getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
     }
 
+    private FileConfiguration loadQuizzes() {
+        File quizzesFile = new File(getDataFolder(), "quizzes.yml");
+        if (!quizzesFile.exists()) {
+            saveResource("quizzes.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(quizzesFile);
+    }
+
+    public BukkitCommandHandler getHandler() {
+        return handler;
+    }
+
+    public BukkitAudiences getAdventure() {
+        return adventure;
+    }
 
     @Override
     public void onDisable() {
+        System.out.println("DISABLE");
         this.databaseManager.close();
+        this.quizManager.close();
     }
 
     public Set<UUID> getFrozenPlayers() {
@@ -177,7 +210,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @param category the permission category
      * @param suffix the permission suffix
      * @return The formatted permission.
-     * @see PermissionCategory#PERMISSION_PREFIX
+     * @see PermissionCategory #PERMISSION_PREFIX
      */
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {

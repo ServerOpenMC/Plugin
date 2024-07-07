@@ -4,19 +4,9 @@ main: fr.communaywen.core.AywenCraftPlugin
 api-version: '1.20'
 
 commands:
-  version:
-    description: Affiche la version du plugin.
-  team:
-    description: Commande pour gérer les équipes
-    permission: ayw.command.teams
-    permission-message: "Vous n'avez pas la permission d'utiliser cette commande."
   prout:
     description: Prout !
     permission: ayw.command.prout
-  rules:
-    description: Affiche les règles.
-    permission: ayw.command.rules
-    aliases: regles
   rtp:
     description: Téléportation aléatoire
     permission: ayw.command.rtp
@@ -85,4 +75,12 @@ permissions:
   openmc.staff.freeze:
     description: 'Ensemble de commandes pour freeze un joueur'
     default: false
-
+  aywencraft.antivpn.notification:
+    description: 'Permission to receive VPN connection notifications'
+    default: op
+  aywencraft.antivpn.bypass:
+    description: 'Permission to bypass VPN check'
+    default: false
+  ayw.command.spawn:
+    description: 'spawn'
+    default: true
