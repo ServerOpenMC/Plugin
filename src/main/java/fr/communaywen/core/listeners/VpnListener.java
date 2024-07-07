@@ -25,7 +25,7 @@ public class VpnListener implements Listener {
     }
 
     @EventHandler
-    public void OnPlayerJoin(PlayerLoginEvent event) {
+    public void OnPlayerJoin(PlayerJoinEvent event) {
 
         Player player = event.getPlayer();
 
