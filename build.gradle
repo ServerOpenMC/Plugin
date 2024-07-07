@@ -27,7 +27,6 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
     implementation 'dev.xernas:menulib:1.1.0'
-    // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
     implementation 'org.json:json:20210307'
     compileOnly 'net.luckperms:api:5.4'
@@ -61,7 +60,6 @@ processResources {
         expand props
     }
 }
-
 
 jar {
     destinationDirectory.set(file("./builds/"))
