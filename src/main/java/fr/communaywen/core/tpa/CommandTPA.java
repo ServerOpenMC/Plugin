@@ -44,6 +44,7 @@ public class CommandTPA implements CommandExecutor, TabCompleter {
             Player receiver = Bukkit.getPlayerExact(args[0]);
             if (receiver == null) {
                 player.sendMessage("Impossible de trouver le joueur «"+args[0]+"»");
+              
                 return false;
             }
 
