@@ -54,6 +54,9 @@ commands:
     description: Unfreeze un joueur
     usage: /unfreeze [joueur]
     permission: openmc.staff.freeze
+  spawn:
+    description: Téléportation au spawn
+    permission: ayw.command.spawn
 
 permissions:
   ayw.admin.version:
@@ -73,7 +76,7 @@ permissions:
     default: true
   ayw.command.rtp:
     description: 'rtp'
-    default: true
+    default: false
   ayw.command.feed:
     description: 'feed'
     default: true
@@ -83,4 +86,6 @@ permissions:
   openmc.staff.freeze:
     description: 'Ensemble de commandes pour freeze un joueur'
     default: false
-
+  ayw.command.spawn:
+    description: 'spawn'
+    default: true
