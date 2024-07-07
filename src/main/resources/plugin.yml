@@ -19,8 +19,7 @@ commands:
     aliases: regles
   rtp:
     description: Téléportation aléatoire
-    permission: ayw.command.rtp
-    aliases: randomteleportation
+    permission: op
   money:
     description: Manage your money
     usage: /money [transfer <player> <amount>]
@@ -46,6 +45,9 @@ commands:
   tpcancel:
     description: tpcancel
     permission: ayw.command.tpa
+  spawn:
+    description: Téléportation au spawn
+    permission: ayw.command.spawn
 
 permissions:
   ayw.admin.version:
@@ -63,12 +65,12 @@ permissions:
   ayw.command.rules:
     description: 'Rules'
     default: true
-  ayw.command.rtp:
-    description: 'rtp'
-    default: true
   ayw.command.feed:
     description: 'feed'
     default: true
   ayw.command.tpa:
     description: 'tpa'
+    default: true
+  ayw.command.spawn:
+    description: 'Téléportation au spawn'
     default: true
