@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
@@ -27,6 +28,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,6 +53,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private static AywenCraftPlugin instance;
     public EconomyManager economyManager;
     public LuckPerms api;
+    public ScoreboardManagers scoreboardManagers;
 
     private BukkitAudiences adventure;
     private InteractiveHelpMenu interactiveHelpMenu;
@@ -88,6 +91,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
+        scoreboardManagers = new ScoreboardManagers();
+
         quizManager = new QuizManager(this, loadQuizzes());
 
         OnPlayers onPlayers = new OnPlayers();
@@ -122,8 +127,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
 
-        this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
-                new TeamCommand(), new MoneyCommand(this.economyManager));
+        this.handler.register(
+                new SpawnCommand(this),
+                new VersionCommand(this),
+                new RulesCommand(bookConfig),
+                new TeamCommand(),
+                new ScoreboardCommand(),
+                new MoneyCommand(this.economyManager));
 
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
         this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
@@ -149,6 +159,17 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
         /*  --------  */
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    if(!scoreboardManagers.disableSBPlayerList.contains(player)) {
+                        scoreboardManagers.setScoreboard(player);
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);

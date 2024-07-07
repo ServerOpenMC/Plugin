@@ -1,5 +1,6 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,5 +48,8 @@ public class WelcomeMessage implements Listener {
                 }
             }
         }
+
+        AywenCraftPlugin.getInstance().scoreboardManagers.setScoreboard(player);
+
     }
 }
