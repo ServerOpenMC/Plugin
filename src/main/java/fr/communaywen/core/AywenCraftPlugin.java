@@ -114,7 +114,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
-        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("freeze").setExecutor(new FreezeCommand());
 
         PluginCommand teamCommand = this.getCommand("team");
         teamCommand.setExecutor(new TeamCommand());
