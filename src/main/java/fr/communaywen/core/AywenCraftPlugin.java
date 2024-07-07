@@ -42,7 +42,7 @@ import java.util.UUID;
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    public ArrayList<Player> frozenPlayers = new ArrayList<>();
+    public static ArrayList<Player> frozenPlayers = new ArrayList<>();
 
 
     private MOTDChanger motdChanger;
