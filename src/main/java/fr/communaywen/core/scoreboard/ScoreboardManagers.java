@@ -36,7 +36,7 @@ public class ScoreboardManagers {
 
         Score pseudo = objective.getScore("§8• §fPseudo§7: §b" + player.getName());
         Score money = objective.getScore("§8• §fArgent§7: §6" + AywenCraftPlugin.getInstance().economyManager.getBalance(player));
-        Score grade = objective.getScore("§8• §fGrade§7: " + userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§"));
+        Score grade = objective.getScore("§8• §fGrade§7: §&" + userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§"));
         Score team = objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucun team."));
 
         vide1.setScore(10);
