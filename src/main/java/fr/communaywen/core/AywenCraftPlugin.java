@@ -39,7 +39,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
-    private EconomyManager economyManager;
+    public EconomyManager economyManager;
     public LuckPerms api;
 
     private DatabaseManager databaseManager;
@@ -175,7 +175,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @param category the permission category
      * @param suffix the permission suffix
      * @return The formatted permission.
-     * @see PermissionCategory#PERMISSION_PREFIX
+     * @see PermissionCategory #PERMISSION_PREFIX
      */
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
