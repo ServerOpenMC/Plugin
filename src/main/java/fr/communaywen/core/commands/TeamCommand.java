@@ -9,12 +9,16 @@ import fr.communaywen.core.teams.menu.TeamMenu;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.teams.utils.TeamUtils;
 import fr.communaywen.core.utils.CommandUtils;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
+import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+import revxrsal.commands.command.ExecutableCommand;
+import revxrsal.commands.help.CommandHelp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,18 @@ public class TeamCommand {
 
     TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
 
+    @DefaultFor("~")
+    public void sendHelp(BukkitCommandActor actor, ExecutableCommand command) {
+        String helpCommandPath = command.getPath().toRealString() + " help";
+        actor.getCommandHandler().dispatch(actor, helpCommandPath);
+    }
+
+    @Subcommand("help")
+    @Description("Afficher l'aide")
+    public void sendHelp(BukkitCommandActor sender, CommandHelp<Component> help, ExecutableCommand thisHelpCommand, @Default("1") @Range(min = 1) int page) {
+        Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
+        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§b§lTEAM");
+    }
 
     @Subcommand("menu")
     @Description("Menu de la team")
