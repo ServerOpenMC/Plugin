@@ -81,7 +81,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
-        quizManager = new QuizManager(loadQuizzes());
+        quizManager = new QuizManager(this, loadQuizzes());
 
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);

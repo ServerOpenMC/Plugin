@@ -12,14 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class QuizManager {
     public static Quiz currentQuiz;
-
     public ScheduledExecutorService executor;
-
     private List<Quiz> quizzes;
-
     public FileConfiguration config;
+    private AywenCraftPlugin plugin;
 
-    public QuizManager(FileConfiguration config) {
+    public QuizManager(AywenCraftPlugin plugin, FileConfiguration config) {
+        this.plugin = plugin;
         this.config = config;
         this.quizzes = new ArrayList<>();
 
@@ -62,6 +61,7 @@ public class QuizManager {
         if (event.getMessage().toLowerCase().equals(currentQuiz.answer)) {
             String message = MessageFormat.format("{0} a trouvé la réponse en premier, il remporte {1} de monnaie", event.getPlayer().getDisplayName(), money);
             Bukkit.broadcastMessage(message);
+            this.plugin.economyManager.addBalance(event.getPlayer(), money);
             currentQuiz = null;
             this.executor.shutdownNow();
             this.executor = Executors.newScheduledThreadPool(1);
