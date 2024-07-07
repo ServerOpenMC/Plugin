@@ -22,7 +22,7 @@ public class ScoreboardManagers {
         ScoreboardManager scoreboardManagers = Bukkit.getScoreboardManager();
         Scoreboard scoreboard = scoreboardManagers.getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy");
-        objective.setDisplayName("%img_openmc%");
+        objective.setDisplayName("\uE253");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         TeamManager teams = AywenCraftPlugin.getInstance().getTeamManager();
         boolean teambool = teams.isInTeam(player.getUniqueId());
