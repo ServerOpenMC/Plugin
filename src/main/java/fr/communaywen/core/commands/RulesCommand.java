@@ -1,18 +1,18 @@
 package fr.communaywen.core.commands;
 
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.List;
 
 
-public class RulesCommand implements CommandExecutor {
+public class RulesCommand {
 
     private final FileConfiguration bookConfig;
 
@@ -20,31 +20,21 @@ public class RulesCommand implements CommandExecutor {
         this.bookConfig = bookConfig;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("Seul un joueur peut executer cette commande !");
-            return false;
-        }
-
+    @Command({"rules", "regles", "reglement"})
+    @Description("Affiche le règlement du serveur")
+    @CommandPermission("ayw.command.rules")
+    public void onCommand(Player player) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
-
         meta.setTitle(bookConfig.getString("title"));
         meta.setAuthor(bookConfig.getString("author"));
-
         List<String> pages = bookConfig.getStringList("pages");
-
         for (int i = 0; i < pages.size(); i++) {
             pages.set(i, pages.get(i).replace("\\n", "\n"));
         }
-
         meta.setPages(pages);
-
         book.setItemMeta(meta);
-
-        ((Player) sender).openBook(book);
-
-        return true;
+        player.openBook(book);
     }
+
 }
