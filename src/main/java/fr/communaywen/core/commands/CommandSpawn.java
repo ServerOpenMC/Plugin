@@ -26,8 +26,8 @@ public class CommandSpawn implements CommandExecutor {
 
         // Load configuration values
         X = plugin.getConfig().getDouble("spawn.x");
-        Y = plugin.getConfig().getInt("spawn.x");
-        Z = plugin.getConfig().getInt("spawn.x");
+        Y = plugin.getConfig().getInt("spawn.y");
+        Z = plugin.getConfig().getInt("spawn.z");
         WORLD = plugin.getConfig().getString("spawn.world");
 
     }
