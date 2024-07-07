@@ -33,7 +33,8 @@ public class VpnListener implements Listener {
             return;
         }
 
-        String ip = Objects.requireNonNull(player.getAddress()).toString();
+        String ip = player.getAddress().getAddress().getHostAddress();
+
 
         new BukkitRunnable() {
             @Override
