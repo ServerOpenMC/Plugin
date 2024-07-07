@@ -43,6 +43,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public LuckPerms api;
 
     private DatabaseManager databaseManager;
+    private FallingBlocksExplosionManager fbeManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -88,6 +89,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
+        fbeManager = new FallingBlocksExplosionManager();
         /* ----- */
 
         String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
@@ -127,6 +129,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+
+        //TEMPO
+        this.getCommand("fboom").setExecutor(new FBoomCommand());
         /*  --------  */
 
         /* LISTENERS */
@@ -137,6 +142,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
+        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
+        getServer().getPluginManager().registerEvents(new ThorHammer(), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -163,6 +170,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public FallingBlocksExplosionManager getFbeManager() {
+        return fbeManager;
     }
 
     public static AywenCraftPlugin getInstance() {
