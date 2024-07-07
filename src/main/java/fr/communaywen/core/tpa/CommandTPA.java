@@ -46,13 +46,19 @@ public class CommandTPA implements CommandExecutor, TabCompleter {
                 player.sendMessage("Impossible de trouver le joueur «"+args[0]+"»");
                 return false;
             }
+
+            if(player == receiver){
+                player.sendMessage("Tu ne peux pas faire une demande de téléportation à toi-même !");
+                return false;
+            }
+
             tpQueue.TPA_REQUESTS.put(receiver, player);
             tpQueue.TPA_REQUESTS2.put(player, receiver);
             player.sendMessage("Vous avez envoyé une demande de tpa à " + receiver.getName());
 
             final TextComponent textComponent = Component.text(player.getName() + " vous a envoyé un demande de téléportation faites /tpaccept pour l'accepter")
                     .color(TextColor.color(255,255,255))
-                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "tpaccept"))
+                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"))
                     .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour accepter§7]")));
 
             plugin.getAdventure().player(receiver).sendMessage(textComponent);
