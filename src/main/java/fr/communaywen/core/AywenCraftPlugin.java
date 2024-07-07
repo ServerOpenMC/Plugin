@@ -157,7 +157,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        System.out.println("DISABLE");
         this.databaseManager.close();
+        this.quizManager.close();
     }
 
     public Set<UUID> getFrozenPlayers() {
