@@ -24,10 +24,9 @@ public class RTPCommand implements CommandExecutor {
     private final int COOLDOWN_ERROR;
     private final int MIN_X;
     private final int MAX_X;
-    private int MIN_Y;
-    private int MAX_Y;
     private final int MIN_Z;
     private final int MAX_Z;
+    private int MAX_TRY;
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
@@ -43,8 +42,7 @@ public class RTPCommand implements CommandExecutor {
         MAX_X = plugin.getConfig().getInt("rtp.maxx");
         MIN_Z = plugin.getConfig().getInt("rtp.minz");
         MAX_Z = plugin.getConfig().getInt("rtp.maxz");
-	    plugin.getConfig().options().copyDefaults(true);
-	    plugin.saveConfig();
+        MAX_TRY = plugin.getConfig().getInt("rtp.max_try");
 	    
     }
 
@@ -66,25 +64,25 @@ public class RTPCommand implements CommandExecutor {
                 }
             }
             World world = player.getWorld();
-            int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
-            int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-            if (!world.getBiome(new Location(world, x, 64, z)).equals(Biome.RIVER) || !world.getBiome(new Location(world, x, 64, z)).toString().contains("OCEAN")) {
-                int y = world.getHighestBlockAt(new Location(world, x, 64, z)).getY();
-                Location location = new Location(world, x, y+1, z);
-                if (new Location(world, x, y, z).getBlock().getType().isSolid()){
-                    player.teleport(location);
-                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " " + (System.currentTimeMillis() - ExactTime)/1000 + "s");
-                    cooldowns.put(playerId, Time);
-                    return true;
+            for (int i=1; i<=MAX_TRY;i++) {
+                int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
+                int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
+                if (!world.getBiome(new Location(world, x, 64, z)).equals(Biome.RIVER) || !world.getBiome(new Location(world, x, 64, z)).toString().contains("OCEAN")) {
+                    int y = world.getHighestBlockAt(new Location(world, x, 64, z)).getY();
+                    Location location = new Location(world, x, y+1, z);
+                    if (new Location(world, x, y, z).getBlock().getType().isSolid()){
+                        player.teleport(location);
+                        player.sendMessage(" §aRTP réussi x: §f" + x + " §ay: §f" + y + " §az: §f" + z );
+                        player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z );
+                        cooldowns.put(playerId, Time);
+                        return true;
+                    }
                 }
-                else{
+                if (i==3){
                     player.sendTitle(" §cErreur","/rtp");
                     cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-                    return true;
                 }
             }
-            player.sendTitle(" §cErreur","/rtp");
-            cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
         }
 
         return true;
