@@ -1,79 +1,55 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.teams.Team;
+import fr.communaywen.core.teams.menu.TeamMenu;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import revxrsal.commands.annotation.*;
+import revxrsal.commands.bukkit.BukkitCommandActor;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
+import revxrsal.commands.command.ExecutableCommand;
+import revxrsal.commands.help.CommandHelp;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoneyCommand implements CommandExecutor, TabCompleter {
+@Command("money")
+@Description("Transférer de l'argent entre joueurs")
+public class MoneyCommand {
     private final EconomyManager economyManager;
 
     public MoneyCommand(EconomyManager economyManager) {
         this.economyManager = economyManager;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be run by a player.");
-            return true;
-        }
-
-        Player player = (Player) sender;
-
-        if (args.length == 0) {
-            player.sendMessage("Balance: " + economyManager.getBalance(player));
-            return true;
-        }
-
-        if (args.length == 3 && args[0].equalsIgnoreCase("transfer")) {
-            Player target = Bukkit.getPlayer(args[1]);
-            double amount;
-
-            try {
-                amount = Double.parseDouble(args[2]);
-            } catch (NumberFormatException e) {
-                player.sendMessage("Invalid amount.");
-                return true;
-            }
-
-            if (target != null && economyManager.transferBalance(player, target, amount)) {
-                player.sendMessage("Transferred " + amount + " to " + target.getName());
-                target.sendMessage("Received " + amount + " from " + player.getName());
-            } else {
-                player.sendMessage("Transfer failed.");
-            }
-
-            return true;
-        }
-
-        player.sendMessage("Usage: /money [transfer <player> <amount>]");
-        return true;
+    @DefaultFor("~")
+    public void balance(Player player) {
+        player.sendMessage("Balance: " + economyManager.getBalance(player));
     }
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 
-        List<String> tab = new ArrayList<>();
-
-        if(args.length == 1) {
-            tab.add("transfer");
-        } else if(args.length == 2) {
-          for(Player players : Bukkit.getOnlinePlayers()) {
-              tab.add(players.getName());
-          }
-        } else if(args.length == 3) {
-            tab.add("<amout>");
-        }
-
-        return tab;
+    @Subcommand("help")
+    @Description("Afficher l'aide")
+    public void sendHelp(BukkitCommandActor sender, CommandHelp<Component> help, ExecutableCommand thisHelpCommand, @Default("1") @Range(min = 1) int page) {
+        Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
+        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§b§lTEAM");
     }
+
+    @Subcommand("transfer")
+    @Description("Transférer de l'argent à un joueur")
+    public void transfer(Player player, @Named("joueur") Player target, int amount) {
+        if (economyManager.transferBalance(player, target, amount)) {
+            player.sendMessage("Transféré " + amount + " à " + target.getName());
+            target.sendMessage("Reçu " + amount + " de " + player.getName());
+        } else {
+            player.sendMessage("Transfert échoué.");
+        }
+    }
+
+
+
 
 }

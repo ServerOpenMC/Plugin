@@ -123,7 +123,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.accept(interactiveHelpMenu);
 
         this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
-                new TeamCommand());
+                new TeamCommand(), new MoneyCommand(this.economyManager));
 
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
         this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
@@ -131,8 +131,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("exploderandom").setExecutor(new ExplodeRandomCommand());
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
-        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
-        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
         this.getCommand("tpa").setExecutor(new CommandTPA(this));
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
