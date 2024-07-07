@@ -5,7 +5,7 @@
 > **Ce guide a pour but de donner des normes pour l'ensemble du projet afin de le rendre plus simple à lire et contribuer**
 
 ## 📖 Code de conduite
-Merci de lire notre [Code de conduite](https://github.com/Margouta/PluginOpenMC/blob/main/CONTRIBUTING.md) pour assurer un moment convivial à tous les contributeurs
+Merci de lire notre [Code de conduite](https://github.com/Margouta/PluginOpenMC/blob/main/CODE_OF_CONDUCT.md) pour assurer un moment convivial à tous les contributeurs
 
 ## 📥 Ouvrir une Issue
 Avant de créer une issue, soyez sûr d'avoir la version la plus récente du plugin

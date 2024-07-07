@@ -47,6 +47,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     private DatabaseManager databaseManager;
 
+    public QuizManager quizManager;
+
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
         if (!bookFile.exists()) {
@@ -63,6 +65,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
     }
 
+    private FileConfiguration loadQuizzes() {
+        File quizzesFile = new File(getDataFolder(), "quizzes.yml");
+        if (!quizzesFile.exists()) {
+            saveResource("quizzes.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(quizzesFile);
+    }
+
     @Override
     public void onEnable() {
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
@@ -73,6 +83,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* UTILS */
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
+
+        quizManager = new QuizManager(this, loadQuizzes());
 
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
@@ -129,6 +141,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+        this.getCommand("spawn").setExecutor(new CommandSpawn(this));
         /*  --------  */
 
         /* LISTENERS */
@@ -136,7 +149,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
         /* --------- */

@@ -8,6 +8,7 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
@@ -19,7 +20,9 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
-    mavenLocal()
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
@@ -30,6 +33,7 @@ dependencies {
     implementation 'org.json:json:20210307'
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
 }
 
 def targetJavaVersion = 21
