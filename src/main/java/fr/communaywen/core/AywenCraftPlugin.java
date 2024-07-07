@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
@@ -137,6 +138,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
         this.getCommand("freeze").setExecutor(new FreezeCommand());
+        this.getCommand("players").setExecutor(new PlayersCommand());
 
 
 

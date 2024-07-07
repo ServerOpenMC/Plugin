@@ -12,7 +12,7 @@ public class FreezeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (!player.hasPermission("openmc.staff.freeze")) {
+            if (player.hasPermission("openmc.staff.freeze")) {
                 if (args.length == 1) {
                     Player target = player.getServer().getPlayer(args[0]);
                     

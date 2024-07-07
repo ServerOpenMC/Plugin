@@ -16,9 +16,9 @@ public class PlayersCommand implements CommandExecutor {
 				return false;
 			}
 			PlayersMenuUtils.openPlayersMenu(player);
+			return true;
 		 } else {
 			 return false;
 		 }
-		 return true;
 	}
 }
