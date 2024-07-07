@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoneyCommand implements CommandExecutor, TabCompleter {
@@ -60,13 +61,19 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 
+        List<String> tab = new ArrayList<>();
+
         if(args.length == 1) {
-            return List.of("transfer");
+            tab.add("transfer");
+        } else if(args.length == 2) {
+          for(Player players : Bukkit.getOnlinePlayers()) {
+              tab.add(players.getName());
+          }
         } else if(args.length == 3) {
-            return List.of("<amout>");
+            tab.add("<amout>");
         }
 
-        return List.of();
+        return tab;
     }
 
 }
