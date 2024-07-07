@@ -25,7 +25,7 @@ public class VpnListener implements Listener {
     }
 
     @EventHandler
-    public void OnPlayerJoin(PlayerJoinEvent event) {
+    public void OnPlayerJoin(PlayerLoginEvent event) {
 
         Player player = event.getPlayer();
 
@@ -58,12 +58,17 @@ public class VpnListener implements Listener {
                     if (response.contains("\"proxy\":true")) {
                         Bukkit.getScheduler().runTask(plugin, () -> {
                             player.kickPlayer(  "§l§cOpenMc - Sécuritée\n" +
+                                    "\n" +
                                     "§l§eConnexion Non Permise !§r\n" +
+                                    "\n" +
                                     "§6Vous essayez actuellement de vous connecter au serveur\n" +
                                     "§6avec un vpn ou un proxy.\n" +
+                                    "\n" +
                                     "§3Merci de le désactiver et de réessayer\n" +
+                                    "\n" +
                                     "§cSi vous pensez qu'il s'agit d'une erreur, vous pouvez\n" +
                                     "§cavoir de l'assistance sur discord.gg/aywen");
+
                             Bukkit.broadcast(ChatColor.YELLOW + event.getPlayer().getName() + " a essayé de se connecter mais il avait un vpn.",
                                     "aywencraft.antivpn.notification");
                         });
