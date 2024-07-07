@@ -1,6 +1,5 @@
 package fr.communaywen.core.staff.freeze;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.FreezeUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
