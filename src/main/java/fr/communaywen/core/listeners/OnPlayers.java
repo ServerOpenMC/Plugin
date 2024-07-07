@@ -3,7 +3,6 @@ package fr.communaywen.core.listeners;
 import fr.communaywen.core.utils.DraftAPI;
 import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
-import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import org.bukkit.entity.Player;
@@ -14,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class OnPlayers implements Listener {
 
@@ -37,18 +37,25 @@ public class OnPlayers implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) throws IOException { // Donne une permissions en fonction du niveau
+    public void onPlayerJoin(PlayerJoinEvent event) throws IOException, SQLException { // Donne une permissions en fonction du niveau
         Player player = event.getPlayer();
         DraftAPI draftAPI = new DraftAPI();
 
         JSONObject data = new JSONObject(draftAPI.getTop());
         JSONArray users = data.getJSONArray("users");
 
+        String DiscordPlayerId = this.linkerAPI.getUserId(player);
+
+        if (DiscordPlayerId.isEmpty()){
+            player.sendMessage("Profitez de récompenses en lient votre compte Discord à Minecraft");
+            return;
+        }
+
         for (int i = 0; i < users.length(); i++) {
             JSONObject user = users.getJSONObject(i);
             String discordId = user.getString("id");
 
-            if (this.linkerAPI.getUserId(player).equals(discordId)){
+            if (DiscordPlayerId.equals(discordId)){
                 User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
 
                 int level = user.getInt("level");
@@ -67,6 +74,7 @@ public class OnPlayers implements Listener {
                 if (level >= 50) {
                     addPermission(lpPlayer, "ayw.levels.50");
                 }
+                return;
             }
         }
     }

@@ -13,3 +13,5 @@ rtp:
   max_try: 3
 feed:
   cooldown: 60
+
+deco_freeze_nombre_de_jours_ban: 30

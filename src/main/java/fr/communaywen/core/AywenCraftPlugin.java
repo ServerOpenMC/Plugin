@@ -1,27 +1,23 @@
 package fr.communaywen.core;
 
-import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
-import fr.communaywen.core.economy.EconomyManager;
-import fr.communaywen.core.listeners.ChatListener;
-import fr.communaywen.core.listeners.OnPlayers;
-import fr.communaywen.core.listeners.SleepListener;
-import fr.communaywen.core.teams.TeamManager;
-import fr.communaywen.core.commands.ProutCommand;
+import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.teams.*;
+import fr.communaywen.core.utils.*;
+
 import fr.communaywen.core.tpa.CommandTPA;
 import fr.communaywen.core.tpa.CommandTpaccept;
 import fr.communaywen.core.tpa.CommandTpcancel;
 import fr.communaywen.core.tpa.CommandTpdeny;
-import fr.communaywen.core.utils.DiscordWebhook;
-import fr.communaywen.core.utils.LinkerAPI;
-import fr.communaywen.core.utils.MOTDChanger;
-import fr.communaywen.core.commands.VersionCommand;
-import fr.communaywen.core.utils.PermissionCategory;
+
+import fr.communaywen.core.economy.EconomyManager;
+import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.staff.freeze.FreezeCommand;
+import fr.communaywen.core.staff.freeze.FreezeListener;
+
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import fr.communaywen.core.commands.RTPCommand;
-import fr.communaywen.core.utils.database.DatabaseManager;
-import fr.communaywen.core.listeners.RTPWand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,10 +25,15 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
+    private final Set<UUID> frozenPlayers = new HashSet<>();
+
 
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
@@ -51,18 +52,26 @@ public final class AywenCraftPlugin extends JavaPlugin {
         bookConfig = YamlConfiguration.loadConfiguration(bookFile);
     }
 
+    private FileConfiguration loadWelcomeMessageConfig() {
+        File welcomeMessageConfigFile = new File(getDataFolder(), "welcomeMessageConfig.yml");
+        if (!welcomeMessageConfigFile.exists()) {
+            saveResource("welcomeMessageConfig.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
+    }
+
     @Override
     public void onEnable() {
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
         saveDefaultConfig();
 
         instance = this;
-        databaseManager = new DatabaseManager(this);
 
-        LinkerAPI linkerAPI = new LinkerAPI();
+        /* UTILS */
+        databaseManager = new DatabaseManager(this);
+        LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
         OnPlayers onPlayers = new OnPlayers();
-        getServer().getPluginManager().registerEvents(onPlayers, this);
         onPlayers.setLinkerAPI(linkerAPI);
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -72,25 +81,37 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
 
         MenuLib.init(this);
+        economyManager = new EconomyManager(getDataFolder());
+        loadBookConfig();
+
 
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
+        /* ----- */
 
         String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
         String botName = "Annonce Serveur";
         String botAvatarUrl = "https://media.discordapp.net/attachments/1161296445169741836/1258408047412383804/image.png?ex=66889812&is=66874692&hm=4bb38f7b6460952afc21811f7145a6b289d7210861d81d91b1ca8ee264f0ab0d&=&format=webp&quality=lossless&width=1131&height=662";
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
-        getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
 
+        /*  COMMANDS  */
         this.getCommand("version").setExecutor(new VersionCommand(this));
-
-        loadBookConfig();
         this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
         this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
-
         this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
+        this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
         this.getCommand("credit").setExecutor(new CreditCommand());
+        this.getCommand("rtp").setExecutor(new RTPCommand(this));
+        this.getCommand("feed").setExecutor(new FeedCommand(this));
+        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+
+        this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
+        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+
+        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
 
         PluginCommand teamCommand = this.getCommand("team");
         teamCommand.setExecutor(new TeamCommand());
@@ -99,29 +120,41 @@ public final class AywenCraftPlugin extends JavaPlugin {
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
-        
-        this.getCommand("rtp").setExecutor(new RTPCommand(this));
-        this.getCommand("feed").setExecutor(new FeedCommand(this));
-        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
-        getServer().getPluginManager().registerEvents(new RTPWand(this), this);
+      
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpa").setTabCompleter(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+        /*  --------  */
 
-
+        /* LISTENERS */
+        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
+        getServer().getPluginManager().registerEvents(new RTPWand(this), this);
+        getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
+        getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
+        getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
+        /* --------- */
 
-        // Initialiser EconomyManager et enregistrer la commande money
-        economyManager = new EconomyManager(getDataFolder());
-        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+        saveDefaultConfig();
     }
+
 
     @Override
     public void onDisable() {
         this.databaseManager.close();
     }
+
+    public Set<UUID> getFrozenPlayers() {
+        return frozenPlayers;
+    }
+
+    public int getBanDuration() {
+        return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
+    }
+
 
     public TeamManager getTeamManager() {
         return teamManager;

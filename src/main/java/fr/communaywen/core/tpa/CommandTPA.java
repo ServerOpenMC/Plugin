@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandTPA implements CommandExecutor, TabCompleter {
-    // This method is called, when somebody uses our command
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;
 
