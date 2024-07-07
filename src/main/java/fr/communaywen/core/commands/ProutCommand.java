@@ -1,5 +1,6 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -100,6 +101,6 @@ public final class ProutCommand implements CommandExecutor {
         team.addEntry(player.getName());
         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0, false, false, true));
 
-        Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("AywenCraftPlugin"), () -> finalTeam.removeEntry(player.getName()), 600L);
+        Bukkit.getScheduler().runTaskLater(AywenCraftPlugin.getInstance(), () -> finalTeam.removeEntry(player.getName()), 600L);
     }
 }

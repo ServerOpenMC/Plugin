@@ -3,6 +3,7 @@ package fr.communaywen.core;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.Debug;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -11,8 +12,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class QuizManager {
-    public static Quiz currentQuiz;
-    public ScheduledExecutorService executor;
+    public Quiz currentQuiz;
+    private ScheduledExecutorService timeoutExecutor;
+    private ScheduledExecutorService executor;
     private List<Quiz> quizzes;
     public FileConfiguration config;
     private AywenCraftPlugin plugin;
@@ -29,7 +31,9 @@ public class QuizManager {
         };
 
         Runnable runnable = () -> {
-            this.executor = Executors.newScheduledThreadPool(1);
+            if (Bukkit.getOnlinePlayers().size() < 1) return;
+
+            this.timeoutExecutor = Executors.newScheduledThreadPool(1);
 
             int index = new Random().nextInt(this.quizzes.size());
 
@@ -46,11 +50,11 @@ public class QuizManager {
                 currentQuiz = null;
             };
 
-            this.executor.schedule(tellAnswer, 30, TimeUnit.SECONDS);
+            this.timeoutExecutor.schedule(tellAnswer, 30, TimeUnit.SECONDS);
         };
 
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(runnable, 5, config.getInt("interval"), TimeUnit.MINUTES);
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(runnable, 1, config.getInt("interval"), TimeUnit.MINUTES);
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
@@ -63,9 +67,13 @@ public class QuizManager {
             Bukkit.broadcastMessage(message);
             this.plugin.economyManager.addBalance(event.getPlayer(), money);
             currentQuiz = null;
-            this.executor.shutdownNow();
-            this.executor = Executors.newScheduledThreadPool(1);
+            this.timeoutExecutor.shutdownNow();
+            this.timeoutExecutor = Executors.newScheduledThreadPool(1);
         }
+    }
+
+    public void close() {
+        executor.shutdownNow();
     }
 
     public class Quiz {
