@@ -40,7 +40,7 @@ public class MoneyCommand {
 
     @Subcommand("transfer")
     @Description("Transférer de l'argent à un joueur")
-    public void transfer(Player player, @Named("joueur") Player target, int amount) {
+    public void transfer(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
         if (economyManager.transferBalance(player, target, amount)) {
             player.sendMessage("Transféré " + amount + " à " + target.getName());
             target.sendMessage("Reçu " + amount + " de " + player.getName());

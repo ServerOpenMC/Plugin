@@ -176,7 +176,7 @@ public final class InteractiveHelpMenu implements CommandHelpWriter<Component>, 
         int pageCount = allEntries.getPageSize(pageSize);
         int index = coerce(page, 1, pageCount);
 
-        Component totalComponent = Component.empty().append(sendTopBar(target, helpCommand, prefix));
+        Component totalComponent = Component.empty().append(sendTopBar(target, helpCommand, prefix)).appendNewline();
         Component commandComponent = Component.empty();
         CommandHelp<Component> helpPage = allEntries.paginate(index, pageSize);
         for (Component component : helpPage) {
