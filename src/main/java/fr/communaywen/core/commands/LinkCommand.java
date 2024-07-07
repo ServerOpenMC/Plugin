@@ -21,31 +21,32 @@ public class LinkCommand {
     public void onCommand(Player player) {
 
         try {
-            if(!linkerAPI.getUserId(player).isEmpty()) {
+            if (!linkerAPI.getUserId(player).isEmpty()) {
                 player.sendMessage(ChatColor.RED + "Votre compte minecraft est déjà lié à un compte Discord.");
-            }
+            } else {
+                int code = linkerAPI.generateCode();
 
-            int code = linkerAPI.generateCode();
+                linkerAPI.linkWithCode(player, code);
+                player.sendMessage("§aUtilise la commande §f/link " + code + " §asur discord pour lier votre compte.");
 
-            linkerAPI.linkWithCode(player, code);
-            player.sendMessage("§aUtilise la commande §f/link " + code + " §asur discord pour lier votre compte.");
-
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try {
-                        linkerAPI.delayRemoveCode(player);
-                        player.sendMessage("§cVous avez dépasser les 5 minutes.");
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            linkerAPI.delayRemoveCode(player);
+                            if(!linkerAPI.isVerified(player)) {
+                                player.sendMessage("§cVous avez dépasser les 5 minutes.");
+                            }
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                }
-            }.runTaskLater(AywenCraftPlugin.getInstance(), 300 * 20);
+                }.runTaskLater(AywenCraftPlugin.getInstance(), 300 * 20);
 
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 
