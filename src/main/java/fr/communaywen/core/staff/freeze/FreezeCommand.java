@@ -52,7 +52,7 @@ public class FreezeCommand implements CommandExecutor {
         }
 
         plugin.getFrozenPlayers().add(target.getUniqueId());
-        target.sendTitle(ChatColor.RED + "Vous êtes freeze !", ChatColor.YELLOW + "Regardez votre chat", 10, 70, 20);
+        target.sendTitle(ChatColor.RED + "Vous êtes freeze !", ChatColor.YELLOW + "Regardez votre chat", 10, 1000, 20);
         target.sendMessage(ChatColor.RED + "Vous êtes Freeze, si vous déconnectez, vous serez banni !");
         player.sendMessage(ChatColor.GREEN + target.getName() + " a bien été freeze.");
         return true;

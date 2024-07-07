@@ -13,5 +13,9 @@ rtp:
   max_try: 3
 feed:
   cooldown: 60
-
+spawn:
+  x: 5611.5
+  y: 65.0
+  z: 1226.5
+  world: world
 deco_freeze_nombre_de_jours_ban: 30

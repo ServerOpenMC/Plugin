@@ -54,6 +54,9 @@ commands:
     description: Unfreeze un joueur
     usage: /unfreeze [joueur]
     permission: openmc.staff.freeze
+  spawn:
+    description: Téléportation au spawn
+    permission: ayw.command.spawn
 
 permissions:
   ayw.admin.version:
@@ -83,4 +86,12 @@ permissions:
   openmc.staff.freeze:
     description: 'Ensemble de commandes pour freeze un joueur'
     default: false
-
+  aywencraft.antivpn.notification:
+    description: 'Permission to receive VPN connection notifications'
+    default: op
+  aywencraft.antivpn.bypass:
+    description: 'Permission to bypass VPN check'
+    default: false
+  ayw.command.spawn:
+    description: 'spawn'
+    default: true
