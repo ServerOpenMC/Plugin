@@ -66,7 +66,7 @@ public class RTPWand implements Listener {
     	    ItemStack item = player.getItemInHand();
     	    CustomStack customStack = CustomStack.byItemStack(item);
             if (customStack != null && customStack.getNamespacedID().equals(RTP_WAND_NAME)) {
-		event.setCancelled(true);
+		        event.setCancelled(true);
                 UUID playerId = player.getUniqueId();
                 long Time = System.currentTimeMillis() / 1000;
 
@@ -76,32 +76,26 @@ public class RTPWand implements Listener {
 
                     if (timeSinceLastUse < COOLDOWN_TIME) {
                         long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
-                        player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
                         return;
                     }
                 }
                 World world = player.getWorld();
                 int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
                 int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-                int y = 0;
+                int y = MIN_Y;
                 Location location = new Location(world, x, y, z);
+
                 if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
-                    y = world.getHighestBlockAt(x,z).getY();
-                    Location belowLocation = new Location(world, x, y - 1, z);
-                    if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
-                        player.teleport(location);
-                        player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
-                        cooldowns.put(playerId, Time);
-                        return;
-                    }
-                    else {
-                        player.sendTitle(" §cErreur","/rtp");
-                        cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-                        return;
-                    }
+                    y = world.getHighestBlockAt(location).getY();
+                    player.teleport(location);
+                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " " + (System.currentTimeMillis() / 1000 - Time) + "s");
+                    cooldowns.put(playerId, Time);
+                    player.setCooldown(item.getType(),COOLDOWN_TIME);
+                    return;
                 }
                 player.sendTitle(" §cErreur","/rtp");
                 cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
+                player.setCooldown(item.getType(),COOLDOWN_ERROR);
             }
         }
     }

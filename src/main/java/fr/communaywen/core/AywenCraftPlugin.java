@@ -104,12 +104,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setTabCompleter(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
 
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        saveDefaultConfig();
 
         // Initialiser EconomyManager et enregistrer la commande money
         economyManager = new EconomyManager(getDataFolder());

@@ -41,16 +41,11 @@ public class RTPCommand implements CommandExecutor {
         MIN_X = plugin.getConfig().getInt("rtp.minx");
         MAX_X = plugin.getConfig().getInt("rtp.maxx");
         MIN_Y = plugin.getConfig().getInt("rtp.miny");
-        MAX_Y = plugin.getConfig().getInt("rtp.maxy");
         MIN_Z = plugin.getConfig().getInt("rtp.minz");
         MAX_Z = plugin.getConfig().getInt("rtp.maxz");
         if (MIN_Y <= -64 || MIN_Y >= 319){
 		    plugin.getConfig().set("rtp.miny", 64);
 		    MIN_Y = 64;
-	    }
-	    if (MAX_Y <= -64 || MAX_Y >= 319){
-		    plugin.getConfig().set("rtp.maxy", 100);
-		    MAX_Y = 100;
 	    }
 	    plugin.getConfig().options().copyDefaults(true);
 	    plugin.saveConfig();
@@ -76,22 +71,15 @@ public class RTPCommand implements CommandExecutor {
             World world = player.getWorld();
             int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
             int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-            int y = 0;
+            int y = MIN_Y;
             Location location = new Location(world, x, y, z);
+
             if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
-                y = world.getHighestBlockAt(x,z).getY();
-                Location belowLocation = new Location(world, x, y - 1, z);
-                if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
-                    player.teleport(location);
-                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
-                    cooldowns.put(playerId, Time);
-                    return true;
-                }
-                else {
-                    player.sendTitle(" §cErreur","/rtp");
-                    cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-                    return true;
-                }
+                y = world.getHighestBlockAt(location).getY();
+                player.teleport(location);
+                player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " " + (System.currentTimeMillis() / 1000 - Time) + "s");
+                cooldowns.put(playerId, Time);
+                return true;
             }
             player.sendTitle(" §cErreur","/rtp");
             cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
