@@ -2,37 +2,42 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.scoreboard.ScoreboardManagers;
+import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
-import fr.communaywen.core.tpa.CommandTPA;
-import fr.communaywen.core.tpa.CommandTpaccept;
-import fr.communaywen.core.tpa.CommandTpcancel;
-import fr.communaywen.core.tpa.CommandTpdeny;
+import fr.communaywen.core.tpa.TPACommand;
+import fr.communaywen.core.tpa.TpacceptCommand;
+import fr.communaywen.core.tpa.TpcancelCommand;
+import fr.communaywen.core.tpa.TpdenyCommand;
 
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
-import fr.communaywen.core.staff.freeze.FreezeListener;
+import fr.communaywen.core.listeners.FreezeListener;
 
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+
+import java.util.ArrayList;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
+
 
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    private final Set<UUID> frozenPlayers = new HashSet<>();
+    public static ArrayList<Player> frozenPlayers = new ArrayList<>();
 
 
     private MOTDChanger motdChanger;
@@ -41,9 +46,17 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private static AywenCraftPlugin instance;
     public EconomyManager economyManager;
     public LuckPerms api;
+    public ScoreboardManagers scoreboardManagers;
+
+    private BukkitAudiences adventure;
+    private InteractiveHelpMenu interactiveHelpMenu;
+
+    private BukkitCommandHandler handler;
 
     private DatabaseManager databaseManager;
     private FallingBlocksExplosionManager fbeManager;
+
+    public QuizManager quizManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -72,6 +85,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
+        scoreboardManagers = new ScoreboardManagers();
+
+        quizManager = new QuizManager(this, loadQuizzes());
+
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
 
@@ -90,6 +107,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
         fbeManager = new FallingBlocksExplosionManager();
+        this.adventure = BukkitAudiences.create(this);
         /* ----- */
 
         String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
@@ -129,33 +147,73 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
-
-        //TEMPO
         this.getCommand("fboom").setExecutor(new FBoomCommand());
+
+        this.handler = BukkitCommandHandler.create(this);
+        this.interactiveHelpMenu = InteractiveHelpMenu.create();
+        this.handler.accept(interactiveHelpMenu);
+
+        this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
+                new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
+                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(), 
+                new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
+                new RTPCommand(this), new FreezeCommand(), new PlayersCommand());
+
         /*  --------  */
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    if(!scoreboardManagers.disableSBPlayerList.contains(player)) {
+                        scoreboardManagers.setScoreboard(player);
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
-        getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
+        //getServer().getPluginManager().registerEvents(new SleepListener(),this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
         getServer().getPluginManager().registerEvents(new ThorHammer(), this);
+        getServer().getPluginManager().registerEvents(new Insomnia(), this);
+        getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
     }
 
+    private FileConfiguration loadQuizzes() {
+        File quizzesFile = new File(getDataFolder(), "quizzes.yml");
+        if (!quizzesFile.exists()) {
+            saveResource("quizzes.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(quizzesFile);
+    }
+
+    public BukkitCommandHandler getHandler() {
+        return handler;
+    }
+
+    public BukkitAudiences getAdventure() {
+        return adventure;
+    }
 
     @Override
     public void onDisable() {
+        System.out.println("DISABLE");
         this.databaseManager.close();
+        this.quizManager.close();
     }
 
-    public Set<UUID> getFrozenPlayers() {
+    public ArrayList<Player> getFrozenPlayers() {
         return frozenPlayers;
     }
 
@@ -175,6 +233,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public FallingBlocksExplosionManager getFbeManager() {
         return fbeManager;
     }
+    public InteractiveHelpMenu getInteractiveHelpMenu() {
+        return interactiveHelpMenu;
+    }
 
     public static AywenCraftPlugin getInstance() {
         return instance;
@@ -192,5 +253,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
     }
+
+
 
 }
