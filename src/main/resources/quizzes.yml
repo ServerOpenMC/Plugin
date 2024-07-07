@@ -1,0 +1,20 @@
+rewards:
+  money:
+    min: 15
+    max: 150
+
+interval: 30 # Interval between two questions (in minutes)
+
+quizzes:
+  - question: "Que font 1 + 1"
+    answer: "2"
+  - question: "Que elle est la racine carrée de 25"
+    answer: "5"
+  - question: "Qui est le créateur de ce serveur minecraft"
+    answer: "Aywen"
+  - question: "Quelle est le carrée de 7"
+    answer: "10"
+  - question: "Quelle est la capitale de la France"
+    answer: "Paris"
+  - question: "J'ai plus d'idées de questions"
+    answer: "Aider moi"
