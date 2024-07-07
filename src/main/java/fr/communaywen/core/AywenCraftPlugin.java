@@ -137,6 +137,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
+        getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
