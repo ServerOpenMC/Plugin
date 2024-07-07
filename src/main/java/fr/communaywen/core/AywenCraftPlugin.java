@@ -51,6 +51,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         bookConfig = YamlConfiguration.loadConfiguration(bookFile);
     }
 
+    private FileConfiguration loadWelcomeMessageConfig() {
+        File welcomeMessageConfigFile = new File(getDataFolder(), "welcomeMessageConfig.yml");
+        if (!welcomeMessageConfigFile.exists()) {
+            saveResource("welcomeMessageConfig.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
+    }
+
     @Override
     public void onEnable() {
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
@@ -120,6 +128,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
+        getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
         /* --------- */
 
         saveDefaultConfig();
