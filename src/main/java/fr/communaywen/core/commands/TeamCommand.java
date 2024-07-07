@@ -9,187 +9,162 @@ import fr.communaywen.core.teams.menu.TeamMenu;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.teams.utils.TeamUtils;
 import fr.communaywen.core.utils.CommandUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import revxrsal.commands.annotation.*;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class TeamCommand implements CommandExecutor, TabCompleter {
+@Command({"team", "ekip", "gang", "clan", "faction", "guild", "equipe", "tribu"})
+@Description("Gestion des teams")
+@CommandPermission("ayw.command.teams")
+public class TeamCommand {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
+
+
+    @Subcommand("menu")
+    @Description("Menu de la team")
+    public void teamMenu(Player player) {
+        Team team = teamManager.isInTeam(player.getUniqueId());
+        if (team == null) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        TeamMenu teamMenu = new TeamMenu(player, team, false);
+        teamMenu.open();
+    }
+
+    @Subcommand("create")
+    @Description("Créer une team")
+    public void createTeam(Player player, @Named("nom") String teamName) {
         TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
-        if (!(sender instanceof Player player)) {
-            return CommandUtils.sendMessage(sender, "Vous devez être un joueur pour exécuter cette commande !", true);
+        if (teamManager.isInTeam(player.getUniqueId()) != null) {
+            CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
+            return;
         }
-        if (args.length == 0) {
-            Team team = teamManager.isInTeam(player.getUniqueId());
-            if (team == null) {
-                return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
-            }
-            TeamMenu teamMenu = new TeamMenu(player, team, false);
-            teamMenu.open();
+        if (teamName.length() > 16) {
+            CommandUtils.sendMessage(player, "Le nom de la team ne doit pas dépasser 16 caractères !", true);
+            return;
         }
-        if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("create")) {
-                return CommandUtils.sendMessage(sender, ChatColor.WHITE + "Usage: /team create <nom de la team>", true);
-            }
-            if (args[0].equalsIgnoreCase("list")) {
-                Menu menu = new TeamListMenu(player, teamManager);
-                menu.open();
-            }
-            if (args[0].equalsIgnoreCase("invite")) {
-                return CommandUtils.sendMessage(sender, ChatColor.WHITE + "Usage: /team invite <joueur>", true);
-            }
-            if (args[0].equalsIgnoreCase("accept")) {
-                if (teamManager.isInTeam(player.getUniqueId()) != null) {
-                    return CommandUtils.sendMessage(sender, "Vous êtes déjà dans une team !", true);
-                }
-                Team team = teamManager.acceptInvite(player.getUniqueId());
-                if (team != null) {
-                    CommandUtils.sendMessage(sender, ChatColor.GREEN + "Vous avez bien rejoint la team " + team.getName() + " !", false);
-                    for (UUID teamPlayer : team.getPlayers()) {
-                        Player teamPlayerOnline = Bukkit.getPlayer(teamPlayer);
-                        if (teamPlayerOnline != null) {
-                            CommandUtils.sendMessage(teamPlayerOnline, player.getName() + " a rejoint la team !", false);
-                        }
-                    }
-                } else {
-                    return CommandUtils.sendMessage(sender, "Vous n'avez pas d'invitation en attente !", true);
-                }
-            }
-            if (args[0].equalsIgnoreCase("kick")) {
-                return CommandUtils.sendMessage(sender, ChatColor.WHITE + "Usage: /team kick <joueur>", true);
-            }
-            if (args[0].equalsIgnoreCase("leave")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
-                if (team == null) {
-                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
-                }
-                return TeamUtils.quit(team, player);
-            }
-            if (args[0].equalsIgnoreCase("inventory")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
-                if (team == null) {
-                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
-                }
-                team.openInventory(player);
-            }
+        Team createdTeam = teamManager.createTeam(player.getUniqueId(), teamName);
+        boolean couldAdd = createdTeam.addPlayer(player.getUniqueId());
+        if (!couldAdd) {
+            CommandUtils.sendMessage(player, "La team est déjà au complet !", true);
+            return;
         }
-        if (args.length >= 2) {
-            if (args[0].equalsIgnoreCase("create")) {
-                StringBuilder teamName = new StringBuilder();
-                for (int i = 1; i < args.length; i++) {
-                    teamName.append(args[i]).append(" ");
-                }
-                if (teamManager.isInTeam(player.getUniqueId()) != null) {
-                    return CommandUtils.sendMessage(sender, "Vous êtes déjà dans une team !", true);
-                }
-                if (teamName.length() > 16) {
-                    return CommandUtils.sendMessage(sender, "Le nom de la team ne doit pas dépasser 16 caractères !", true);
-                }
-                Team createdTeam = teamManager.createTeam(player.getUniqueId(), teamName.toString().trim());
-                boolean couldAdd = createdTeam.addPlayer(player.getUniqueId());
-                if (!couldAdd) {
-                    return CommandUtils.sendMessage(sender, "La team est déjà au complet !", true);
-                }
-                CommandUtils.sendMessage(sender, ChatColor.GREEN + "Vous avez créé la team " + createdTeam.getName() + " !", false);
-            }
-            if (args[0].equalsIgnoreCase("invite")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
-                if (team == null) {
-                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
-                }
-                if (!team.isOwner(player.getUniqueId())) {
-                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas le propriétaire de la team !", true);
-                }
-                Player target = player.getServer().getPlayer(args[1]);
-                if (target == null) {
-                    return CommandUtils.sendMessage(sender, "Le joueur " + args[1] + " n'est pas en ligne !", true);
-                }
-                if (teamManager.isInTeam(target.getUniqueId()) != null) {
-                    return CommandUtils.sendMessage(sender, "Le joueur " + target.getName() + " est déjà dans une team !", true);
-                }
-                boolean couldInvite = teamManager.invite(target.getUniqueId(), team);
-                if (!couldInvite) {
-                    return CommandUtils.sendMessage(sender, "La team est déjà au complet !", true);
-                }
-                CommandUtils.sendMessage(sender, "Vous avez invité " + target.getName() + " dans la team !", false);
-                CommandUtils.sendMessage(target, "Vous avez été invité dans la team " + team.getName() + " !", false);
-                CommandUtils.sendMessage(target, "Pour accepter, faites " + ChatColor.GREEN + "/team accept", false);
-            }
-            if (args[0].equalsIgnoreCase("kick")) {
-                Team team = teamManager.isInTeam(player.getUniqueId());
-                if (team == null) {
-                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas dans une team !", true);
-                }
-                if (!team.isOwner(player.getUniqueId())) {
-                    return CommandUtils.sendMessage(sender, "Vous n'êtes pas le propriétaire de la team !", true);
-                }
-                UUID target = team.getPlayerByUsername(args[1]);
-                if (target != null) {
-                    MethodState state = team.removePlayer(target);
-                    if (state == MethodState.VALID || state == MethodState.WARNING) CommandUtils.sendMessage(sender, "Le joueur " + args[1] + " a été kické de la team !", false);
-                    if (state == MethodState.INVALID) return CommandUtils.sendMessage(sender, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée et il reste des items dans l'inventaire !", true);
-                    Player targetPlayer = Bukkit.getPlayer(target);
-                    if (targetPlayer != null) {
-                        CommandUtils.sendMessage(Objects.requireNonNull(targetPlayer), ChatColor.DARK_RED + "Vous avez été kické de la team !", false);
-                    }
-                    if (state == MethodState.WARNING) CommandUtils.sendMessage(sender, ChatColor.DARK_RED + "La team a été supprimée !", false);
-
-                } else {
-                    return CommandUtils.sendMessage(sender, "Le joueur " + args[1] + " n'est pas dans la team !", true);
-                }
-            }
-        }
-        return true;
+        CommandUtils.sendMessage(player, ChatColor.GREEN + "Vous avez créé la team " + createdTeam.getName() + " !", false);
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
-            return List.of("create", "list", "invite", "accept", "leave", "kick", "inventory");
-        }
-        if (args.length == 2)
-        {
-            if (sender instanceof Player player) {
-                if (args[0].equalsIgnoreCase("create")) {
-                    return List.of(player.getName() + "'s team");
-                }
-                if (args[0].equalsIgnoreCase("invite")) {
-                    TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
-                    Team team = teamManager.isInTeam(player.getUniqueId());
-                    if (team != null) {
-                        List<String> players = new ArrayList<>();
-                        for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
-                            if (teamManager.isInTeam(onlinePlayer.getUniqueId()) == null) {
-                                players.add(onlinePlayer.getName());
-                            }
-                        }
-                        return players;
-                    }
+    @Subcommand("list")
+    @Description("Liste des teams")
+    public void listTeams(Player player) {
+        Menu menu = new TeamListMenu(player, AywenCraftPlugin.getInstance().getTeamManager());
+        menu.open();
+    }
 
-                }
-                if (args[0].equalsIgnoreCase("kick")) {
-                    Team team = AywenCraftPlugin.getInstance().getTeamManager().isInTeam(player.getUniqueId());
-                    if (team != null) {
-                        List<String> players = new ArrayList<>();
-                        for (UUID uuid : team.getPlayers()) {
-                            players.add(Bukkit.getOfflinePlayer(uuid).getName());
-                        }
-                        return players;
-                    }
+
+    @Subcommand("invite")
+    @Description("Inviter un joueur dans la team")
+    public void invitePlayer(Player player, @Named("joueur") Player target) {
+        Team team = teamManager.isInTeam(player.getUniqueId());
+        if (team == null) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        if (!team.isOwner(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas le propriétaire de la team !", true);
+            return;
+        }
+        if (teamManager.isInTeam(target.getUniqueId()) != null) {
+            CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " est déjà dans une team !", true);
+            return;
+        }
+        boolean couldInvite = teamManager.invite(target.getUniqueId(), team);
+        if (!couldInvite) {
+            CommandUtils.sendMessage(player, "La team est déjà au complet !", true);
+            return;
+        }
+
+        //TODO: make component with kiory for clickable buttons
+        CommandUtils.sendMessage(player, "Vous avez invité " + target.getName() + " dans la team !", false);
+        CommandUtils.sendMessage(target, "Vous avez été invité dans la team " + team.getName() + " !", false);
+        CommandUtils.sendMessage(target, "Pour accepter, faites " + ChatColor.GREEN + "/team accept", false);
+    }
+
+    @Subcommand("accept")
+    @Description("Accepter une invitation")
+    public void acceptInvite(Player player) {
+        Team team = teamManager.isInTeam(player.getUniqueId());
+        if (team != null) {
+            CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
+            return;
+        }
+        team = teamManager.acceptInvite(player.getUniqueId());
+        if (team != null) {
+            CommandUtils.sendMessage(player, ChatColor.GREEN + "Vous avez bien rejoint la team " + team.getName() + " !", false);
+            for (UUID teamPlayer : team.getPlayers()) {
+                Player teamPlayerOnline = Bukkit.getPlayer(teamPlayer);
+                if (teamPlayerOnline != null) {
+                    CommandUtils.sendMessage(teamPlayerOnline, player.getName() + " a rejoint la team !", false);
                 }
             }
+        } else {
+            CommandUtils.sendMessage(player, "Vous n'avez pas d'invitation en attente !", true);
         }
-        return List.of();
     }
+
+    @Subcommand("kick")
+    @Description("Kick un joueur de la team")
+    public void kickPlayer(Player player, @Named("joueur") Player target) {
+        Team team = teamManager.isInTeam(player.getUniqueId());
+        if (team == null) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        if (!team.isOwner(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas le propriétaire de la team !", true);
+            return;
+        }
+        UUID targetUUID = target.getUniqueId();
+        MethodState state = team.removePlayer(targetUUID);
+        if (state == MethodState.VALID || state == MethodState.WARNING) CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " a été kické de la team !", false);
+        if (state == MethodState.INVALID) {
+            CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée et il reste des items dans l'inventaire !", true);
+            return;
+        }
+        if (state == MethodState.WARNING) CommandUtils.sendMessage(player, ChatColor.DARK_RED + "La team a été supprimée !", false);
+        if (state == MethodState.VALID) {
+            CommandUtils.sendMessage(target, ChatColor.DARK_RED + "Vous avez été kické de la team !", false);
+        }
+    }
+
+    @Subcommand("leave")
+    @Description("Quitter la team")
+    public void leaveTeam(Player player) {
+        Team team = teamManager.isInTeam(player.getUniqueId());
+        if (team == null) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        TeamUtils.quit(team, player);
+    }
+
+    @Subcommand("inventory")
+    @Description("Inventaire de la team")
+    public void teamInventory(Player player) {
+        Team team = teamManager.isInTeam(player.getUniqueId());
+        if (team == null) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        team.openInventory(player);
+    }
+
 }
