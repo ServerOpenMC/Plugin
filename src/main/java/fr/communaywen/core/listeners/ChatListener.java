@@ -1,5 +1,6 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.DiscordWebhook;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -9,15 +10,19 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.server.BroadcastMessageEvent;
 
 public class ChatListener implements Listener {
-
     private final DiscordWebhook discordWebhook;
 
-    public ChatListener(DiscordWebhook discordWebhook) {
+    private AywenCraftPlugin plugin;
+
+    public ChatListener(AywenCraftPlugin plugin, DiscordWebhook discordWebhook) {
+        this.plugin = plugin;
         this.discordWebhook = discordWebhook;
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        plugin.quizManager.onPlayerChat(event);
+
         String username = event.getPlayer().getName();
         String avatarUrl = "https://minotar.net/helm/" + username;
         String message = event.getMessage();
