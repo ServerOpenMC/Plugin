@@ -45,7 +45,13 @@ public class EconomyManager {
     }
 
     public void withdraw(Player player, double amount) {
-        setBalance(player, getBalance(player) - amount);
+        double currentBalance = getBalance(player);
+        if (currentBalance >= amount) {
+            setBalance(player, currentBalance - amount);
+        } else {
+            // Gérer le cas où le joueur n'a pas suffisamment de fonds
+            // Par exemple, lancer une exception ou enregistrer un message
+        }
     }
 
     public void deposit(Player player, double amount) {
