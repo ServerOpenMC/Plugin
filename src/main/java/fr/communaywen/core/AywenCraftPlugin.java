@@ -15,7 +15,7 @@ import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
-import fr.communaywen.core.staff.freeze.FreezeListener;
+import fr.communaywen.core.listeners.FreezeListener;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
@@ -23,10 +23,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.util.HashSet;
@@ -36,7 +39,7 @@ import java.util.UUID;
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    private final Set<UUID> frozenPlayers = new HashSet<>();
+    public ArrayList<Player> frozenPlayers = new ArrayList<>();
 
 
     private MOTDChanger motdChanger;
@@ -131,8 +134,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
 
-        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
-        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("freeze").setExecutor(new FreezeCommand());
 
 
 
@@ -185,7 +187,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.quizManager.close();
     }
 
-    public Set<UUID> getFrozenPlayers() {
+    public ArrayList<Player> getFrozenPlayers() {
         return frozenPlayers;
     }
 
