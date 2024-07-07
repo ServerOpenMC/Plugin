@@ -3,7 +3,7 @@ rewards:
     min: 15
     max: 150
 
-interval: 1 # Interval between two questions (in minutes)
+interval: 30 # Interval between two questions (in minutes)
 
 quizzes:
   - question: "Que font 1 + 1"
