@@ -7,6 +7,7 @@ import fr.communaywen.core.utils.*;
 
 import fr.communaywen.core.tpa.CommandTPA;
 import fr.communaywen.core.tpa.CommandTpaccept;
+import fr.communaywen.core.tpa.CommandTpcancel;
 import fr.communaywen.core.tpa.CommandTpdeny;
 
 import fr.communaywen.core.economy.EconomyManager;
@@ -38,10 +39,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
-    private EconomyManager economyManager;
+    public EconomyManager economyManager;
     public LuckPerms api;
 
     private DatabaseManager databaseManager;
+
+    public QuizManager quizManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -59,6 +62,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
     }
 
+    private FileConfiguration loadQuizzes() {
+        File quizzesFile = new File(getDataFolder(), "quizzes.yml");
+        if (!quizzesFile.exists()) {
+            saveResource("quizzes.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(quizzesFile);
+    }
+
     @Override
     public void onEnable() {
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
@@ -69,6 +80,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* UTILS */
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
+
+        quizManager = new QuizManager(this, loadQuizzes());
 
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
@@ -104,6 +117,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
@@ -119,6 +133,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
+      
+        this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setTabCompleter(new CommandTPA());
+        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
+        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+        this.getCommand("spawn").setExecutor(new CommandSpawn(this));
         /*  --------  */
 
         /* LISTENERS */
@@ -126,9 +147,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
+        getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -167,7 +189,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @param category the permission category
      * @param suffix the permission suffix
      * @return The formatted permission.
-     * @see PermissionCategory#PERMISSION_PREFIX
+     * @see PermissionCategory #PERMISSION_PREFIX
      */
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {

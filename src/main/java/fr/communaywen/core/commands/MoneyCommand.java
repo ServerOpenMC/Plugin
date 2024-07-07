@@ -5,9 +5,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class MoneyCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MoneyCommand implements CommandExecutor, TabCompleter {
     private final EconomyManager economyManager;
 
     public MoneyCommand(EconomyManager economyManager) {
@@ -52,4 +58,22 @@ public class MoneyCommand implements CommandExecutor {
         player.sendMessage("Usage: /money [transfer <player> <amount>]");
         return true;
     }
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+
+        List<String> tab = new ArrayList<>();
+
+        if(args.length == 1) {
+            tab.add("transfer");
+        } else if(args.length == 2) {
+          for(Player players : Bukkit.getOnlinePlayers()) {
+              tab.add(players.getName());
+          }
+        } else if(args.length == 3) {
+            tab.add("<amout>");
+        }
+
+        return tab;
+    }
+
 }
