@@ -13,6 +13,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public final class ExplodeRandomCommand implements CommandExecutor {
 
@@ -20,6 +21,8 @@ public final class ExplodeRandomCommand implements CommandExecutor {
     private static final int COOLDOWN_TIME = 300; // 5 minutes in seconds
 
     public static final HashSet<TNTPrimed> preventedExplosvies = new HashSet<>();
+
+    public static final int COST = 16;
 
     @Override
     public boolean onCommand(final @NotNull CommandSender sender,
@@ -54,14 +57,40 @@ public final class ExplodeRandomCommand implements CommandExecutor {
             PlayerInventory inventory = player.getInventory();
 
             if (player.getGameMode() != GameMode.CREATIVE) {
-                if (!inventory.contains(Material.DIAMOND)) {
-                    player.sendMessage("Vous avez besoin d'un diamant pour executer cette commande");
+                System.out.println("Before filter");
+
+                int totalDiamonds = Arrays.stream(inventory.getContents())
+                        .filter(stack -> stack != null && stack.getType() == Material.DIAMOND) //make the stream only be of gold stacks
+                        .mapToInt(stack -> stack.getAmount()) //turn stacks into their amounts
+                        .sum(); //add them up
+
+                System.out.println("DIAMONDS");
+                System.out.println(totalDiamonds);
+
+                if (totalDiamonds < COST) {
+                    player.sendMessage("Il vous manque " + (COST - totalDiamonds) + " diamants");
 
                     return true;
                 }
 
-                ItemStack item = inventory.getItem(inventory.first(Material.DIAMOND));
-                item.setAmount(item.getAmount() - 1);
+                List<ItemStack> diamondStacks = Arrays.stream(inventory.getContents())
+                        .filter(stack -> stack != null && stack.getType() == Material.DIAMOND).toList();
+
+                int remaining = COST;
+
+                for (ItemStack stack : diamondStacks) {
+                    int ammount = stack.getAmount();
+
+                    if (ammount < remaining) {
+                        remaining -= ammount;
+                        stack.setAmount(0);
+                        continue;
+                    }
+
+                    stack.setAmount(ammount - remaining);
+
+                    break;
+                }
             }
 
             int random = new Random().nextInt(players.size());
