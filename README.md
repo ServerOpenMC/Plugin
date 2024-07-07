@@ -1,7 +1,9 @@
 # Plugin OpenMC
 Plugin collaboratif pour un serveur : VOTRE serveur !
 
-![Pdp des contribs](https://contrib.rocks/image?repo=Margouta/PluginOpenMC)
+<a href="https://github.com/margouta/pluginopenmc/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=margouta/pluginopenmc" />
+</a>
 
 ## 🤝 Rejoindre le développement.
 1. Commencez par forker le dépôt et rejoindre le [Discord](https://discord.gg/aywen-communaute-1161296442577653802)
