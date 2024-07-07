@@ -17,12 +17,8 @@ public class ExplosionListener implements Listener {
 
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event) {
-        System.out.println("EXPLOSION");
-        System.out.println(event.getBlock().getLocation());
-        System.out.println(AywenCraftPlugin.getInstance().getFbeManager().getLocations());
 
         if(AywenCraftPlugin.getInstance().getFbeManager().getLocations().contains(event.getBlock().getLocation())) {
-            System.out.println("FB EXPLOSION");
             for (Block b: event.blockList()) {
                 float x = (float) -5 + (float) (Math.random() * ((5 - -5) + 1));
                 float y = (float) -6 + (float) (Math.random() * ((6 - -6) + 1));
