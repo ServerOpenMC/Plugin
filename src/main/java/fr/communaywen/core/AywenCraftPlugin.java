@@ -10,6 +10,7 @@ import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.commands.ProutCommand;
 import fr.communaywen.core.tpa.CommandTPA;
 import fr.communaywen.core.tpa.CommandTpaccept;
+import fr.communaywen.core.tpa.CommandTpcancel;
 import fr.communaywen.core.tpa.CommandTpdeny;
 import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.LinkerAPI;
@@ -104,12 +105,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setTabCompleter(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
 
 
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        saveDefaultConfig();
 
         // Initialiser EconomyManager et enregistrer la commande money
         economyManager = new EconomyManager(getDataFolder());

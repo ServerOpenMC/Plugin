@@ -1,16 +1,15 @@
 package fr.communaywen.core.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -32,6 +31,8 @@ public class RTPCommand implements CommandExecutor {
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
+    private final HashMap<UUID, Location> loc = new HashMap<>();
+
     public RTPCommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
         
@@ -40,28 +41,20 @@ public class RTPCommand implements CommandExecutor {
         COOLDOWN_ERROR = plugin.getConfig().getInt("rtp.cooldown-error");
         MIN_X = plugin.getConfig().getInt("rtp.minx");
         MAX_X = plugin.getConfig().getInt("rtp.maxx");
-        MIN_Y = plugin.getConfig().getInt("rtp.miny");
-        MAX_Y = plugin.getConfig().getInt("rtp.maxy");
         MIN_Z = plugin.getConfig().getInt("rtp.minz");
         MAX_Z = plugin.getConfig().getInt("rtp.maxz");
-        if (MIN_Y <= -64 || MIN_Y >= 319){
-		    plugin.getConfig().set("rtp.miny", 64);
-		    MIN_Y = 64;
-	    }
-	    if (MAX_Y <= -64 || MAX_Y >= 319){
-		    plugin.getConfig().set("rtp.maxy", 100);
-		    MAX_Y = 100;
-	    }
 	    plugin.getConfig().options().copyDefaults(true);
 	    plugin.saveConfig();
 	    
     }
 
+    @SuppressWarnings("deprecation")
 	@Override
     public boolean onCommand(@NotNull final CommandSender sender,@NotNull final Command command,@NotNull final String label, final String[] args) {
         if (sender instanceof Player player) {
             UUID playerId = player.getUniqueId();
             long Time = System.currentTimeMillis() / 1000;
+            long ExactTime = System.currentTimeMillis();
 
             if (cooldowns.containsKey(playerId)) {
                 long lastUsed = cooldowns.get(playerId);
@@ -69,25 +62,22 @@ public class RTPCommand implements CommandExecutor {
 
                 if (timeSinceLastUse < COOLDOWN_TIME) {
                     long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
-                    player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
                     return true;
                 }
             }
             World world = player.getWorld();
             int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
             int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
-            int y = 0;
-            Location location = new Location(world, x, y, z);
-            if (!world.getBiome(location).equals(Biome.RIVER) || !world.getBiome(location).toString().contains("OCEAN")) {
-                y = world.getHighestBlockAt(x,z).getY();
-                Location belowLocation = new Location(world, x, y - 1, z);
-                if (location.getBlock().getType().isAir() && belowLocation.getBlock().getType().isSolid()) {
+            if (!world.getBiome(new Location(world, x, 64, z)).equals(Biome.RIVER) || !world.getBiome(new Location(world, x, 64, z)).toString().contains("OCEAN")) {
+                int y = world.getHighestBlockAt(new Location(world, x, 64, z)).getY();
+                Location location = new Location(world, x, y+1, z);
+                if (new Location(world, x, y, z).getBlock().getType().isSolid()){
                     player.teleport(location);
-                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " "+(System.currentTimeMillis() / 1000 -Time)+"s");
+                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z + " " + (System.currentTimeMillis() - ExactTime)/1000 + "s");
                     cooldowns.put(playerId, Time);
                     return true;
                 }
-                else {
+                else{
                     player.sendTitle(" §cErreur","/rtp");
                     cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
                     return true;
@@ -95,7 +85,6 @@ public class RTPCommand implements CommandExecutor {
             }
             player.sendTitle(" §cErreur","/rtp");
             cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
-            return true;
         }
 
         return true;
