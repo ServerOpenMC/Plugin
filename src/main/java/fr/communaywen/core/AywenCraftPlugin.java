@@ -2,28 +2,25 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.listeners.*;
-import fr.communaywen.core.staff.freeze.FreezeListener;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
 import fr.communaywen.core.tpa.CommandTPA;
 import fr.communaywen.core.tpa.CommandTpaccept;
+import fr.communaywen.core.tpa.CommandTpcancel;
 import fr.communaywen.core.tpa.CommandTpdeny;
 
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.staff.freeze.FreezeCommand;
+import fr.communaywen.core.staff.freeze.FreezeListener;
 
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import fr.communaywen.core.commands.RTPCommand;
-import fr.communaywen.core.utils.database.DatabaseManager;
-import fr.communaywen.core.listeners.RTPWand;
-import fr.communaywen.core.staff.freeze.FreezeCommand;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +50,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
             saveResource("rules.yml", false);
         }
         bookConfig = YamlConfiguration.loadConfiguration(bookFile);
+    }
+
+    private FileConfiguration loadWelcomeMessageConfig() {
+        File welcomeMessageConfigFile = new File(getDataFolder(), "welcomeMessageConfig.yml");
+        if (!welcomeMessageConfigFile.exists()) {
+            saveResource("welcomeMessageConfig.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
     }
 
     @Override
@@ -100,10 +105,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+
+        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
+        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
 
         PluginCommand teamCommand = this.getCommand("team");
         teamCommand.setExecutor(new TeamCommand());
@@ -112,6 +121,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
+      
+        this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setTabCompleter(new CommandTPA());
+        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
+        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
         /*  --------  */
 
         /* LISTENERS */
@@ -121,22 +136,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
+        getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
         /* --------- */
 
-
-        // Initialiser EconomyManager et enregistrer la commande money
-        economyManager = new EconomyManager(getDataFolder());
-        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
-
-        // Commandes de freeze
-        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
-        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
-
-
-
-
         saveDefaultConfig();
-
     }
 
 

@@ -38,10 +38,13 @@ commands:
     description: tpa
     permission: ayw.command.tpa
   tpaccept:
-    description: tpa
+    description: tpaccept
     permission: ayw.command.tpa
   tpdeny:
-    description: tpa
+    description: tpdeny
+    permission: ayw.command.tpa
+  tpcancel:
+    description: tpcancel
     permission: ayw.command.tpa
   freeze:
     description: Freeze un joueur

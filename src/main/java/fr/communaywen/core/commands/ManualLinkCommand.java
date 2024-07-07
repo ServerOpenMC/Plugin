@@ -26,6 +26,7 @@ public class ManualLinkCommand implements CommandExecutor {
         try {
             this.linkerAPI.setDatabase(player, args[0]);
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException(e);
         }
 

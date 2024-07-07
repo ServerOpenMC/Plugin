@@ -1,13 +1,23 @@
 package fr.communaywen.core.tpa;
 
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.Team;
+import fr.communaywen.core.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandTPA implements CommandExecutor {
-    // This method is called, when somebody uses our command
+import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandTPA implements CommandExecutor, TabCompleter {
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;
 
@@ -22,15 +32,28 @@ public class CommandTPA implements CommandExecutor {
             Player player = (Player) sender;
             Player receiver = Bukkit.getPlayerExact(args[0]);
             if (receiver == null) {
-                player.sendMessage("Impossible de trouver le joeur \""+args[0]+"\"");
+                player.sendMessage("Impossible de trouver le joueur «"+args[0]+"»");
                 return false;
             }
-            tpQueue.TPA_REQUESTS.put(receiver, new TPARequest(player));
+            tpQueue.TPA_REQUESTS.put(receiver, player);
+            tpQueue.TPA_REQUESTS2.put(player, receiver);
             player.sendMessage("Vous avez envoyé une demande de tpa à " + receiver.getName());
             receiver.sendMessage(player.getName() + " vous a envoyé un demande de téléportation faites /tpaccept pour l'accepter");
             return true;
         }
 
         return false;
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> list = new ArrayList<String>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.getName().startsWith(strings[0])){
+                list.add(p.getName());
+            }
+        }
+        return list;
     }
 }
