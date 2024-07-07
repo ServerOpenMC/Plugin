@@ -54,6 +54,13 @@ commands:
     description: ouvre le menu des joueurs
     usage: /players
     permission: openmc.staff.players
+  unfreeze:
+    description: Unfreeze un joueur
+    usage: /unfreeze [joueur]
+    permission: openmc.staff.freeze
+  spawn:
+    description: Téléportation au spawn
+    permission: ayw.command.spawn
 
 permissions:
   ayw.admin.version:
@@ -73,7 +80,7 @@ permissions:
     default: true
   ayw.command.rtp:
     description: 'rtp'
-    default: true
+    default: false
   ayw.command.feed:
     description: 'feed'
     default: true
@@ -86,3 +93,6 @@ permissions:
   openmc.staff.players:
     description: 'players'
     default: false
+  ayw.command.spawn:
+    description: 'spawn'
+    default: true
