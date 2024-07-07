@@ -33,14 +33,14 @@ public class TeamCommand {
     TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
 
     @DefaultFor("~")
-    public void sendHelp(Player player, ExecutableCommand command) {
+    public void sendHelp(Player player, ExecutableCommand command, CommandHelp<Component> help, @Default("1") @Range(min = 1) int page) {
         if(teamManager.isInTeam(player.getUniqueId())) {
             Team team = teamManager.getTeamByPlayer(player.getUniqueId());
             TeamMenu teamMenu = new TeamMenu(player, team, false);
             teamMenu.open();
         } else {
             Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(player);
-            AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, command.getHelp(), 1, command, "§b§lTEAM");
+            AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, 1, command, "§b§lTEAM");
         }
     }
 
