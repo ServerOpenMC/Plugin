@@ -7,10 +7,10 @@ import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
-import fr.communaywen.core.tpa.CommandTPA;
-import fr.communaywen.core.tpa.CommandTpaccept;
-import fr.communaywen.core.tpa.CommandTpcancel;
-import fr.communaywen.core.tpa.CommandTpdeny;
+import fr.communaywen.core.tpa.TPACommand;
+import fr.communaywen.core.tpa.TpacceptCommand;
+import fr.communaywen.core.tpa.TpcancelCommand;
+import fr.communaywen.core.tpa.TpdenyCommand;
 
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
@@ -22,7 +22,6 @@ import fr.communaywen.core.listeners.FreezeListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -30,16 +29,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 import java.io.File;
 
@@ -127,37 +120,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
 
-        this.handler.register(
-                new SpawnCommand(this),
-                new VersionCommand(this),
-                new RulesCommand(bookConfig),
-                new TeamCommand(),
-                new ScoreboardCommand(),
-                new MoneyCommand(this.economyManager));
+        this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
+                new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
+                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(), 
+                new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
+                new RTPCommand(this), new FreezeCommand(), new PlayersCommand());
 
-        this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
-        this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
-        this.getCommand("credit").setExecutor(new CreditCommand());
-        this.getCommand("exploderandom").setExecutor(new ExplodeRandomCommand());
-        this.getCommand("rtp").setExecutor(new RTPCommand(this));
-        this.getCommand("feed").setExecutor(new FeedCommand(this));
-
-        this.getCommand("tpa").setExecutor(new CommandTPA(this));
-        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
-        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
-
-        this.getCommand("freeze").setExecutor(new FreezeCommand());
-        this.getCommand("players").setExecutor(new PlayersCommand());
-
-        final @Nullable PluginCommand proutCommand = super.getCommand("prout");
-        if (proutCommand != null)
-            proutCommand.setExecutor(new ProutCommand());
-
-        this.getCommand("tpa").setExecutor(new CommandTPA(this));
-        this.getCommand("tpa").setTabCompleter(new CommandTPA(this));
-        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
-        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
-        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
         /*  --------  */
 
         new BukkitRunnable() {

@@ -3,51 +3,6 @@ version: '${version}'
 main: fr.communaywen.core.AywenCraftPlugin
 api-version: '1.20'
 
-commands:
-  prout:
-    description: Prout !
-    permission: ayw.command.prout
-  rtp:
-    description: Téléportation aléatoire
-    permission: ayw.command.rtp
-    aliases: randomteleportation
-  credit:
-    description: Affiche les crédits du plugin
-  exploderandom:
-    description: Fait exploser un joueur aléatoire, côute 32 diamants
-  link:
-    description: Lie un compte Minecraft à Discord
-  manuallink:
-    description: Lie un compte Minecraft à Discord manuellement (sans verif)
-    permission: ayw.command.manuallink
-  feed:
-    description: feed
-    permission: ayw.command.feed
-  tpa:
-    description: tpa
-    permission: ayw.command.tpa
-  tpaccept:
-    description: tpaccept
-    permission: ayw.command.tpa
-  tpdeny:
-    description: tpdeny
-    permission: ayw.command.tpa
-  tpcancel:
-    description: tpcancel
-    permission: ayw.command.tpa
-  freeze:
-    description: Freeze un joueur
-    usage: /freeze [joueur]
-    permission: openmc.staff.freeze
-  players:
-    description: ouvre le menu des joueurs
-    usage: /players
-    permission: openmc.staff.players
-  unfreeze:
-    description: Unfreeze un joueur
-    usage: /unfreeze [joueur]
-    permission: openmc.staff.freeze
-
 permissions:
   ayw.admin.version:
     description: Permission pour utiliser la commande /version
