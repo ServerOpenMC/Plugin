@@ -53,7 +53,7 @@ public class ThorHammer implements Listener {
         if(customStack != null && customStack.getNamespacedID().equals("thor:hammer")) {
             if(player.getCooldown(item.getType()) > 0) return;
             item.setDurability((short) (item.getDurability() + 1));
-            player.setCooldown(item.getType(), 1200);
+            if(player.getGameMode() == GameMode.CREATIVE) player.setCooldown(item.getType(), 1200);
             World world = loc.getWorld();
             assert world != null;
             world.strikeLightning(loc);
