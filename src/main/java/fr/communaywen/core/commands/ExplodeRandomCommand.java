@@ -73,15 +73,10 @@ public final class ExplodeRandomCommand implements CommandExecutor {
                 PlayerInventory inventory = player.getInventory();
 
                 if (player.getGameMode() != GameMode.CREATIVE) {
-                    System.out.println("Before filter");
-
                     int totalDiamonds = Arrays.stream(inventory.getContents())
                             .filter(stack -> stack != null && stack.getType() == Material.DIAMOND) //make the stream only be of gold stacks
                             .mapToInt(stack -> stack.getAmount()) //turn stacks into their amounts
                             .sum(); //add them up
-
-                    System.out.println("DIAMONDS");
-                    System.out.println(totalDiamonds);
 
                     if (totalDiamonds < COST) {
                         player.sendMessage("Il vous manque " + (COST - totalDiamonds) + " diamants");
@@ -125,8 +120,7 @@ public final class ExplodeRandomCommand implements CommandExecutor {
 
                 lastExploded.put(playerId, currentTime);
 
-//            cooldowns.put(playerId, currentTime);
-
+                cooldowns.put(playerId, currentTime);
             } catch (Exception e) {
                 e.printStackTrace();
             }
