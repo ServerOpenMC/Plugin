@@ -139,6 +139,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+        this.getCommand("spawn").setExecutor(new CommandSpawn(this));
         /*  --------  */
 
         /* LISTENERS */
@@ -149,6 +150,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
+        getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
