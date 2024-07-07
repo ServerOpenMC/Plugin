@@ -3,6 +3,7 @@ package fr.communaywen.core.listeners;
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -23,6 +24,14 @@ public class VpnListener implements Listener {
 
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
+
+        Player player = event.getPlayer();
+
+        if (player.hasPermission("aywencraft.antivpn.bypass")) {
+            return;
+        }
+
+
         String ip = event.getAddress().getHostAddress();
         new BukkitRunnable() {
             @Override
