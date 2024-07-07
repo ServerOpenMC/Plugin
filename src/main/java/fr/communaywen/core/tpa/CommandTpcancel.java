@@ -19,9 +19,10 @@ public class CommandTpcancel implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "Vous n'avez pas de demande de téléporation");
                 return true;
             }
-            player.sendMessage(ChatColor.RED + player.getName() + " a refusé votre demande de téléportation");
             tpQueue.TPA_REQUESTS.remove(tpaplayer);
             tpQueue.TPA_REQUESTS2.remove(player);
+            player.sendMessage("Vous avez annulé votre demande de tpa à "+tpaplayer.getName());
+            tpaplayer.sendMessage(player.getName()+" a annulé sa demande de tpa");
             return true;
         }
 

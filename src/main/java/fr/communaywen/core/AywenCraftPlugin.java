@@ -127,6 +127,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
         this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
         this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
+        this.getCommand("spawn").setExecutor(new CommandSpawn(this));
         /*  --------  */
 
         /* LISTENERS */
