@@ -7,6 +7,7 @@ import fr.communaywen.core.utils.*;
 
 import fr.communaywen.core.tpa.CommandTPA;
 import fr.communaywen.core.tpa.CommandTpaccept;
+import fr.communaywen.core.tpa.CommandTpcancel;
 import fr.communaywen.core.tpa.CommandTpdeny;
 
 import fr.communaywen.core.economy.EconomyManager;
@@ -49,6 +50,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
             saveResource("rules.yml", false);
         }
         bookConfig = YamlConfiguration.loadConfiguration(bookFile);
+    }
+
+    private FileConfiguration loadWelcomeMessageConfig() {
+        File welcomeMessageConfigFile = new File(getDataFolder(), "welcomeMessageConfig.yml");
+        if (!welcomeMessageConfigFile.exists()) {
+            saveResource("welcomeMessageConfig.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
     }
 
     @Override
@@ -97,6 +106,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
@@ -112,6 +122,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         final @Nullable PluginCommand proutCommand = super.getCommand("prout");
         if (proutCommand != null)
             proutCommand.setExecutor(new ProutCommand());
+      
+        this.getCommand("tpa").setExecutor(new CommandTPA());
+        this.getCommand("tpa").setTabCompleter(new CommandTPA());
+        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
+        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
+        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
         /*  --------  */
 
         /* LISTENERS */
@@ -122,6 +138,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(discordWebhook), this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
+        getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
         /* --------- */
 
         saveDefaultConfig();
