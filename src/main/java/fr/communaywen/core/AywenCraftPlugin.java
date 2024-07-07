@@ -54,9 +54,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private BukkitCommandHandler handler;
 
     private DatabaseManager databaseManager;
-    private FallingBlocksExplosionManager fbeManager;
 
     public QuizManager quizManager;
+
+    private FallingBlocksExplosionManager fbeManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -106,7 +107,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
-        fbeManager = new FallingBlocksExplosionManager();
+
         this.adventure = BukkitAudiences.create(this);
         /* ----- */
 
@@ -116,38 +117,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
 
         /*  COMMANDS  */
-        this.getCommand("version").setExecutor(new VersionCommand(this));
-        this.getCommand("rules").setExecutor(new RulesCommand(bookConfig));
-        this.getCommand("regles").setExecutor(new RulesCommand(bookConfig));
-        this.getCommand("link").setExecutor(new LinkCommand(linkerAPI));
-        this.getCommand("manuallink").setExecutor(new ManualLinkCommand(linkerAPI));
-        this.getCommand("credit").setExecutor(new CreditCommand());
-        this.getCommand("rtp").setExecutor(new RTPCommand(this));
-        this.getCommand("feed").setExecutor(new FeedCommand(this));
-        this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
-        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
-
-        this.getCommand("tpa").setExecutor(new CommandTPA());
-        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
-        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
-
-        this.getCommand("freeze").setExecutor(new FreezeCommand(this));
-        this.getCommand("unfreeze").setExecutor(new FreezeCommand(this));
-
-        PluginCommand teamCommand = this.getCommand("team");
-        teamCommand.setExecutor(new TeamCommand());
-        teamCommand.setTabCompleter(new TeamCommand());
-
-        final @Nullable PluginCommand proutCommand = super.getCommand("prout");
-        if (proutCommand != null)
-            proutCommand.setExecutor(new ProutCommand());
-      
-        this.getCommand("tpa").setExecutor(new CommandTPA());
-        this.getCommand("tpa").setTabCompleter(new CommandTPA());
-        this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
-        this.getCommand("tpdeny").setExecutor(new CommandTpdeny());
-        this.getCommand("tpcancel").setExecutor(new CommandTpcancel());
-        this.getCommand("fboom").setExecutor(new FBoomCommand());
 
         this.handler = BukkitCommandHandler.create(this);
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
@@ -155,9 +124,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
                 new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
-                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(), 
+                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
-                new RTPCommand(this), new FreezeCommand(), new PlayersCommand());
+                new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand());
 
         /*  --------  */
 
@@ -181,10 +150,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
-        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
-        getServer().getPluginManager().registerEvents(new ThorHammer(), this);
         getServer().getPluginManager().registerEvents(new Insomnia(), this);
         getServer().getPluginManager().registerEvents(new VpnListener(this), this);
+        getServer().getPluginManager().registerEvents(new ThorHammer(), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -230,9 +198,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return databaseManager;
     }
 
-    public FallingBlocksExplosionManager getFbeManager() {
-        return fbeManager;
-    }
     public InteractiveHelpMenu getInteractiveHelpMenu() {
         return interactiveHelpMenu;
     }
