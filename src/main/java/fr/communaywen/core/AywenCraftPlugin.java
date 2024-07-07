@@ -17,8 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.HashSet;
@@ -73,19 +71,22 @@ public final class AywenCraftPlugin extends JavaPlugin {
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
 
-        quizManager = new QuizManager(this, loadQuizzes());
+        // Initialize EconomyManager
+        economyManager = new EconomyManager(getDataFolder());
 
-        OnPlayers onPlayers = new OnPlayers();
-        onPlayers.setLinkerAPI(linkerAPI);
+        // Load quizzes configuration
+        FileConfiguration quizzesConfig = loadQuizzes();
 
+        // Initialize QuizManager
+        quizManager = new QuizManager(this, economyManager, quizzesConfig);
+        
+        // Initialize LuckPerms API
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
-            onPlayers.setLuckPerms(api);
         }
 
         MenuLib.init(this);
-        economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
 
         motdChanger = new MOTDChanger();
@@ -130,7 +131,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* LISTENERS */
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
-        getServer().getPluginManager().registerEvents(onPlayers, this);
+        getServer().getPluginManager().registerEvents(new OnPlayers(linkerAPI, api), this);
         getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
