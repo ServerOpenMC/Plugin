@@ -12,15 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public final class ExplodeRandomCommand implements CommandExecutor {
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
     private static final int COOLDOWN_TIME = 300; // 5 minutes in seconds
+
+    public static final HashSet<TNTPrimed> preventedExplosvies = new HashSet<>();
 
     @Override
     public boolean onCommand(final @NotNull CommandSender sender,
@@ -74,6 +73,8 @@ public final class ExplodeRandomCommand implements CommandExecutor {
             TNTPrimed tnt = (TNTPrimed) chosenPlayer.getWorld().spawnEntity(chosenPlayer.getLocation().add(0, 5, 0), EntityType.TNT);
 
             tnt.setFuseTicks(15);
+
+            preventedExplosvies.add(tnt);
 
             cooldowns.put(playerId, currentTime);
         }
