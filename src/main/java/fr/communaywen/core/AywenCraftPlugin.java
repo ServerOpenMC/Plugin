@@ -57,6 +57,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public QuizManager quizManager;
 
+    private FallingBlocksExplosionManager fbeManager;
+
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
         if (!bookFile.exists()) {
@@ -122,9 +124,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
                 new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
-                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(), 
+                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
-                new RTPCommand(this), new FreezeCommand(), new PlayersCommand());
+                new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand());
 
         /*  --------  */
 
@@ -150,6 +152,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
         getServer().getPluginManager().registerEvents(new Insomnia(), this);
         getServer().getPluginManager().registerEvents(new VpnListener(this), this);
+        getServer().getPluginManager().registerEvents(new ThorHammer(), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -193,6 +196,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public FallingBlocksExplosionManager getFbeManager() {
+        return fbeManager;
     }
 
     public InteractiveHelpMenu getInteractiveHelpMenu() {
