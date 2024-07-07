@@ -23,8 +23,8 @@ public class SpawnCommand {
 
         // Load configuration values
         x = plugin.getConfig().getDouble("spawn.x");
-        y = plugin.getConfig().getInt("spawn.x");
-        z = plugin.getConfig().getInt("spawn.x");
+        y = plugin.getConfig().getInt("spawn.y");
+        z = plugin.getConfig().getInt("spawn.z");
         WORLD = plugin.getConfig().getString("spawn.world");
     }
 
