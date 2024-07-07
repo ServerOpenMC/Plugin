@@ -40,7 +40,16 @@ public class TeamManager {
         return true;
     }
 
-    public Team isInTeam(UUID player) {
+    public boolean isInTeam(UUID player) {
+        for (Team team : teams) {
+            if (team.getPlayers().contains(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Team getTeamByPlayer(UUID player) {
         for (Team team : teams) {
             if (team.getPlayers().contains(player)) {
                 return team;

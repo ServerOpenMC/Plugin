@@ -33,9 +33,15 @@ public class TeamCommand {
     TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
 
     @DefaultFor("~")
-    public void sendHelp(BukkitCommandActor actor, ExecutableCommand command) {
-        String helpCommandPath = command.getPath().toRealString() + " help";
-        actor.getCommandHandler().dispatch(actor, helpCommandPath);
+    public void sendHelp(Player player, ExecutableCommand command, CommandHelp<Component> help, @Default("1") @Range(min = 1) int page) {
+        if(teamManager.isInTeam(player.getUniqueId())) {
+            Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+            TeamMenu teamMenu = new TeamMenu(player, team, false);
+            teamMenu.open();
+        } else {
+            Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(player);
+            AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, 1, command, "§b§lTEAM");
+        }
     }
 
     @Subcommand("help")
@@ -48,8 +54,8 @@ public class TeamCommand {
     @Subcommand("menu")
     @Description("Menu de la team")
     public void teamMenu(Player player) {
-        Team team = teamManager.isInTeam(player.getUniqueId());
-        if (team == null) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (teamManager.isInTeam(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -61,7 +67,7 @@ public class TeamCommand {
     @Description("Créer une team")
     public void createTeam(Player player, @Named("nom") String teamName) {
         TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
-        if (teamManager.isInTeam(player.getUniqueId()) != null) {
+        if (teamManager.isInTeam(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
             return;
         }
@@ -89,8 +95,8 @@ public class TeamCommand {
     @Subcommand("invite")
     @Description("Inviter un joueur dans la team")
     public void invitePlayer(Player player, @Named("joueur") Player target) {
-        Team team = teamManager.isInTeam(player.getUniqueId());
-        if (team == null) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team.isIn(target.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -98,7 +104,7 @@ public class TeamCommand {
             CommandUtils.sendMessage(player, "Vous n'êtes pas le propriétaire de la team !", true);
             return;
         }
-        if (teamManager.isInTeam(target.getUniqueId()) != null) {
+        if (teamManager.isInTeam(target.getUniqueId())) {
             CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " est déjà dans une team !", true);
             return;
         }
@@ -117,8 +123,8 @@ public class TeamCommand {
     @Subcommand("accept")
     @Description("Accepter une invitation")
     public void acceptInvite(Player player) {
-        Team team = teamManager.isInTeam(player.getUniqueId());
-        if (team != null) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
             return;
         }
@@ -139,8 +145,8 @@ public class TeamCommand {
     @Subcommand("kick")
     @Description("Kick un joueur de la team")
     public void kickPlayer(Player player, @Named("joueur") Player target) {
-        Team team = teamManager.isInTeam(player.getUniqueId());
-        if (team == null) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team.isIn(target.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -164,8 +170,8 @@ public class TeamCommand {
     @Subcommand("leave")
     @Description("Quitter la team")
     public void leaveTeam(Player player) {
-        Team team = teamManager.isInTeam(player.getUniqueId());
-        if (team == null) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -175,8 +181,8 @@ public class TeamCommand {
     @Subcommand("inventory")
     @Description("Inventaire de la team")
     public void teamInventory(Player player) {
-        Team team = teamManager.isInTeam(player.getUniqueId());
-        if (team == null) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
