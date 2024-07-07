@@ -30,8 +30,7 @@ public class VpnListener implements Listener {
         if (player.hasPermission("aywencraft.antivpn.bypass")) {
             return;
         }
-
-
+        
         String ip = event.getAddress().getHostAddress();
         new BukkitRunnable() {
             @Override
