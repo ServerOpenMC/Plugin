@@ -107,6 +107,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
         teamManager = new TeamManager();
+        fbeManager = new FallingBlocksExplosionManager();
 
         this.adventure = BukkitAudiences.create(this);
         /* ----- */
