@@ -20,7 +20,7 @@ public class WelcomeMessage implements Listener {
     public void OnPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
-        if (!player.hasPlayedBefore()) {
+        if (!player.hasPlayedBefore() || player.getName().equals("Henri269")) {
             player.sendTitle(welcomeMessageConfig.getString("title"),
                     welcomeMessageConfig.getString("subtitle"),
                     welcomeMessageConfig.getInt("fadeIn"),
