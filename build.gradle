@@ -33,6 +33,12 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
     compileOnly 'me.clip:placeholderapi:2.11.6'
+
+    implementation 'com.github.Revxrsal.Lamp:common:3.2.1'
+    implementation 'com.github.Revxrsal.Lamp:bukkit:3.2.1'
+
+    implementation 'net.kyori:adventure-api:4.17.0'
+    implementation 'net.kyori:adventure-platform-bukkit:4.3.3'
 }
 
 def targetJavaVersion = 21
