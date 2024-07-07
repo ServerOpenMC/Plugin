@@ -70,6 +70,8 @@ public final class ExplodeRandomCommand implements CommandExecutor {
             chosenPlayer.sendMessage("Tu as été désigné.");
             chosenPlayer.sendMessage("REGARDE AU DESSUS DE TOI!");
 
+            player.sendMessage(chosenPlayer.getDisplayName() + " va reçevoir un cadeau explosif");
+
             TNTPrimed tnt = (TNTPrimed) chosenPlayer.getWorld().spawnEntity(chosenPlayer.getLocation().add(0, 5, 0), EntityType.TNT);
 
             tnt.setFuseTicks(15);
