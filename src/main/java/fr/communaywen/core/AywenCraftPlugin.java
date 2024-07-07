@@ -105,6 +105,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.getCommand("rtp").setExecutor(new RTPCommand(this));
         this.getCommand("feed").setExecutor(new FeedCommand(this));
         this.getCommand("money").setExecutor(new MoneyCommand(economyManager));
+        this.getCommand("money").setTabCompleter(new MoneyCommand(economyManager));
 
         this.getCommand("tpa").setExecutor(new CommandTPA());
         this.getCommand("tpaccept").setExecutor(new CommandTpaccept());
