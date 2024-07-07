@@ -22,7 +22,7 @@ public final class ExplodeRandomCommand implements CommandExecutor {
 
     public static final HashSet<TNTPrimed> preventedExplosvies = new HashSet<>();
 
-    public static final int COST = 16;
+    public static final int COST = 32;
 
     @Override
     public boolean onCommand(final @NotNull CommandSender sender,

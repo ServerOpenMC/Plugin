@@ -27,7 +27,7 @@ commands:
   credit:
     description: Affiche les crédits du plugin
   exploderandom:
-    description: Fait exploser un joueur aléatoire, côute 16 diamants
+    description: Fait exploser un joueur aléatoire, côute 32 diamants
   link:
     description: Lie un compte Minecraft à Discord
   manuallink:
