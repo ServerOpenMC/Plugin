@@ -19,7 +19,8 @@ commands:
     aliases: regles
   rtp:
     description: Téléportation aléatoire
-    permission: op
+    permission: ayw.command.rtp
+    aliases: randomteleportation
   money:
     description: Manage your money
     usage: /money [transfer <player> <amount>]
@@ -45,9 +46,14 @@ commands:
   tpcancel:
     description: tpcancel
     permission: ayw.command.tpa
-  spawn:
-    description: Téléportation au spawn
-    permission: ayw.command.spawn
+  freeze:
+    description: Freeze un joueur
+    usage: /freeze [joueur]
+    permission: openmc.staff.freeze
+  unfreeze:
+    description: Unfreeze un joueur
+    usage: /unfreeze [joueur]
+    permission: openmc.staff.freeze
 
 permissions:
   ayw.admin.version:
@@ -65,12 +71,16 @@ permissions:
   ayw.command.rules:
     description: 'Rules'
     default: true
+  ayw.command.rtp:
+    description: 'rtp'
+    default: true
   ayw.command.feed:
     description: 'feed'
     default: true
   ayw.command.tpa:
     description: 'tpa'
     default: true
-  ayw.command.spawn:
-    description: 'Téléportation au spawn'
-    default: true
+  openmc.staff.freeze:
+    description: 'Ensemble de commandes pour freeze un joueur'
+    default: false
+

@@ -1,13 +1,10 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.utils.Queue;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
