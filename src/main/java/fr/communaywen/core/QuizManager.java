@@ -103,14 +103,3 @@ public class QuizManager implements Listener {
         }
     }
 }
-
-    public class Quiz {
-        public String question;
-        public String answer;
-
-        public Quiz(String question, String answer) {
-            this.question = question;
-            this.answer = answer.toLowerCase();
-        }
-    }
-}
