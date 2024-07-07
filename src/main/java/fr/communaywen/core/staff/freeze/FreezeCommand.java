@@ -1,8 +1,6 @@
 package fr.communaywen.core.staff.freeze;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.FreezeUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,17 +9,10 @@ import org.bukkit.ChatColor;
 
 public class FreezeCommand implements CommandExecutor {
 
-    private final AywenCraftPlugin plugin;
-
-    public FreezeCommand(AywenCraftPlugin plugin) {
-
-        this.plugin = plugin;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            //if (!player.hasPermission("openmc.staff.freeze")) {
+            if (!player.hasPermission("openmc.staff.freeze")) {
                 if (args.length == 1) {
                     Player target = player.getServer().getPlayer(args[0]);
                     
@@ -35,10 +26,10 @@ public class FreezeCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "La commande est " + ChatColor.BLUE + "/freeze <joueur>");
                     return false;
                 }
-            /*} else {
+            } else {
                 player.sendMessage(ChatColor.RED + "Hé, tu ne peut pas faire ça !");
                 return false;
-            }*/
+            }
         } else {
             sender.sendMessage(ChatColor.RED + "La commande ne peut seulement être exécutée par un joueur");
             return false;

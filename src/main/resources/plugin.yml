@@ -50,10 +50,10 @@ commands:
     description: Freeze un joueur
     usage: /freeze [joueur]
     permission: openmc.staff.freeze
-  unfreeze:
-    description: Unfreeze un joueur
-    usage: /unfreeze [joueur]
-    permission: openmc.staff.freeze
+  players:
+    description: ouvre le menu des joueurs
+    usage: /players
+    permission: openmc.staff.players
 
 permissions:
   ayw.admin.version:
@@ -81,6 +81,8 @@ permissions:
     description: 'tpa'
     default: true
   openmc.staff.freeze:
-    description: 'Ensemble de commandes pour freeze un joueur'
+    description: 'freeze'
     default: false
-
+  openmc.staff.players:
+    description: 'players'
+    default: false
