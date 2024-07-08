@@ -21,14 +21,14 @@ public class PlayersMenuListener implements Listener {
 		
 		if (e.getView().getTitle().equalsIgnoreCase(ChatColor.BLUE + "Liste des joueurs")) {
 			if (Objects.requireNonNull(e.getCurrentItem()).getType() == (Material.PLAYER_HEAD)) {
+				player.sendMessage("Click");
 				Player target = player.getServer().getPlayerExact(ChatColor.stripColor(Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName()));
-				assert target != null;
 				PlayersMenuUtils.openDetailsPlayersMenu(player, target);
 			}
 			e.setCancelled(true);
 		} else if (e.getView().getTitle().equalsIgnoreCase(ChatColor.BLUE + "Détails")) {
 			Player target = player.getServer().getPlayerExact(ChatColor.stripColor(e.getClickedInventory().getItem(4).getItemMeta().getDisplayName()));
-			if (e.getCurrentItem().getType() == Material.BARRIER) {
+			if (Objects.requireNonNull(e.getCurrentItem()).getType() == Material.BARRIER) {
 				PlayersMenuUtils.openPlayersMenu(player);
 				return;
 			}
