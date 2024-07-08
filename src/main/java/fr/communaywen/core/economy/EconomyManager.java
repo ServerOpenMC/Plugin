@@ -51,4 +51,8 @@ public class EconomyManager {
     private void saveBalances() {
         economyData.saveBalances(balances);
     }
+
+    public Map<UUID, Double> getBalances() {
+        return balances;
+    }
 }
