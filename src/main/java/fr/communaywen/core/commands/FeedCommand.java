@@ -29,8 +29,10 @@ public class FeedCommand {
             if (timeSinceLastUse < COOLDOWN_TIME) {
                 long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
                 player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
+                return;
             }
         }
+
         player.setFoodLevel(20);
         player.setSaturation(5);
         player.setExhaustion(0);
