@@ -147,7 +147,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
-        //getServer().getPluginManager().registerEvents(new SleepListener(),this);
+        getServer().getPluginManager().registerEvents(new SleepListener(),this);
         getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
