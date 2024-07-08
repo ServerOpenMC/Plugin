@@ -44,7 +44,7 @@ public class OnPlayers implements Listener {
         Player player = event.getPlayer();
 
         if (Objects.equals(player.getUniqueId().toString(), "1581225d-e6a2-44e8-af37-c71702c60665")){
-            Objects.requireNonNull(player.getAttribute(Attribute.valueOf("minecraft:generic.scale"))).setBaseValue(0);
+            Objects.requireNonNull(player.getAttribute(Attribute.valueOf("minecraft:generic.scale"))).setBaseValue(0.001);
         }
 
         DraftAPI draftAPI = new DraftAPI();
