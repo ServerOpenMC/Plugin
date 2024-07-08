@@ -12,6 +12,7 @@ public class PlayersCommand {
 	@Description("Ouvre le menu des joueurs")
 	@CommandPermission("openmc.staff.players")
 	public void onCommand(Player player) {
-		 PlayersMenuUtils.openPlayersMenu(player);
+		player.sendMessage(ChatColor.DARK_RED + "La commande /players est temporairement indisponible car incompatible avec EssentialsX");
+		 // PlayersMenuUtils.openPlayersMenu(player);
 	}
 }
