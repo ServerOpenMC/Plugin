@@ -28,6 +28,7 @@ public class PlayersMenuUtils {
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GOLD + "Vie : " + ChatColor.RED + target.getHealth());
 			lore.add(ChatColor.GOLD + "XP : " + ChatColor.AQUA + target.getExp());
+			
 			String name = target.getDisplayName();
 			
 			if (meta != null) {
