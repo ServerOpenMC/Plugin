@@ -21,12 +21,12 @@ public class TpacceptCommand {
         }
         tpQueue.TPA_REQUESTS.remove(player);
         player.sendMessage(tpaplayer.getName()+" va être téléporté à vous dans 3 secondes");
-        tpaplayer.sendTitle("Téléportation à "+player.getName()," dans 3 secondes...",0,20,40);
+        tpaplayer.sendTitle("§0","Téléportation à "+player.getName()+" dans 3 secondes...",20,10,10);
         new BukkitRunnable() {
             @Override
             public void run() {
                 tpaplayer.teleport(player);
             }
-        }.runTaskLater(AywenCraftPlugin.getInstance(),60);
+        }.runTaskLater(AywenCraftPlugin.getInstance(),25);
     }
 }
