@@ -38,21 +38,6 @@ public class QuizManager {
             int index = new Random().nextInt(this.quizzes.size());
 
             currentQuiz = this.quizzes.get(index);
-            Bukkit.broadcastMessage(
-                    "§7\n" +
-                    "§7\n" +
-                    "§8§m                                                     §r\n" +
-                    "§7\n" +
-                    "§6              Nouvelle question : \n§7" +
-                    "           " + currentQuiz.question + "\n" +
-                    "§b     Vous avez 30 seconds pour répondre" + "\n" +
-                    "§e         Le premier a répondre gagne !\n" +
-                    "§7\n" +
-                    "§8§m                                                     §r" +
-                    "§7\n" +
-                    "§7\n"
-            );
-
             Runnable tellAnswer = () -> {
                 Bukkit.broadcastMessage(
                         "§7\n" +
