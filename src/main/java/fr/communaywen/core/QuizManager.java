@@ -38,15 +38,20 @@ public class QuizManager {
             int index = new Random().nextInt(this.quizzes.size());
 
             currentQuiz = this.quizzes.get(index);
-            Bukkit.broadcastMessage(
-                    "Nouvelle question : " + currentQuiz.question + "\n" +
-                    "Vous avez 30 secondes pour répondre" + "\n" +
-                    "Le premier a répondre gagne !"
-            );
-
             Runnable tellAnswer = () -> {
-                Bukkit.broadcastMessage("Personne n'as trouvée la réponse au quizz après 30 secondes");
-                Bukkit.broadcastMessage("La réponse était : " + currentQuiz.answer);
+                Bukkit.broadcastMessage(
+                        "§7\n" +
+                        "§7\n" +
+                        "§8§m                                                     §r\n" +
+                        "§7\n" +
+                        "§cAie aie aie ! Personne n'a trouver la réponse ... \n§7" +
+                        "§7\n" +
+                        "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
+                        "§7\n" +
+                        "§8§m                                                     §r" +
+                        "§7\n" +
+                        "§7\n"
+                );
                 currentQuiz = null;
             };
 
@@ -58,13 +63,25 @@ public class QuizManager {
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max") - 1);
+        int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
 
         if (currentQuiz == null) return;
 
         if (event.getMessage().toLowerCase().equals(currentQuiz.answer)) {
-            String message = MessageFormat.format("{0} a trouvé la réponse en premier, il remporte {1} de monnaie", event.getPlayer().getDisplayName(), money);
-            Bukkit.broadcastMessage(message);
+            Bukkit.broadcastMessage(
+                    "§7\n" +
+                            "§7\n" +
+                            "§8§m                                                     §r\n" +
+                            "§7\n" +
+                            "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui trouve la réponse en premier ! \n§7" +
+                            "§eLa réponse au quizz étais §7" + currentQuiz.answer + ". \n§7" +
+                            "§bIl remporte §7" + money + " §bde monnaie !\n" +
+                            "§7\n" +
+                            "§8§m                                                     §r" +
+                            "§7\n" +
+                            "§7\n"
+            );
+            event.setCancelled(true);
             this.plugin.economyManager.addBalance(event.getPlayer(), money);
             currentQuiz = null;
             this.timeoutExecutor.shutdownNow();
