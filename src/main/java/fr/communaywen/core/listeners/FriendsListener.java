@@ -26,11 +26,10 @@ public class FriendsListener implements Listener {
         for(String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())){
             Player friends = Bukkit.getPlayer(friends_uuid);
 
-            if(friends == null){
-                continue;
+            assert friends != null;
+            if(friends.isOnline()){
+                friends.sendMessage("§aVotre ami §e" + p.getName() + " §as'est connecté(e) !");
             }
-
-            friends.sendMessage("§aVotre ami §e" + p.getName() + " §as'est connecté(e) !");
         }
     }
 
@@ -41,11 +40,10 @@ public class FriendsListener implements Listener {
         for(String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())){
             Player friends = Bukkit.getPlayer(friends_uuid);
 
-            if(friends == null){
-                continue;
+            assert friends != null;
+            if(friends.isOnline()){
+                friends.sendMessage("§cVotre ami §e" + p.getName() + " §cs'est déconnecté(e) !");
             }
-
-            friends.sendMessage("§cVotre ami §e" + p.getName() + " §cs'est déconnecté(e) !");
         }
     }
 
