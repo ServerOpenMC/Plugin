@@ -36,8 +36,6 @@ quizzes:
     answer: "Pierre"
   - question: "En quelle année Minecraft est-il sorti"
     answer: "2009"
-  - question: "Combien de blocs de bois faut-il pour faire une porte"
-    answer: "6"
   - question: "Quel est le nom de l'élément qui permet de réparer les outils en Minecraft"
     answer: "Enclume"
   - question: "Quel est l'ingrédient principal pour créer du pain dans Minecraft"
