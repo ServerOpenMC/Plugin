@@ -160,6 +160,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Insomnia(), this);
         getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         getServer().getPluginManager().registerEvents(new ThorHammer(), this);
+        getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
         /* --------- */
 
         saveDefaultConfig();
