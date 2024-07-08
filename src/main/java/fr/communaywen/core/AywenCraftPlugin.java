@@ -1,6 +1,8 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.friends.FriendsManager;
+import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.players.PlayersCommand;
@@ -44,6 +46,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
+    private FriendsManager friendsManager;
     public EconomyManager economyManager;
     public LuckPerms api;
     public ScoreboardManagers scoreboardManagers;
@@ -85,6 +88,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* UTILS */
         databaseManager = new DatabaseManager(this);
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
+        FriendsUtils friendsUtils = new FriendsUtils(databaseManager);
 
         scoreboardManagers = new ScoreboardManagers();
 
@@ -103,6 +107,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
 
+        friendsManager = new FriendsManager(friendsUtils, this);
 
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
@@ -127,7 +132,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
                 new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
-                new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this));
+                new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
+                new FriendsCommand(friendsManager, this, adventure));
 
         /*  --------  */
 
@@ -154,6 +160,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Insomnia(), this);
         getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         getServer().getPluginManager().registerEvents(new ThorHammer(), this);
+        getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
         /* --------- */
 
         saveDefaultConfig();
