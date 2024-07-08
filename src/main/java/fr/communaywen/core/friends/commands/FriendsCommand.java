@@ -54,10 +54,15 @@ public class FriendsCommand {
                 return;
             }
 
+            if(player == target){
+                player.sendMessage("§cTu ne peux pas envoyer une demande d'ami à toi-même.");
+                return;
+            }
+
             friendsManager.addRequest(player.getUniqueId().toString(), target.getUniqueId().toString());
             player.sendMessage("§aDemande d'ami envoyée à §e" + target.getName() + "§a.");
 
-            TextComponent accept = Component.text("§e" +target.getName() +" §avous a envoyé une demande d'ami !")
+            TextComponent accept = Component.text("§e" +player.getName() +" §avous a envoyé une demande d'ami !")
                     .hoverEvent(HoverEvent.showText(Component.text("§7[§aCliquez pour accepter§7]")))
                     .clickEvent(ClickEvent.runCommand("/friends accept " + player.getName()));
 
