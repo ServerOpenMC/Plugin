@@ -2,20 +2,14 @@ package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
-import fr.communaywen.core.teams.Team;
-import fr.communaywen.core.teams.menu.TeamMenu;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.command.ExecutableCommand;
 import revxrsal.commands.help.CommandHelp;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Command("money")
 @Description("Transférer de l'argent entre joueurs")
