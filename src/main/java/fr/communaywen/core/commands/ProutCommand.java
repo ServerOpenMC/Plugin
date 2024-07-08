@@ -15,11 +15,13 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Cooldown;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * THE Prout command.
@@ -28,27 +30,11 @@ import java.util.UUID;
  * Permission: PREFIX.command.prout
  */
 public final class ProutCommand {
-    private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN_TIME = 300; // 5 minutes in seconds
-
     @Command("prout")
     @Description("Prout !")
     @CommandPermission("ayw.command.prout")
+    @Cooldown(value = 5, unit = TimeUnit.MINUTES)
     public void onCommand(Player player) {
-        UUID playerId = player.getUniqueId();
-        long currentTime = System.currentTimeMillis() / 1000;
-
-        if (cooldowns.containsKey(playerId)) {
-            long lastUsed = cooldowns.get(playerId);
-            long timeSinceLastUse = currentTime - lastUsed;
-
-            if (timeSinceLastUse < COOLDOWN_TIME) {
-                long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
-                player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
-                return;
-            }
-        }
-
         player.sendMessage("§2Beuuurk, ça pue !");
 
         // Make the player jump
@@ -75,9 +61,6 @@ public final class ProutCommand {
         // Broadcast the message
         String broadcastMessage = "[§c§l§ka§r] §f§lPROUT !!! §r" + player.getName() + " a §f§lpété§r. §2§lBeurk !";
         Bukkit.broadcastMessage(broadcastMessage);
-
-        // Update cooldown
-        cooldowns.put(playerId, currentTime);
     }
 
     private void addGlowingEffect(Player player) {

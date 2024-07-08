@@ -223,7 +223,4 @@ public final class AywenCraftPlugin extends JavaPlugin {
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
     }
-
-
-
 }
