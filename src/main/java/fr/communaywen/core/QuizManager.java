@@ -40,7 +40,7 @@ public class QuizManager {
             currentQuiz = this.quizzes.get(index);
             Bukkit.broadcastMessage(
                     "Nouvelle question : " + currentQuiz.question + "\n" +
-                    "Vous avez 30 seconds pour répondre" + "\n" +
+                    "Vous avez 30 secondes pour répondre" + "\n" +
                     "Le premier a répondre gagne !"
             );
 

@@ -47,7 +47,7 @@ public class OnPlayers implements Listener {
         String DiscordPlayerId = this.linkerAPI.getUserId(player);
 
         if (DiscordPlayerId.isEmpty()){
-            player.sendMessage("Profitez de récompenses en lient votre compte Discord à Minecraft");
+            player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
             return;
         }
 
