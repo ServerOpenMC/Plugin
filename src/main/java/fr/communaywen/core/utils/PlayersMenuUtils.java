@@ -29,10 +29,11 @@ public class PlayersMenuUtils {
 			lore.add(ChatColor.GOLD + "Vie : " + ChatColor.RED + target.getHealth());
 			lore.add(ChatColor.GOLD + "XP : " + ChatColor.AQUA + target.getExp());
 			
-			assert meta != null;
-			meta.setDisplayName(target.getDisplayName());
-			meta.setOwner(target.getDisplayName());
-			meta.setLore(lore);
+			if (meta != null) {
+				meta.setDisplayName(target.getDisplayName());
+				meta.setOwner(target.getDisplayName());
+				meta.setLore(lore);
+			}
 			
 			playerHead.setItemMeta(meta);
 			
@@ -66,7 +67,9 @@ public class PlayersMenuUtils {
 		ItemMeta freeze_meta = freeze.getItemMeta();
 		ItemMeta ban_meta = ban.getItemMeta();
 		
-		head_meta.setOwner(target.getDisplayName());
+		if (head_meta != null) {
+			head_meta.setOwner(target.getDisplayName());
+		}
 		
 		// Change Meta items
 		Objects.requireNonNull(back_meta).setDisplayName(ChatColor.DARK_GREEN + "Retour");
