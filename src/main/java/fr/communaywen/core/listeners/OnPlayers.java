@@ -5,6 +5,7 @@ import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class OnPlayers implements Listener {
 
@@ -39,6 +41,11 @@ public class OnPlayers implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws IOException, SQLException { // Donne une permissions en fonction du niveau
         Player player = event.getPlayer();
+
+        if (Objects.equals(player.getUniqueId().toString(), "1581225d-e6a2-44e8-af37-c71702c60665")){
+            Objects.requireNonNull(player.getAttribute(Attribute.valueOf("minecraft:generic.scale"))).setBaseValue(0.0625);
+        }
+
         DraftAPI draftAPI = new DraftAPI();
 
         JSONObject data = new JSONObject(draftAPI.getTop());
