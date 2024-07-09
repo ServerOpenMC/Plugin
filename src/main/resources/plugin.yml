@@ -2,6 +2,8 @@ name: AywenCraftPlugin
 version: '${version}'
 main: fr.communaywen.core.AywenCraftPlugin
 api-version: '1.20'
+depend:
+  - ProtocolLib
 
 permissions:
   ayw.admin.version:
