@@ -33,7 +33,7 @@ public class PlayersMenuUtils {
 			
 			if (meta != null) {
 				meta.setDisplayName(name);
-				meta.setOwner(name);
+				meta.setOwner(player.getName());
 				meta.setLore(lore);
 			}
 			
