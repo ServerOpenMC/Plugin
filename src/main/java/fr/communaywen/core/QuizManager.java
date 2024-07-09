@@ -33,13 +33,28 @@ public class QuizManager {
         };
 
         Runnable runnable = () -> {
-            if (Bukkit.getOnlinePlayers().size() < 1) return;
+            if (Bukkit.getOnlinePlayers().isEmpty()) return;
 
             this.timeoutExecutor = Executors.newScheduledThreadPool(1);
 
-            int index = new Random().nextInt(this.quizzes.size());
+            currentQuiz = getRandomQuiz();
 
-            currentQuiz = this.quizzes.get(index);
+            int numberOfSpaces = Math.max(0, 23 - (currentQuiz.question.length() / 2));
+            Bukkit.broadcastMessage(
+                    "§7\n" +
+                            "§7\n" +
+                            "§8§m                                                     §r\n" +
+                            "§7\n" +
+                            "§6              Nouvelle question : \n§7" +
+                            " ".repeat(numberOfSpaces) + currentQuiz.question + "\n" +
+                            "§b     Vous avez 30 seconds pour répondre" + "\n" +
+                            "§e         Le premier a répondre gagne !\n" +
+                            "§7\n" +
+                            "§8§m                                                     §r" +
+                            "§7\n" +
+                            "§7\n"
+            );
+
             Runnable tellAnswer = () -> {
                 Bukkit.broadcastMessage(
                         "§7\n" +
@@ -70,11 +85,6 @@ public class QuizManager {
         if (currentQuiz == null) return;
 
         if (event.getMessage().toLowerCase().equals(currentQuiz.answer)) {
-
-            BukkitRunnable task = new BukkitRunnable() {
-                @Override
-                public void run() {
-
             Bukkit.broadcastMessage(
                     "§7\n" +
                             "§7\n" +
@@ -89,21 +99,42 @@ public class QuizManager {
                             "§7\n"
             );
 
-
-                }
-
-            };
-
-            task.runTaskLater((Plugin) this, 10);
-        }
-
             event.setCancelled(true);
-            this.plugin.economyManager.addBalance(event.getPlayer(), money);
-            currentQuiz = null;
-            this.timeoutExecutor.shutdownNow();
-            this.timeoutExecutor = Executors.newScheduledThreadPool(1);
         }
 
+        this.plugin.economyManager.addBalance(event.getPlayer(), money);
+        currentQuiz = null;
+        this.timeoutExecutor.shutdownNow();
+        this.timeoutExecutor = Executors.newScheduledThreadPool(1);
+    }
+
+    public Quiz getRandomQuiz()
+    {
+        boolean isPredefinedQuiz = new Random().nextInt(3) < 2;
+
+        if (isPredefinedQuiz) {
+            int index = new Random().nextInt(this.quizzes.size());
+
+            return this.quizzes.get(index);
+        } else {
+            int type = new Random().nextInt(4);
+            int a = new Random().nextInt(1, 10);
+
+            return switch (type) {
+                case 0 -> {
+                    int b = new Random().nextInt(1, 10);
+                    yield new Quiz(MessageFormat.format("Combien font {0} + {1} ?", a, b), String.valueOf(a + b));
+                }
+                case 1 -> {
+                    int b = new Random().nextInt(1, 10);
+                    yield new Quiz(MessageFormat.format("Combien font {0} * {1} ?", a, b), String.valueOf(a * b));
+                }
+                case 2 -> new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
+                case 3 -> new Quiz(MessageFormat.format("Quelle est le carrée de {0} ?", a), String.valueOf(a * a));
+                default -> throw new IllegalStateException("Unexpected value: " + type);
+            };
+        }
+    }
 
     public void close() {
         executor.shutdownNow();
