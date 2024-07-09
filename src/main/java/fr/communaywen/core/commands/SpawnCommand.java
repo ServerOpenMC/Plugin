@@ -33,7 +33,7 @@ public class SpawnCommand {
     @CommandPermission("ayw.command.spawn")
     public void spawn(Player player){
         Location spawn = new Location(player.getServer().getWorld(WORLD), x, y, z, 0, 0);
-        player.sendTitle("§0", "§aTéléportation au spawn...", 10, 10, 10);
+        player.sendTitle("§0","§a§lTéléportation au spawn...",20,10,10);
         new BukkitRunnable() {
             @Override
             public void run() {
