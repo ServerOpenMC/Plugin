@@ -1,5 +1,6 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.friends.FriendsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,10 +25,9 @@ public class FriendsListener implements Listener {
         Player p = e.getPlayer();
 
         for(String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())){
-            Player friends = Bukkit.getPlayer(friends_uuid);
+            Player friends = Bukkit.getPlayer(UUID.fromString(friends_uuid));
 
-            assert friends != null;
-            if(friends.isOnline()){
+            if(friends != null && friends.isOnline()) {
                 friends.sendMessage("§aVotre ami §e" + p.getName() + " §as'est connecté(e) !");
             }
         }
@@ -38,10 +38,9 @@ public class FriendsListener implements Listener {
         Player p = e.getPlayer();
 
         for(String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())){
-            Player friends = Bukkit.getPlayer(friends_uuid);
+            Player friends = Bukkit.getPlayer(UUID.fromString(friends_uuid));
 
-            assert friends != null;
-            if(friends.isOnline()){
+            if(friends != null && friends.isOnline()){
                 friends.sendMessage("§cVotre ami §e" + p.getName() + " §cs'est déconnecté(e) !");
             }
         }

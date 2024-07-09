@@ -81,7 +81,7 @@ public class PlayersMenuUtils {
 		Objects.requireNonNull(head_meta).setDisplayName(ChatColor.DARK_GREEN + target.getDisplayName());
 		Objects.requireNonNull(exp_meta).setDisplayName(ChatColor.DARK_GREEN + "Expérience");
 		Objects.requireNonNull(inventory_meta).setDisplayName(ChatColor.DARK_GREEN + "Voir l'inventaire");
-		Objects.requireNonNull(freeze_meta).setDisplayName(ChatColor.DARK_GREEN + "Gêler le joueur");
+		Objects.requireNonNull(freeze_meta).setDisplayName(ChatColor.DARK_GREEN + "Geler le joueur");
 		Objects.requireNonNull(ban_meta).setDisplayName(ChatColor.DARK_GREEN + "Bannir le joueur");
 		
 		// Change lore of items

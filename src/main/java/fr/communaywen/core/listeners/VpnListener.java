@@ -57,9 +57,9 @@ public class VpnListener implements Listener {
                     String response = content.toString();
                     if (response.contains("\"proxy\":true")) {
                         Bukkit.getScheduler().runTask(plugin, () -> {
-                            player.kickPlayer(  "§l§cOpenMc - Sécuritée\n" +
+                            player.kickPlayer(  "§l§cOpenMc - Sécurité\n" +
                                     "\n" +
-                                    "§l§eConnexion Non Permise !§r\n" +
+                                    "§l§eConnexion non permise !§r\n" +
                                     "\n" +
                                     "§6Vous essayez actuellement de vous connecter au serveur\n" +
                                     "§6avec un vpn ou un proxy.\n" +
