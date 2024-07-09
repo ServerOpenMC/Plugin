@@ -34,6 +34,7 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
     compileOnly 'me.clip:placeholderapi:2.11.6'
+    compileOnly 'com.github.dmulloy2:ProtocolLib:-SNAPSHOT'
 
     implementation 'com.github.Revxrsal.Lamp:common:3.2.1'
     implementation 'com.github.Revxrsal.Lamp:bukkit:3.2.1'
