@@ -9,7 +9,7 @@ public class ExperienceManager {
     }
 
     public void removeExperience(int amount, Player player) {
-        LevelsDataManager.addToCount(player, amount * -1);
+        LevelsDataManager.removeToCount(player, amount * -1);
     }
 
     public void setExperience(int amount, Player player) {
