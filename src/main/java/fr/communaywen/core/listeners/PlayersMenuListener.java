@@ -51,7 +51,7 @@ public class PlayersMenuListener implements Listener {
 				String name = target.getDisplayName();
 				player.getServer().getBanList(BanList.Type.NAME).addBan(name, "Aucune raison spécifiée", null, player.getDisplayName());
 				player.sendMessage(ChatColor.BLUE + name + ChatColor.DARK_RED + " a bien été banni !");
-				target.kickPlayer("Vous avez été banni pour Aucune raison spécifiée");
+				target.kickPlayer("Vous avez été banni pour aucune raison spécifiée");
 				player.closeInventory();
 			}
 			e.setCancelled(true);
