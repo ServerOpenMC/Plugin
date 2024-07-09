@@ -162,6 +162,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ThorHammer(), this);
         getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
         getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
+        getServer().getPluginManager().registerEvents(new TablistListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
