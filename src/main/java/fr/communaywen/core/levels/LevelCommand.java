@@ -12,21 +12,23 @@ public class LevelCommand {
 
     private final ExperienceManager experienceManager;
 
-    public LevelCommand(ExperienceManager experienceManager) { this.experienceManager = experienceManager; }
+    public LevelCommand(ExperienceManager experienceManager) {
+        this.experienceManager = experienceManager;
+    }
 
     @Subcommand("add")
     public void add(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
 
-        experienceManager.addExperience(amount,target);
+        experienceManager.addExperience(amount, target);
     }
 
     @Subcommand("remove")
     public void remove(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
-        experienceManager.removeExperience(amount,target);
+        experienceManager.removeExperience(amount, target);
     }
 
     @Subcommand("set")
     public void set(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
-        experienceManager.setExperience(amount,target);
+        experienceManager.setExperience(amount, target);
     }
 }

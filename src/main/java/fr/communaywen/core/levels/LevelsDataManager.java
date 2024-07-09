@@ -1,31 +1,13 @@
 package fr.communaywen.core.levels;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.*;
-
-import java.io.File;
-
-import static org.bukkit.Bukkit.getLogger;
-import static org.bukkit.scoreboard.Criteria.DUMMY;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+
+import static org.bukkit.Bukkit.getLogger;
+
 
 public class LevelsDataManager {
 
@@ -47,13 +29,13 @@ public class LevelsDataManager {
     }
 
     public static void addToCount(Player player, int amount) {
-       String playerName = player.getName();
+        String playerName = player.getName();
 
-       if (levelsFileConfig.contains("xp."+playerName+".amount")) {
-           levelsFileConfig.set("xp."+playerName+".amount", levelsFileConfig.getInt("xp."+playerName+".amount") + amount);
-       } else {
-           levelsFileConfig.set("xp."+playerName+".amount", amount);
-       }
+        if (levelsFileConfig.contains("xp." + playerName + ".amount")) {
+            levelsFileConfig.set("xp." + playerName + ".amount", levelsFileConfig.getInt("xp." + playerName + ".amount") + amount);
+        } else {
+            levelsFileConfig.set("xp." + playerName + ".amount", amount);
+        }
 
         saveFile();
     }
@@ -61,10 +43,10 @@ public class LevelsDataManager {
     public static void removeToCount(Player player, int amount) {
         String playerName = player.getName();
 
-        if (levelsFileConfig.contains("xp."+playerName+".amount")) {
-            levelsFileConfig.set("xp."+playerName+".amount", levelsFileConfig.getInt("xp."+playerName+".amount") - amount);
+        if (levelsFileConfig.contains("xp." + playerName + ".amount")) {
+            levelsFileConfig.set("xp." + playerName + ".amount", levelsFileConfig.getInt("xp." + playerName + ".amount") - amount);
         } else {
-            levelsFileConfig.set("xp."+playerName+".amount", amount);
+            levelsFileConfig.set("xp." + playerName + ".amount", amount);
         }
 
         saveFile();
@@ -73,10 +55,10 @@ public class LevelsDataManager {
     public static void setCount(Player player, int amount) {
         String playerName = player.getName();
 
-        if (levelsFileConfig.contains("xp."+playerName+".amount")) {
-            levelsFileConfig.set("xp."+playerName+".amount", amount);
+        if (levelsFileConfig.contains("xp." + playerName + ".amount")) {
+            levelsFileConfig.set("xp." + playerName + ".amount", amount);
         } else {
-            levelsFileConfig.set("xp."+playerName+".amount", amount);
+            levelsFileConfig.set("xp." + playerName + ".amount", amount);
         }
 
         saveFile();
