@@ -154,6 +154,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
+        getServer().getPluginManager().registerEvents(new KebabListener(this), this);
         getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
         getServer().getPluginManager().registerEvents(new RTPWand(this), this);
         getServer().getPluginManager().registerEvents(onPlayers, this);
