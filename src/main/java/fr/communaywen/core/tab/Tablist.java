@@ -31,7 +31,7 @@ public class Tablist {
         if (user != null) {
             String prefix = user.getCachedData().getMetaData().getPrefix();
             if (prefix != null) {
-                player.setPlayerListName(prefix.replace("&", "§") + " " + player.getName().replace("&", "§"));
+                player.setPlayerListName(prefix.replace("&", "§") + player.getName().replace("&", "§"));
             } else {
                 player.setPlayerListName(player.getName());
             }
