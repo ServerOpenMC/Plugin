@@ -30,6 +30,7 @@ public class ChatListener implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendMessage(username, avatarUrl, message));
 
         Bukkit.getOnlinePlayers().forEach(player -> {
+            if (player.equals(event.getPlayer())) { return; }
             if (message.toLowerCase().contains(player.getName().toLowerCase())) {
                 player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
             }
