@@ -26,7 +26,7 @@ public final class ExplodeRandomCommand {
     public static final int COST = 32;
 
     @Command("exploderandom")
-    @Description("Fait exploser un joueur aléatoire, côute 32 diamants")
+    @Description("Fait exploser un joueur aléatoire, coûte 32 diamants")
     public void onCommand(Player player) {
         try {
             UUID playerId = player.getUniqueId();
@@ -61,7 +61,7 @@ public final class ExplodeRandomCommand {
             }
 
             if (players.isEmpty()) {
-                player.sendMessage("Aucun joueur n'as été trouvée...");
+                player.sendMessage("Aucun joueur n'a été trouvé...");
 
                 return;
             }

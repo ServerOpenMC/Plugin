@@ -32,7 +32,7 @@ permissions:
     description: 'freeze'
     default: false
   openmc.command.fboom:
-    description: 'Crée une explosion de falling blocks autour du joueur'
+    description: 'Créer une explosion de falling blocks autour du joueur'
     default: op
 
   openmc.staff.players:
