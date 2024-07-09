@@ -5,6 +5,8 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import fr.communaywen.core.AywenCraftPlugin;
+import net.luckperms.api.model.user.User;
 import org.bukkit.entity.Player;
 
 public class Tablist {
@@ -19,6 +21,20 @@ public class Tablist {
             protocolManager.sendServerPacket(player, packet);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        updatePlayerPrefix(player);
+    }
+
+    private void updatePlayerPrefix(Player player) {
+        User user = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
+        if (user != null) {
+            String prefix = user.getCachedData().getMetaData().getPrefix();
+            if (prefix != null) {
+                player.setPlayerListName(prefix + " " + player.getName().replace("&", "§"));
+            } else {
+                player.setPlayerListName(player.getName());
+            }
         }
     }
 

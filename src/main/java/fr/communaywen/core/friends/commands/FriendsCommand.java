@@ -101,7 +101,7 @@ public class FriendsCommand {
             for (String friendUUID : friends) {
                 OfflinePlayer friend = Bukkit.getOfflinePlayer(UUID.fromString(friendUUID));
 
-                TextComponent friendComponent = Component.text("- §e" + friend.getName() + " §7depuis le: §e" + getFormattedDate(friendsManager.getTimestamp(player.getUniqueId().toString(), friendUUID))+"\n")
+                TextComponent friendComponent = Component.text("- §e" + friend.getName() + " §7depuis le: §e" + getFormattedDate(friendsManager.getTimestamp(player.getUniqueId().toString(), friendUUID)))
                         .hoverEvent(HoverEvent.showText(Component.text("§7[§cCliquez pour supprimer§7]")))
                         .clickEvent(ClickEvent.runCommand("/friends remove " + friend.getName()));
 
