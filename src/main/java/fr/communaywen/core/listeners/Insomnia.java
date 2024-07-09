@@ -40,7 +40,7 @@ public class Insomnia implements Listener {
                 random = new Random();
                 if (random.nextDouble() <= 0.1) {
                     System.out.println("Giving insomnia to "+player.getName());
-                    player.sendMessage("Tu as fais une insomnie!");
+                    player.sendMessage("Tu as fait une insomnie!");
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 200, 1)); // Slowness II
                     player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 0)); // Weakness
                     player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 0)); // Blindness
