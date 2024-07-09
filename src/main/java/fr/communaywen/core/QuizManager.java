@@ -75,7 +75,6 @@ public class QuizManager {
                 @Override
                 public void run() {
 
-                    Bukkit.broadcastMessage(
             Bukkit.broadcastMessage(
                     "§7\n" +
                             "§7\n" +
@@ -87,20 +86,12 @@ public class QuizManager {
                             "§7\n" +
                             "§8§m                                                     §r" +
                             "§7\n" +
-                                    "§7\n" +
-                                    "§8§m                                                     §r\n" +
-                                    "§7\n" +
-                                    "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui trouve la réponse en premier ! \n§7" +
-                                    "§eLa réponse au quizz étais §7" + currentQuiz.answer + ". \n§7" +
-                                    "§bIl remporte §7" + money + " §bde monnaie !\n" +
-                                    "§7\n" +
-                                    "§8§m                                                     §r" +
-                                    "§7\n" +
-                                    "§7\n"
-                    );
+                            "§7\n"
+            );
 
 
                 }
+
             };
 
             task.runTaskLater((Plugin) this, 10 * 3);
