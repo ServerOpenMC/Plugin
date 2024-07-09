@@ -27,7 +27,7 @@ public class ChatListener implements Listener {
         String avatarUrl = "https://minotar.net/helm/" + username;
         String message = event.getMessage();
 
-        discordWebhook.sendMessage(username, avatarUrl, message);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendMessage(username, avatarUrl, message));
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (message.toLowerCase().contains(player.getName().toLowerCase())) {
@@ -38,6 +38,6 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onBroadcastMessage(BroadcastMessageEvent event) {
-        discordWebhook.sendBroadcast(event.getMessage());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendBroadcast(event.getMessage()));
     }
 }
