@@ -29,7 +29,15 @@ public class TPACommand {
     @CommandPermission("ayw.command.tpa")
     public void onCommand(Player player, @Named("joueur") Player target) {
             if (player == target){
-                player.sendMessage("Tu ne peux pas faire une demande de téléportation à toi-même !");
+                player.sendMessage("Pourquoi pas ?");
+                tpQueue.TPA_REQUESTS.put(target, player);
+                tpQueue.TPA_REQUESTS2.put(player, target);
+                tpQueue.TPA_REQUESTS_TIME.put(player, System.currentTimeMillis()/1000);
+                new BukkitRunnable() {
+                @Override
+                public void run() {
+                     expire_tpa(player, target);}
+                }.runTaskLater(AywenCraftPlugin.getInstance(), 2400);
                 return;
             }
 
@@ -41,6 +49,7 @@ public class TPACommand {
 
             tpQueue.TPA_REQUESTS.put(target, player);
             tpQueue.TPA_REQUESTS2.put(player, target);
+            tpQueue.TPA_REQUESTS_TIME.put(player, System.currentTimeMillis()/1000);
 
             player.sendMessage("Vous avez envoyé une demande de tpa à " + target.getName());
 
@@ -51,24 +60,21 @@ public class TPACommand {
 
             plugin.getAdventure().player(target).sendMessage(textComponent);
 
-        BukkitRunnable task = new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
+                expire_tpa(player, target);}
+        }.runTaskLater(AywenCraftPlugin.getInstance(), 2400);
+    }
+    private void expire_tpa(Player player,Player target){
 
-
-                if (tpQueue.TPA_REQUESTS2.containsKey(player)) {
-                    player.sendMessage("Votre demande de téléportation a expirée...");
-
-                    tpQueue.TPA_REQUESTS.remove(target, player);
-                    tpQueue.TPA_REQUESTS2.remove(player, target);
-
-                }
-
-
+        if (tpQueue.TPA_REQUESTS2.containsKey(player)) {
+            if (tpQueue.TPA_REQUESTS_TIME.get(player) >= System.currentTimeMillis()/1000-(2400/20)) {
+                player.sendMessage("Votre demande de téléportation a expirée...");
+                tpQueue.TPA_REQUESTS.remove(target, player);
+                tpQueue.TPA_REQUESTS2.remove(player, target);
             }
-        };
-
-        task.runTaskLater((Plugin) this, 2400);
+        }
     }
 
 }

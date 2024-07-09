@@ -21,7 +21,7 @@ public class TpacceptCommand {
         }
         tpQueue.TPA_REQUESTS.remove(player);
         player.sendMessage(tpaplayer.getName()+" va être téléporté à vous !");
-        tpaplayer.sendTitle("§0","Téléportation à "+player.getName() ,20,10,10);
+        tpaplayer.sendTitle("§0","§a§lTéléportation à "+player.getName(),20,10,10);
         new BukkitRunnable() {
             @Override
             public void run() {
