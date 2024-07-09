@@ -95,18 +95,18 @@ public class FriendsCommand {
     public void listFriends(Player player) {
         try {
             List<String> friends = friendsManager.getFriends(player.getUniqueId().toString());
-            TextComponent friendComponent = Component.text("§cTu n'as pas d'ami :(");
+
+            player.sendMessage("§eVos amis:");
 
             for (String friendUUID : friends) {
                 OfflinePlayer friend = Bukkit.getOfflinePlayer(UUID.fromString(friendUUID));
 
-                friendComponent = Component.text("- §e" + friend.getName() + " §7depuis le: §e" + getFormattedDate(friendsManager.getTimestamp(player.getUniqueId().toString(), friendUUID))+"\n")
+                TextComponent friendComponent = Component.text("- §e" + friend.getName() + " §7depuis le: §e" + getFormattedDate(friendsManager.getTimestamp(player.getUniqueId().toString(), friendUUID))+"\n")
                         .hoverEvent(HoverEvent.showText(Component.text("§7[§cCliquez pour supprimer§7]")))
                         .clickEvent(ClickEvent.runCommand("/friends remove " + friend.getName()));
-            }
 
-            player.sendMessage("§eVos amis:");
-            audiences.sender(player).sendMessage(friendComponent);
+                audiences.sender(player).sendMessage(friendComponent);
+            }
         } catch (SQLException e) {
             player.sendMessage("§cUne erreur s'est produite lors de la récupération de votre liste d'amis.");
             e.printStackTrace();

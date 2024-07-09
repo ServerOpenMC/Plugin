@@ -29,10 +29,10 @@ public class PlayersMenuUtils {
 			lore.add(ChatColor.GOLD + "Vie : " + ChatColor.RED + target.getHealth());
 			lore.add(ChatColor.GOLD + "XP : " + ChatColor.AQUA + target.getExp());
 			
-			String name = target.getDisplayName();
+			String name = target.getName();
 			
 			if (meta != null) {
-				meta.setDisplayName(name);
+				meta.setDisplayName(ChatColor.WHITE + name);
 				meta.setOwner(name);
 				meta.setLore(lore);
 			}
@@ -70,7 +70,7 @@ public class PlayersMenuUtils {
 		ItemMeta ban_meta = ban.getItemMeta();
 		
 		if (head_meta != null) {
-			head_meta.setOwner(target.getDisplayName());
+			head_meta.setOwner(target.getName());
 		}
 		
 		// Change Meta items
