@@ -37,7 +37,7 @@ public class TPACommand {
                 @Override
                 public void run() {
                      expire_tpa(player, target);}
-                }.runTaskLater((Plugin) this, 2400);
+                }.runTaskLater(AywenCraftPlugin.getInstance(), 2400);
                 return;
             }
 
@@ -64,7 +64,7 @@ public class TPACommand {
             @Override
             public void run() {
                 expire_tpa(player, target);}
-        }.runTaskLater((Plugin) this, 2400);
+        }.runTaskLater(AywenCraftPlugin.getInstance(), 2400);
     }
     private void expire_tpa(Player player,Player target){
 
