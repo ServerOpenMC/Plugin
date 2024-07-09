@@ -3,6 +3,8 @@ package fr.communaywen.core;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Debug;
 
 import java.text.MessageFormat;
@@ -68,26 +70,38 @@ public class QuizManager {
         if (currentQuiz == null) return;
 
         if (event.getMessage().toLowerCase().equals(currentQuiz.answer)) {
-            Bukkit.broadcastMessage(
-                    "§7\n" +
+            BukkitRunnable task = new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    Bukkit.broadcastMessage(
                             "§7\n" +
-                            "§8§m                                                     §r\n" +
-                            "§7\n" +
-                            "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui trouve la réponse en premier ! \n§7" +
-                            "§eLa réponse au quizz étais §7" + currentQuiz.answer + ". \n§7" +
-                            "§bIl remporte §7" + money + " §bde monnaie !\n" +
-                            "§7\n" +
-                            "§8§m                                                     §r" +
-                            "§7\n" +
-                            "§7\n"
-            );
+                                    "§7\n" +
+                                    "§8§m                                                     §r\n" +
+                                    "§7\n" +
+                                    "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui trouve la réponse en premier ! \n§7" +
+                                    "§eLa réponse au quizz étais §7" + currentQuiz.answer + ". \n§7" +
+                                    "§bIl remporte §7" + money + " §bde monnaie !\n" +
+                                    "§7\n" +
+                                    "§8§m                                                     §r" +
+                                    "§7\n" +
+                                    "§7\n"
+                    );
+
+
+                }
+            };
+
+            task.runTaskLater((Plugin) this, 10 * 3);
+        }
+
             event.setCancelled(true);
             this.plugin.economyManager.addBalance(event.getPlayer(), money);
             currentQuiz = null;
             this.timeoutExecutor.shutdownNow();
             this.timeoutExecutor = Executors.newScheduledThreadPool(1);
         }
-    }
+
 
     public void close() {
         executor.shutdownNow();
