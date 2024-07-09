@@ -22,7 +22,7 @@ public class PlayersMenuListener implements Listener {
 		if (e.getView().getTitle().equalsIgnoreCase(ChatColor.BLUE + "Liste des joueurs")) {
 			if (Objects.requireNonNull(e.getCurrentItem()).getType() == (Material.PLAYER_HEAD)) {
 				player.sendMessage("Click");
-				Player target = player.getServer().getPlayerExact(ChatColor.stripColor(Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName()));
+				Player target = player.getServer().getPlayerExact(ChatColor.stripColor(Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().replace("§f", "")));
 				PlayersMenuUtils.openDetailsPlayersMenu(player, target);
 			}
 			e.setCancelled(true);

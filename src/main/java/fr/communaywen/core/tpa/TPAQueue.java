@@ -11,4 +11,5 @@ public class TPAQueue {
     }
     public final HashMap<Player, Player> TPA_REQUESTS = new HashMap<Player, Player>();
     public final HashMap<Player, Player> TPA_REQUESTS2 = new HashMap<Player, Player>();
+    public final HashMap<Player, Long> TPA_REQUESTS_TIME = new HashMap<Player, Long>();
 }

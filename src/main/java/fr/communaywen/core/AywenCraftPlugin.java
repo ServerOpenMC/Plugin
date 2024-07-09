@@ -30,6 +30,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -162,9 +167,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VpnListener(this), this);
         getServer().getPluginManager().registerEvents(new ThorHammer(), this);
         getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
+        getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
+        getServer().getPluginManager().registerEvents(new TablistListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
+
+        getServer().getPluginManager().registerEvents(new FarineListener(), this);
+        createFarineRecipe();
     }
 
     private FileConfiguration loadQuizzes() {
@@ -218,6 +228,24 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static AywenCraftPlugin getInstance() {
         return instance;
     }
+
+
+    // Farine pour fabriquer du pain
+
+    private void createFarineRecipe() {
+        ItemStack farine = new ItemStack(Material.SUGAR);
+        ItemMeta meta = farine.getItemMeta();
+        meta.setDisplayName("Farine");
+        farine.setItemMeta(meta);
+
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "farine"), farine);
+        recipe.shape(" A ", " B ", "   ");
+        recipe.setIngredient('A', Material.GUNPOWDER);
+        recipe.setIngredient('B', Material.WHEAT);
+
+        Bukkit.addRecipe(recipe);
+    }
+
 
     /**
      * Format a permission with the permission prefix.
