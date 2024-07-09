@@ -36,8 +36,8 @@ public class TablistListener implements Listener {
     }
 
     private void updateTab(Player player) {
-        String header = PlaceholderAPI.setPlaceholders(player, "\uE253\n§eJoueur en ligne §7: §6%server_online%§7/§e%server_max_players%\n");
-        String footer = "\n§ddev.openmc.fr";
+        String header = PlaceholderAPI.setPlaceholders(player, "\n\n\n\n\n\n\uE253\n\n  §eJoueurs en ligne §7: §6%server_online%§7/§e%server_max_players%  \n");
+        String footer = "\n§ddev.openmc.fr\n";
 
         new Tablist().sendTabList(player, header, footer);
     }

@@ -14,6 +14,6 @@ public class FBoomCommand {
     public void onCommand(Player player) {
         Location location = new Location(player.getWorld(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getPlayer().getLocation().getBlockZ());
 
-        new FallingBlocksExplosion(20, location, true);
+        new FallingBlocksExplosion(5, location, true);
     }
 }
