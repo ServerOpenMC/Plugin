@@ -94,7 +94,7 @@ public class QuizManager {
 
             };
 
-            task.runTaskLater((Plugin) this, 10 * 3);
+            task.runTaskLater((Plugin) this, 10);
         }
 
             event.setCancelled(true);

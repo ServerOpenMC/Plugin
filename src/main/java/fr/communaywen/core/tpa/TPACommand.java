@@ -68,7 +68,7 @@ public class TPACommand {
             }
         };
 
-        task.runTaskLater((Plugin) this, 2400 * 3);
+        task.runTaskLater((Plugin) this, 2400);
     }
 
 }
