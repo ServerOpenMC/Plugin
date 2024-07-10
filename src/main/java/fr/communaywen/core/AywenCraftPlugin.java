@@ -160,7 +160,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
                 new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelCommand(experienceManager));
+                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelCommand(experienceManager), new TailleCommand());
 
         /*  --------  */
 
