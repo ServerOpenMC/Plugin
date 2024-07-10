@@ -3,11 +3,15 @@ package fr.communaywen.core;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
+import fr.communaywen.core.levels.ExperienceManager;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
+
+import fr.communaywen.core.levels.LevelCommand;
+import fr.communaywen.core.levels.LevelsDataManager;
 
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
@@ -67,6 +71,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     private FallingBlocksExplosionManager fbeManager;
 
+    private ExperienceManager experienceManager;
+
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
         if (!bookFile.exists()) {
@@ -81,6 +87,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
             saveResource("welcomeMessageConfig.yml", false);
         }
         return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
+    }
+
+    private FileConfiguration loadLevelsFile() {
+        File levelsFile = new File(getDataFolder(), "levels.yml");
+        if (!levelsFile.exists()) {
+            saveResource("levels.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(levelsFile);
     }
 
     @Override
@@ -112,6 +126,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
 
+        LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
+
         friendsManager = new FriendsManager(friendsUtils, this);
 
         motdChanger = new MOTDChanger();
@@ -119,7 +135,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         teamManager = new TeamManager();
         fbeManager = new FallingBlocksExplosionManager();
 
+        experienceManager = new ExperienceManager();
+
         this.adventure = BukkitAudiences.create(this);
+
         /* ----- */
 
         String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
@@ -138,7 +157,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
                 new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure));
+                new FriendsCommand(friendsManager, this, adventure), new LevelCommand(experienceManager));
 
         /*  --------  */
 
