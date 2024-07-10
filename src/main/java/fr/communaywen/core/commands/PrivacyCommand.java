@@ -1,13 +1,15 @@
 package fr.communaywen.core.commands;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import fr.communaywen.core.AywenCraftPlugin;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import fr.communaywen.core.utils.database.Blacklist;
 import revxrsal.commands.annotation.*;
+import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.command.ExecutableCommand;
 import revxrsal.commands.help.CommandHelp;
 
@@ -27,8 +29,9 @@ public class PrivacyCommand {
     }
 
     @DefaultFor("~")
-    public void sendHelp(Player player, ExecutableCommand command, CommandHelp<Component> help, @Default("1") @Range(min = 1) int page) {
-        player.sendMessage("hello");
+    public void sendHelp(BukkitCommandActor sender, CommandHelp<Component> help, ExecutableCommand thisHelpCommand, @Default("1") @Range(min = 1) int page) {
+        Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
+        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, ChatColor.BLACK+"BLACKLIST"+ ChatColor.RESET);
     }
 
     @Subcommand("blacklist")
@@ -50,21 +53,23 @@ public class PrivacyCommand {
 
     @Subcommand("block")
     @Description("Ajoute quelqu'un à la blacklist")
-    public void block(Player player, @Named("player") String blocked) throws SQLException {
-        if (player.getName().equals(blocked)) {
+    public void block(Player player, @Named("player") Player blocked) throws SQLException {
+        if (player.getUniqueId().equals(blocked.getUniqueId())) {
             player.sendMessage("Vous ne pouvez pas vous bloquer vous-même");
             return;
         }
-        blacklist.block(player, Bukkit.getOfflinePlayer(blocked));
+        blacklist.block(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
+        player.sendMessage("Vous avez bloqué "+blocked);
     }
 
     @Subcommand("unblock")
     @Description("Retire quelqu'un à la blacklist")
-    public void unblock(Player player, @Named("player") String blocked) throws SQLException {
-        if (player.getName().equals(blocked)) {
+    public void unblock(Player player, @Named("player") Player blocked) throws SQLException {
+        if (player.getUniqueId().equals(blocked.getUniqueId())) {
             player.sendMessage("Vous ne pouvez pas vous débloquer vous-même");
             return;
         }
-        blacklist.unblock(player, Bukkit.getOfflinePlayer(blocked));
+        blacklist.unblock(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
+        player.sendMessage("Vous avez débloqué "+blocked);
     }
 }
