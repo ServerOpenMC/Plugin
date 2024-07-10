@@ -24,7 +24,12 @@ public class LinkCommand {
             if (!linkerAPI.getUserId(player).isEmpty()) {
                 player.sendMessage(ChatColor.RED + "Votre compte minecraft est déjà lié à un compte Discord.");
             } else {
-                int code = linkerAPI.generateCode();
+                int code = 2555;
+
+                do {
+                    code = linkerAPI.generateCode();
+                    AywenCraftPlugin.getInstance().getLogger().info("regen code" + code);
+                } while (linkerAPI.codeAlreadyExist(code));
 
                 linkerAPI.linkWithCode(player, code);
                 player.sendMessage("§aUtilise la commande §f/link " + code + " §asur discord pour lier votre compte.");

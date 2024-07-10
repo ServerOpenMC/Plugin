@@ -118,6 +118,27 @@ public class LinkerAPI {
         }
     }
 
+    public boolean codeAlreadyExist(int code) throws SQLException {
+        try {
+            Connection connection = dbmanager.getConnection();
+
+            String sql = "SELECT * FROM link_verif WHERE code = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, String.valueOf(code));
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
     public int generateCode() {
         return new Random().nextInt(9000) + 1000;
     }
