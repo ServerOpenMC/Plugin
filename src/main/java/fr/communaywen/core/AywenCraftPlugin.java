@@ -1,6 +1,7 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.ExperienceManager;
@@ -56,6 +57,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FileConfiguration bookConfig;
     private static AywenCraftPlugin instance;
     private FriendsManager friendsManager;
+    private CorpseManager corpseManager;
     public EconomyManager economyManager;
     public LuckPerms api;
     public ScoreboardManagers scoreboardManagers;
@@ -129,6 +131,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
 
         friendsManager = new FriendsManager(friendsUtils, this);
+        corpseManager = new CorpseManager();
 
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
@@ -188,6 +191,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
         getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
         getServer().getPluginManager().registerEvents(new TablistListener(this), this);
+        getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -217,6 +221,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         System.out.println("DISABLE");
         this.databaseManager.close();
         this.quizManager.close();
+        this.corpseManager.removeAll();
     }
 
     public ArrayList<Player> getFrozenPlayers() {
