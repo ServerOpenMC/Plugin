@@ -15,6 +15,9 @@ permissions:
   ayw.command.prout:
     description: 'Prout !'
     default: true
+  ayw.command.englishorspanish:
+    description: 'English or Spanish?'
+    default: true
   ayw.command.teams:
     description: 'Teams'
     default: true
