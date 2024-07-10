@@ -80,27 +80,27 @@ public class QuizManager {
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
-
         if (currentQuiz == null) return;
 
-        if (event.getMessage().toLowerCase().equals(currentQuiz.answer)) {
-            Bukkit.broadcastMessage(
-                    "§7\n" +
-                            "§7\n" +
-                            "§8§m                                                     §r\n" +
-                            "§7\n" +
-                            "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui trouve la réponse en premier ! \n§7" +
-                            "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
-                            "§bIl remporte §7" + money + " §bde monnaie !\n" +
-                            "§7\n" +
-                            "§8§m                                                     §r" +
-                            "§7\n" +
-                            "§7\n"
-            );
+        if (!event.getMessage().toLowerCase().equals(currentQuiz.answer)) return;
 
-            event.setCancelled(true);
-        }
+        int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
+
+        Bukkit.broadcastMessage(
+                "§7\n" +
+                "§7\n" +
+                "§8§m                                                     §r\n" +
+                "§7\n" +
+                "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui trouve la réponse en premier ! \n§7" +
+                "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
+                "§bIl remporte §7" + money + " §bde monnaie !\n" +
+                "§7\n" +
+                "§8§m                                                     §r" +
+                "§7\n" +
+                "§7\n"
+        );
+
+        event.setCancelled(true);
 
         this.plugin.economyManager.addBalance(event.getPlayer(), money);
         currentQuiz = null;
