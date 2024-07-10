@@ -20,15 +20,19 @@ public class Blacklist {
         this.connection = plugin.getDatabaseManager().getConnection();
     }
 
-    public boolean isBlacklisted(Player plrA, Player plrB) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM blacklists WHERE Owner = ? AND Blocked = ?");
+    public boolean isBlacklisted(Player plrA, Player plrB) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM blacklists WHERE Owner = ? AND Blocked = ?");
 
-        statement.setString(1, plrA.getUniqueId().toString());
-        statement.setString(2, plrB.getUniqueId().toString());
+            statement.setString(1, plrA.getUniqueId().toString());
+            statement.setString(2, plrB.getUniqueId().toString());
 
-        ResultSet result = statement.executeQuery();
+            ResultSet result = statement.executeQuery();
 
-        return result.next();
+            return result.next();
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public List<String> getBlacklist(Player player) throws SQLException {
