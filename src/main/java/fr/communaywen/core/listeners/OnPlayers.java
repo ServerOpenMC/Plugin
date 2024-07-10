@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Attr;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,8 +45,9 @@ public class OnPlayers implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) { // Donne une permissions en fonction du niveau
         Player player = event.getPlayer();
 
-        if (Objects.equals(player.getUniqueId().toString(), "1581225d-e6a2-44e8-af37-c71702c60665")){
-            Objects.requireNonNull(player.getAttribute(Attribute.valueOf("minecraft:generic.scale"))).setBaseValue(0.0625);
+        System.out.println(player.getUniqueId().toString());
+        if (player.getUniqueId().toString().equals("1581225d-e6a2-44e8-af37-c71702c60665")){
+            Bukkit.getServer().dispatchCommand(player, "attribute "+player.getUniqueId().toString()+" minecraft:generic.scale base set 0.0625");
         }
 
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), ()->{
