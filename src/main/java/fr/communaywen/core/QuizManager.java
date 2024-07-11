@@ -48,7 +48,7 @@ public class QuizManager {
                             "§b     Vous avez 30 seconds pour répondre" + "\n" +
                             "§e         Le premier a répondre gagne !\n" +
                             "§7\n" +
-                            "§8§m                                                     §r" +
+                            "§8§m                                                     §r"
             );
 
             Runnable tellAnswer = () -> {
@@ -60,7 +60,7 @@ public class QuizManager {
                         "§7\n" +
                         "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
                         "§7\n" +
-                        "§8§m                                                     §r" +
+                        "§8§m                                                     §r"
                 );
                 currentQuiz = null;
             };
@@ -86,7 +86,7 @@ public class QuizManager {
                 "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
                 "§bIl remporte §7" + money + " §bde monnaie !\n" +
                 "§7\n" +
-                "§8§m                                                     §r" +
+                "§8§m                                                     §r"
         );
 
         event.setCancelled(true);
