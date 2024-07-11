@@ -12,6 +12,6 @@ public class PlayersCommand {
 	@Description("Ouvre le menu des joueurs")
 	@CommandPermission("openmc.staff.players")
 	public void onCommand(Player player) {
-		PlayersMenuUtils.openPlayersMenu(player);
+		PlayersMenuUtils.openPlayersMenu(player, 0);
 	}
 }
