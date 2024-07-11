@@ -9,6 +9,7 @@ import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
+import fr.communaywen.core.commands.QuestsCommands;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
@@ -212,7 +213,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new WikiCommand(wikiConfig), 
             new GithubCommand(this), 
             new TradeCommand(this), 
-            new TradeAcceptCommand(this));
+            new TradeAcceptCommand(this),
+            new QuestsCommands());
 
         /*  --------  */
 
