@@ -49,7 +49,6 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.desktop.QuitStrategy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -184,14 +183,36 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(wikiConfig.getKeys(false)));
 
-        this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
-                new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
-                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
-                new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
-                new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelCommand(experienceManager),
-                new TailleCommand(), new WikiCommand(wikiConfig), new GithubCommand(this), new TradeCommand(this),
-                new TradeAcceptCommand(this), new QuestsCommands());
+        this.handler.register(
+            new SpawnCommand(this), 
+            new VersionCommand(this), 
+            new RulesCommand(bookConfig),
+            new TeamCommand(), 
+            new MoneyCommand(this.economyManager), 
+            new ScoreboardCommand(), 
+            new ProutCommand(),
+            new FeedCommand(this), 
+            new TPACommand(this), 
+            new TpacceptCommand(), 
+            new TpcancelCommand(), 
+            new TpdenyCommand(),
+            new CreditCommand(), 
+            new ExplodeRandomCommand(), 
+            new LinkCommand(linkerAPI), 
+            new ManualLinkCommand(linkerAPI),
+            new RTPCommand(this), 
+            new FreezeCommand(), 
+            new PlayersCommand(), 
+            new FBoomCommand(), 
+            new BaltopCommand(this),
+            new FriendsCommand(friendsManager, this, adventure), 
+            new PrivacyCommand(this), 
+            new LevelsCommand(levelsManager), 
+            new TailleCommand(), 
+            new WikiCommand(wikiConfig), 
+            new GithubCommand(this), 
+            new TradeCommand(this), 
+            new TradeAcceptCommand(this));
 
         /*  --------  */
 
@@ -232,7 +253,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new FarineListener(), this);
         createFarineRecipe();
-
+      
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
     }
 
