@@ -24,20 +24,28 @@ public class LevelsCommand {
     @Subcommand("add")
     @CommandPermission("ayw.command.levels")
     public void add(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
-
         levelsManager.addExperience(amount, target);
+        int newAmount = levelsManager.getExperience(target);
+
+        player.sendMessage(amount + " xp ajoutés à "+target.getName()+" , il a à présent "+ newAmount );
     }
 
     @Subcommand("remove")
     @CommandPermission("ayw.command.levels")
     public void remove(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
         levelsManager.removeExperience(amount, target);
+        int newAmount = levelsManager.getExperience(target);
+
+        player.sendMessage(amount + " xp enlevés à "+target.getName()+" , il a à présent "+ newAmount+" xp" );
     }
 
     @Subcommand("set")
     @CommandPermission("ayw.command.levels")
     public void set(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
         levelsManager.setExperience(amount, target);
+        int newAmount = levelsManager.getExperience(target);
+
+        player.sendMessage("l'xp de "+target.getName()+" a été défini à "+ newAmount+" xp" );
     }
 
     @Subcommand("get")
