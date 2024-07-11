@@ -14,41 +14,78 @@ import java.util.List;
 import java.util.Objects;
 
 public class PlayersMenuUtils {
-	
+
+	private static int PAGE_SIZE = 36;
 	public static String state = "§2Unfreeze";
-	
-	public static void openPlayersMenu(Player player) {
+
+	public static void openPlayersMenu(Player player, int page) {
 		ArrayList<Player> list = new ArrayList<>(player.getServer().getOnlinePlayers());
 		Inventory playersgui = Bukkit.createInventory(player, 45, ChatColor.BLUE + "Liste des joueurs");
-		
-		for (Player target : list) {
+
+		int startIndex = page * PAGE_SIZE;
+		int endIndex = Math.min(startIndex + PAGE_SIZE, list.size());
+
+		for (int i = startIndex; i < endIndex; i++) {
+			Player target = list.get(i);
 			ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
 			SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
-			
+
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GOLD + "Vie : " + ChatColor.RED + target.getHealth());
 			lore.add(ChatColor.GOLD + "XP : " + ChatColor.AQUA + target.getExp());
-			
+
 			String name = target.getName();
-			
+
 			if (meta != null) {
 				meta.setDisplayName(ChatColor.WHITE + name);
 				meta.setOwner(name);
 				meta.setLore(lore);
 			}
-			
+
 			playerHead.setItemMeta(meta);
-			
 			playersgui.addItem(playerHead);
 		}
+
+		if (page > 0) {
+			ItemStack leftPaper = new ItemStack(Material.PAPER);
+			ItemMeta leftMeta = leftPaper.getItemMeta();
+			if (leftMeta != null) {
+				leftMeta.setCustomModelData(10005);
+				leftMeta.setDisplayName(ChatColor.GREEN + "Page précédente");
+				leftPaper.setItemMeta(leftMeta);
+			}
+			playersgui.setItem(36, leftPaper);
+		}
+
+		ItemStack quit = new ItemStack(Material.PAPER);
+		ItemMeta quitMeta = quit.getItemMeta();
+		if (quitMeta != null) {
+			quitMeta.setCustomModelData(10003);
+			quitMeta.setDisplayName(ChatColor.RED + "Quitter");
+			quit.setItemMeta(quitMeta);
+		}
+		playersgui.setItem(40, quit);
+
+		if (endIndex < list.size()) {
+			ItemStack rightPaper = new ItemStack(Material.PAPER);
+			ItemMeta rightMeta = rightPaper.getItemMeta();
+			if (rightMeta != null) {
+				rightMeta.setCustomModelData(10006);
+				rightMeta.setDisplayName(ChatColor.GREEN + "Page suivante");
+				rightPaper.setItemMeta(rightMeta);
+			}
+			playersgui.setItem(44, rightPaper);
+		}
+
 		player.openInventory(playersgui);
 	}
-	
+
+
 	public static void openDetailsPlayersMenu(Player player, Player target) {
 		Inventory playerDetails = Bukkit.createInventory(player, 9, ChatColor.BLUE + "Détails");
 		
 		// Creating items
-		ItemStack back = new ItemStack(Material.BARRIER);
+		ItemStack back = new ItemStack(Material.PAPER);
 		ItemStack position = new ItemStack(Material.COMPASS);
 		ItemStack health = new ItemStack(Material.APPLE);
 		ItemStack hunger = new ItemStack(Material.COOKED_BEEF);
@@ -75,6 +112,7 @@ public class PlayersMenuUtils {
 		
 		// Change Meta items
 		Objects.requireNonNull(back_meta).setDisplayName(ChatColor.DARK_GREEN + "Retour");
+		Objects.requireNonNull(back_meta).setCustomModelData(10005);
 		Objects.requireNonNull(position_meta).setDisplayName(ChatColor.DARK_GREEN + "Position/Cliquer pour se téléporter");
 		Objects.requireNonNull(health_meta).setDisplayName(ChatColor.DARK_GREEN + "Vie");
 		Objects.requireNonNull(hunger_meta).setDisplayName(ChatColor.DARK_GREEN + "Faim");
