@@ -207,7 +207,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new BaltopCommand(this),
             new FriendsCommand(friendsManager, this, adventure), 
             new PrivacyCommand(this), 
-            new LevelsCommand(levelsManager), 
+            new LevelCommand(experienceManager),
             new TailleCommand(), 
             new WikiCommand(wikiConfig), 
             new GithubCommand(this), 
