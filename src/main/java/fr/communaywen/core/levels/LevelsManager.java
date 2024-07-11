@@ -18,7 +18,12 @@ public class LevelsManager {
 
     public int getExperience(Player player) {
         return LevelsDataManager.getCount(player);
+    }
 
+    public void applyExperienceReward(Player player, String entityType) {
+        int rewardAmount = LevelsDataManager.getExperienceReward(entityType);
+        LevelsDataManager.addToCount(player, rewardAmount);
+        player.sendMessage(" + " + rewardAmount + " xp !");
     }
 
 }

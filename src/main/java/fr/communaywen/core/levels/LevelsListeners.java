@@ -16,12 +16,13 @@ public class LevelsListeners implements Listener {
 
     @EventHandler
     public void EntityDeathEvent( EntityDeathEvent event ) {
-         Entity entity = event.getDamageSource().getCausingEntity();
+         Entity entityDamaging = event.getDamageSource().getCausingEntity();
+         Entity entityDamaged = event.getEntity();
 
-         if ( entity != null ) {
-             if (entity instanceof Player player) {
-                 levelsManager.addExperience(10, player);
-                 player.sendMessage("+ 10 xp !");
+
+         if ( entityDamaging != null ) {
+             if (entityDamaging instanceof Player player) {
+                levelsManager.applyExperienceReward(player,entityDamaged.getName().toLowerCase().replace(" ", "_"));
              }
          }
 

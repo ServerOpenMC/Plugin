@@ -69,4 +69,12 @@ public class LevelsDataManager {
             return 0;
         }
     }
+
+    public static int getExperienceReward(String entityType) {
+        if (levelsFileConfig.contains("xp_rewards." + entityType)) {
+            return levelsFileConfig.getInt("xp_rewards." + entityType);
+        } else {
+            return levelsFileConfig.getInt("xp_rewards.default");
+        }
+    }
 }
