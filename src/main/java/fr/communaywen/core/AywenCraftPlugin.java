@@ -1,6 +1,7 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -18,6 +19,10 @@ import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
 import fr.communaywen.core.tpa.TpdenyCommand;
+
+import fr.communaywen.core.trade.TradeCommand;
+import fr.communaywen.core.trade.TradeListener;
+import fr.communaywen.core.trade.TradeAcceptCommand;
 
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
@@ -43,6 +48,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 
@@ -55,8 +62,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
     private FileConfiguration bookConfig;
+    private FileConfiguration wikiConfig;
     private static AywenCraftPlugin instance;
     private FriendsManager friendsManager;
+    private CorpseManager corpseManager;
     public EconomyManager economyManager;
     public LuckPerms api;
     public ScoreboardManagers scoreboardManagers;
@@ -80,6 +89,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
             saveResource("rules.yml", false);
         }
         bookConfig = YamlConfiguration.loadConfiguration(bookFile);
+    }
+
+    private void loadWikiConfig() {
+        File wikiFile = new File(getDataFolder(), "wiki.yml");
+        if (!wikiFile.exists()) {
+            saveResource("wiki.yml", false);
+        }
+        wikiConfig = YamlConfiguration.loadConfiguration(wikiFile);
     }
 
     private FileConfiguration loadWelcomeMessageConfig() {
@@ -126,10 +143,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
+        loadWikiConfig();
 
         LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
 
         friendsManager = new FriendsManager(friendsUtils, this);
+        corpseManager = new CorpseManager();
 
         motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
@@ -153,12 +172,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
 
+        this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(wikiConfig.getKeys(false)));
+
         this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
                 new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
                 new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
                 new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelsCommand(levelsManager));
+                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelCommand(levelsManager), new TailleCommand(), new WikiCommand(wikiConfig), new GithubCommand(this), new TradeCommand(this), new TradeAcceptCommand(this));
 
         /*  --------  */
 
@@ -190,6 +211,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
         getServer().getPluginManager().registerEvents(new TablistListener(this), this);
         getServer().getPluginManager().registerEvents(new LevelsListeners(levelsManager), this);
+        getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
+        getServer().getPluginManager().registerEvents(new TradeListener(), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -219,6 +242,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         System.out.println("DISABLE");
         this.databaseManager.close();
         this.quizManager.close();
+        this.corpseManager.removeAll();
     }
 
     public ArrayList<Player> getFrozenPlayers() {
