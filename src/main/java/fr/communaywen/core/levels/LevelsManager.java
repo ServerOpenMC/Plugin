@@ -2,7 +2,7 @@ package fr.communaywen.core.levels;
 
 import org.bukkit.entity.Player;
 
-public class ExperienceManager {
+public class LevelsManager {
 
     public void addExperience(int amount, Player player) {
         LevelsDataManager.addToCount(player, amount);
@@ -14,6 +14,11 @@ public class ExperienceManager {
 
     public void setExperience(int amount, Player player) {
         LevelsDataManager.setCount(player, amount);
+    }
+
+    public int getExperience(Player player) {
+        return LevelsDataManager.getCount(player);
+
     }
 
 }

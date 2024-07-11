@@ -55,12 +55,18 @@ public class LevelsDataManager {
     public static void setCount(Player player, int amount) {
         String playerName = player.getName();
 
-        if (levelsFileConfig.contains("xp." + playerName + ".amount")) {
-            levelsFileConfig.set("xp." + playerName + ".amount", amount);
-        } else {
-            levelsFileConfig.set("xp." + playerName + ".amount", amount);
-        }
+        levelsFileConfig.set("xp." + playerName + ".amount", amount);
 
         saveFile();
+    }
+
+    public static int getCount(Player player) {
+        String playerName = player.getName();
+
+        if (levelsFileConfig.contains("xp." + playerName + ".amount")) {
+            return levelsFileConfig.getInt("xp." + playerName + ".amount");
+        } else {
+            return 0;
+        }
     }
 }
