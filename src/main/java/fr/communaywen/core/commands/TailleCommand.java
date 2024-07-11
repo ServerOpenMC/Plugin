@@ -10,7 +10,7 @@ import revxrsal.commands.annotation.Range;
 public class TailleCommand {
     @Command({"taille", "size"})
     @Description("Change la taille du joueur")
-    public void onCommand(Player player, @Named("Taille (cm)") @Range(min = 100, max=200) @Default(187) int size) {
+    public void onCommand(Player player, @Named("Taille (cm)") @Range(min = 100, max=200) @Default("187") int size) {
         player.sendMessage(player.getName()+" fais "+size+"cm");
         double sizeRation = ((double) size /10) * ((double) 10 /187);
         System.out.println(sizeRation);
