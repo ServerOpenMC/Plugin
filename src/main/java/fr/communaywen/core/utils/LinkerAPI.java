@@ -139,6 +139,27 @@ public class LinkerAPI {
         }
     }
 
+    public boolean playerAlreadyLinkTime(Player player) throws SQLException {
+        try {
+            Connection connection = dbmanager.getConnection();
+
+            String sql = "SELECT * FROM link_verif WHERE minecraft_uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, String.valueOf(player.getUniqueId()));
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
     public int generateCode() {
         return new Random().nextInt(9000) + 1000;
     }
