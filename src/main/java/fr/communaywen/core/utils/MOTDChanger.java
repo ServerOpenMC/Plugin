@@ -10,11 +10,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MOTDChanger {
 
     private final List<String> motdList = Arrays.asList(
-            "Bienvenue sur notre serveur !",
-            "Profitez de votre séjour !",
-            "Découvrez de nouvelles aventures !",
-            "Participez à nos événements spéciaux !",
-            "Amusez-vous bien sur notre serveur !"
+            "OpenMC - C'est VOTRE serveur SMP en 1.20.6",
+            "OpenMC - Serveur SMP 1.20.6 - Crée par la communautey",
+            "OpenMC - Salam les koyas"
     );
 
     public void startMOTDChanger(JavaPlugin plugin) {
