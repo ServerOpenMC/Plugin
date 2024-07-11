@@ -4,7 +4,8 @@ import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
-import fr.communaywen.core.levels.ExperienceManager;
+import fr.communaywen.core.levels.LevelsListeners;
+import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
@@ -13,7 +14,7 @@ import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
 import fr.communaywen.core.utils.*;
 
-import fr.communaywen.core.levels.LevelCommand;
+import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsDataManager;
 
 import fr.communaywen.core.tpa.TPACommand;
@@ -84,7 +85,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     private FallingBlocksExplosionManager fbeManager;
 
-    private ExperienceManager experienceManager;
+    private LevelsManager levelsManager;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -164,7 +165,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         teamManager = new TeamManager();
         fbeManager = new FallingBlocksExplosionManager();
 
-        experienceManager = new ExperienceManager();
+        levelsManager = new LevelsManager();
 
         this.adventure = BukkitAudiences.create(this);
 
@@ -221,6 +222,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
         getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
         getServer().getPluginManager().registerEvents(new TablistListener(this), this);
+        getServer().getPluginManager().registerEvents(new LevelsListeners(levelsManager), this);
         getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
         getServer().getPluginManager().registerEvents(new QuestsListener(), this);

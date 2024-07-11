@@ -8,27 +8,34 @@ import revxrsal.commands.annotation.Subcommand;
 
 @Command("level")
 @Description("manage xp")
-public class LevelCommand {
+public class LevelsCommand {
 
-    private final ExperienceManager experienceManager;
+    private final LevelsManager levelsManager;
 
-    public LevelCommand(ExperienceManager experienceManager) {
-        this.experienceManager = experienceManager;
+    public LevelsCommand(LevelsManager levelsManager) {
+        this.levelsManager = levelsManager;
     }
 
     @Subcommand("add")
     public void add(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
 
-        experienceManager.addExperience(amount, target);
+        levelsManager.addExperience(amount, target);
     }
 
     @Subcommand("remove")
     public void remove(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
-        experienceManager.removeExperience(amount, target);
+        levelsManager.removeExperience(amount, target);
     }
 
     @Subcommand("set")
     public void set(Player player, @Named("Player") Player target, @Named("Amount") int amount) {
-        experienceManager.setExperience(amount, target);
+        levelsManager.setExperience(amount, target);
+    }
+
+    @Subcommand("get")
+    public void get(Player player, @Named("Player") Player target) {
+        int amount = levelsManager.getExperience(target);
+
+        player.sendMessage(target.getName() + " a actuellement " + amount + " xp !");
     }
 }
