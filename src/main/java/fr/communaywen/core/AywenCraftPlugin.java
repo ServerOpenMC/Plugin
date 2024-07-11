@@ -7,6 +7,8 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.quests.QuestsListener;
+import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
@@ -244,12 +246,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LevelsListeners(levelsManager), this);
         getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
+        getServer().getPluginManager().registerEvents(new QuestsListener(), this);
         /* --------- */
 
         saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(new FarineListener(), this);
         createFarineRecipe();
+      
+        getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
     }
 
     private FileConfiguration loadQuizzes() {
@@ -274,6 +279,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.databaseManager.close();
         this.quizManager.close();
         this.corpseManager.removeAll();
+        QuestsManager.saveAllPlayersData();
     }
 
     public ArrayList<Player> getFrozenPlayers() {
