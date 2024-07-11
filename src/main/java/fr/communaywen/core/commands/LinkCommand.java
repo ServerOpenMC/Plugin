@@ -23,8 +23,8 @@ public class LinkCommand {
         try {
             if (!linkerAPI.getUserId(player).isEmpty()) {
                 player.sendMessage(ChatColor.RED + "Votre compte minecraft est déjà lié à un compte Discord.");
-            } else {
-                int code = 2555;
+            } else if(linkerAPI.playerAlreadyLinkTime(player)) {
+                int code = linkerAPI.generateCode();
 
                 do {
                     code = linkerAPI.generateCode();
@@ -40,7 +40,7 @@ public class LinkCommand {
                         try {
                             linkerAPI.delayRemoveCode(player);
                             if(!linkerAPI.isVerified(player)) {
-                                player.sendMessage("§cVous avez dépasser les 5 minutes.");
+                                player.sendMessage("§cVous avez dépassé les 5 minutes.");
                             }
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
@@ -48,6 +48,8 @@ public class LinkCommand {
                     }
                 }.runTaskLater(AywenCraftPlugin.getInstance(), 300 * 20);
 
+            } else {
+                player.sendMessage(ChatColor.RED + "Vous avez déjà un code de vérifications.");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

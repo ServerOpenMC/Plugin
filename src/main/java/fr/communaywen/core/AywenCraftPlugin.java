@@ -58,10 +58,10 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 
 import java.io.File;
+import java.util.List;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
-
 
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
@@ -171,9 +171,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* ----- */
 
-        String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
-        String botName = "Annonce Serveur";
-        String botAvatarUrl = "https://media.discordapp.net/attachments/1161296445169741836/1258408047412383804/image.png?ex=66889812&is=66874692&hm=4bb38f7b6460952afc21811f7145a6b289d7210861d81d91b1ca8ee264f0ab0d&=&format=webp&quality=lossless&width=1131&height=662";
+        String webhookUrl = getConfig().getString("discord.webhookURL");
+        String botName = getConfig().getString("discord.webhookName");
+        String botAvatarUrl = getConfig().getString("discord.webhookIconURL");
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
 
         /*  COMMANDS  */
