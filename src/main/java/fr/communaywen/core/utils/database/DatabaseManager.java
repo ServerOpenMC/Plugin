@@ -1,6 +1,7 @@
 package fr.communaywen.core.utils.database;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import fr.communaywen.core.AywenCraftPlugin;
@@ -19,6 +20,19 @@ public class DatabaseManager {
         }
         this.connection = new DatabaseConnection(plugin.getConfig().getString("database.url"),
                 plugin.getConfig().getString("database.user"), plugin.getConfig().getString("database.password"));
+    }
+
+    public void init() throws SQLException {
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS friends (" +
+                "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                "firstPlayer_uuid VARCHAR(36) NOT NULL," +
+                "secondPlayer_uuid VARCHAR(36) NOT NULL," +
+                "friendDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+                ")").executeUpdate();
+
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS blacklists (Owner VARCHAR(36), Blocked VARCHAR(36))").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(36))").executeUpdate();
+        System.out.println("Les tables ont été créer si besoin");
     }
 
     public void close() {

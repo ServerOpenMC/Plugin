@@ -46,6 +46,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import revxrsal.commands.autocomplete.SuggestionProvider;
@@ -123,6 +124,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* UTILS */
         databaseManager = new DatabaseManager(this);
+        try {
+            databaseManager.init(); // Créer les tables nécessaires
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
         FriendsUtils friendsUtils = new FriendsUtils(databaseManager);
 

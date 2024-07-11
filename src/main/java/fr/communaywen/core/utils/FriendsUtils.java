@@ -15,29 +15,6 @@ public class FriendsUtils {
 
     public FriendsUtils(DatabaseManager dbmanager) {
         this.dbmanager = dbmanager;
-        createTableIfNotExists();
-    }
-
-    private void createTableIfNotExists() {
-        try {
-            Connection connection = dbmanager.getConnection();
-
-            String createTableSQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
-                    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                    "firstPlayer_uuid VARCHAR(36) NOT NULL," +
-                    "secondPlayer_uuid VARCHAR(36) NOT NULL," +
-                    "friendDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
-                    ")";
-
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(createTableSQL);
-            statement.close();
-
-            System.out.println("Table 'friends' vérifiée ou créée avec succès si elle n'existait pas.");
-
-        } catch (SQLException e) {
-            System.out.println("Une erreur s'est produite lors de la création/vérification de la table 'friends': " + e.getMessage());
-        }
     }
 
     public boolean addInDatabase(String firstUUID, String secondUUID) throws SQLException {
