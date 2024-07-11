@@ -19,6 +19,10 @@ import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
 import fr.communaywen.core.tpa.TpdenyCommand;
 
+import fr.communaywen.core.trade.TradeCommand;
+import fr.communaywen.core.trade.TradeListener;
+import fr.communaywen.core.trade.TradeAcceptCommand;
+
 import fr.communaywen.core.economy.EconomyManager;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
@@ -174,7 +178,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
                 new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
                 new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelCommand(experienceManager), new TailleCommand(), new WikiCommand(wikiConfig), new GithubCommand(this));
+                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelCommand(experienceManager), new TailleCommand(), new WikiCommand(wikiConfig), new GithubCommand(this), new TradeCommand(this), new TradeAcceptCommand(this));
 
         /*  --------  */
 
@@ -206,6 +210,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
         getServer().getPluginManager().registerEvents(new TablistListener(this), this);
         getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
+        getServer().getPluginManager().registerEvents(new TradeListener(), this);
         /* --------- */
 
         saveDefaultConfig();
