@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
+import fr.communaywen.core.datapacks.Applier;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -156,6 +157,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadWikiConfig();
 
         LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
+
+        Applier applier = new Applier(this);
+        applier.apply();
 
         friendsManager = new FriendsManager(friendsUtils, this);
         corpseManager = new CorpseManager();
