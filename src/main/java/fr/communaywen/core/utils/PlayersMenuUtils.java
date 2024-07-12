@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+//////////////////////////////
+//       Credits            //
+// Idée : gab400            //
+// Développeur : gab400     //
+// Aide : Martinouxx        //
+//////////////////////////////
+
 public class PlayersMenuUtils {
 
 	private static int PAGE_SIZE = 36;

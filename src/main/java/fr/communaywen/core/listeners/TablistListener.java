@@ -14,6 +14,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class TablistListener implements Listener {
 
     private final AywenCraftPlugin plugin;

@@ -19,6 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Xernas            //
+// Développeur : Xernas     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class TeamListMenu extends PaginatedMenu {
 
     private final TeamManager manager;

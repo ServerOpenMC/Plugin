@@ -7,6 +7,13 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+//////////////////////////////
+//       Credits            //
+// Idée : gab400            //
+// Développeur : gab400     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class PlayersCommand {
 	@Command("players")
 	@Description("Ouvre le menu des joueurs")

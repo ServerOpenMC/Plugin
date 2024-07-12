@@ -60,6 +60,11 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 import java.io.File;
 import java.util.List;
 
+//////////////////////////////////////////////////////////////////////////////////
+//                      Credits                                                 //
+// Contributeurs : https://github.com/margouta/pluginopenmc/graphs/contributors //
+//////////////////////////////////////////////////////////////////////////////////
+
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
 

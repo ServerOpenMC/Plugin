@@ -8,6 +8,13 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Xernas            //
+// Développeur : Xernas     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class TeamUtils {
 
     public static boolean quit(Team team, Player player) {

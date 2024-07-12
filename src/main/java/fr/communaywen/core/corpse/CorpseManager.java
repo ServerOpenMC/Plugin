@@ -17,6 +17,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+//////////////////////////////
+//       Credits            //
+// Idée : sajiterre         //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class CorpseManager implements Listener {
 
     private Map<CorpseBlock, CorpseMenu> corpses = new HashMap<>();

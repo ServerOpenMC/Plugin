@@ -15,6 +15,12 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+///////////////////////////////////////////////////////////////////
+//            Credits                                            //
+// Idée : je sais pas                                            //
+// Contributeurs : ddemile, misieur, processofficial, Martinouxx //
+///////////////////////////////////////////////////////////////////
+
 public class TPACommand {
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;

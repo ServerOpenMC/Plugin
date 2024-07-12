@@ -9,6 +9,13 @@ import fr.communaywen.core.AywenCraftPlugin;
 import net.luckperms.api.model.user.User;
 import org.bukkit.entity.Player;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : Axeno             //
+//////////////////////////////
+
 public class Tablist {
 
     ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();

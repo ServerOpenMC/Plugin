@@ -5,6 +5,12 @@ import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+////////////////////////////
+//        Credits         //
+// Idée : je sais pas     //
+// Contributeus : ddemile //
+////////////////////////////
+
 public class TpcancelCommand {
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;

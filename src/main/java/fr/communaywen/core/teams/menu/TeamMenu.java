@@ -18,6 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Xernas            //
+// Développeur : Xernas     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class TeamMenu extends Menu {
 
     private final Team team;

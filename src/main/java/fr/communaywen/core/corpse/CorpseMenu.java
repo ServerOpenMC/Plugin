@@ -11,6 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : sajiterre         //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class CorpseMenu {
 
     private final UUID owner;

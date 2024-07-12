@@ -5,6 +5,12 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 
+////////////////////////////
+//        Credits         //
+// Idée : je sais pas     //
+// Contributeus : misieur //
+////////////////////////////
+
 public class TPAQueue {
     public static final TPAQueue INSTANCE = new TPAQueue();
     private TPAQueue() {

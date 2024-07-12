@@ -9,6 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class FriendsRequest extends BukkitRunnable {
 
     private final FriendsManager friendsManager;

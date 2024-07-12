@@ -12,6 +12,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.SQLException;
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class FriendsListener implements Listener {
 
     private FriendsManager friendsManager;

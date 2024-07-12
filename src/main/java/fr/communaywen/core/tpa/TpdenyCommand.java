@@ -6,6 +6,12 @@ import net.md_5.bungee.api.ChatColor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+////////////////////////////
+//        Credits         //
+// Idée : je sais pas     //
+// Contributeus : ddemile //
+////////////////////////////
+
 public class TpdenyCommand {
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;

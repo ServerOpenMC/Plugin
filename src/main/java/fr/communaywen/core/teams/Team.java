@@ -8,6 +8,13 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Xernas            //
+// Développeur : Xernas     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class Team {
 
     private UUID owner;

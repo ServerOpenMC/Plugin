@@ -13,6 +13,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Objects;
 
+//////////////////////////////
+//       Credits            //
+// Idée : gab400            //
+// Développeur : gab400     //
+// Aide : Martinouxx        //
+//////////////////////////////
+
 public class PlayersMenuListener implements Listener {
 
 	private static int currentPage = 0;

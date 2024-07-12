@@ -10,6 +10,13 @@ import org.bukkit.entity.*;
 
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : sajiterre         //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class CorpseBlock {
 
     private CustomBlock block;

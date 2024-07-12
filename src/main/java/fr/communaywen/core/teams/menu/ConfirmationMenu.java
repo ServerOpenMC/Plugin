@@ -13,6 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.function.Consumer;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Xernas            //
+// Développeur : Xernas     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class ConfirmationMenu extends Menu {
 
     private final Consumer<InventoryClickEvent> toConfirm;

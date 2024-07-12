@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class FriendsUtils {
 
     private final DatabaseManager dbmanager;

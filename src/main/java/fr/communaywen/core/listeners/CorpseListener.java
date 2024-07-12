@@ -17,6 +17,13 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+//////////////////////////////
+//       Credits            //
+// Idée : sajiterre         //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class CorpseListener implements Listener {
 
     private CorpseManager corpseManager;

@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Xernas            //
+// Développeur : Xernas     //
+// Aide : N/A               //
+//////////////////////////////
+
 public class TeamManager {
 
     // Laissez ce truc

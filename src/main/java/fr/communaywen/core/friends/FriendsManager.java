@@ -10,6 +10,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 public class FriendsManager {
 
     private final FriendsUtils friendsUtils;

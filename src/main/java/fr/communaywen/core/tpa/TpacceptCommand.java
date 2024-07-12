@@ -8,6 +8,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+///////////////////////////////////////////////////////
+//            Credits                                //
+// Idée : je sais pas                                //
+// Contributeurs : ddemile, misieur, processofficial //
+///////////////////////////////////////////////////////
+
 public class TpacceptCommand {
     TPAQueue tpQueue = TPAQueue.INSTANCE;
 

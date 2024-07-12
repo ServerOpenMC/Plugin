@@ -27,6 +27,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+//////////////////////////////
+//       Credits            //
+// Idée : Martinouxx        //
+// Développeur : Martinouxx //
+// Aide : N/A               //
+//////////////////////////////
+
 @Command({"friends", "friend", "ami", "f"})
 public class FriendsCommand {
 
