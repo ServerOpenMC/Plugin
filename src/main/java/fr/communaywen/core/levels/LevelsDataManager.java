@@ -77,4 +77,7 @@ public class LevelsDataManager {
             return levelsFileConfig.getInt("xp_rewards.default");
         }
     }
+    public static boolean rewardsAreEnabled() {
+        return levelsFileConfig.contains("xp_rewards.enabled");
+    }
 }
