@@ -7,6 +7,9 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.quests.QuestsListener;
+import fr.communaywen.core.quests.QuestsManager;
+import fr.communaywen.core.commands.QuestsCommands;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.teams.*;
@@ -55,10 +58,10 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 
 import java.io.File;
+import java.util.List;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
-
 
     private MOTDChanger motdChanger;
     private TeamManager teamManager;
@@ -168,9 +171,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* ----- */
 
-        String webhookUrl = "https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_";
-        String botName = "Annonce Serveur";
-        String botAvatarUrl = "https://media.discordapp.net/attachments/1161296445169741836/1258408047412383804/image.png?ex=66889812&is=66874692&hm=4bb38f7b6460952afc21811f7145a6b289d7210861d81d91b1ca8ee264f0ab0d&=&format=webp&quality=lossless&width=1131&height=662";
+        String webhookUrl = getConfig().getString("discord.webhookURL");
+        String botName = getConfig().getString("discord.webhookName");
+        String botAvatarUrl = getConfig().getString("discord.webhookIconURL");
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
 
         /*  COMMANDS  */
@@ -181,12 +184,37 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(wikiConfig.getKeys(false)));
 
-        this.handler.register(new SpawnCommand(this), new VersionCommand(this), new RulesCommand(bookConfig),
-                new TeamCommand(), new MoneyCommand(this.economyManager), new ScoreboardCommand(), new ProutCommand(),
-                new FeedCommand(this), new TPACommand(this), new TpacceptCommand(), new TpcancelCommand(), new TpdenyCommand(),
-                new CreditCommand(), new ExplodeRandomCommand(), new LinkCommand(linkerAPI), new ManualLinkCommand(linkerAPI),
-                new RTPCommand(this), new FreezeCommand(), new PlayersCommand(), new FBoomCommand(), new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure), new PrivacyCommand(this), new LevelsCommand(levelsManager), new TailleCommand(), new WikiCommand(wikiConfig), new GithubCommand(this), new TradeCommand(this), new TradeAcceptCommand(this));
+        this.handler.register(
+            new SpawnCommand(this), 
+            new VersionCommand(this), 
+            new RulesCommand(bookConfig),
+            new TeamCommand(), 
+            new MoneyCommand(this.economyManager), 
+            new ScoreboardCommand(), 
+            new ProutCommand(),
+            new FeedCommand(this), 
+            new TPACommand(this), 
+            new TpacceptCommand(), 
+            new TpcancelCommand(), 
+            new TpdenyCommand(),
+            new CreditCommand(), 
+            new ExplodeRandomCommand(), 
+            new LinkCommand(linkerAPI), 
+            new ManualLinkCommand(linkerAPI),
+            new RTPCommand(this), 
+            new FreezeCommand(), 
+            new PlayersCommand(), 
+            new FBoomCommand(), 
+            new BaltopCommand(this),
+            new FriendsCommand(friendsManager, this, adventure), 
+            new PrivacyCommand(this), 
+            new LevelsCommand(levelsManager), 
+            new TailleCommand(), 
+            new WikiCommand(wikiConfig), 
+            new GithubCommand(this), 
+            new TradeCommand(this), 
+            new TradeAcceptCommand(this),
+            new QuestsCommands());
 
         /*  --------  */
 
@@ -220,12 +248,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LevelsListeners(levelsManager), this);
         getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
+        getServer().getPluginManager().registerEvents(new QuestsListener(), this);
         /* --------- */
 
         saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(new FarineListener(), this);
         createFarineRecipe();
+      
+        getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
     }
 
     private FileConfiguration loadQuizzes() {
@@ -250,6 +281,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.databaseManager.close();
         this.quizManager.close();
         this.corpseManager.removeAll();
+        QuestsManager.saveAllPlayersData();
     }
 
     public ArrayList<Player> getFrozenPlayers() {

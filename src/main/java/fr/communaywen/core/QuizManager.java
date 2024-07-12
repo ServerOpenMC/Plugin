@@ -41,8 +41,6 @@ public class QuizManager {
 
             int numberOfSpaces = Math.max(0, 23 - (currentQuiz.question.length() / 2));
             Bukkit.broadcastMessage(
-                    "§7\n" +
-                            "§7\n" +
                             "§8§m                                                     §r\n" +
                             "§7\n" +
                             "§6              Nouvelle question : \n§7" +
@@ -50,24 +48,19 @@ public class QuizManager {
                             "§b     Vous avez 30 seconds pour répondre" + "\n" +
                             "§e         Le premier a répondre gagne !\n" +
                             "§7\n" +
-                            "§8§m                                                     §r" +
-                            "§7\n" +
-                            "§7\n"
+                            "§8§m                                                     §r"
             );
 
             Runnable tellAnswer = () -> {
                 Bukkit.broadcastMessage(
-                        "§7\n" +
-                        "§7\n" +
+
                         "§8§m                                                     §r\n" +
                         "§7\n" +
                         "§cAie aie aie ! Personne n'a trouvé la réponse ... \n§7" +
                         "§7\n" +
                         "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
                         "§7\n" +
-                        "§8§m                                                     §r" +
-                        "§7\n" +
-                        "§7\n"
+                        "§8§m                                                     §r"
                 );
                 currentQuiz = null;
             };
@@ -87,17 +80,13 @@ public class QuizManager {
         int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
 
         Bukkit.broadcastMessage(
-                "§7\n" +
-                "§7\n" +
                 "§8§m                                                     §r\n" +
                 "§7\n" +
                 "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
                 "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
                 "§bIl remporte §7" + money + " §bde monnaie !\n" +
                 "§7\n" +
-                "§8§m                                                     §r" +
-                "§7\n" +
-                "§7\n"
+                "§8§m                                                     §r"
         );
 
         event.setCancelled(true);
