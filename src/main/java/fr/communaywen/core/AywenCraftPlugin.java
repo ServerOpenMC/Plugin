@@ -249,6 +249,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
         getServer().getPluginManager().registerEvents(new QuestsListener(), this);
+        getServer().getPluginManager().registerEvents(new PasFraisListener(this), this);
         /* --------- */
 
         saveDefaultConfig();
