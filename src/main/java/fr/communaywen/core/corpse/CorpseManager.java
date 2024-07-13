@@ -69,6 +69,11 @@ public class CorpseManager implements Listener {
         Iterator<CorpseBlock> iterator = corpses.keySet().iterator();
         while (iterator.hasNext()) {
             CorpseBlock corpseBlock = iterator.next();
+
+            for(ItemStack it : corpses.get(corpseBlock).getContents()){
+                corpseBlock.getLocation().getWorld().dropItemNaturally(corpseBlock.getLocation(), it);
+            }
+
             corpseBlock.remove();
             iterator.remove();
         }

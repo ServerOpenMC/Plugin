@@ -7,9 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class CorpseMenu {
 
@@ -89,7 +87,7 @@ public class CorpseMenu {
     }
 
     public boolean isOwner(Player p) {
-        return p.getUniqueId() == owner;
+        return p.getUniqueId().equals(owner);
     }
 
     public Inventory getInventory() {
@@ -116,5 +114,9 @@ public class CorpseMenu {
                 toInventory.setItem(toSlot, item);
             }
         }
+    }
+
+    public List<ItemStack> getContents(){
+        return Arrays.stream(inv.getContents()).toList().stream().filter(item -> item.getType() != Material.BLACK_STAINED_GLASS_PANE).toList();
     }
 }
