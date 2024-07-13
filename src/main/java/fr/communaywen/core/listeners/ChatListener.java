@@ -32,6 +32,7 @@ public class ChatListener implements Listener {
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> discordWebhook.sendMessage(username, avatarUrl, message));
 
+        if (!(event.getPlayer() instanceof Player)) { return; }
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (player.equals(event.getPlayer())) {
                 return;
