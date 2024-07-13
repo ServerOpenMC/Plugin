@@ -261,13 +261,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new TradeListener(),
                 new QuestsListener(),
                 new PasFraisListener(this),
-                new ClaimManager()
+                new ClaimManager(),
+                new FarineListener()
         );
         /* --------- */
 
         saveDefaultConfig();
 
-        getServer().getPluginManager().registerEvents(new FarineListener(), this);
         createFarineRecipe();
 
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);

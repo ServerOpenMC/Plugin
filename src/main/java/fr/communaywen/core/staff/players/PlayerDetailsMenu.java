@@ -53,6 +53,7 @@ public class PlayerDetailsMenu extends Menu {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Position/Cliquer pour se téléporter");
             itemMeta.setLore(List.of(ChatColor.BLUE + String.valueOf(target.getLocation().getBlockX()) + ", " + target.getLocation().getBlockY() + ", " + target.getLocation().getBlockZ()));
         }).setOnClick(inventoryClickEvent -> {
+            if (!checkAuthorized()) return;
             getOwner().teleport(target.getLocation());
             getOwner().sendMessage(ChatColor.DARK_GREEN + "Vous avez été téléporté au joueur " + ChatColor.BLUE + target.getDisplayName() + ChatColor.DARK_GREEN + " !");
             getOwner().closeInventory();
@@ -80,7 +81,7 @@ public class PlayerDetailsMenu extends Menu {
         map.put(6, new ItemBuilder(this, Material.ENDER_EYE, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Voir l'inventaire");
         }).setOnClick(inventoryClickEvent -> {
-            if (!checkOnline()) return;
+            if (!checkAuthorized() || !checkOnline()) return;
             getOwner().openInventory(target.getInventory());
         }));
 
@@ -88,7 +89,7 @@ public class PlayerDetailsMenu extends Menu {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Geler le joueur");
             itemMeta.setLore(List.of(ChatColor.BLUE + "État : " + (AywenCraftPlugin.frozenPlayers.contains(target) ? "§4Freeze" : "§2Unfreeze")));
         }).setOnClick(inventoryClickEvent -> {
-            if (!checkOnline()) return;
+            if (!checkAuthorized() || !checkOnline()) return;
             FreezeUtils.switch_freeze(getOwner(), target);
             getOwner().closeInventory();
         }));
@@ -96,6 +97,7 @@ public class PlayerDetailsMenu extends Menu {
         map.put(8, new ItemBuilder(this, Material.WOODEN_AXE, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Bannir le joueur");
         }).setOnClick(inventoryClickEvent -> {
+            if (!checkAuthorized()) return;
             String name = target.getName();
             Bukkit.getServer().getBanList(BanList.Type.NAME).addBan(name, "Aucune raison spécifiée", null, getOwner().getName());
             getOwner().sendMessage(ChatColor.BLUE + name + ChatColor.DARK_RED + " a bien été banni !");
@@ -110,6 +112,13 @@ public class PlayerDetailsMenu extends Menu {
 
         getOwner().sendMessage(ChatColor.RED + target.getName() + " n'est plus connecté");
         getOwner().closeInventory();
+        return false;
+    }
+
+    public boolean checkAuthorized() {
+        if (getOwner().hasPermission("openmc.staff.players")) return true;
+
+        getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas la permission de faire celà");
         return false;
     }
 }
