@@ -1,10 +1,10 @@
 package fr.communaywen.core;
 
+import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigFile;
 import fr.communaywen.core.claim.ClaimManager;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
-import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.economy.EconomyManager;
@@ -20,12 +20,8 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
-import fr.communaywen.core.teams.*;
-import fr.communaywen.core.utils.*;
-
-import fr.communaywen.core.levels.LevelsCommand;
-import fr.communaywen.core.levels.LevelsDataManager;
-
+import fr.communaywen.core.teams.Team;
+import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
@@ -39,9 +35,9 @@ import fr.communaywen.core.utils.database.DatabaseManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -57,10 +53,9 @@ import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -126,7 +121,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        if(Bukkit.getPluginManager().getPlugin("WorldGuard") == null || Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
+        if (Bukkit.getPluginManager().getPlugin("WorldGuard") == null || Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
             getLogger().warning("WorldGuard or WorldEdit isn't installed");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -167,7 +162,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadWikiConfig();
 
 
-        LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
+        LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
 
         friendsManager = new FriendsManager(friendsUtils, this);
@@ -276,7 +271,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         createFarineRecipe();
 
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
-        for(Player player : Bukkit.getOnlinePlayers()) { new GamePlayer(player.getName()); }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            new GamePlayer(player.getName());
+        }
 
         loadRegions();
     }
