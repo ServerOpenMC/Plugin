@@ -80,6 +80,7 @@ public class PlayerDetailsMenu extends Menu {
         map.put(6, new ItemBuilder(this, Material.ENDER_EYE, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Voir l'inventaire");
         }).setOnClick(inventoryClickEvent -> {
+            if (!checkOnline()) return;
             getOwner().openInventory(target.getInventory());
         }));
 
@@ -87,6 +88,7 @@ public class PlayerDetailsMenu extends Menu {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Geler le joueur");
             itemMeta.setLore(List.of(ChatColor.BLUE + "État : " + (AywenCraftPlugin.frozenPlayers.contains(target) ? "§4Freeze" : "§2Unfreeze")));
         }).setOnClick(inventoryClickEvent -> {
+            if (!checkOnline()) return;
             FreezeUtils.switch_freeze(getOwner(), target);
             getOwner().closeInventory();
         }));
@@ -101,5 +103,13 @@ public class PlayerDetailsMenu extends Menu {
             getOwner().closeInventory();
         }));
         return map;
+    }
+
+    public boolean checkOnline() {
+        if (target.isOnline()) return true;
+
+        getOwner().sendMessage(ChatColor.RED + target.getName() + " n'est plus connecté");
+        getOwner().closeInventory();
+        return false;
     }
 }

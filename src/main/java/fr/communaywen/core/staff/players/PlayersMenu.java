@@ -39,8 +39,6 @@ public class PlayersMenu extends PaginatedMenu {
         List<ItemStack> items = new ArrayList<>();
         for (Player player : players) {
             items.add(new ItemBuilder(this, ItemUtils.getPlayerSkull(player.getUniqueId()), itemMeta -> {
-                System.out.println("META");
-                System.out.println(itemMeta);
                 itemMeta.setDisplayName(ChatColor.WHITE + player.getName());
                 itemMeta.setLore(List.of(
                         ChatColor.GOLD + "Vie : " + ChatColor.RED + player.getHealth(),
