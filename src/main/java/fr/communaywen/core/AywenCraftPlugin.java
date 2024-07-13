@@ -50,6 +50,11 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -58,7 +63,8 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 
 import java.io.File;
-import java.util.List;
+import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -186,7 +192,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.register(
             new SpawnCommand(this), 
-            new VersionCommand(this), 
+            new VersionCommand(this),
             new RulesCommand(bookConfig),
             new TeamCommand(), 
             new MoneyCommand(this.economyManager), 
@@ -249,6 +255,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
         getServer().getPluginManager().registerEvents(new QuestsListener(), this);
+        getServer().getPluginManager().registerEvents(new StructureCompass(), this);
         /* --------- */
 
         saveDefaultConfig();
