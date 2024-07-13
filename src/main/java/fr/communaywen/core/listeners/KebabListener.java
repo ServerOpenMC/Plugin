@@ -2,6 +2,7 @@ package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -32,6 +33,8 @@ public class KebabListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         CustomStack customstack = CustomStack.byItemStack(item);
+
+        if (customstack == null){ return; }
 
         if (customstack.getNamespacedID().equals("aywen:kebab")) {
             addFood(player, 4);

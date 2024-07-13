@@ -22,8 +22,13 @@ public class LevelsManager {
 
     public void applyExperienceReward(Player player, String entityType) {
         int rewardAmount = LevelsDataManager.getExperienceReward(entityType);
-        LevelsDataManager.addToCount(player, rewardAmount);
-        player.sendMessage(" + " + rewardAmount + " xp !");
+        boolean rewardsEnabled = LevelsDataManager.rewardsAreEnabled();
+        if (rewardsEnabled) {
+            LevelsDataManager.addToCount(player, rewardAmount);
+            player.sendMessage(" + " + rewardAmount + " xp !");
+        } else {
+            player.sendMessage("§4les gains d'xp sont désactivés !");
+        }
     }
 
 }
