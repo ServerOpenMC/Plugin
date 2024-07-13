@@ -6,7 +6,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
-
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
@@ -18,7 +17,7 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 /**
  * La commande /trade
- *
+ * <p>
  * Usage: /trade [player]
  * Permission: PREFIX.command.trade
  */
@@ -53,9 +52,9 @@ public final class TradeCommand {
         }
 
         final TextComponent textComponent = Component.text("§9" + player1.getName() + " §3vous a envoyé un demande de trade, /tradeaccept pour l'accepter")
-                    .color(TextColor.color(255,255,255))
-                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tradeaccept"))
-                    .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour accepter§7]")));
+                .color(TextColor.color(255, 255, 255))
+                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tradeaccept"))
+                .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour accepter§7]")));
 
         TradeAcceptCommand.newPendingDemand(player1, player2);
 

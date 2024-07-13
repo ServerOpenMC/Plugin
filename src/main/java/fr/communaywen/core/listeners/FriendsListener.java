@@ -1,6 +1,5 @@
 package fr.communaywen.core.listeners;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.friends.FriendsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +15,7 @@ public class FriendsListener implements Listener {
 
     private FriendsManager friendsManager;
 
-    public FriendsListener(FriendsManager friendsManager){
+    public FriendsListener(FriendsManager friendsManager) {
         this.friendsManager = friendsManager;
     }
 
@@ -24,10 +23,10 @@ public class FriendsListener implements Listener {
     public void onJoin(PlayerJoinEvent e) throws SQLException {
         Player p = e.getPlayer();
 
-        for(String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())){
+        for (String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())) {
             Player friends = Bukkit.getPlayer(UUID.fromString(friends_uuid));
 
-            if(friends != null && friends.isOnline()) {
+            if (friends != null && friends.isOnline()) {
                 friends.sendMessage("§aVotre ami §e" + p.getName() + " §as'est connecté(e) !");
             }
         }
@@ -37,10 +36,10 @@ public class FriendsListener implements Listener {
     public void onLeave(PlayerQuitEvent e) throws SQLException {
         Player p = e.getPlayer();
 
-        for(String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())){
+        for (String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())) {
             Player friends = Bukkit.getPlayer(UUID.fromString(friends_uuid));
 
-            if(friends != null && friends.isOnline()){
+            if (friends != null && friends.isOnline()) {
                 friends.sendMessage("§cVotre ami §e" + p.getName() + " §cs'est déconnecté(e) !");
             }
         }

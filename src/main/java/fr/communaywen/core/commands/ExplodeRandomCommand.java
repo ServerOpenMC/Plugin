@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 
@@ -21,7 +20,7 @@ public final class ExplodeRandomCommand {
 
     private static final int IMMUNITY_TIME = 60 * 60; // 1 hour in seconds
 
-    public static final HashSet<TNTPrimed> preventedExplosvies = new HashSet<>();
+    public static final HashSet<TNTPrimed> preventedExplosives = new HashSet<>();
 
     public static final int COST = 32;
 
@@ -112,7 +111,7 @@ public final class ExplodeRandomCommand {
 
             tnt.setFuseTicks(15);
 
-            preventedExplosvies.add(tnt);
+            preventedExplosives.add(tnt);
 
             lastExploded.put(playerId, currentTime);
 

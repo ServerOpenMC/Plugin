@@ -21,7 +21,7 @@ public class CreditCommand {
                 player.sendMessage("Impossible de récuperer les contributeurs: " + jsonResponse);
             } else {
                 JSONArray contributors = new JSONArray(jsonResponse);
-                player.sendMessage(ChatColor.BOLD+"Merci à"+ChatColor.RESET);
+                player.sendMessage(ChatColor.BOLD + "Merci à" + ChatColor.RESET);
                 for (int i = 0; i < contributors.length(); i++) {
                     JSONObject contributor = contributors.getJSONObject(i);
                     String login = contributor.getString("login");

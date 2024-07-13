@@ -19,9 +19,9 @@ public class DiscordCommand {
 
     @Command("discord")
     @Description("Affiche un lien redirigeant vers le discord.")
-    public void onCommand(Player p){
+    public void onCommand(Player p) {
         final TextComponent textComponent = Component.text("Voici le serveur discord : §ndiscord.gg/aywen-communaute-1161296442577653802")
-                .color(TextColor.color(255,255,255))
+                .color(TextColor.color(255, 255, 255))
                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, "https://discord.com/invite/aywen-communaute-1161296442577653802"))
                 .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour rejoindre§7]")));
 

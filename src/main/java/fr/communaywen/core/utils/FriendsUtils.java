@@ -1,11 +1,9 @@
 package fr.communaywen.core.utils;
 
 import fr.communaywen.core.utils.database.DatabaseManager;
-import org.bukkit.entity.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FriendsUtils {
@@ -21,7 +19,7 @@ public class FriendsUtils {
         try {
             Connection connection = dbmanager.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO "+TABLE_NAME+" (firstPlayer_uuid, secondPlayer_uuid, friendDate) VALUES (?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_NAME + " (firstPlayer_uuid, secondPlayer_uuid, friendDate) VALUES (?, ?, ?)");
 
             statement.setString(1, firstUUID);
             statement.setString(2, secondUUID);
@@ -30,7 +28,7 @@ public class FriendsUtils {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -40,7 +38,7 @@ public class FriendsUtils {
         try {
             Connection connection = dbmanager.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM "+TABLE_NAME+" WHERE firstPlayer_uuid = ? AND secondPlayer_uuid = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE firstPlayer_uuid = ? AND secondPlayer_uuid = ?");
 
             statement.setString(1, firstUUID);
             statement.setString(2, secondUUID);
@@ -48,7 +46,7 @@ public class FriendsUtils {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -58,7 +56,7 @@ public class FriendsUtils {
         try {
             Connection connection = dbmanager.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+TABLE_NAME+" WHERE (firstPlayer_uuid = ? AND secondPlayer_uuid = ?) OR (firstPlayer_uuid = ? AND secondPlayer_uuid = ?)");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE (firstPlayer_uuid = ? AND secondPlayer_uuid = ?) OR (firstPlayer_uuid = ? AND secondPlayer_uuid = ?)");
 
             statement.setString(1, firstUUID);
             statement.setString(2, secondUUID);
@@ -68,7 +66,7 @@ public class FriendsUtils {
             ResultSet resultSet = statement.executeQuery();
 
             return resultSet.next();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -78,7 +76,7 @@ public class FriendsUtils {
         try {
             Connection connection = dbmanager.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT friendDate FROM "+TABLE_NAME+" WHERE (firstPlayer_uuid = ? AND secondPlayer_uuid = ?) OR (firstPlayer_uuid = ? AND secondPlayer_uuid = ?)");
+            PreparedStatement statement = connection.prepareStatement("SELECT friendDate FROM " + TABLE_NAME + " WHERE (firstPlayer_uuid = ? AND secondPlayer_uuid = ?) OR (firstPlayer_uuid = ? AND secondPlayer_uuid = ?)");
 
             statement.setString(1, firstUUID);
             statement.setString(2, secondUUID);
@@ -90,7 +88,7 @@ public class FriendsUtils {
                 return resultSet.getTimestamp("friendDate");
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 
@@ -103,7 +101,7 @@ public class FriendsUtils {
         try {
             Connection connection = dbmanager.getConnection();
 
-            String sql = "SELECT * FROM "+TABLE_NAME+" WHERE firstPlayer_uuid = ? OR secondPlayer_uuid = ?";
+            String sql = "SELECT * FROM " + TABLE_NAME + " WHERE firstPlayer_uuid = ? OR secondPlayer_uuid = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid);
             statement.setString(2, uuid);

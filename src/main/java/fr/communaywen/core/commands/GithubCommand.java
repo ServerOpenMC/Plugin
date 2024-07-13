@@ -20,9 +20,9 @@ public class GithubCommand {
 
     @Command({"github", "git"})
     @Description("Affiche un lien redirigeant vers le repo github.")
-    public void onCommand(Player p){
+    public void onCommand(Player p) {
         final TextComponent textComponent = Component.text("Voici le repository du serveur : §ngithub.com/Margouta/PluginOpenMC")
-                .color(TextColor.color(255,255,255))
+                .color(TextColor.color(255, 255, 255))
                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Margouta/PluginOpenMC"))
                 .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour voir le repository§7]")));
 

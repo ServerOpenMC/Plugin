@@ -3,10 +3,8 @@ package fr.communaywen.core.commands;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.PermissionCategory;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Description;
 
 public class VersionCommand {

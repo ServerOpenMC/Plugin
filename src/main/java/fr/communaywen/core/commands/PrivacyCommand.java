@@ -1,13 +1,13 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.utils.database.Blacklist;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import fr.communaywen.core.utils.database.Blacklist;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.command.ExecutableCommand;
@@ -31,7 +31,7 @@ public class PrivacyCommand {
     @DefaultFor("~")
     public void sendHelp(BukkitCommandActor sender, CommandHelp<Component> help, ExecutableCommand thisHelpCommand, @Default("1") @Range(min = 1) int page) {
         Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
-        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, ChatColor.BLACK+"BLACKLIST"+ ChatColor.RESET);
+        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, ChatColor.BLACK + "BLACKLIST" + ChatColor.RESET);
     }
 
     @Subcommand("blacklist")
@@ -48,7 +48,7 @@ public class PrivacyCommand {
                 playersList.append(blocked.getName());
             }
         }
-        player.sendMessage("Blacklist: "+ playersList.toString());
+        player.sendMessage("Blacklist: " + playersList.toString());
     }
 
     @Subcommand("block")
@@ -59,7 +59,7 @@ public class PrivacyCommand {
             return;
         }
         blacklist.block(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
-        player.sendMessage("Vous avez bloqué "+blocked);
+        player.sendMessage("Vous avez bloqué " + blocked);
     }
 
     @Subcommand("unblock")
@@ -70,6 +70,6 @@ public class PrivacyCommand {
             return;
         }
         blacklist.unblock(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
-        player.sendMessage("Vous avez débloqué "+blocked);
+        player.sendMessage("Vous avez débloqué " + blocked);
     }
 }

@@ -1,9 +1,8 @@
 package fr.communaywen.core.tpa;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import org.bukkit.entity.Player;
-
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -20,13 +19,13 @@ public class TpacceptCommand {
             return;
         }
         tpQueue.TPA_REQUESTS.remove(player);
-        player.sendMessage(tpaplayer.getName()+" va être téléporté à vous !");
-        tpaplayer.sendTitle("§0","§a§lTéléportation à "+player.getName(),20,10,10);
+        player.sendMessage(tpaplayer.getName() + " va être téléporté à vous !");
+        tpaplayer.sendTitle("§0", "§a§lTéléportation à " + player.getName(), 20, 10, 10);
         new BukkitRunnable() {
             @Override
             public void run() {
                 tpaplayer.teleport(player);
             }
-        }.runTaskLater(AywenCraftPlugin.getInstance(),25);
+        }.runTaskLater(AywenCraftPlugin.getInstance(), 25);
     }
 }
