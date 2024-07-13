@@ -2,23 +2,17 @@ package fr.communaywen.core.friends.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.friends.FriendsManager;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Subcommand;
-import revxrsal.commands.command.CommandActor;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,17 +38,17 @@ public class FriendsCommand {
     @Description("Ajoutez un joueur en tant qu'ami.")
     public void addFriend(Player player, Player target) {
         try {
-            if(friendsManager.isRequestPending(player.getUniqueId().toString())){
+            if (friendsManager.isRequestPending(player.getUniqueId().toString())) {
                 player.sendMessage("§cTu as déjà envoyé une demande d'ami.");
                 return;
             }
 
-            if(friendsManager.areFriends(player.getUniqueId().toString(), target.getUniqueId().toString())){
+            if (friendsManager.areFriends(player.getUniqueId().toString(), target.getUniqueId().toString())) {
                 player.sendMessage("§cTu es déjà ami avec §e" + target.getName());
                 return;
             }
 
-            if(player == target){
+            if (player == target) {
                 player.sendMessage("§cTu ne peux pas envoyer une demande d'ami à toi-même.");
                 return;
             }
@@ -62,7 +56,7 @@ public class FriendsCommand {
             friendsManager.addRequest(player.getUniqueId().toString(), target.getUniqueId().toString());
             player.sendMessage("§aDemande d'ami envoyée à §e" + target.getName() + "§a.");
 
-            TextComponent accept = Component.text("§e" +player.getName() +" §avous a envoyé une demande d'ami !")
+            TextComponent accept = Component.text("§e" + player.getName() + " §avous a envoyé une demande d'ami !")
                     .hoverEvent(HoverEvent.showText(Component.text("§7[§aCliquez pour accepter§7]")))
                     .clickEvent(ClickEvent.runCommand("/friends accept " + player.getName()));
 
@@ -77,7 +71,7 @@ public class FriendsCommand {
     @Description("Supprime un joueur de votre liste d'amis.")
     public void removeFriend(Player player, Player target) {
         try {
-            if(!friendsManager.areFriends(player.getUniqueId().toString(), target.getUniqueId().toString())){
+            if (!friendsManager.areFriends(player.getUniqueId().toString(), target.getUniqueId().toString())) {
                 player.sendMessage("§cTu n'es pas ami avec §e" + target.getName());
                 return;
             }
@@ -117,7 +111,7 @@ public class FriendsCommand {
     @Description("Accepte une demande d'ami.")
     public void acceptRequest(Player player, Player target) {
         try {
-            if(!friendsManager.isRequestPending(player.getUniqueId().toString())){
+            if (!friendsManager.isRequestPending(player.getUniqueId().toString())) {
                 player.sendMessage("§e" + target.getName() + " §cne vous a pas envoyé de demande d'ami.");
                 return;
             }
@@ -134,7 +128,7 @@ public class FriendsCommand {
     @Description("Refuse une demande d'ami.")
     public void denyRequest(Player player, Player target) {
         try {
-            if(!friendsManager.isRequestPending(player.getUniqueId().toString())){
+            if (!friendsManager.isRequestPending(player.getUniqueId().toString())) {
                 player.sendMessage("§e" + target.getName() + " §cne vous a pas envoyé de demande d'ami.");
                 return;
             }

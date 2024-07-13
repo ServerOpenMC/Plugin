@@ -37,7 +37,7 @@ public class FreezeListener implements Listener {
 
         }
     }
-    
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
@@ -46,7 +46,7 @@ public class FreezeListener implements Listener {
             player.sendMessage(FreezeUtils.prefix + ChatColor.DARK_RED + "Vous êtes freeze !");
         }
     }
-    
+
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         Entity entity = e.getEntity();

@@ -2,7 +2,6 @@ package fr.communaywen.core.commands;
 
 import fr.communaywen.core.utils.LinkerAPI;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.N;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Named;
@@ -14,7 +13,9 @@ public class ManualLinkCommand {
 
     private final LinkerAPI linkerAPI;
 
-    public ManualLinkCommand(LinkerAPI linkerAPI) { this.linkerAPI = linkerAPI; }
+    public ManualLinkCommand(LinkerAPI linkerAPI) {
+        this.linkerAPI = linkerAPI;
+    }
 
     @Command("manuallink")
     @Description("Lie un compte Minecraft à Discord manuellement (sans verif)")

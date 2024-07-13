@@ -2,13 +2,15 @@ package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +48,7 @@ public class PasFraisListener implements Listener {
 
         @Override
         public void run() {
-            if (count < 5){
+            if (count < 5) {
                 count++;
                 // Make the player jump
                 final Vector currentVelocity = player.getVelocity();

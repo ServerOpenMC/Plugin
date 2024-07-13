@@ -35,11 +35,11 @@ public class WelcomeMessage implements Listener {
             if (executeOnfirstJoin == (!player.hasPlayedBefore())) {
 
                 if (type.equals("title")) {
-                    player.sendTitle(welcomeMessageConfig.getString(message+".config.title"),
-                            welcomeMessageConfig.getString(message+".config.subtitle"),
-                            welcomeMessageConfig.getInt(message+".config.fadeIn"),
-                            welcomeMessageConfig.getInt(message+".config.stay"),
-                            welcomeMessageConfig.getInt(message+".config.fadeOut"));
+                    player.sendTitle(welcomeMessageConfig.getString(message + ".config.title"),
+                            welcomeMessageConfig.getString(message + ".config.subtitle"),
+                            welcomeMessageConfig.getInt(message + ".config.fadeIn"),
+                            welcomeMessageConfig.getInt(message + ".config.stay"),
+                            welcomeMessageConfig.getInt(message + ".config.fadeOut"));
                 } else if (type.equals("chat")) {
                     String messageContent = welcomeMessageConfig.getString(message + ".config.content");
                     if (messageContent != null) {

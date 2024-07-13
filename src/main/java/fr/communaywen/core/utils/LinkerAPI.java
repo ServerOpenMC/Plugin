@@ -30,7 +30,7 @@ public class LinkerAPI {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -49,7 +49,7 @@ public class LinkerAPI {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -67,7 +67,7 @@ public class LinkerAPI {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -84,7 +84,7 @@ public class LinkerAPI {
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                System.out.println("Discord ID found for "+player.getName()+": "+resultSet.getString("discord_id"));
+                System.out.println("Discord ID found for " + player.getName() + ": " + resultSet.getString("discord_id"));
                 return resultSet.getString("discord_id");
             } else {
                 return "";

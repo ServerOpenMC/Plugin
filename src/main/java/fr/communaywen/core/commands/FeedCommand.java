@@ -16,6 +16,7 @@ public class FeedCommand {
     public FeedCommand(@NotNull AywenCraftPlugin plugin) {
         COOLDOWN_TIME = plugin.getConfig().getLong("feed.cooldown");
     }
+
     @Command("feed")
     @CommandPermission("ayw.command.feed")
     public void onCommand(Player player) {

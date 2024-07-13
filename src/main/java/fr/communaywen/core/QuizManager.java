@@ -3,12 +3,12 @@ package fr.communaywen.core;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Debug;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +30,8 @@ public class QuizManager {
             this.quizzes.add(
                     new Quiz((String) i.get("question"), (String) i.get("answer"))
             );
-        };
+        }
+        ;
 
         Runnable runnable = () -> {
             if (Bukkit.getOnlinePlayers().isEmpty()) return;
@@ -41,7 +42,7 @@ public class QuizManager {
 
             int numberOfSpaces = Math.max(0, 23 - (currentQuiz.question.length() / 2));
             Bukkit.broadcastMessage(
-                            "§8§m                                                     §r\n" +
+                    "§8§m                                                     §r\n" +
                             "§7\n" +
                             "§6              Nouvelle question : \n§7" +
                             " ".repeat(numberOfSpaces) + currentQuiz.question + "\n" +
@@ -55,12 +56,12 @@ public class QuizManager {
                 Bukkit.broadcastMessage(
 
                         "§8§m                                                     §r\n" +
-                        "§7\n" +
-                        "§cAie aie aie ! Personne n'a trouvé la réponse ... \n§7" +
-                        "§7\n" +
-                        "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
-                        "§7\n" +
-                        "§8§m                                                     §r"
+                                "§7\n" +
+                                "§cAie aie aie ! Personne n'a trouvé la réponse ... \n§7" +
+                                "§7\n" +
+                                "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
+                                "§7\n" +
+                                "§8§m                                                     §r"
                 );
                 currentQuiz = null;
             };
@@ -81,12 +82,12 @@ public class QuizManager {
 
         Bukkit.broadcastMessage(
                 "§8§m                                                     §r\n" +
-                "§7\n" +
-                "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
-                "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
-                "§bIl remporte §7" + money + " §bde monnaie !\n" +
-                "§7\n" +
-                "§8§m                                                     §r"
+                        "§7\n" +
+                        "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
+                        "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
+                        "§bIl remporte §7" + money + " §bde monnaie !\n" +
+                        "§7\n" +
+                        "§8§m                                                     §r"
         );
 
         event.setCancelled(true);
@@ -97,8 +98,7 @@ public class QuizManager {
         this.timeoutExecutor = Executors.newScheduledThreadPool(1);
     }
 
-    public Quiz getRandomQuiz()
-    {
+    public Quiz getRandomQuiz() {
         boolean isPredefinedQuiz = new Random().nextInt(3) < 2;
 
         if (isPredefinedQuiz) {
@@ -118,7 +118,8 @@ public class QuizManager {
                     int b = new Random().nextInt(1, 10);
                     yield new Quiz(MessageFormat.format("Combien font {0} * {1} ?", a, b), String.valueOf(a * b));
                 }
-                case 2 -> new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
+                case 2 ->
+                        new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
                 case 3 -> new Quiz(MessageFormat.format("Quelle est le carrée de {0} ?", a), String.valueOf(a * a));
                 default -> throw new IllegalStateException("Unexpected value: " + type);
             };

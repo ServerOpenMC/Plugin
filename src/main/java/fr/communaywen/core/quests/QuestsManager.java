@@ -1,8 +1,6 @@
 package fr.communaywen.core.quests;
 
-import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.listeners.RTPWand;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
@@ -24,6 +22,7 @@ public class QuestsManager {
     private static final Map<UUID, PlayerQuests> playerQuests = new HashMap<>();
     private static final File questsFile = new File(AywenCraftPlugin.getInstance().getDataFolder(), "quests.yml");
     private static final FileConfiguration questsData = YamlConfiguration.loadConfiguration(questsFile);
+
     public enum QUESTS {
         BREAK_STONE(Material.STONE, 10000, TYPE.BREAK, "Casseur de pierres", "de stone", REWARD.MONEY, 2000, TIER.TIER_1),
         BREAK_DIAMOND(Material.DIAMOND, 100, TYPE.BREAK, "Richou", "diamants", REWARD.MONEY, 2500, TIER.TIER_1),
@@ -55,6 +54,7 @@ public class QuestsManager {
             this.rewardsQt = rewardsQt;
             this.tier = tier;
         }
+
         QUESTS(Material material, int qt, TYPE type, String name, String desc, REWARD reward, int rewardsQt, TIER tier) {
             this(material, qt, type, name, desc, reward, rewardsQt, null, tier);
         }
@@ -62,37 +62,67 @@ public class QuestsManager {
         public Material getMaterial() {
             return material;
         }
+
         public int getQt() {
             return qt;
         }
+
         public TYPE getType() {
             return type;
         }
+
         public String getName() {
             return name;
         }
+
         public REWARD getReward() {
             return reward;
         }
+
         public int getRewardsQt() {
             return rewardsQt;
         }
+
         public Material getRewardsMaterial() {
             return rewardsMaterial;
         }
-        public TIER getTier() { return tier; }
+
+        public TIER getTier() {
+            return tier;
+        }
+
         public String getDesc() {
             switch (type) {
-                case GET -> { return "Récupérer " + qt + " " + desc; }
-                case KILL -> { return "Tuer " + qt + " " + desc; }
-                case WALK -> { return "Marcher " + qt + " " + desc; }
-                case BREAK -> { return "Casser " + qt + " " + desc; }
-                case CRAFT -> { return "Crafter " + qt + " " + desc; }
-                case PLACE -> { return "Placer " + qt + " " + desc; }
-                case EAT -> { return "Manger " + qt + " " + desc; }
-                case ENCHANT -> { return "Enchanter " + qt + " " + desc; }
-                case SMELT -> { return "Cuire " + qt + " " + desc; }
-                default -> { return ""; }
+                case GET -> {
+                    return "Récupérer " + qt + " " + desc;
+                }
+                case KILL -> {
+                    return "Tuer " + qt + " " + desc;
+                }
+                case WALK -> {
+                    return "Marcher " + qt + " " + desc;
+                }
+                case BREAK -> {
+                    return "Casser " + qt + " " + desc;
+                }
+                case CRAFT -> {
+                    return "Crafter " + qt + " " + desc;
+                }
+                case PLACE -> {
+                    return "Placer " + qt + " " + desc;
+                }
+                case EAT -> {
+                    return "Manger " + qt + " " + desc;
+                }
+                case ENCHANT -> {
+                    return "Enchanter " + qt + " " + desc;
+                }
+                case SMELT -> {
+                    return "Cuire " + qt + " " + desc;
+                }
+                default -> {
+                    return "";
+                }
             }
         }
     }
@@ -163,6 +193,7 @@ public class QuestsManager {
             e.printStackTrace();
         }
     }
+
     public static void loadAllPlayersData() {
         if (!questsFile.exists()) {
             return;
@@ -204,6 +235,7 @@ public class QuestsManager {
             e.printStackTrace();
         }
     }
+
     public static PlayerQuests getPlayerQuests(Player player) {
         return playerQuests.get(player.getUniqueId());
     }
@@ -211,7 +243,7 @@ public class QuestsManager {
     public static void manageQuestsPlayer(Player player, QUESTS quests, int amount, String actionBar) {
         PlayerQuests pq = getPlayerQuests(player);
 
-        if(!pq.isQuestCompleted(quests)) {
+        if (!pq.isQuestCompleted(quests)) {
             pq.addProgress(quests, amount);
             QuestsManager.savePlayerData(player);
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("» §7[§9§lQuêtes§7] §6" + pq.getProgress(quests) + "§l/§6" + quests.getQt() + " " + actionBar));
