@@ -1,5 +1,9 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.claim.ClaimConfigFile;
+import fr.communaywen.core.claim.ClaimManager;
+import fr.communaywen.core.claim.GamePlayer;
+import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.friends.FriendsManager;
@@ -37,6 +41,7 @@ import fr.communaywen.core.listeners.FreezeListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -59,6 +64,7 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -86,6 +92,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FallingBlocksExplosionManager fbeManager;
 
     private LevelsManager levelsManager;
+    public ClaimConfigFile claimConfigFile;
+    public List<RegionManager> regions;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -121,6 +129,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        if(Bukkit.getPluginManager().getPlugin("WorldGuard") == null || Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
+            getLogger().warning("WorldGuard or WorldEdit isn't installed");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
         saveDefaultConfig();
 
@@ -155,6 +170,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadBookConfig();
         loadWikiConfig();
 
+
         LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
 
         friendsManager = new FriendsManager(friendsUtils, this);
@@ -168,6 +184,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         levelsManager = new LevelsManager();
 
         this.adventure = BukkitAudiences.create(this);
+
+        this.regions = new ArrayList<>();
+        this.claimConfigFile = new ClaimConfigFile(this, "claim.yml");
 
         /* ----- */
 
@@ -250,6 +269,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
         getServer().getPluginManager().registerEvents(new QuestsListener(), this);
         getServer().getPluginManager().registerEvents(new PasFraisListener(this), this);
+        getServer().getPluginManager().registerEvents(new ClaimManager(), this);
         /* --------- */
 
         saveDefaultConfig();
@@ -258,6 +278,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         createFarineRecipe();
       
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
+        for(Player player : Bukkit.getOnlinePlayers()) { new GamePlayer(player.getName()); }
+
+        loadRegions();
     }
 
     private FileConfiguration loadQuizzes() {
@@ -343,5 +366,18 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
+    }
+
+    private void loadRegions() {
+        if (claimConfigFile.get().getConfigurationSection("") == null) return;
+        for (String teamName : claimConfigFile.get().getConfigurationSection("").getKeys(false)) {
+            List<String> coordinates = claimConfigFile.get().getStringList(teamName);
+            Location pos1 = new Location(Bukkit.getWorld(coordinates.get(4)), Double.parseDouble(coordinates.get(0)), -62, Double.parseDouble(coordinates.get(1)));
+            Location pos2 = new Location(Bukkit.getWorld(coordinates.get(4)), Double.parseDouble(coordinates.get(2)), 320, Double.parseDouble(coordinates.get(3)));
+            Team team = teamManager.getTeamByName(teamName);
+            if (team != null) {
+                regions.add(new RegionManager(pos1, pos2, team));
+            }
+        }
     }
 }

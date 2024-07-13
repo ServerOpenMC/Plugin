@@ -3,8 +3,13 @@ package fr.communaywen.core.teams;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.utils.MethodState;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -50,6 +55,18 @@ public class Team {
 
     public void openInventory(Player player) {
         player.openInventory(inventory);
+    }
+
+    public void giveClaimStick(Player player) {
+        ItemStack itemStack = new ItemStack(Material.STICK);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("§cBATON DE CLAIM");
+        itemMeta.addEnchant(Enchantment.SHARPNESS, 1, true);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.setLore(Arrays.asList("§6Faites deux cliques §egauches §6", "§6sur l'endroit où vous voulez claim.", "§6Toutes les locations de la couche §e-62 §6à §e320 §6seront protégés."));
+
+        itemStack.setItemMeta(itemMeta);
+        player.getInventory().addItem(itemStack);
     }
 
     public Inventory getInventory() {
