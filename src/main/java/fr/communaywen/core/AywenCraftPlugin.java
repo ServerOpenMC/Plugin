@@ -40,6 +40,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -230,26 +231,28 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
-        getServer().getPluginManager().registerEvents(new KebabListener(this), this);
-        getServer().getPluginManager().registerEvents(new AntiTrampling(),this);
-        getServer().getPluginManager().registerEvents(new RTPWand(this), this);
-        getServer().getPluginManager().registerEvents(onPlayers, this);
-        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
-        getServer().getPluginManager().registerEvents(new SleepListener(),this);
-        getServer().getPluginManager().registerEvents(new ChatListener(this, discordWebhook), this);
-        getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
-        getServer().getPluginManager().registerEvents(new WelcomeMessage(loadWelcomeMessageConfig()), this);
-        getServer().getPluginManager().registerEvents(new Insomnia(), this);
-        getServer().getPluginManager().registerEvents(new VpnListener(this), this);
-        getServer().getPluginManager().registerEvents(new ThorHammer(), this);
-        getServer().getPluginManager().registerEvents(new FriendsListener(friendsManager), this);
-        getServer().getPluginManager().registerEvents(new PlayersMenuListener(), this);
-        getServer().getPluginManager().registerEvents(new TablistListener(this), this);
-        getServer().getPluginManager().registerEvents(new LevelsListeners(levelsManager), this);
-        getServer().getPluginManager().registerEvents(new CorpseListener(corpseManager), this);
-        getServer().getPluginManager().registerEvents(new TradeListener(), this);
-        getServer().getPluginManager().registerEvents(new QuestsListener(), this);
-        getServer().getPluginManager().registerEvents(new PasFraisListener(this), this);
+        registerEvents(
+                new KebabListener(this),
+                new AntiTrampling(),
+                new RTPWand(this),
+                onPlayers,
+                new ExplosionListener(),
+                new SleepListener(),
+                new ChatListener(this, discordWebhook),
+                new FreezeListener(this),
+                new WelcomeMessage(loadWelcomeMessageConfig()),
+                new Insomnia(),
+                new VpnListener(this),
+                new ThorHammer(),
+                new FriendsListener(friendsManager),
+                new PlayersMenuListener(),
+                new TablistListener(this),
+                new LevelsListeners(levelsManager),
+                new CorpseListener(corpseManager),
+                new TradeListener(),
+                new QuestsListener(),
+                new PasFraisListener(this)
+        );
         /* --------- */
 
         saveDefaultConfig();
@@ -285,6 +288,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         QuestsManager.saveAllPlayersData();
     }
 
+    public void registerEvents(Listener... args) {
+        for (Listener listener : args) {
+            getServer().getPluginManager().registerEvents(listener, this);
+        }
+    }
+
     public ArrayList<Player> getFrozenPlayers() {
         return frozenPlayers;
     }
@@ -292,7 +301,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
     }
-
 
     public TeamManager getTeamManager() {
         return teamManager;
