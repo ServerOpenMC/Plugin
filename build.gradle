@@ -23,6 +23,9 @@ repositories {
     maven {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
+    maven {
+        url = 'https://maven.enginehub.org/repo/'
+    }
 }
 
 dependencies {
@@ -41,6 +44,9 @@ dependencies {
 
     implementation 'net.kyori:adventure-api:4.17.0'
     implementation 'net.kyori:adventure-platform-bukkit:4.3.3'
+
+    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7+' // WorldEdit
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.10' // WorldGuard
 }
 
 def targetJavaVersion = 21

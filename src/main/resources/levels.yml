@@ -1,4 +1,5 @@
 xp_rewards:
+  enabled: false
   default: 10
   axolotl: 5
   camel: 5

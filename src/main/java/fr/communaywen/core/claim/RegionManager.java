@@ -1,0 +1,80 @@
+package fr.communaywen.core.claim;
+
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+import fr.communaywen.core.teams.Team;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class RegionManager {
+
+    public Location minLoc, maxLoc;
+    private Team team;
+    private static final double MIN_Y = -64.0;
+    private static final double MAX_Y = 320.0;
+
+    public RegionManager(Location firstPoint, Location secondPoint, Team team) {
+        minLoc = new Location(firstPoint.getWorld(), min(firstPoint.getX(), secondPoint.getX()), min(MIN_Y, MIN_Y), min(firstPoint.getZ(), secondPoint.getZ()));
+        maxLoc = new Location(firstPoint.getWorld(), max(firstPoint.getX(), secondPoint.getX()), max(MAX_Y, MAX_Y), max(firstPoint.getZ(), secondPoint.getZ()));
+        this.team = team;
+    }
+
+    public double min(double a, double b) {
+        return a < b ? a : b;
+    }
+
+    public double max(double a, double b) {
+        return a > b ? a : b;
+    }
+
+    public boolean isInArea(Location loc) {
+        return (minLoc.getX() <= loc.getX() && minLoc.getY() <= loc.getY() && minLoc.getZ() <= loc.getZ() && maxLoc.getX() >= loc.getX() && maxLoc.getY() >= loc.getY() && maxLoc.getZ() >= loc.getZ());
+    }
+
+    public Location getMiddle() {
+        double a, b;
+        a = (maxLoc.getX() - minLoc.getX()) / 2D + minLoc.getX();
+        b = (maxLoc.getZ() - minLoc.getZ()) / 2D + minLoc.getZ();
+
+        return new Location(Bukkit.getWorld("world"), a, minLoc.getY(), b);
+    }
+
+    public List<Location> getArea() {
+        List<Location> blocksLocation = new ArrayList<>();
+
+        for (int x = minLoc.getBlockX(); x <= maxLoc.getBlockX(); x++) {
+            for (int z = minLoc.getBlockZ(); z <= maxLoc.getBlockZ(); z++) {
+                for (int y = minLoc.getBlockY(); y <= maxLoc.getBlockY(); y++)
+                    blocksLocation.add(new Location(minLoc.getWorld(), x, y, z));
+            }
+        }
+        return blocksLocation;
+    }
+
+    public boolean isTeamMember(UUID playerUuid) {
+        return team.isIn(playerUuid);
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    @Override
+    public String toString() {
+        return "RegionManager{" +
+                "team=" + team.getName() +
+                '}';
+    }
+
+
+}
