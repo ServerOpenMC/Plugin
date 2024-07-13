@@ -1,5 +1,9 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.claim.ClaimConfigFile;
+import fr.communaywen.core.claim.ClaimManager;
+import fr.communaywen.core.claim.GamePlayer;
+import fr.communaywen.core.claim.RegionManager;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
@@ -16,7 +20,12 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
-import fr.communaywen.core.teams.TeamManager;
+import fr.communaywen.core.teams.*;
+import fr.communaywen.core.utils.*;
+
+import fr.communaywen.core.levels.LevelsCommand;
+import fr.communaywen.core.levels.LevelsDataManager;
+
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
@@ -32,6 +41,7 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -47,6 +57,8 @@ import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -76,6 +88,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FallingBlocksExplosionManager fbeManager;
 
     private LevelsManager levelsManager;
+    public ClaimConfigFile claimConfigFile;
+    public List<RegionManager> regions;
 
     private void loadBookConfig() {
         File bookFile = new File(getDataFolder(), "rules.yml");
@@ -111,6 +125,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        if(Bukkit.getPluginManager().getPlugin("WorldGuard") == null || Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
+            getLogger().warning("WorldGuard or WorldEdit isn't installed");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
         saveDefaultConfig();
 
@@ -145,6 +166,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadBookConfig();
         loadWikiConfig();
 
+
+        LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
 
         friendsManager = new FriendsManager(friendsUtils, this);
@@ -158,6 +181,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         levelsManager = new LevelsManager();
 
         this.adventure = BukkitAudiences.create(this);
+
+        this.regions = new ArrayList<>();
+        this.claimConfigFile = new ClaimConfigFile(this, "claim.yml");
 
         /* ----- */
 
@@ -239,7 +265,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CorpseListener(corpseManager),
                 new TradeListener(),
                 new QuestsListener(),
-                new PasFraisListener(this)
+                new PasFraisListener(this),
+                new ClaimManager()
         );
         /* --------- */
 
@@ -249,6 +276,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         createFarineRecipe();
 
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
+        for(Player player : Bukkit.getOnlinePlayers()) { new GamePlayer(player.getName()); }
+
+        loadRegions();
     }
 
     private FileConfiguration loadQuizzes() {
@@ -339,5 +369,18 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
+    }
+
+    private void loadRegions() {
+        if (claimConfigFile.get().getConfigurationSection("") == null) return;
+        for (String teamName : claimConfigFile.get().getConfigurationSection("").getKeys(false)) {
+            List<String> coordinates = claimConfigFile.get().getStringList(teamName);
+            Location pos1 = new Location(Bukkit.getWorld(coordinates.get(4)), Double.parseDouble(coordinates.get(0)), -62, Double.parseDouble(coordinates.get(1)));
+            Location pos2 = new Location(Bukkit.getWorld(coordinates.get(4)), Double.parseDouble(coordinates.get(2)), 320, Double.parseDouble(coordinates.get(3)));
+            Team team = teamManager.getTeamByName(teamName);
+            if (team != null) {
+                regions.add(new RegionManager(pos1, pos2, team));
+            }
+        }
     }
 }
