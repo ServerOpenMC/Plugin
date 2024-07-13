@@ -23,6 +23,9 @@ repositories {
     maven {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
+    maven {
+        url = 'https://maven.enginehub.org/repo/'
+    }
 }
 
 dependencies {
@@ -46,6 +49,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+    
+    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7+' // WorldEdit
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.10' // WorldGuard
 }
 
 def targetJavaVersion = 21

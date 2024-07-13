@@ -31,7 +31,7 @@ public class TeamCommand {
 
     @DefaultFor("~")
     public void sendHelp(Player player, ExecutableCommand command, CommandHelp<Component> help, @Default("1") @Range(min = 1) int page) {
-        if(teamManager.isInTeam(player.getUniqueId())) {
+        if (teamManager.isInTeam(player.getUniqueId())) {
             Team team = teamManager.getTeamByPlayer(player.getUniqueId());
             TeamMenu teamMenu = new TeamMenu(player, team, false);
             teamMenu.open();
@@ -121,7 +121,7 @@ public class TeamCommand {
     @Description("Accepter une invitation")
     public void acceptInvite(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(player.getUniqueId())) {
+        if (team != null && team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
             return;
         }
@@ -153,12 +153,14 @@ public class TeamCommand {
         }
         UUID targetUUID = target.getUniqueId();
         MethodState state = team.removePlayer(targetUUID);
-        if (state == MethodState.VALID || state == MethodState.WARNING) CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " a été kické de la team !", false);
+        if (state == MethodState.VALID || state == MethodState.WARNING)
+            CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " a été kické de la team !", false);
         if (state == MethodState.INVALID) {
             CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée et il reste des items dans l'inventaire !", true);
             return;
         }
-        if (state == MethodState.WARNING) CommandUtils.sendMessage(player, ChatColor.DARK_RED + "La team a été supprimée !", false);
+        if (state == MethodState.WARNING)
+            CommandUtils.sendMessage(player, ChatColor.DARK_RED + "La team a été supprimée !", false);
         if (state == MethodState.VALID) {
             CommandUtils.sendMessage(target, ChatColor.DARK_RED + "Vous avez été kické de la team !", false);
         }
@@ -168,7 +170,7 @@ public class TeamCommand {
     @Description("Quitter la team")
     public void leaveTeam(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(player.getUniqueId())) {
+        if (team != null && team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -184,6 +186,17 @@ public class TeamCommand {
             return;
         }
         team.openInventory(player);
+    }
+
+    @Subcommand("claim")
+    @Description("Claim une zone définit par un stick")
+    public void claimStickGive(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if(team != null && !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        team.giveClaimStick(player);
     }
 
 }

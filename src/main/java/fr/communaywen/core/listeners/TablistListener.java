@@ -3,16 +3,11 @@ package fr.communaywen.core.listeners;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.tab.Tablist;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.model.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 public class TablistListener implements Listener {
 

@@ -2,5 +2,6 @@
 
 *Votre code se compile t-il en local ?*: 
 
+*Avez-vous supprimez les imports inutilisés ?*: 
 ## Decrivez vos changements
 *Clairement et avec des screenshots si nécessaires*

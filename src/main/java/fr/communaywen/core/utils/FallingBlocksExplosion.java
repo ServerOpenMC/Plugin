@@ -2,9 +2,7 @@ package fr.communaywen.core.utils;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 
-import java.util.List;
 import java.util.Objects;
 
 public class FallingBlocksExplosion {

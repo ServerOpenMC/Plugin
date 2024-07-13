@@ -1,8 +1,7 @@
 package fr.communaywen.core.tpa;
 
-import org.bukkit.entity.Player;
-
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
@@ -21,6 +20,6 @@ public class TpdenyCommand {
         tpQueue.TPA_REQUESTS.remove(player);
         tpQueue.TPA_REQUESTS2.remove(tpaplayer);
         tpaplayer.sendMessage(ChatColor.RED + player.getName() + " a refusé votre demande de téléportation");
-        player.sendMessage("Vous avez refusé la demande de téléporation de "+tpaplayer.getName());
+        player.sendMessage("Vous avez refusé la demande de téléporation de " + tpaplayer.getName());
     }
 }

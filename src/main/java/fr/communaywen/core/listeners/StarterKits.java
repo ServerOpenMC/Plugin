@@ -37,13 +37,17 @@ public class StarterKits implements Listener {
         Player player = event.getPlayer();
         User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
 
-        if (player.hasPermission("ayw.starterpack.isclaimed")) { return; }
+        if (player.hasPermission("ayw.starterpack.isclaimed")) {
+            return;
+        }
         String uid = linkerAPI.getUserId(player);
-        if (uid.isBlank()){ return; }
+        if (uid.isBlank()) {
+            return;
+        }
 
         Inventory pInv = player.getInventory();
         if (player.hasPermission("ayw.levels.10")) {
-            System.out.println("Give lv10 starter kits to "+player.getName());
+            System.out.println("Give lv10 starter kits to " + player.getName());
             pInv.addItem(new ItemStack(Material.LEATHER_HELMET));
             pInv.addItem(new ItemStack(Material.LEATHER_CHESTPLATE));
             pInv.addItem(new ItemStack(Material.LEATHER_LEGGINGS));
@@ -56,13 +60,13 @@ public class StarterKits implements Listener {
         }
 
         if (player.hasPermission("ayw.levels.20")) {
-            System.out.println("Give lv20 starter kits to "+player.getName());
+            System.out.println("Give lv20 starter kits to " + player.getName());
             pInv.addItem(new ItemStack(Material.COOKED_BEEF, 16));
 
         }
 
         if (player.hasPermission("ayw.levels.30")) { // Level 30+
-            System.out.println("Give lv30 starter kits to "+player.getName());
+            System.out.println("Give lv30 starter kits to " + player.getName());
             pInv.addItem(new ItemStack(Material.COOKED_BEEF, 32));
         }
 

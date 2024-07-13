@@ -5,6 +5,7 @@ import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.database.Blacklist;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -30,12 +31,17 @@ public class ChatListener implements Listener {
         String avatarUrl = "https://minotar.net/helm/" + username;
         String message = event.getMessage();
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendMessage(username, avatarUrl, message));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> discordWebhook.sendMessage(username, avatarUrl, message));
 
+        if (!(event.getPlayer() instanceof Player)) { return; }
         Bukkit.getOnlinePlayers().forEach(player -> {
-            if (player.equals(event.getPlayer())) { return; }
+            if (player.equals(event.getPlayer())) {
+                return;
+            }
             if (message.toLowerCase().contains(player.getName().toLowerCase())) {
-                if (blacklist.isBlacklisted(player, event.getPlayer())) { return; }
+                if (blacklist.isBlacklisted(player, event.getPlayer())) {
+                    return;
+                }
                 player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
             }
         });
@@ -43,6 +49,6 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onBroadcastMessage(BroadcastMessageEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendBroadcast(event.getMessage()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> discordWebhook.sendBroadcast(event.getMessage()));
     }
 }

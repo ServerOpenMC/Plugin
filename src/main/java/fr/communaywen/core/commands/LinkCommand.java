@@ -9,12 +9,13 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 
 import java.sql.SQLException;
-import java.util.Random;
 
 public class LinkCommand {
     private final LinkerAPI linkerAPI;
 
-    public LinkCommand(LinkerAPI linkerAPI) { this.linkerAPI = linkerAPI; }
+    public LinkCommand(LinkerAPI linkerAPI) {
+        this.linkerAPI = linkerAPI;
+    }
 
     @Command("link")
     @Description("Lie un compte Minecraft à Discord")
@@ -23,7 +24,7 @@ public class LinkCommand {
         try {
             if (!linkerAPI.getUserId(player).isEmpty()) {
                 player.sendMessage(ChatColor.RED + "Votre compte minecraft est déjà lié à un compte Discord.");
-            } else if(linkerAPI.playerAlreadyLinkTime(player)) {
+            } else if (linkerAPI.playerAlreadyLinkTime(player)) {
                 int code = linkerAPI.generateCode();
 
                 do {
@@ -39,7 +40,7 @@ public class LinkCommand {
                     public void run() {
                         try {
                             linkerAPI.delayRemoveCode(player);
-                            if(!linkerAPI.isVerified(player)) {
+                            if (!linkerAPI.isVerified(player)) {
                                 player.sendMessage("§cVous avez dépassé les 5 minutes.");
                             }
                         } catch (SQLException e) {

@@ -1,13 +1,10 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
-
-import fr.communaywen.core.AywenCraftPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -16,7 +13,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class RTPCommand {
-	private final AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
 
     // Configuration values
     private final int COOLDOWN_TIME;
@@ -33,7 +30,7 @@ public class RTPCommand {
 
     public RTPCommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        
+
         // Load configuration values
         COOLDOWN_TIME = plugin.getConfig().getInt("rtp.cooldown");
         COOLDOWN_ERROR = plugin.getConfig().getInt("rtp.cooldown-error");
@@ -42,11 +39,11 @@ public class RTPCommand {
         MIN_Z = plugin.getConfig().getInt("rtp.minz");
         MAX_Z = plugin.getConfig().getInt("rtp.maxz");
         MAX_TRY = plugin.getConfig().getInt("rtp.max_try");
-	    
+
     }
 
     @SuppressWarnings("deprecation")
-	@Command({ "rtp", "randomteleportation" })
+    @Command({"rtp", "randomteleportation"})
     @Description("Téléportation aléatoire")
     @CommandPermission("ayw.command.rtp")
     public void onCommand(Player player) {
@@ -64,22 +61,22 @@ public class RTPCommand {
             }
         }
         World world = player.getWorld();
-        for (int i=1; i<=MAX_TRY;i++) {
+        for (int i = 1; i <= MAX_TRY; i++) {
             int x = (int) (Math.random() * (MAX_X - MIN_X) + MIN_X);
             int z = (int) (Math.random() * (MAX_Z - MIN_Z) + MIN_Z);
             if (!world.getBiome(new Location(world, x, 64, z)).equals(Biome.RIVER) || !world.getBiome(new Location(world, x, 64, z)).toString().contains("OCEAN")) {
                 int y = world.getHighestBlockAt(new Location(world, x, 64, z)).getY();
-                Location location = new Location(world, x, y+1, z);
-                if (new Location(world, x, y, z).getBlock().getType().isSolid()){
+                Location location = new Location(world, x, y + 1, z);
+                if (new Location(world, x, y, z).getBlock().getType().isSolid()) {
                     player.teleport(location);
-                    player.sendMessage(" §aRTP réussi x: §f" + x + " §ay: §f" + y + " §az: §f" + z );
-                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z );
+                    player.sendMessage(" §aRTP réussi x: §f" + x + " §ay: §f" + y + " §az: §f" + z);
+                    player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
                     cooldowns.put(playerId, Time);
                     return;
                 }
             }
-            if (i==3){
-                player.sendTitle(" §cErreur","/rtp");
+            if (i == 3) {
+                player.sendTitle(" §cErreur", "/rtp");
                 cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
             }
         }
