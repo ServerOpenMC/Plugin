@@ -14,7 +14,7 @@ public class ScoreboardCommand {
     @Command({"scoreboard", "sb"})
     @Description("Désactive / active ton scoreboard")
     public void onDelete(Player player) {
-        if(scoreboardManagers.disableSBPlayerList.contains(player)) {
+        if (scoreboardManagers.disableSBPlayerList.contains(player)) {
             scoreboardManagers.disableSBPlayerList.remove(player);
             player.sendMessage("§aScoreboard activé !");
             scoreboardManagers.setScoreboard(player);

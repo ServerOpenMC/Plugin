@@ -1,8 +1,7 @@
 package fr.communaywen.core.trade;
 
-import java.util.Collection;
-import java.util.HashMap;
-
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.utils.Queue;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -12,8 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.utils.Queue;
+import java.util.Collection;
 
 
 // Partie principalement réalisée par Armibule
@@ -84,7 +82,7 @@ public class Trade implements Listener {
     public boolean setMoney1(double value) {
         boolean success = plugin.economyManager.withdrawBalance(player1, value - money1);
 
-        if (!success) {            
+        if (!success) {
             return false;
         }
 
@@ -95,7 +93,7 @@ public class Trade implements Listener {
     public boolean setMoney2(double value) {
         boolean success = plugin.economyManager.withdrawBalance(player2, value - money1);
 
-        if (!success) {            
+        if (!success) {
             return false;
         }
 
@@ -113,7 +111,7 @@ public class Trade implements Listener {
         for (ItemStack stack : inventory1.getContents()) {
             if (stack != null) {
                 Collection<ItemStack> leftItems = player1.getInventory().addItem(
-                    stack
+                        stack
                 ).values();
 
                 if (leftItems.size() > 0) {
@@ -131,7 +129,7 @@ public class Trade implements Listener {
         for (ItemStack stack : inventory2.getContents()) {
             if (stack != null) {
                 Collection<ItemStack> leftItems = player2.getInventory().addItem(
-                    stack
+                        stack
                 ).values();
 
                 if (leftItems.size() > 0) {
@@ -166,14 +164,14 @@ public class Trade implements Listener {
         plugin.economyManager.addBalance(player2, money1);
         plugin.economyManager.addBalance(player1, money2);
 
-        
+
         World player1World = player1.getWorld();
         Location player1Location = player1.getLocation();
 
         for (ItemStack stack : inventory2.getContents()) {
             if (stack != null) {
                 Collection<ItemStack> leftItems = player1.getInventory().addItem(
-                    stack
+                        stack
                 ).values();
 
                 if (leftItems.size() > 0) {
@@ -191,7 +189,7 @@ public class Trade implements Listener {
         for (ItemStack stack : inventory1.getContents()) {
             if (stack != null) {
                 Collection<ItemStack> leftItems = player2.getInventory().addItem(
-                    stack
+                        stack
                 ).values();
 
                 if (leftItems.size() > 0) {

@@ -27,7 +27,7 @@ public class LevelsCommand {
         levelsManager.addExperience(amount, target);
         int newAmount = levelsManager.getExperience(target);
 
-        player.sendMessage(amount + " xp ajoutés à "+target.getName()+" , il a à présent "+ newAmount );
+        player.sendMessage(amount + " xp ajoutés à " + target.getName() + " , il a à présent " + newAmount);
     }
 
     @Subcommand("remove")
@@ -36,7 +36,7 @@ public class LevelsCommand {
         levelsManager.removeExperience(amount, target);
         int newAmount = levelsManager.getExperience(target);
 
-        player.sendMessage(amount + " xp enlevés à "+target.getName()+" , il a à présent "+ newAmount+" xp" );
+        player.sendMessage(amount + " xp enlevés à " + target.getName() + " , il a à présent " + newAmount + " xp");
     }
 
     @Subcommand("set")
@@ -45,7 +45,7 @@ public class LevelsCommand {
         levelsManager.setExperience(amount, target);
         int newAmount = levelsManager.getExperience(target);
 
-        player.sendMessage("l'xp de "+target.getName()+" a été défini à "+ newAmount+" xp" );
+        player.sendMessage("l'xp de " + target.getName() + " a été défini à " + newAmount + " xp");
     }
 
     @Subcommand("get")

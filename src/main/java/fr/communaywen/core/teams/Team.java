@@ -23,7 +23,7 @@ public class Team {
     public Team(UUID owner, String name) {
         this.owner = owner;
         this.name = name;
-        this.inventory = Bukkit.createInventory(null , 27, name + " - Inventory");
+        this.inventory = Bukkit.createInventory(null, 27, name + " - Inventory");
     }
 
     public String getName() {

@@ -2,8 +2,6 @@ package fr.communaywen.core.friends;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.FriendsUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -53,7 +51,7 @@ public class FriendsManager {
     }
 
     public void removeRequest(FriendsRequest friendsRequest) {
-        if(friendsRequest != null) {
+        if (friendsRequest != null) {
             if (!friendsRequest.isCancelled()) {
                 friendsRequest.cancel();
             }
@@ -62,9 +60,9 @@ public class FriendsManager {
         friendsRequests.remove(friendsRequest);
     }
 
-    public FriendsRequest getRequest(String uuid){
-        for(FriendsRequest friendsRequests : friendsRequests){
-            if(friendsRequests.containsUUID(uuid)){
+    public FriendsRequest getRequest(String uuid) {
+        for (FriendsRequest friendsRequests : friendsRequests) {
+            if (friendsRequests.containsUUID(uuid)) {
                 return friendsRequests;
             }
         }

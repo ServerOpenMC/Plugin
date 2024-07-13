@@ -2,7 +2,6 @@ package fr.communaywen.core.quests;
 
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
-import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -26,6 +25,7 @@ public class QuestsMenu extends Menu {
         super(player);
         this.currentPage = currentPage;
     }
+
     public QuestsMenu(Player player) {
         this(player, 0);
     }
@@ -68,7 +68,7 @@ public class QuestsMenu extends Menu {
             ItemMeta meta = item.getItemMeta();
             PlayerQuests pq = QuestsManager.getPlayerQuests(getOwner().getPlayer());
             if (meta != null) {
-                if(pq.isQuestCompleted(quest)) {
+                if (pq.isQuestCompleted(quest)) {
                     meta.addEnchant(Enchantment.SHARPNESS, 5, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }

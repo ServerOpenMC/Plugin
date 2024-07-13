@@ -7,14 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 public class VpnListener implements Listener {
 
@@ -57,7 +55,7 @@ public class VpnListener implements Listener {
                     String response = content.toString();
                     if (response.contains("\"proxy\":true")) {
                         Bukkit.getScheduler().runTask(plugin, () -> {
-                            player.kickPlayer(  "§l§cOpenMc - Sécurité\n" +
+                            player.kickPlayer("§l§cOpenMc - Sécurité\n" +
                                     "\n" +
                                     "§l§eConnexion non permise !§r\n" +
                                     "\n" +
