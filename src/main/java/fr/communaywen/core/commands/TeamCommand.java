@@ -121,7 +121,7 @@ public class TeamCommand {
     @Description("Accepter une invitation")
     public void acceptInvite(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(player.getUniqueId())) {
+        if (team != null && team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
             return;
         }
@@ -168,7 +168,7 @@ public class TeamCommand {
     @Description("Quitter la team")
     public void leaveTeam(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(player.getUniqueId())) {
+        if (team != null && team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -184,6 +184,17 @@ public class TeamCommand {
             return;
         }
         team.openInventory(player);
+    }
+
+    @Subcommand("claim")
+    @Description("Claim une zone définit par un stick")
+    public void claimStickGive(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if(team != null && !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        team.giveClaimStick(player);
     }
 
 }
