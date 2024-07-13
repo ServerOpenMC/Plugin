@@ -245,7 +245,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new VpnListener(this),
                 new ThorHammer(),
                 new FriendsListener(friendsManager),
-                new PlayersMenuListener(),
                 new TablistListener(this),
                 new LevelsListeners(levelsManager),
                 new CorpseListener(corpseManager),

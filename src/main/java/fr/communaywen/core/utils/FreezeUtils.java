@@ -18,13 +18,11 @@ public class FreezeUtils {
 				target.sendMessage(prefix + ChatColor.DARK_RED + "Vous êtes freeze, si vous vous déconnectez, vous serez banni !");
 				player.sendMessage(prefix + ChatColor.DARK_RED + "Vous avez freeze " + ChatColor.BLUE + target.getDisplayName() + ChatColor.DARK_RED + " !");
 				AywenCraftPlugin.frozenPlayers.add(target);
-				PlayersMenuUtils.state = "§4Freeze";
 			} else {
 				target.resetTitle();
 				target.sendMessage(prefix + ChatColor.DARK_GREEN + "Tu as été unfreeze !");
 				player.sendMessage(prefix + ChatColor.DARK_GREEN + "Vous avez unfreeze " + ChatColor.BLUE + target.getDisplayName() + ChatColor.DARK_GREEN + " !");
 				AywenCraftPlugin.frozenPlayers.remove(target);
-				PlayersMenuUtils.state = "§2Unfreeze";
 			}
 		}
 	}
