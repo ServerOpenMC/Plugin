@@ -1,20 +1,14 @@
 package fr.communaywen.core.staff.players;
 
-import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.PaginatedMenu;
-import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
 import dev.xernas.menulib.utils.StaticSlots;
-import fr.communaywen.core.teams.menu.TeamMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,5 +75,6 @@ public class PlayersMenu extends PaginatedMenu {
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) { }
+    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
+    }
 }

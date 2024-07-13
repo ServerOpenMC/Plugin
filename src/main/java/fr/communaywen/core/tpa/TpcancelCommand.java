@@ -19,7 +19,7 @@ public class TpcancelCommand {
         }
         tpQueue.TPA_REQUESTS.remove(tpaplayer);
         tpQueue.TPA_REQUESTS2.remove(player);
-        player.sendMessage("Vous avez annulé votre demande de tpa à "+tpaplayer.getName());
-        tpaplayer.sendMessage(player.getName()+" a annulé sa demande de tpa");
+        player.sendMessage("Vous avez annulé votre demande de tpa à " + tpaplayer.getName());
+        tpaplayer.sendMessage(player.getName() + " a annulé sa demande de tpa");
     }
 }

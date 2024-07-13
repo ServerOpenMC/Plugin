@@ -1,17 +1,12 @@
 package fr.communaywen.core.corpse;
 
 import dev.lone.itemsadder.api.CustomBlock;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Location;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +21,7 @@ public class CorpseManager implements Listener {
 
         CustomBlock block = CustomBlock.getInstance("omc_blocks:grave");
 
-        if(block != null) {
+        if (block != null) {
             block.place(p.getLocation());
 
             CorpseBlock corpseBlock = new CorpseBlock(block, p.getLocation(), p.getUniqueId());
@@ -70,9 +65,9 @@ public class CorpseManager implements Listener {
         }
     }
 
-    public void removeAll(){
+    public void removeAll() {
         Iterator<CorpseBlock> iterator = corpses.keySet().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             CorpseBlock corpseBlock = iterator.next();
             corpseBlock.remove();
             iterator.remove();

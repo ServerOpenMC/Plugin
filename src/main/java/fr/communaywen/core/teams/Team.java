@@ -6,7 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Team {
 
@@ -18,7 +21,7 @@ public class Team {
     public Team(UUID owner, String name) {
         this.owner = owner;
         this.name = name;
-        this.inventory = Bukkit.createInventory(null , 27, name + " - Inventory");
+        this.inventory = Bukkit.createInventory(null, 27, name + " - Inventory");
     }
 
     public String getName() {

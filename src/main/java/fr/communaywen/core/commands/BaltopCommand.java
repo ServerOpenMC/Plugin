@@ -1,11 +1,11 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import net.md_5.bungee.api.ChatColor;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class BaltopCommand {
         this.plugin = plugin;
     }
 
-    @Command({ "baltop", "balancetop" })
+    @Command({"baltop", "balancetop"})
     @Description("Affiche la liste des joueurs les plus riches du serveur")
     public void onCommand(Player player) {
         List<PlayerBalance> balances = this.getBalances();
@@ -46,7 +46,7 @@ public class BaltopCommand {
             System.out.println(getColor(index));
             lines.add(MessageFormat.format("{0}. {1}: {2}", getColor(index) + index, ChatColor.GRAY + playerName, ChatColor.GREEN + playerBalance.balance.toString()));
 
-            index ++;
+            index++;
         }
 
         player.sendMessage(String.join("\n", lines));

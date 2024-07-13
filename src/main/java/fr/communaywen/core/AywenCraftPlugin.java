@@ -1,65 +1,54 @@
 package fr.communaywen.core;
 
+import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
+import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
+import fr.communaywen.core.levels.LevelsCommand;
+import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
-import fr.communaywen.core.commands.QuestsCommands;
 import fr.communaywen.core.scoreboard.ScoreboardManagers;
+import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
-import fr.communaywen.core.teams.*;
-import fr.communaywen.core.utils.*;
-
-import fr.communaywen.core.levels.LevelsCommand;
-import fr.communaywen.core.levels.LevelsDataManager;
-
+import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
 import fr.communaywen.core.tpa.TpdenyCommand;
-
+import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
-import fr.communaywen.core.trade.TradeAcceptCommand;
-
-import fr.communaywen.core.economy.EconomyManager;
-import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
-import fr.communaywen.core.staff.freeze.FreezeCommand;
-import fr.communaywen.core.listeners.FreezeListener;
-
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
-
 import java.io.File;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -156,7 +145,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         loadBookConfig();
         loadWikiConfig();
 
-        LevelsDataManager.setLevelsFile(loadLevelsFile(),new File(getDataFolder(), "levels.yml"));
+        LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
 
         friendsManager = new FriendsManager(friendsUtils, this);
         corpseManager = new CorpseManager();
@@ -186,44 +175,44 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(wikiConfig.getKeys(false)));
 
         this.handler.register(
-            new SpawnCommand(this), 
-            new VersionCommand(this), 
-            new RulesCommand(bookConfig),
-            new TeamCommand(), 
-            new MoneyCommand(this.economyManager), 
-            new ScoreboardCommand(), 
-            new ProutCommand(),
-            new FeedCommand(this), 
-            new TPACommand(this), 
-            new TpacceptCommand(), 
-            new TpcancelCommand(), 
-            new TpdenyCommand(),
-            new CreditCommand(), 
-            new ExplodeRandomCommand(), 
-            new LinkCommand(linkerAPI), 
-            new ManualLinkCommand(linkerAPI),
-            new RTPCommand(this), 
-            new FreezeCommand(), 
-            new PlayersCommand(), 
-            new FBoomCommand(), 
-            new BaltopCommand(this),
-            new FriendsCommand(friendsManager, this, adventure), 
-            new PrivacyCommand(this), 
-            new LevelsCommand(levelsManager), 
-            new TailleCommand(), 
-            new WikiCommand(wikiConfig), 
-            new GithubCommand(this), 
-            new TradeCommand(this), 
-            new TradeAcceptCommand(this),
-            new QuestsCommands());
+                new SpawnCommand(this),
+                new VersionCommand(this),
+                new RulesCommand(bookConfig),
+                new TeamCommand(),
+                new MoneyCommand(this.economyManager),
+                new ScoreboardCommand(),
+                new ProutCommand(),
+                new FeedCommand(this),
+                new TPACommand(this),
+                new TpacceptCommand(),
+                new TpcancelCommand(),
+                new TpdenyCommand(),
+                new CreditCommand(),
+                new ExplodeRandomCommand(),
+                new LinkCommand(linkerAPI),
+                new ManualLinkCommand(linkerAPI),
+                new RTPCommand(this),
+                new FreezeCommand(),
+                new PlayersCommand(),
+                new FBoomCommand(),
+                new BaltopCommand(this),
+                new FriendsCommand(friendsManager, this, adventure),
+                new PrivacyCommand(this),
+                new LevelsCommand(levelsManager),
+                new TailleCommand(),
+                new WikiCommand(wikiConfig),
+                new GithubCommand(this),
+                new TradeCommand(this),
+                new TradeAcceptCommand(this),
+                new QuestsCommands());
 
         /*  --------  */
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(Player player : Bukkit.getOnlinePlayers()) {
-                    if(!scoreboardManagers.disableSBPlayerList.contains(player)) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!scoreboardManagers.disableSBPlayerList.contains(player)) {
                         scoreboardManagers.setScoreboard(player);
                     }
                 }
@@ -258,7 +247,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new FarineListener(), this);
         createFarineRecipe();
-      
+
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
     }
 
@@ -343,7 +332,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * Format a permission with the permission prefix.
      *
      * @param category the permission category
-     * @param suffix the permission suffix
+     * @param suffix   the permission suffix
      * @return The formatted permission.
      * @see PermissionCategory #PERMISSION_PREFIX
      */

@@ -6,10 +6,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -17,7 +15,7 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 /**
  * La commande /tradeaccept
- *
+ * <p>
  * Usage: /tradeaccept
  * Permission: PREFIX.command.trade
  */
@@ -48,34 +46,34 @@ public final class TradeAcceptCommand {
         trade.openOwnItems(true);
         trade.openOwnItems(false);
 
-        final TextComponent textComponent = 
-            Component.text("$3Trade avec §9" + player1.getName())
-                .append(
-                    Component.text("\n> §b[§cModifier les items§b] ")
-                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade items"))
-                        .hoverEvent(HoverEvent.showText(Component.text("Modifier les items")))
+        final TextComponent textComponent =
+                Component.text("$3Trade avec §9" + player1.getName())
                         .append(
-                            Component.text("\n> §b[§dModifier l'argent à envoyer§b] ")
-                                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/trade money 0"))
-                                .hoverEvent(HoverEvent.showText(Component.text("Modifier l'argent à envoyer")))
-                                .append(
-                                    Component.text("\n> §b[§dVérifier les items envoyés§b] ")
-                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade check"))
-                                        .hoverEvent(HoverEvent.showText(Component.text("Vérifier les items envoyés par l'autre")))
+                                Component.text("\n> §b[§cModifier les items§b] ")
+                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade items"))
+                                        .hoverEvent(HoverEvent.showText(Component.text("Modifier les items")))
                                         .append(
-                                            Component.text("\n> §b[§aConclure le trade§b] ")
-                                                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade conclude"))
-                                                .hoverEvent(HoverEvent.showText(Component.text("Accepter et conclure le trade")))
-                                                .append(
-                                                    Component.text("\n> §b[§cAnnuler le trade§b] ")
-                                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade cancel"))
-                                                        .hoverEvent(HoverEvent.showText(Component.text("Annuler le trade")))
-                                                )
+                                                Component.text("\n> §b[§dModifier l'argent à envoyer§b] ")
+                                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/trade money 0"))
+                                                        .hoverEvent(HoverEvent.showText(Component.text("Modifier l'argent à envoyer")))
+                                                        .append(
+                                                                Component.text("\n> §b[§dVérifier les items envoyés§b] ")
+                                                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade check"))
+                                                                        .hoverEvent(HoverEvent.showText(Component.text("Vérifier les items envoyés par l'autre")))
+                                                                        .append(
+                                                                                Component.text("\n> §b[§aConclure le trade§b] ")
+                                                                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade conclude"))
+                                                                                        .hoverEvent(HoverEvent.showText(Component.text("Accepter et conclure le trade")))
+                                                                                        .append(
+                                                                                                Component.text("\n> §b[§cAnnuler le trade§b] ")
+                                                                                                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade cancel"))
+                                                                                                        .hoverEvent(HoverEvent.showText(Component.text("Annuler le trade")))
+                                                                                        )
+                                                                        )
+                                                        )
                                         )
-                                )
-                        )
-                );
-                
+                        );
+
         plugin.getAdventure().player(player1).sendMessage(textComponent);
         player1.playSound(player1.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
         plugin.getAdventure().player(player2).sendMessage(textComponent);

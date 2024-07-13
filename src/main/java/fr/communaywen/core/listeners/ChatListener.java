@@ -30,12 +30,16 @@ public class ChatListener implements Listener {
         String avatarUrl = "https://minotar.net/helm/" + username;
         String message = event.getMessage();
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendMessage(username, avatarUrl, message));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> discordWebhook.sendMessage(username, avatarUrl, message));
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            if (player.equals(event.getPlayer())) { return; }
+            if (player.equals(event.getPlayer())) {
+                return;
+            }
             if (message.toLowerCase().contains(player.getName().toLowerCase())) {
-                if (blacklist.isBlacklisted(player, event.getPlayer())) { return; }
+                if (blacklist.isBlacklisted(player, event.getPlayer())) {
+                    return;
+                }
                 player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
             }
         });
@@ -43,6 +47,6 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onBroadcastMessage(BroadcastMessageEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> discordWebhook.sendBroadcast(event.getMessage()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> discordWebhook.sendBroadcast(event.getMessage()));
     }
 }

@@ -1,10 +1,9 @@
 package fr.communaywen.core.utils.database;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import fr.communaywen.core.AywenCraftPlugin;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class DatabaseManager {
     private DatabaseConnection connection;

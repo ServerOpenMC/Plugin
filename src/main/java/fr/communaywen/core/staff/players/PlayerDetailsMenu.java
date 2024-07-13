@@ -38,7 +38,8 @@ public class PlayerDetailsMenu extends Menu {
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) { }
+    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
+    }
 
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
