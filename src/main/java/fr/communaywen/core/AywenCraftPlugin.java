@@ -7,6 +7,7 @@ import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
+import fr.communaywen.core.datapacks.Applier;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -165,6 +166,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
 
+        Applier applier = new Applier(this);
+        applier.apply();
+
         friendsManager = new FriendsManager(friendsUtils, this);
         corpseManager = new CorpseManager();
 
@@ -262,7 +266,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsListener(),
                 new PasFraisListener(this),
                 new ClaimManager(),
-                new FarineListener()
+                new FarineListener(),
+                new StructureCompass()
         );
         /* --------- */
 
@@ -296,7 +301,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("DISABLE");
         this.databaseManager.close();
         this.quizManager.close();
         this.corpseManager.removeAll();
