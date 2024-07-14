@@ -121,13 +121,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
-        if (Bukkit.getPluginManager().getPlugin("WorldGuard") == null || Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
-            getLogger().warning("WorldGuard or WorldEdit isn't installed");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
         saveDefaultConfig();
 
