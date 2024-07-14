@@ -5,7 +5,6 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import org.bukkit.*;
 import org.bukkit.generator.structure.Structure;
-import org.bukkit.generator.structure.StructureType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,9 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.packs.DataPack;
 import org.bukkit.util.StructureSearchResult;
-import org.jetbrains.annotations.Debug;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
@@ -91,6 +88,7 @@ public class StructureCompass implements Listener {
 
                 meta.setLodestoneTracked(false);
                 meta.setLodestone(searchResult.getLocation());
+                meta.setLore(List.of(MessageFormat.format("Pointe vers le {0} le plus proche", structure.displayName.toLowerCase())));
 
                 compass.setItemMeta(meta);
 
@@ -105,7 +103,6 @@ public class StructureCompass implements Listener {
 
                 for (int i = 0; i < RegisteredStructure.values().length; i++) {
                     System.out.println("Struct " + i);
-//                    Structure structure = structures.values().stream().toList().get(i);
                     RegisteredStructure structure = RegisteredStructure.values()[i];
                     ItemStack item = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -118,15 +115,14 @@ public class StructureCompass implements Listener {
 
                 return content;
             }
-
         };
         menu.open();
     }
 
     public enum RegisteredStructure {
-        TNT_TRAP("struct:tnt_trap_", "Piège a TNT"),
-        CLOUD("struct:nuage", "Nuage"),
-        END_RETURN_PORTAL("struct:end_end_portal_", "Portail de retour de l'end");
+        TNT_TRAP("open_mc_structures:tnt_trap", "Piège a TNT"),
+        CLOUD("open_mc_structures:cloud", "Nuage"),
+        END_RETURN_PORTAL("open_mc_structures:end_return_portal", "Portail de retour de l'end");
 
         private final String id;
         private final String displayName;

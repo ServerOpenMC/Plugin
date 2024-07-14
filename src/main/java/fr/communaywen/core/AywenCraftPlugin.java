@@ -266,7 +266,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsListener(),
                 new PasFraisListener(this),
                 new ClaimManager(),
-                new FarineListener()
+                new FarineListener(),
+                new StructureCompass()
         );
         /* --------- */
 
@@ -300,7 +301,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("DISABLE");
         this.databaseManager.close();
         this.quizManager.close();
         this.corpseManager.removeAll();
