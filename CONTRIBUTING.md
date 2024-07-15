@@ -38,6 +38,9 @@ S'il vous plaît, [écrivez de bons messages de commits](https://cbea.ms/git-com
 4. Ecrivez des descriptions complètes
 5. Ne dépassez pas les 72 charactères en largeur
 
+Il est préférable qu'une PR sois merge par quelqu'un d'autre que son auteur
+Avant de merge je m'assure que le code se compile et s'éxécute sans problèmes, ni erreur
+
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (72 chars)
 
 ```
