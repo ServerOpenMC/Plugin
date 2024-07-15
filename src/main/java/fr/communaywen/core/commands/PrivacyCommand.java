@@ -21,10 +21,8 @@ import java.util.UUID;
 @Description("Affiche un lien redirigeant vers le discord.")
 public class PrivacyCommand {
     private AywenCraftPlugin plugin;
-    private Blacklist blacklist;
 
     public PrivacyCommand(AywenCraftPlugin plugin) {
-        this.blacklist = new Blacklist(plugin);
         this.plugin = plugin;
     }
 
@@ -38,7 +36,7 @@ public class PrivacyCommand {
     @Description("Affiche votre blacklist")
     public void blacklist(Player player) throws SQLException {
         StringBuilder playersList = new StringBuilder();
-        List<String> playersUUID = blacklist.getBlacklist(player);
+        List<String> playersUUID = Blacklist.getBlacklist(player);
 
         for (int i = 0; i < playersUUID.size(); i++) {
             OfflinePlayer blocked = Bukkit.getOfflinePlayer(UUID.fromString(playersUUID.get(i)));
@@ -58,7 +56,7 @@ public class PrivacyCommand {
             player.sendMessage("Vous ne pouvez pas vous bloquer vous-même");
             return;
         }
-        blacklist.block(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
+        Blacklist.block(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
         player.sendMessage("Vous avez bloqué " + blocked);
     }
 
@@ -69,7 +67,7 @@ public class PrivacyCommand {
             player.sendMessage("Vous ne pouvez pas vous débloquer vous-même");
             return;
         }
-        blacklist.unblock(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
+        Blacklist.unblock(player, Bukkit.getOfflinePlayer(blocked.getUniqueId()));
         player.sendMessage("Vous avez débloqué " + blocked);
     }
 }
