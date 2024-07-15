@@ -131,6 +131,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
             databaseManager.init(); // Créer les tables nécessaires
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            databaseManager.register(
+                // Utilisation : NomDeLaClasse.class,
+                // Dans la classe, ajouter : extends DatabaseConnector, et vous pourrez accéder à la base de données avec l'attribut "connection"
+            );
         }
 
         LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
