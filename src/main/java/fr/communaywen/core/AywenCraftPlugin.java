@@ -32,6 +32,7 @@ import fr.communaywen.core.trade.TradeListener;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.utils.database.Blacklist;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -135,6 +136,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             databaseManager.register(
                 // Utilisation : NomDeLaClasse.class,
                 // Dans la classe, ajouter : extends DatabaseConnector, et vous pourrez accéder à la base de données avec l'attribut "connection"
+                Blacklist.class,
             );
         }
 
