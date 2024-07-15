@@ -218,7 +218,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new GithubCommand(this),
                 new TradeCommand(this),
                 new TradeAcceptCommand(this),
-                new QuestsCommands());
+                new QuestsCommands(),
+                new RewardCommand(this)
+        );
 
         /*  --------  */
 
@@ -268,7 +270,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new GamePlayer(player.getName());
         }
 
-        loadRegions();
+        //loadRegions();
     }
 
     private FileConfiguration loadQuizzes() {
