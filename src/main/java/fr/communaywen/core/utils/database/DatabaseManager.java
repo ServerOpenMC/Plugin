@@ -2,7 +2,9 @@ package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
@@ -49,6 +51,19 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void register(Class<?>... classes) {
+        for (Class<?> dbClass : classes) {
+            if (DatabaseConnector.class.isAssignableFrom(dbClass)) {
+                try {
+                    Method setConnectionMethod = dbClass.getMethod("setConnection", Connection.class);
+                    setConnectionMethod.invoke(null, getConnection());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

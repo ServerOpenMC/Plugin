@@ -14,12 +14,10 @@ import org.bukkit.event.server.BroadcastMessageEvent;
 public class ChatListener implements Listener {
     private final DiscordWebhook discordWebhook;
 
-    private Blacklist blacklist;
     private AywenCraftPlugin plugin;
 
     public ChatListener(AywenCraftPlugin plugin, DiscordWebhook discordWebhook) {
         this.plugin = plugin;
-        this.blacklist = new Blacklist(plugin);
         this.discordWebhook = discordWebhook;
     }
 
@@ -39,7 +37,7 @@ public class ChatListener implements Listener {
                 return;
             }
             if (message.toLowerCase().contains(player.getName().toLowerCase())) {
-                if (blacklist.isBlacklisted(player, event.getPlayer())) {
+                if (Blacklist.isBlacklisted(player, event.getPlayer())) {
                     return;
                 }
                 player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
