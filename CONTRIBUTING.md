@@ -30,6 +30,9 @@ Avant de forker le repo et créer une pull request, assurez vous que les modific
 - **[Corriger tous les conflits](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-on-github)**
 - Quand vous écrivez des commentaires, écrivez des phrases construites, sans argot
 
+Il est préférable qu'une PR sois merge par quelqu'un d'autre que son auteur
+Avant de merge je m'assure que le code se compile et s'éxécute sans problèmes, ni erreur
+
 ## 📝 Ecrire un message de commit
 S'il vous plaît, [écrivez de bons messages de commits](https://cbea.ms/git-commit/)
 1. Limitez le sujet à 50 charactères
@@ -37,9 +40,6 @@ S'il vous plaît, [écrivez de bons messages de commits](https://cbea.ms/git-com
 3. Ajoutez un tag si possible ([Docs], [Bug], [Features]...)
 4. Ecrivez des descriptions complètes
 5. Ne dépassez pas les 72 charactères en largeur
-
-Il est préférable qu'une PR sois merge par quelqu'un d'autre que son auteur
-Avant de merge je m'assure que le code se compile et s'éxécute sans problèmes, ni erreur
 
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (72 chars)
 
