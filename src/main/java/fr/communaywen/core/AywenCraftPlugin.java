@@ -136,7 +136,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
             databaseManager.register(
                 // Utilisation : NomDeLaClasse.class,
                 // Dans la classe, ajouter : extends DatabaseConnector, et vous pourrez accéder à la base de données avec l'attribut "connection"
-                Blacklist.class
+                Blacklist.class,
+                RewardCommand.class
             );
         }
 

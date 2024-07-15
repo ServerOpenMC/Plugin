@@ -2,6 +2,7 @@ package fr.communaywen.core.commands;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
@@ -12,8 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class RewardCommand {
-    Connection connection;
+public class RewardCommand extends DatabaseConnector {
     AywenCraftPlugin plugin;
 
     public RewardCommand(AywenCraftPlugin plugin) {
