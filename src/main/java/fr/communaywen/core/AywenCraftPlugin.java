@@ -278,7 +278,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new GamePlayer(player.getName());
         }
 
-        //loadRegions();
+        loadRegions();
     }
 
     private FileConfiguration loadQuizzes() {
