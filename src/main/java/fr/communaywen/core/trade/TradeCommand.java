@@ -6,24 +6,22 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
+
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Subcommand;
-import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 
 /**
  * La commande /trade
- * <p>
+ *
  * Usage: /trade [player]
- * Permission: PREFIX.command.trade
  */
 @Command("trade")
 @Description("Gestion des trades")
-@CommandPermission("ayw.command.trade")
 public final class TradeCommand {
     private AywenCraftPlugin plugin;
 
@@ -33,7 +31,6 @@ public final class TradeCommand {
 
     @DefaultFor("~")
     @Description("Echanger des items et de l'argent avec un autre joueur")
-    @CommandPermission("ayw.command.trade")
     public void onCommand(Player player1, Player player2) {
 
         if (Trade.tradesPlayer1.get(player1) != null || Trade.tradesPlayer2.get(player1) != null) {
@@ -52,9 +49,9 @@ public final class TradeCommand {
         }
 
         final TextComponent textComponent = Component.text("§9" + player1.getName() + " §3vous a envoyé un demande de trade, /tradeaccept pour l'accepter")
-                .color(TextColor.color(255, 255, 255))
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tradeaccept"))
-                .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour accepter§7]")));
+                    .color(TextColor.color(255,255,255))
+                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tradeaccept"))
+                    .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour accepter§7]")));
 
         TradeAcceptCommand.newPendingDemand(player1, player2);
 
@@ -66,7 +63,6 @@ public final class TradeCommand {
 
     @Subcommand("money")
     @Description("Définir l'argent à envoyer")
-    @CommandPermission("ayw.command.trade")
     public void moneyCmd(Player player, double moneytoPay) {
 
         boolean isPlayer1;
@@ -124,7 +120,6 @@ public final class TradeCommand {
 
     @Subcommand("items")
     @Description("Définir les items à envoyer")
-    @CommandPermission("ayw.command.trade")
     public void itemsCmd(Player player) {
 
         boolean isPlayer1;
@@ -153,7 +148,6 @@ public final class TradeCommand {
 
     @Subcommand("check")
     @Description("Vérifier les items envoyés par l'autre")
-    @CommandPermission("ayw.command.trade")
     public void checkCmd(Player player) {
 
         boolean isPlayer1;
@@ -183,7 +177,6 @@ public final class TradeCommand {
 
     @Subcommand("cancel")
     @Description("Annule le trade")
-    @CommandPermission("ayw.command.trade")
     public void cancelCmd(Player player) {
         Trade trade = Trade.tradesPlayer1.get(player);
         if (trade == null) {
@@ -200,7 +193,6 @@ public final class TradeCommand {
 
     @Subcommand("conclude")
     @Description("Conclus le trade")
-    @CommandPermission("ayw.command.trade")
     public void concludeCmd(Player player) {
         boolean isPlayer1;
 
