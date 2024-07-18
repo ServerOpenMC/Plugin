@@ -39,6 +39,9 @@ permissions:
   openmc.command.fboom:
     description: 'Créer une explosion de falling blocks autour du joueur'
     default: op
+  ayw.command.trade:
+    description: 'Effectuer un échange de money/items avec un joueur'
+    default: true
 
   openmc.staff.players:
     description: 'Permission pour ouvrir le panneau des joueurs'

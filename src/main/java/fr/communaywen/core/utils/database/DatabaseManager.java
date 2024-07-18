@@ -2,7 +2,9 @@ package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
@@ -31,6 +33,7 @@ public class DatabaseManager {
 
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS blacklists (Owner VARCHAR(36), Blocked VARCHAR(36))").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(36))").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS events_rewards (player VARCHAR(36) NOT NULL PRIMARY KEY, scope VARCHAR(32) NOT NULL, isClaimed BOOLEAN)").executeUpdate();
         System.out.println("Les tables ont été créer si besoin");
     }
 
@@ -49,6 +52,19 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void register(Class<?>... classes) {
+        for (Class<?> dbClass : classes) {
+            if (DatabaseConnector.class.isAssignableFrom(dbClass)) {
+                try {
+                    Method setConnectionMethod = dbClass.getMethod("setConnection", Connection.class);
+                    setConnectionMethod.invoke(null, getConnection());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
