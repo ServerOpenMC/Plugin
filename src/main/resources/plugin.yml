@@ -41,7 +41,7 @@ permissions:
     default: op
 
   openmc.staff.players:
-    description: 'players'
+    description: 'Permission pour ouvrir le panneau des joueurs'
     default: false
   aywencraft.antivpn.notification:
     description: 'Permission to receive VPN connection notifications'
