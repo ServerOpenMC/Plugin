@@ -49,7 +49,7 @@ public class WelcomeMessage implements Listener {
             }
         }
 
-        AywenCraftPlugin.getInstance().scoreboardManagers.setScoreboard(player);
+        AywenCraftPlugin.getInstance().getManagers().getScoreboardManager().setScoreboard(player);
 
     }
 }

@@ -2,27 +2,18 @@ package fr.communaywen.core;
 
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
-import fr.communaywen.core.claim.ClaimManager;
+import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
-import fr.communaywen.core.corpse.CorpseManager;
-import fr.communaywen.core.credit.FeatureManager;
-import fr.communaywen.core.economy.EconomyManager;
-import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
-import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsListeners;
-import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
-import fr.communaywen.core.scoreboard.ScoreboardManagers;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
-import fr.communaywen.core.teams.Team;
-import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
@@ -32,17 +23,12 @@ import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
-import fr.communaywen.core.utils.database.DatabaseManager;
-import fr.communaywen.core.utils.database.Blacklist;
 import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -55,28 +41,18 @@ import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
 
-    private MOTDChanger motdChanger;
     @Getter
-    private TeamManager teamManager;
-    @Getter
-    private FeatureManager featureManager;
-    private FileConfiguration bookConfig;
-    private FileConfiguration wikiConfig;
+    private final Managers managers = new Managers();
+
     @Getter
     private static AywenCraftPlugin instance;
-    private FriendsManager friendsManager;
-    private CorpseManager corpseManager;
-    public EconomyManager economyManager;
     public LuckPerms api;
-    public ScoreboardManagers scoreboardManagers;
 
     @Getter
     private BukkitAudiences adventure;
@@ -86,82 +62,20 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Getter
     private BukkitCommandHandler handler;
 
-    @Getter
-    private DatabaseManager databaseManager;
-
-    public QuizManager quizManager;
-
-    @Getter
-    private FallingBlocksExplosionManager fbeManager;
-
-    private LevelsManager levelsManager;
     public List<RegionManager> regions;
-
-    private void loadBookConfig() {
-        File bookFile = new File(getDataFolder(), "rules.yml");
-        if (!bookFile.exists()) {
-            saveResource("rules.yml", false);
-        }
-        bookConfig = YamlConfiguration.loadConfiguration(bookFile);
-    }
-
-    private void loadWikiConfig() {
-        File wikiFile = new File(getDataFolder(), "wiki.yml");
-        if (!wikiFile.exists()) {
-            saveResource("wiki.yml", false);
-        }
-        wikiConfig = YamlConfiguration.loadConfiguration(wikiFile);
-    }
-
-    private FileConfiguration loadWelcomeMessageConfig() {
-        File welcomeMessageConfigFile = new File(getDataFolder(), "welcomeMessageConfig.yml");
-        if (!welcomeMessageConfigFile.exists()) {
-            saveResource("welcomeMessageConfig.yml", false);
-        }
-        return YamlConfiguration.loadConfiguration(welcomeMessageConfigFile);
-    }
-
-    private FileConfiguration loadLevelsFile() {
-        File levelsFile = new File(getDataFolder(), "levels.yml");
-        if (!levelsFile.exists()) {
-            saveResource("levels.yml", false);
-        }
-        return YamlConfiguration.loadConfiguration(levelsFile);
-    }
 
     @Override
     public void onEnable() {
+        // Logs
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
-        saveDefaultConfig();
 
+        // Gardez les au début sinon ça pète tout
         instance = this;
-
-        // Gardez le au début sinon ça pète tous les menus
         MenuLib.init(this);
+        managers.initConfig(this);
+        managers.init(this);
 
-        featureManager = new FeatureManager();
-
-        /* UTILS */
-        databaseManager = new DatabaseManager(this);
-        try {
-            databaseManager.init(); // Créer les tables nécessaires
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            databaseManager.register(
-                // Utilisation : NomDeLaClasse.class,
-                // Dans la classe, ajouter : extends DatabaseConnector, et vous pourrez accéder à la base de données avec l'attribut "connection"
-                Blacklist.class,
-                RewardCommand.class
-            );
-        }
-
-        LinkerAPI linkerAPI = new LinkerAPI(databaseManager);
-        FriendsUtils friendsUtils = new FriendsUtils(databaseManager);
-
-        scoreboardManagers = new ScoreboardManagers();
-
-        quizManager = new QuizManager(this, loadQuizzes());
+        LinkerAPI linkerAPI = new LinkerAPI(managers.getDatabaseManager());
 
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
@@ -171,24 +85,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
             api = provider.getProvider();
             onPlayers.setLuckPerms(api);
         }
+        else {
+            getLogger().severe("LuckPerms not found !");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
-        economyManager = new EconomyManager(getDataFolder());
-        loadBookConfig();
-        loadWikiConfig();
-
-
-        LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
-        LevelsDataManager.setLevelsFile(loadLevelsFile(), new File(getDataFolder(), "levels.yml"));
-
-        friendsManager = new FriendsManager(friendsUtils, this);
-        corpseManager = new CorpseManager();
-
-        motdChanger = new MOTDChanger();
+        MOTDChanger motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
-        teamManager = new TeamManager();
-        fbeManager = new FallingBlocksExplosionManager();
-
-        levelsManager = new LevelsManager();
 
         this.adventure = BukkitAudiences.create(this);
 
@@ -207,14 +111,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
 
-        this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(wikiConfig.getKeys(false)));
+        this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
                 new SpawnCommand(this),
                 new VersionCommand(this),
-                new RulesCommand(bookConfig),
+                new RulesCommand(managers.getBookConfig()),
                 new TeamCommand(),
-                new MoneyCommand(this.economyManager),
+                new MoneyCommand(managers.getEconomyManager()),
                 new ScoreboardCommand(),
                 new ProutCommand(),
                 new FeedCommand(this),
@@ -231,17 +135,17 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PlayersCommand(),
                 new FBoomCommand(),
                 new BaltopCommand(this),
-                new FriendsCommand(friendsManager, this, adventure),
+                new FriendsCommand(managers.getFriendsManager(), this, adventure),
                 new PrivacyCommand(this),
-                new LevelsCommand(levelsManager),
+                new LevelsCommand(managers.getLevelsManager()),
                 new TailleCommand(),
-                new WikiCommand(wikiConfig),
+                new WikiCommand(managers.getWikiConfig()),
                 new GithubCommand(this),
                 new TradeCommand(this),
                 new TradeAcceptCommand(this),
                 new QuestsCommands(),
                 new RewardCommand(this),
-                new FeatureCommand(featureManager)
+                new FeatureCommand(managers.getFeatureManager())
         );
 
         /*  --------  */
@@ -250,8 +154,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!scoreboardManagers.disableSBPlayerList.contains(player)) {
-                        scoreboardManagers.setScoreboard(player);
+                    if (!managers.getScoreboardManager().disableSBPlayerList.contains(player)) {
+                        managers.getScoreboardManager().setScoreboard(player);
                     }
                 }
             }
@@ -267,18 +171,18 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new SleepListener(),
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
-                new WelcomeMessage(loadWelcomeMessageConfig()),
+                new WelcomeMessage(managers.getWelcomeMessageConfig()),
                 new Insomnia(),
                 new VpnListener(this),
                 new ThorHammer(),
-                new FriendsListener(friendsManager),
+                new FriendsListener(managers.getFriendsManager()),
                 new TablistListener(this),
-                new LevelsListeners(levelsManager),
-                new CorpseListener(corpseManager),
+                new LevelsListeners(managers.getLevelsManager()),
+                new CorpseListener(managers.getCorpseManager()),
                 new TradeListener(),
                 new QuestsListener(),
                 new PasFraisListener(this),
-                new ClaimManager(),
+                new ClaimListener(),
                 new FarineListener()
         );
         /* --------- */
@@ -296,20 +200,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.loadAllClaims();
     }
 
-    private FileConfiguration loadQuizzes() {
-        File quizzesFile = new File(getDataFolder(), "quizzes.yml");
-        if (!quizzesFile.exists()) {
-            saveResource("quizzes.yml", false);
-        }
-        return YamlConfiguration.loadConfiguration(quizzesFile);
-    }
-
     @Override
     public void onDisable() {
-        System.out.println("DISABLE");
-        this.databaseManager.close();
-        this.quizManager.close();
-        this.corpseManager.removeAll();
+        managers.cleanup();
         QuestsManager.saveAllPlayersData();
     }
 

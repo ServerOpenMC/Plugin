@@ -64,7 +64,7 @@ public class BaltopCommand {
     private List<PlayerBalance> getBalances() {
         List<PlayerBalance> balances = new ArrayList<>();
 
-        plugin.economyManager.getBalances().forEach((UUID uuid, Double balance) -> {
+        plugin.getManagers().getEconomyManager().getBalances().forEach((UUID uuid, Double balance) -> {
             balances.add(
                     new PlayerBalance(uuid, balance)
             );

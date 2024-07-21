@@ -15,7 +15,7 @@ public class ExplosionListener implements Listener {
 
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event) {
-        if (AywenCraftPlugin.getInstance().getFbeManager().getLocations().contains(event.getBlock().getLocation())) {
+        if (AywenCraftPlugin.getInstance().getManagers().getFbeManager().getLocations().contains(event.getBlock().getLocation())) {
             for (Block b : event.blockList()) {
                 float x = (float) -5 + (float) (Math.random() * ((5 - -5) + 1));
                 float y = (float) -6 + (float) (Math.random() * ((6 - -6) + 1));
@@ -28,7 +28,7 @@ public class ExplosionListener implements Listener {
                 b.setType(Material.AIR);
             }
 
-            AywenCraftPlugin.getInstance().getFbeManager().removeLocation(event.getBlock().getLocation());
+            AywenCraftPlugin.getInstance().getManagers().getFbeManager().removeLocation(event.getBlock().getLocation());
         }
     }
 

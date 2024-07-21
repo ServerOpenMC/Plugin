@@ -1,6 +1,7 @@
 package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import lombok.Getter;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -8,12 +9,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
+
     private DatabaseConnection connection;
-    private AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
 
-    public DatabaseManager(AywenCraftPlugin plugin) {
+    @Getter
+    private final boolean enabled;
+
+    public DatabaseManager(AywenCraftPlugin plugin, boolean enabled) {
         this.plugin = plugin;
+        this.enabled = enabled;
 
+        if (!enabled) {
+            return;
+        }
         if (plugin.getConfig().getString("database.url") == null) {
             plugin.getLogger().severe("\n\nPlease, add the database configuration in the config.yml file !\n\n");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -24,6 +33,9 @@ public class DatabaseManager {
     }
 
     public void init() throws SQLException {
+        if (!enabled) {
+            return;
+        }
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS friends (" +
                 "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                 "firstPlayer_uuid VARCHAR(36) NOT NULL," +
@@ -49,6 +61,9 @@ public class DatabaseManager {
     }
 
     public void close() {
+        if (!enabled) {
+            return;
+        }
         try {
             this.connection.close();
         } catch (SQLException e) {
@@ -58,6 +73,9 @@ public class DatabaseManager {
     }
 
     public Connection getConnection() {
+        if (!enabled) {
+            return null;
+        }
         try {
             return connection.getConnection();
         } catch (SQLException e) {
@@ -67,6 +85,9 @@ public class DatabaseManager {
     }
 
     public void register(Class<?>... classes) {
+        if (!enabled) {
+            return;
+        }
         for (Class<?> dbClass : classes) {
             if (DatabaseConnector.class.isAssignableFrom(dbClass)) {
                 try {
@@ -78,4 +99,5 @@ public class DatabaseManager {
             }
         }
     }
+
 }
