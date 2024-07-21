@@ -1,7 +1,7 @@
 package fr.communaywen.core;
 
 import dev.xernas.menulib.MenuLib;
-import fr.communaywen.core.claim.ClaimConfigFile;
+import fr.communaywen.core.claim.ClaimConfigDataBase;
 import fr.communaywen.core.claim.ClaimManager;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
@@ -95,7 +95,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private FallingBlocksExplosionManager fbeManager;
 
     private LevelsManager levelsManager;
-    public ClaimConfigFile claimConfigFile;
     public List<RegionManager> regions;
 
     private void loadBookConfig() {
@@ -194,7 +193,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.adventure = BukkitAudiences.create(this);
 
         this.regions = new ArrayList<>();
-        this.claimConfigFile = new ClaimConfigFile(this, "claim.yml");
 
         /* ----- */
 
@@ -290,11 +288,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         createFarineRecipe();
 
         getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
         }
 
-        loadRegions();
+        ClaimConfigDataBase.loadAllClaims();
     }
 
     private FileConfiguration loadQuizzes() {
@@ -357,18 +356,5 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
-    }
-
-    private void loadRegions() {
-        if (claimConfigFile.get().getConfigurationSection("") == null) return;
-        for (String teamName : claimConfigFile.get().getConfigurationSection("").getKeys(false)) {
-            List<String> coordinates = claimConfigFile.get().getStringList(teamName);
-            Location pos1 = new Location(Bukkit.getWorld(coordinates.get(4)), Double.parseDouble(coordinates.get(0)), -62, Double.parseDouble(coordinates.get(1)));
-            Location pos2 = new Location(Bukkit.getWorld(coordinates.get(4)), Double.parseDouble(coordinates.get(2)), 320, Double.parseDouble(coordinates.get(3)));
-            Team team = teamManager.getTeamByName(teamName);
-            if (team != null) {
-                regions.add(new RegionManager(pos1, pos2, team));
-            }
-        }
     }
 }

@@ -33,7 +33,18 @@ public class DatabaseManager {
 
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS blacklists (Owner VARCHAR(36), Blocked VARCHAR(36))").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(36))").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link_verif (minecraft_uuid VARCHAR(36) NOT NULL, code int(11) NOT NULL)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS events_rewards (player VARCHAR(36) NOT NULL PRIMARY KEY, scope VARCHAR(32) NOT NULL, isClaimed BOOLEAN)").executeUpdate();
+
+        // Système de claims
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS claim (" +
+                "  team varchar(16) NOT NULL," +
+                "  pos1x double NOT NULL," +
+                "  pos1z double NOT NULL," +
+                "  pos2x double NOT NULL," +
+                "  pos2z double NOT NULL," +
+                "  world varchar(20) NOT NULL" +
+                ")").executeUpdate();
         System.out.println("Les tables ont été créer si besoin");
     }
 
