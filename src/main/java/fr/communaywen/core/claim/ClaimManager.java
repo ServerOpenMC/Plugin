@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -71,11 +72,20 @@ public class ClaimManager implements Listener {
                 event.setCancelled(true);
 
                 GamePlayer gp = GamePlayer.gamePlayers.get(player.getName());
+                Team playerTeam = AywenCraftPlugin.getInstance().getTeamManager().getTeamByPlayer(playerUuid);
 
                 if (gp.getPos1() == null) {
 
-                    if(gp.getCountClaims() >= 5) {
-                        player.getInventory().removeItem(player.getItemInHand());
+                    if (playerTeam == null) {
+                        removeClaimStick(player);
+                        player.sendMessage("§cVous devez être dans une équipe pour créer une région !");
+                        gp.setPos1(null);
+                        gp.setPos2(null);
+                        return;
+                    }
+
+                    if(ClaimConfigDataBase.getCountClaims(playerTeam.getName()) >= 5) {
+                        removeClaimStick(player);
                         player.sendMessage("§cVotre team possède déjà 5 claims, qui est la limite maximale de claim possible par team.");
                         gp.setPos1(null);
                         gp.setPos2(null);
@@ -86,6 +96,7 @@ public class ClaimManager implements Listener {
                     player.sendMessage("§aPosition 1 défini.");
 
                     Bukkit.getScheduler().runTaskLater(AywenCraftPlugin.getInstance(), () -> {
+                        removeClaimStick(player);
                         gp.setPos1(null);
                         gp.setPos2(null);
                     }, 20 * 60 * 5); // 5 Minutes sans interactions
@@ -97,26 +108,20 @@ public class ClaimManager implements Listener {
                     gp.setPos2(event.getClickedBlock().getLocation());
 
                     if (!gp.getPos1().getWorld().equals(gp.getPos2().getWorld())) {
+                        removeClaimStick(player);
                         player.sendMessage("§cVous devez rester dans le même monde entre les deux points !");
                         gp.setPos1(null);
                         gp.setPos2(null);
                         return;
                     } else if(gp.isRegionConflict(player, gp.getPos1(), gp.getPos2())) {
+                        removeClaimStick(player);
                         player.sendMessage("§cUne régions WorldGuard traverse votre claim.");
                         gp.setPos1(null);
                         gp.setPos2(null);
                         return;
                     }
 
-                    gp.setCountClaims(gp.getCountClaims() + 1);
 
-                    Team playerTeam = AywenCraftPlugin.getInstance().getTeamManager().getTeamByPlayer(playerUuid);
-                    if (playerTeam == null) {
-                        player.sendMessage("§cVous devez être dans une équipe pour créer une région !");
-                        gp.setPos1(null);
-                        gp.setPos2(null);
-                        return;
-                    }
 
                     RegionManager region = new RegionManager(gp.getPos1(), gp.getPos2(), playerTeam);
 
@@ -137,8 +142,7 @@ public class ClaimManager implements Listener {
                             gp.getPos1().getWorld().getName()
                     };
 
-                    AywenCraftPlugin.getInstance().claimConfigFile.addClaim(playerTeam.getName() + "_" + gp.getCountClaims(), loc);
-                    AywenCraftPlugin.getInstance().claimConfigFile.save();
+                    ClaimConfigDataBase.addClaims(playerTeam.getName(), gp.getPos1().getX(), gp.getPos1().getZ(), gp.getPos2().getX(), gp.getPos2().getZ(), player.getWorld().getName());
                     AywenCraftPlugin.getInstance().regions.add(region);
 
                     player.sendMessage("§aPosition 2 définie.");
@@ -151,8 +155,11 @@ public class ClaimManager implements Listener {
         }
     }
 
-    public void updateRegionList(RegionManager oldRegion, RegionManager newRegion) {
-        AywenCraftPlugin.getInstance().regions.remove(oldRegion);
-        AywenCraftPlugin.getInstance().regions.add(newRegion);
+    private void removeClaimStick(Player player) {
+        for(ItemStack item : player.getInventory().getContents()) {
+            if (item != null && item.getType() == Material.STICK && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                player.getInventory().remove(item);
+            }
+        }
     }
 }
