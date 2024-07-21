@@ -7,6 +7,7 @@ import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.corpse.CorpseManager;
+import fr.communaywen.core.credit.FeatureManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -33,6 +34,7 @@ import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.utils.database.Blacklist;
+import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -62,9 +64,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
 
     private MOTDChanger motdChanger;
+    @Getter
     private TeamManager teamManager;
+    @Getter
+    private FeatureManager featureManager;
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
+    @Getter
     private static AywenCraftPlugin instance;
     private FriendsManager friendsManager;
     private CorpseManager corpseManager;
@@ -72,15 +78,20 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public LuckPerms api;
     public ScoreboardManagers scoreboardManagers;
 
+    @Getter
     private BukkitAudiences adventure;
+    @Getter
     private InteractiveHelpMenu interactiveHelpMenu;
 
+    @Getter
     private BukkitCommandHandler handler;
 
+    @Getter
     private DatabaseManager databaseManager;
 
     public QuizManager quizManager;
 
+    @Getter
     private FallingBlocksExplosionManager fbeManager;
 
     private LevelsManager levelsManager;
@@ -125,6 +136,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         instance = this;
 
+        // Gardez le au début sinon ça pète tous les menus
+        MenuLib.init(this);
+
+        featureManager = new FeatureManager();
+
         /* UTILS */
         databaseManager = new DatabaseManager(this);
         try {
@@ -156,7 +172,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
             onPlayers.setLuckPerms(api);
         }
 
-        MenuLib.init(this);
         economyManager = new EconomyManager(getDataFolder());
         loadBookConfig();
         loadWikiConfig();
@@ -225,7 +240,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new TradeCommand(this),
                 new TradeAcceptCommand(this),
                 new QuestsCommands(),
-                new RewardCommand(this)
+                new RewardCommand(this),
+                new FeatureCommand(featureManager)
         );
 
         /*  --------  */
@@ -288,14 +304,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(quizzesFile);
     }
 
-    public BukkitCommandHandler getHandler() {
-        return handler;
-    }
-
-    public BukkitAudiences getAdventure() {
-        return adventure;
-    }
-
     @Override
     public void onDisable() {
         System.out.println("DISABLE");
@@ -317,26 +325,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
-    }
-
-    public TeamManager getTeamManager() {
-        return teamManager;
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-
-    public FallingBlocksExplosionManager getFbeManager() {
-        return fbeManager;
-    }
-
-    public InteractiveHelpMenu getInteractiveHelpMenu() {
-        return interactiveHelpMenu;
-    }
-
-    public static AywenCraftPlugin getInstance() {
-        return instance;
     }
 
 
