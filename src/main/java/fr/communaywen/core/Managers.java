@@ -60,7 +60,7 @@ public class Managers {
         featureManager = new FeatureManager();
 
         // Database
-        databaseManager = new DatabaseManager(plugin, false);
+        databaseManager = new DatabaseManager(plugin, true);
         try {
             databaseManager.init(); // Créer les tables nécessaires
         } catch (SQLException e) {
