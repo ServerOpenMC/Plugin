@@ -12,19 +12,19 @@ import org.bukkit.scoreboard.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScoreboardManagers {
+public class ScoreboardManager {
 
     public List<Player> disableSBPlayerList = new ArrayList<>();
 
     public void setScoreboard(Player player) {
         User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
         QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
-        ScoreboardManager scoreboardManagers = Bukkit.getScoreboardManager();
+        org.bukkit.scoreboard.ScoreboardManager scoreboardManagers = Bukkit.getScoreboardManager();
         Scoreboard scoreboard = scoreboardManagers.getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy");
         objective.setDisplayName("\uE253");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        TeamManager teams = AywenCraftPlugin.getInstance().getTeamManager();
+        TeamManager teams = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
         boolean teambool = teams.isInTeam(player.getUniqueId());
         Team teamName = teams.getTeamByPlayer(player.getUniqueId());
         Score vide1 = objective.getScore(" ");
@@ -35,7 +35,7 @@ public class ScoreboardManagers {
         Score bars2 = objective.getScore("§d§m                         §r");
 
         Score pseudo = objective.getScore("§8• §fPseudo§7: §b" + player.getName());
-        Score money = objective.getScore("§8• §fArgent§7: §6" + AywenCraftPlugin.getInstance().economyManager.getBalance(player));
+        Score money = objective.getScore("§8• §fArgent§7: §6" + AywenCraftPlugin.getInstance().getManagers().getEconomyManager().getBalance(player));
         Score grade = objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade"));
         Score team = objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team."));
 

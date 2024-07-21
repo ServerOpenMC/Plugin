@@ -8,16 +8,11 @@ import java.util.List;
 
 public class FriendsUtils {
 
-    private final DatabaseManager dbmanager;
-    private final String TABLE_NAME = "friends";
+    private static final String TABLE_NAME = "friends";
 
-    public FriendsUtils(DatabaseManager dbmanager) {
-        this.dbmanager = dbmanager;
-    }
-
-    public boolean addInDatabase(String firstUUID, String secondUUID) throws SQLException {
+    public static boolean addInDatabase(DatabaseManager dbManager, String firstUUID, String secondUUID) throws SQLException {
         try {
-            Connection connection = dbmanager.getConnection();
+            Connection connection = dbManager.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_NAME + " (firstPlayer_uuid, secondPlayer_uuid, friendDate) VALUES (?, ?, ?)");
 
@@ -34,9 +29,9 @@ public class FriendsUtils {
         }
     }
 
-    public boolean removeInDatabase(String firstUUID, String secondUUID) throws SQLException {
+    public static boolean removeInDatabase(DatabaseManager dbManager, String firstUUID, String secondUUID) throws SQLException {
         try {
-            Connection connection = dbmanager.getConnection();
+            Connection connection = dbManager.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE firstPlayer_uuid = ? AND secondPlayer_uuid = ?");
 
@@ -52,9 +47,9 @@ public class FriendsUtils {
         }
     }
 
-    public boolean areFriends(String firstUUID, String secondUUID) throws SQLException {
+    public static boolean areFriends(DatabaseManager dbManager, String firstUUID, String secondUUID) throws SQLException {
         try {
-            Connection connection = dbmanager.getConnection();
+            Connection connection = dbManager.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE (firstPlayer_uuid = ? AND secondPlayer_uuid = ?) OR (firstPlayer_uuid = ? AND secondPlayer_uuid = ?)");
 
@@ -72,9 +67,9 @@ public class FriendsUtils {
         }
     }
 
-    public Timestamp getTimestamp(String firstUUID, String secondUUID) throws SQLException {
+    public static Timestamp getTimestamp(DatabaseManager dbManager, String firstUUID, String secondUUID) throws SQLException {
         try {
-            Connection connection = dbmanager.getConnection();
+            Connection connection = dbManager.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("SELECT friendDate FROM " + TABLE_NAME + " WHERE (firstPlayer_uuid = ? AND secondPlayer_uuid = ?) OR (firstPlayer_uuid = ? AND secondPlayer_uuid = ?)");
 
@@ -95,11 +90,11 @@ public class FriendsUtils {
         return null;
     }
 
-    public List<String> getAllFriends(String uuid) throws SQLException {
+    public static List<String> getAllFriends(DatabaseManager dbManager, String uuid) throws SQLException {
         List<String> friends = new ArrayList<>();
 
         try {
-            Connection connection = dbmanager.getConnection();
+            Connection connection = dbManager.getConnection();
 
             String sql = "SELECT * FROM " + TABLE_NAME + " WHERE firstPlayer_uuid = ? OR secondPlayer_uuid = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
