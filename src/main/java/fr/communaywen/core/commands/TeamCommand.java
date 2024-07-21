@@ -27,7 +27,7 @@ import java.util.UUID;
 @CommandPermission("ayw.command.teams")
 public class TeamCommand {
 
-    TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
+    TeamManager teamManager = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
 
     @DefaultFor("~")
     public void sendHelp(Player player, ExecutableCommand command, CommandHelp<Component> help, @Default("1") @Range(min = 1) int page) {
@@ -63,7 +63,7 @@ public class TeamCommand {
     @Subcommand("create")
     @Description("Créer une team")
     public void createTeam(Player player, @Named("nom") String teamName) {
-        TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
+        TeamManager teamManager = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
         if (teamManager.isInTeam(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
             return;
@@ -84,7 +84,7 @@ public class TeamCommand {
     @Subcommand("list")
     @Description("Liste des teams")
     public void listTeams(Player player) {
-        Menu menu = new TeamListMenu(player, AywenCraftPlugin.getInstance().getTeamManager());
+        Menu menu = new TeamListMenu(player, AywenCraftPlugin.getInstance().getManagers().getTeamManager());
         menu.open();
     }
 

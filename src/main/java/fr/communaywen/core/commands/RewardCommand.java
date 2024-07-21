@@ -18,7 +18,7 @@ public class RewardCommand extends DatabaseConnector {
 
     public RewardCommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        connection = plugin.getDatabaseManager().getConnection();
+        connection = plugin.getManagers().getDatabaseManager().getConnection();
     }
 
     public boolean hasClaimReward(Player player, String scope) {

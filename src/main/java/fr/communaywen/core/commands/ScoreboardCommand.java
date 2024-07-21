@@ -9,7 +9,7 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 
 public class ScoreboardCommand {
-    ScoreboardManager scoreboardManager = AywenCraftPlugin.getInstance().scoreboardManagers;
+    ScoreboardManager scoreboardManager = AywenCraftPlugin.getInstance().getManagers().getScoreboardManager();
 
     @Command({"scoreboard", "sb"})
     @Description("Désactive / active ton scoreboard")

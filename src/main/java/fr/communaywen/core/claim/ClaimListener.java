@@ -2,7 +2,6 @@ package fr.communaywen.core.claim;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.Team;
-import fr.communaywen.core.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,13 +13,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class ClaimManager implements Listener {
+public class ClaimListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -72,7 +68,7 @@ public class ClaimManager implements Listener {
                 event.setCancelled(true);
 
                 GamePlayer gp = GamePlayer.gamePlayers.get(player.getName());
-                Team playerTeam = AywenCraftPlugin.getInstance().getTeamManager().getTeamByPlayer(playerUuid);
+                Team playerTeam = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByPlayer(playerUuid);
 
                 if (gp.getPos1() == null) {
 

@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class QuizManager {
     public Quiz currentQuiz;
     private ScheduledExecutorService timeoutExecutor;
-    private ScheduledExecutorService executor;
-    private List<Quiz> quizzes;
+    private final ScheduledExecutorService executor;
+    private final List<Quiz> quizzes;
     public FileConfiguration config;
-    private AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
 
     public QuizManager(AywenCraftPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
@@ -30,8 +30,7 @@ public class QuizManager {
             this.quizzes.add(
                     new Quiz((String) i.get("question"), (String) i.get("answer"))
             );
-        }
-        ;
+        };
 
         Runnable runnable = () -> {
             if (Bukkit.getOnlinePlayers().isEmpty()) return;
@@ -92,7 +91,7 @@ public class QuizManager {
 
         event.setCancelled(true);
 
-        this.plugin.economyManager.addBalance(event.getPlayer(), money);
+        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
         currentQuiz = null;
         this.timeoutExecutor.shutdownNow();
         this.timeoutExecutor = Executors.newScheduledThreadPool(1);

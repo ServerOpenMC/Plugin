@@ -11,7 +11,7 @@ public class FallingBlocksExplosion {
         Objects.requireNonNull(location, "Location cannot be null");
         Objects.requireNonNull(location.getWorld(), "Location world cannot be null");
 
-        AywenCraftPlugin.getInstance().getFbeManager().addLocation(location);
+        AywenCraftPlugin.getInstance().getManagers().getFbeManager().addLocation(location);
         location.getWorld().createExplosion(location, radius, fire);
 
 

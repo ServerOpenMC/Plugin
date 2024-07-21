@@ -24,7 +24,7 @@ public class ClaimConfigDataBase extends DatabaseConnector {
             if(result.next()) {
                 Location pos1 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos1X"), -62, result.getDouble("pos1Z"));
                 Location pos2 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos2X"), 320, result.getDouble("pos2Z"));
-                Team team = AywenCraftPlugin.getInstance().getTeamManager().getTeamByName(result.getString("team"));
+                Team team = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByName(result.getString("team"));
                 if (team != null) {
                     AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team));
                     AywenCraftPlugin.getInstance().getLogger().info(AywenCraftPlugin.getInstance().regions.toString());

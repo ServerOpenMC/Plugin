@@ -2,13 +2,12 @@ package fr.communaywen.core;
 
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
-import fr.communaywen.core.claim.ClaimManager;
+import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
-import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.quests.QuestsListener;
@@ -30,8 +29,6 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +49,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Getter
     private final Managers managers = new Managers();
-
 
     @Getter
     private static AywenCraftPlugin instance;
@@ -77,14 +72,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         // Gardez les au début sinon ça pète tout
         instance = this;
         MenuLib.init(this);
+        managers.initConfig(this);
         managers.init(this);
-
-        // Config
-        saveDefaultConfig();
-        FileConfiguration bookConfig = ConfigUtils.loadConfig(this, "rules.yml");
-        FileConfiguration wikiConfig = ConfigUtils.loadConfig(this, "wiki.yml");
-        FileConfiguration welcomeMessageConfig = ConfigUtils.loadConfig(this, "welcomeMessageConfig.yml");
-        FileConfiguration levelsConfig = ConfigUtils.loadConfig(this, "levels.yml");
 
         LinkerAPI linkerAPI = new LinkerAPI(managers.getDatabaseManager());
 
@@ -96,10 +85,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
             api = provider.getProvider();
             onPlayers.setLuckPerms(api);
         }
-
-
-        LevelsDataManager.setLevelsFile(levelsConfig, new File(getDataFolder(), "levels.yml"));
-        LevelsDataManager.setLevelsFile(levelsConfig, new File(getDataFolder(), "levels.yml"));
+        else {
+            getLogger().severe("LuckPerms not found !");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         MOTDChanger motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
@@ -121,12 +111,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
 
-        this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(wikiConfig.getKeys(false)));
+        this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
                 new SpawnCommand(this),
                 new VersionCommand(this),
-                new RulesCommand(bookConfig),
+                new RulesCommand(managers.getBookConfig()),
                 new TeamCommand(),
                 new MoneyCommand(managers.getEconomyManager()),
                 new ScoreboardCommand(),
@@ -149,7 +139,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PrivacyCommand(this),
                 new LevelsCommand(managers.getLevelsManager()),
                 new TailleCommand(),
-                new WikiCommand(wikiConfig),
+                new WikiCommand(managers.getWikiConfig()),
                 new GithubCommand(this),
                 new TradeCommand(this),
                 new TradeAcceptCommand(this),
@@ -172,29 +162,29 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
-        registerEvents(
-                new KebabListener(this),
-                new AntiTrampling(),
-                new RTPWand(this),
-                onPlayers,
-                new ExplosionListener(),
-                new SleepListener(),
-                new ChatListener(this, discordWebhook),
-                new FreezeListener(this),
-                new WelcomeMessage(welcomeMessageConfig),
-                new Insomnia(),
-                new VpnListener(this),
-                new ThorHammer(),
-                new FriendsListener(managers.getFriendsManager()),
-                new TablistListener(this),
-                new LevelsListeners(managers.getLevelsManager()),
-                new CorpseListener(managers.getCorpseManager()),
-                new TradeListener(),
-                new QuestsListener(),
-                new PasFraisListener(this),
-                new ClaimManager(),
-                new FarineListener()
-        );
+//        registerEvents(
+//                new KebabListener(this),
+//                new AntiTrampling(),
+//                new RTPWand(this),
+//                onPlayers,
+//                new ExplosionListener(),
+//                new SleepListener(),
+//                new ChatListener(this, discordWebhook),
+//                new FreezeListener(this),
+//                new WelcomeMessage(managers.getWelcomeMessageConfig()),
+//                new Insomnia(),
+//                new VpnListener(this),
+//                new ThorHammer(),
+//                new FriendsListener(managers.getFriendsManager()),
+//                new TablistListener(this),
+//                new LevelsListeners(managers.getLevelsManager()),
+//                new CorpseListener(managers.getCorpseManager()),
+//                new TradeListener(),
+//                new QuestsListener(),
+//                new PasFraisListener(this),
+//                new ClaimListener(),
+//                new FarineListener()
+//        );
         /* --------- */
 
         saveDefaultConfig();
@@ -207,7 +197,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new GamePlayer(player.getName());
         }
 
-        ClaimConfigDataBase.loadAllClaims();
+        // ClaimConfigDataBase.loadAllClaims();
     }
 
     @Override

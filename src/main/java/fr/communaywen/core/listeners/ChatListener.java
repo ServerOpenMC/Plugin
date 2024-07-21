@@ -23,7 +23,7 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        plugin.quizManager.onPlayerChat(event);
+        plugin.getManagers().getQuizManager().onPlayerChat(event);
 
         String username = event.getPlayer().getName();
         String avatarUrl = "https://minotar.net/helm/" + username;
