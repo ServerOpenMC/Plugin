@@ -1,6 +1,9 @@
 package fr.communaywen.core.teams;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.Queue;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Credit("Xernas")
+@Feature("Teams")
 public class TeamManager {
 
     // Laissez ce truc
     // Zeub - By Xernas 05/07/2024 à 00:05 (UTC+2)
     // Le createur de ce truc
+
+    @Getter
     private final List<Team> teams = new ArrayList<>();
     private final Queue<UUID, Team> pendingInvites = new Queue<>(20);
-
-    public List<Team> getTeams() {
-        return teams;
-    }
 
     public Team createTeam(UUID owner, String name) {
         Team team = new Team(owner, name);
