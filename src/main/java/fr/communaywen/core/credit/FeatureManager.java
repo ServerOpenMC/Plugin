@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Credit("Xernas")
+@Feature("Credits")
+@Collaborators()
 @Getter
 public class FeatureManager {
 
@@ -26,6 +29,15 @@ public class FeatureManager {
             if (collaborators == null) features.add(new FeatureData(feature.value(), credit.value()));
             else features.add(new FeatureData(feature.value(), credit.value(), collaborators.value()));
         }
+    }
+
+    public FeatureData getFeature(String name) {
+        for (FeatureData feature : features) {
+            if (feature.getFeature().equalsIgnoreCase(name)) {
+                return feature;
+            }
+        }
+        return null;
     }
 
 }

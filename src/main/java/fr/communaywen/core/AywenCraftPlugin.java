@@ -197,7 +197,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new GamePlayer(player.getName());
         }
 
-        ClaimConfigDataBase.loadAllClaims();
+       ClaimConfigDataBase.loadAllClaims();
     }
 
     @Override
