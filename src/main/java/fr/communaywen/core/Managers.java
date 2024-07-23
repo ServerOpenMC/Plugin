@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
+import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
@@ -20,6 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.sql.SQLException;
 
+@Credit("Xernas")
 @Getter
 public class Managers {
 
@@ -60,7 +62,7 @@ public class Managers {
         featureManager = new FeatureManager();
 
         // Database
-        databaseManager = new DatabaseManager(plugin, true);
+        databaseManager = new DatabaseManager(plugin, false);
         try {
             databaseManager.init(); // Créer les tables nécessaires
         } catch (SQLException e) {
