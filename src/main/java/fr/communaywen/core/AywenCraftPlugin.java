@@ -162,29 +162,29 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
-//        registerEvents(
-//                new KebabListener(this),
-//                new AntiTrampling(),
-//                new RTPWand(this),
-//                onPlayers,
-//                new ExplosionListener(),
-//                new SleepListener(),
-//                new ChatListener(this, discordWebhook),
-//                new FreezeListener(this),
-//                new WelcomeMessage(managers.getWelcomeMessageConfig()),
-//                new Insomnia(),
-//                new VpnListener(this),
-//                new ThorHammer(),
-//                new FriendsListener(managers.getFriendsManager()),
-//                new TablistListener(this),
-//                new LevelsListeners(managers.getLevelsManager()),
-//                new CorpseListener(managers.getCorpseManager()),
-//                new TradeListener(),
-//                new QuestsListener(),
-//                new PasFraisListener(this),
-//                new ClaimListener(),
-//                new FarineListener()
-//        );
+        registerEvents(
+                new KebabListener(this),
+                new AntiTrampling(),
+                new RTPWand(this),
+                onPlayers,
+                new ExplosionListener(),
+                new SleepListener(),
+                new ChatListener(this, discordWebhook),
+                new FreezeListener(this),
+                new WelcomeMessage(managers.getWelcomeMessageConfig()),
+                new Insomnia(),
+                new VpnListener(this),
+                new ThorHammer(),
+                new FriendsListener(managers.getFriendsManager()),
+                new TablistListener(this),
+                new LevelsListeners(managers.getLevelsManager()),
+                new CorpseListener(managers.getCorpseManager()),
+                new TradeListener(),
+                new QuestsListener(),
+                new PasFraisListener(this),
+                new ClaimListener(),
+                new FarineListener()
+        );
         /* --------- */
 
         saveDefaultConfig();
@@ -197,7 +197,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new GamePlayer(player.getName());
         }
 
-       // ClaimConfigDataBase.loadAllClaims();
+       ClaimConfigDataBase.loadAllClaims();
     }
 
     @Override
