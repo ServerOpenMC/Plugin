@@ -22,7 +22,7 @@ import revxrsal.commands.help.CommandHelp;
 
 import java.util.UUID;
 
-@Command({"team", "ekip", "gang", "clan", "faction", "guild", "equipe", "tribu"})
+@Command({"team"})
 @Description("Gestion des teams")
 @CommandPermission("ayw.command.teams")
 public class TeamCommand {
@@ -70,6 +70,10 @@ public class TeamCommand {
         }
         if (teamName.length() > 16) {
             CommandUtils.sendMessage(player, "Le nom de la team ne doit pas dépasser 16 caractères !", true);
+            return;
+        }
+        if (teamManager.teamExists(teamName)) {
+            CommandUtils.sendMessage(player, "Une team avec ce nom existe déjà !", true);
             return;
         }
         Team createdTeam = teamManager.createTeam(player.getUniqueId(), teamName);
@@ -143,7 +147,7 @@ public class TeamCommand {
     @Description("Kick un joueur de la team")
     public void kickPlayer(Player player, @Named("joueur") Player target) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(target.getUniqueId())) {
+        if (team == null || !team.isIn(target.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -170,7 +174,7 @@ public class TeamCommand {
     @Description("Quitter la team")
     public void leaveTeam(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team != null && team.isIn(player.getUniqueId())) {
+        if (team == null || !team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }

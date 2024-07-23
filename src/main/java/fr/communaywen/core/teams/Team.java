@@ -102,8 +102,8 @@ public class Team {
     }
 
     public MethodState removePlayer(UUID player) {
-        if (players.size() - 1 == 0) {
-            players.remove(player);
+        players.remove(player);
+        if (players.isEmpty()) {
             if (!AywenCraftPlugin.getInstance().getManagers().getTeamManager().deleteTeam(this)) {
                 players.add(player);
                 return MethodState.INVALID;

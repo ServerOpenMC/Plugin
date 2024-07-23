@@ -7,9 +7,7 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Credit("Xernas")
 @Feature("Teams")
@@ -25,7 +23,9 @@ public class TeamManager {
 
     public Team createTeam(UUID owner, String name) {
         Team team = new Team(owner, name);
-        teams.add(team);
+        if (!teamExists(name)) {
+            teams.add(team);
+        }
         return team;
     }
 
@@ -46,6 +46,15 @@ public class TeamManager {
     public boolean isInTeam(UUID player) {
         for (Team team : teams) {
             if (team.getPlayers().contains(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean teamExists(String name) {
+        for (Team team : teams) {
+            if (team.getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
