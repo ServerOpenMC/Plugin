@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -12,6 +14,8 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 import java.util.HashMap;
 import java.util.UUID;
 
+@Feature("RTP")
+@Credit("misieur")
 public class RTPCommand {
     private final AywenCraftPlugin plugin;
 

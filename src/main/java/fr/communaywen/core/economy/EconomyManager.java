@@ -1,11 +1,15 @@
 package fr.communaywen.core.economy;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 
+@Feature("Economie")
+@Credit("TheR0001")
 public class EconomyManager {
     private final Map<UUID, Double> balances;
     private final EconomyData economyData;

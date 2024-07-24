@@ -1,6 +1,8 @@
 package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.FallingBlocksExplosion;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -12,6 +14,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Feature("Marteau de Thor")
+@Credit("ri1_")
 public class ThorHammer implements Listener {
 
     @EventHandler
