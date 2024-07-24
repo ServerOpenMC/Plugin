@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -8,10 +10,12 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.framework.qual.FromByteCode;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-
+@Feature("Wiki")
+@Credit("ri1_")
 public class WikiCommand {
 
     private final FileConfiguration wikiConfig;

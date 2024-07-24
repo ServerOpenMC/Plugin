@@ -1,5 +1,7 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
@@ -7,6 +9,8 @@ import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.annotation.Range;
 
+@Feature("Taille")
+@Credit("Gyro3630")
 public class TailleCommand {
     @Command({"taille", "size"})
     @Description("Change la taille du joueur")

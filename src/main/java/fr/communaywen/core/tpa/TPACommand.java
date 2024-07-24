@@ -1,6 +1,8 @@
 package fr.communaywen.core.tpa;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -12,6 +14,8 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+@Feature("TPA")
+@Credit({"ddemile", "misieur", "process"})
 public class TPACommand {
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;

@@ -1,5 +1,7 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -13,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Feature("Quiz")
+@Credit("ddemile")
 public class QuizManager {
     public Quiz currentQuiz;
     private ScheduledExecutorService timeoutExecutor;

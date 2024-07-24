@@ -1,11 +1,15 @@
 package fr.communaywen.core.levels;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Command("level")
 @Description("manage xp")
+@Feature("Levels")
+@Credit("Youn-T")
 public class LevelsCommand {
 
     private final LevelsManager levelsManager;

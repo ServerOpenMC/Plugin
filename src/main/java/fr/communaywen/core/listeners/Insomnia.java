@@ -1,5 +1,7 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +15,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+@Feature("Insomnie")
+@Credit("Gyro3630")
 public class Insomnia implements Listener {
     public Set<Player> playersWhoSlept = new HashSet<>();
     public Random random;

@@ -2,6 +2,8 @@ package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -17,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
+@Feature("Intoxication alimentaire")
+@Credit("Gyro3630")
 public class PasFraisListener implements Listener {
     AywenCraftPlugin plugin;
 
