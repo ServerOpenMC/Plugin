@@ -9,6 +9,7 @@ import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
@@ -19,6 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 @Credit("Xernas")
@@ -58,7 +60,6 @@ public class Managers {
 
         // --------- MANAGERS --------- //
 
-        this.teamManager = new TeamManager();
         featureManager = new FeatureManager();
 
         // Database
@@ -72,11 +73,14 @@ public class Managers {
                     // Utilisation : NomDeLaClasse.class,
                     // Dans la classe, ajouter : extends DatabaseConnector, et vous pourrez accéder à la base de données avec l'attribut "connection"
                     Blacklist.class,
-                    RewardCommand.class
+                    RewardCommand.class,
+                    TeamManager.class,
+                    Team.class
             );
         }
         // Database
 
+        this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager();
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
@@ -94,5 +98,4 @@ public class Managers {
         quizManager.close();
         corpseManager.removeAll();
     }
-
 }
