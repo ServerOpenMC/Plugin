@@ -2,6 +2,7 @@ package fr.communaywen.core.commands;
 
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.ClaimMenu;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.teams.Team;
@@ -204,5 +205,13 @@ public class TeamCommand {
         }
         team.giveClaimStick(player);
     }
+
+    @Subcommand("claimlist")
+    @Description("Ouvre la liste des claims")
+    public void claimListMenu(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        new ClaimMenu(player, team).open();
+    }
+
 
 }

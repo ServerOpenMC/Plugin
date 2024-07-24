@@ -1,6 +1,7 @@
 package fr.communaywen.core.claim;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +15,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ClaimListener implements Listener {
@@ -50,7 +53,7 @@ public class ClaimListener implements Listener {
     }
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void onInteract(PlayerInteractEvent event) throws SQLException {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();
 
@@ -103,13 +106,13 @@ public class ClaimListener implements Listener {
                     player.getInventory().removeItem(player.getItemInHand());
                     gp.setPos2(event.getClickedBlock().getLocation());
 
-                    if (!gp.getPos1().getWorld().equals(gp.getPos2().getWorld())) {
+                    if (!Objects.equals(gp.getPos1().getWorld(), gp.getPos2().getWorld())) {
                         removeClaimStick(player);
                         player.sendMessage("§cVous devez rester dans le même monde entre les deux points !");
                         gp.setPos1(null);
                         gp.setPos2(null);
                         return;
-                    } else if(gp.isRegionConflict(player, gp.getPos1(), gp.getPos2())) {
+                    } else if(GamePlayer.isRegionConflict(player, gp.getPos1(), gp.getPos2())) {
                         removeClaimStick(player);
                         player.sendMessage("§cUne régions WorldGuard traverse votre claim.");
                         gp.setPos1(null);
@@ -117,7 +120,17 @@ public class ClaimListener implements Listener {
                         return;
                     }
 
+                    double distance = gp.getPos1().distance(gp.getPos2());
+                    double balance = EconomieTeam.getTeamBalances(playerTeam.getName());
+                    AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(distance));
+                    double cost = (1200 + (int) (distance * 12));
 
+                    if(balance < cost) {
+                        player.sendMessage("§cVotre équipe n'a pas assez d'argent pour créer ce claim. Coût: " + cost + "$.");
+                        gp.setPos1(null);
+                        gp.setPos2(null);
+                        return;
+                    }
 
                     RegionManager region = new RegionManager(gp.getPos1(), gp.getPos2(), playerTeam);
 
@@ -130,17 +143,10 @@ public class ClaimListener implements Listener {
                         }
                     }
 
-                    String[] loc = new String[]{
-                            "" + gp.getPos1().getX(),
-                            "" + gp.getPos1().getZ(),
-                            "" + gp.getPos2().getX(),
-                            "" + gp.getPos2().getZ(),
-                            gp.getPos1().getWorld().getName()
-                    };
-
-                    ClaimConfigDataBase.addClaims(playerTeam.getName(), gp.getPos1().getX(), gp.getPos1().getZ(), gp.getPos2().getX(), gp.getPos2().getZ(), player.getWorld().getName());
+                    EconomieTeam.removeBalance(playerTeam.getName(), cost);
+                    ClaimConfigDataBase.addClaims(region.getClaimID(), playerTeam.getName(), gp.getPos1().getX(), gp.getPos1().getZ(), gp.getPos2().getX(), gp.getPos2().getZ(), player.getWorld().getName());
                     AywenCraftPlugin.getInstance().regions.add(region);
-
+        
                     player.sendMessage("§aPosition 2 définie.");
                     player.sendMessage("§aVous venez de créer une nouvelle région.");
 
@@ -153,7 +159,7 @@ public class ClaimListener implements Listener {
 
     private void removeClaimStick(Player player) {
         for(ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.getType() == Material.STICK && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+            if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
                 player.getInventory().remove(item);
             }
         }

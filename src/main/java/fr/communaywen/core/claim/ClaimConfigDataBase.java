@@ -10,47 +10,46 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.logging.ErrorManager;
+import java.util.UUID;
 
 public class ClaimConfigDataBase extends DatabaseConnector {
 
-    public static boolean loadAllClaims() {
+    public static void loadAllClaims() {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM claims");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM claim");
 
 
             ResultSet result = statement.executeQuery();
-            if(result.next()) {
+            while (result.next()) {
                 Location pos1 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos1X"), -62, result.getDouble("pos1Z"));
                 Location pos2 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos2X"), 320, result.getDouble("pos2Z"));
                 Team team = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByName(result.getString("team"));
+                UUID uuid = UUID.fromString(result.getString("claimID"));
                 if (team != null) {
-                    AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team));
+                    AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid));
                     AywenCraftPlugin.getInstance().getLogger().info(AywenCraftPlugin.getInstance().regions.toString());
                 }
                 AywenCraftPlugin.getInstance().getLogger().info(result.getString("team"));
-            } else {
-                AywenCraftPlugin.getInstance().getLogger().info("Une erreur est survenu avec la base de donnée.");
             }
 
 
-            return result.next();
+            result.next();
         } catch (SQLException e) {
-            return false;
+            e.printStackTrace();
         }
     }
 
-    public static boolean addClaims(String teamName, Double pos1X, Double pos1Z, Double pos2X, Double pos2Z, String world) {
+    public static boolean addClaims(UUID claimID, String teamName, Double pos1X, Double pos1Z, Double pos2X, Double pos2Z, String world) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO claim (team, pos1x, pos1z, pos2x, pos2z, world) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO claim (claimID, team, pos1x, pos1z, pos2x, pos2z, world) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-            statement.setString(1, teamName);
-            statement.setDouble(2, pos1X);
-            statement.setDouble(3, pos1Z);
-            statement.setDouble(4, pos2X);
-            statement.setDouble(5, pos2Z);
-            statement.setString(6, world);
+            statement.setString(1, String.valueOf(claimID));
+            statement.setString(2, teamName);
+            statement.setDouble(3, pos1X);
+            statement.setDouble(4, pos1Z);
+            statement.setDouble(5, pos2X);
+            statement.setDouble(6, pos2Z);
+            statement.setString(7, world);
 
             statement.executeUpdate();
 
@@ -61,16 +60,38 @@ public class ClaimConfigDataBase extends DatabaseConnector {
         }
     }
 
-    public static boolean removeClaims(String teamName) {
+    public static boolean removeClaims(String teamName, UUID claimID) {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE INTO claim WHERE team = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE INTO claim WHERE team = ? AND claimID = ?");
 
             statement.setString(1, teamName);
+            statement.setObject(2, claimID);
 
             statement.executeUpdate();
 
             return true;
         } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public static boolean removeAllClaims(String teamName) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM claim WHERE team = ?");
+            statement.setString(1, teamName);
+
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                AywenCraftPlugin.getInstance().regions.removeIf(region -> region.getTeam().getName().equals(teamName));
+                AywenCraftPlugin.getInstance().getLogger().info("Claims removed for team: " + teamName + ". Affected rows: " + rowsAffected);
+            } else {
+                AywenCraftPlugin.getInstance().getLogger().info("No claims found for team: " + teamName);
+            }
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
