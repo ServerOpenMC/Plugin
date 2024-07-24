@@ -1,5 +1,7 @@
 package fr.communaywen.core.commands;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.GitHubAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,6 +12,8 @@ import revxrsal.commands.annotation.Description;
 
 import java.io.IOException;
 
+@Feature("Credits")
+@Credit({"Xernas", "Gyro3630"})
 public class CreditCommand {
     @Command("credit")
     @Description("Affiche les crédits du plugin")

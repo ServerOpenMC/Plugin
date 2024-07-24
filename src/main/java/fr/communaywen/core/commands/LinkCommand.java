@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.LinkerAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,6 +12,8 @@ import revxrsal.commands.annotation.Description;
 
 import java.sql.SQLException;
 
+@Feature("Link")
+@Credit({"Axeno", "Gyro3630"})
 public class LinkCommand {
     private final LinkerAPI linkerAPI;
 

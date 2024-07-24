@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -13,6 +15,8 @@ import revxrsal.commands.help.CommandHelp;
 
 @Command("money")
 @Description("Transférer de l'argent entre joueurs")
+@Feature("Money")
+@Credit({"Axeno", "Koneiii", "TheR0001"})
 public class MoneyCommand {
     private final EconomyManager economyManager;
 

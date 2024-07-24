@@ -1,6 +1,8 @@
 package fr.communaywen.core.trade;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.Queue;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,9 +15,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 
-
-// Partie principalement réalisée par Armibule
-
+@Feature("Trade")
+@Credit("Armibule")
 public class Trade implements Listener {
     // current trade requests (there is one entry for each player, static)
     public static final Queue<Player, Trade> tradesPlayer1 = new Queue<>(20);

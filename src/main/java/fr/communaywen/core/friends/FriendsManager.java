@@ -1,6 +1,9 @@
 package fr.communaywen.core.friends;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.FriendsUtils;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import lombok.Getter;
@@ -10,6 +13,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Feature("Amis")
+@Credit("Martinouxx")
+@Collaborators("Xernas")
 public class FriendsManager {
 
     private final DatabaseManager dbManager;

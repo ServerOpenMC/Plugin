@@ -2,6 +2,8 @@ package fr.communaywen.core.commands;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+@Feature("Rewards")
+@Credit("Gyro3630")
 public class RewardCommand extends DatabaseConnector {
     AywenCraftPlugin plugin;
 

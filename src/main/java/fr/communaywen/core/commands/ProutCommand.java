@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -22,6 +24,9 @@ import java.util.concurrent.TimeUnit;
  * Usage: /prout
  * Permission: PREFIX.command.prout
  */
+
+@Feature("Prout")
+@Credit("dandan")
 public final class ProutCommand {
     @Command("prout")
     @Description("Prout !")
