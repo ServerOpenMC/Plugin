@@ -1,21 +1,47 @@
 package fr.communaywen.core.teams;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.Queue;
+import fr.communaywen.core.utils.database.DatabaseConnector;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 
 @Credit("Xernas")
 @Feature("Teams")
-public class TeamManager {
+public class TeamManager extends DatabaseConnector {
 
     // Laissez ce truc
     // Zeub - By Xernas 05/07/2024 à 00:05 (UTC+2)
     // Le createur de ce truc
+
+    public TeamManager(AywenCraftPlugin plugin) {
+        try {
+            ResultSet rs = connection.prepareStatement("SELECT * FROM teams").executeQuery();
+
+            while (rs.next()) {
+                Team team = createTeam(UUID.fromString(rs.getString("owner")), rs.getString("teamName"));
+                PreparedStatement query = connection.prepareStatement("SELECT * FROM teams_player WHERE teamName = ?");
+                query.setString(1, rs.getString("teamName"));
+                ResultSet players = query.executeQuery();
+
+                while (players.next()) {
+                    System.out.println("Adding "+players.getString("player"));
+                    team.addPlayerWithoutSave(UUID.fromString(players.getString("player")));
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            plugin.getLogger().severe("Impossible de charger les teams :'(");
+            plugin.getPluginLoader().disablePlugin(plugin);
+        }
+    }
 
     @Getter
     private final List<Team> teams = new ArrayList<>();
@@ -40,6 +66,12 @@ public class TeamManager {
             return false;
         }
         teams.remove(team);
+        try {
+            team.delete();
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Impossible de supprimer la team '"+team.getName()+"'");
+        }
         return true;
     }
 
