@@ -1,5 +1,6 @@
 package fr.communaywen.core;
 
+import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
 import fr.communaywen.core.claim.ClaimListener;
@@ -31,6 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -157,6 +159,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                     if (!managers.getScoreboardManager().disableSBPlayerList.contains(player)) {
                         managers.getScoreboardManager().setScoreboard(player);
                     }
+                    Menu openedMenu = hasMenuOpened(player);
+                    if (openedMenu != null) {
+                        openedMenu.open();
+                    }
                 }
             }
         }.runTaskTimer(this, 0L, 100L);
@@ -235,6 +241,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         recipe.setIngredient('B', Material.WHEAT);
 
         Bukkit.addRecipe(recipe);
+    }
+
+    private Menu hasMenuOpened(Player player) {
+        Inventory inv = player.getOpenInventory().getTopInventory();
+        if (inv.getHolder() instanceof Menu invMenu) {
+            return invMenu;
+        }
+        return null;
     }
 
 
