@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Credit("Xernas")
-@Feature("Credits")
 @Collaborators()
 @Getter
 public class FeatureManager {
