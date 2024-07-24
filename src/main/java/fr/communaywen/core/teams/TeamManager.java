@@ -36,6 +36,9 @@ public class TeamManager extends DatabaseConnector {
                     team.addPlayerWithoutSave(UUID.fromString(players.getString("player")));
                 }
             }
+
+            EconomieTeam.loadBalances();
+
         } catch (Exception e){
             e.printStackTrace();
             plugin.getLogger().severe("Impossible de charger les teams :'(");
