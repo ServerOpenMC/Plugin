@@ -103,9 +103,7 @@ public class QuestsMenu extends Menu {
 
         int startIndex = currentPage * QUESTS_PER_PAGE;
         int endIndex = Math.min(startIndex + QUESTS_PER_PAGE, questItems.size());
-
-        System.out.println("currentPage: " + currentPage + ", startIndex: " + startIndex + ", endIndex: " + endIndex); // Debug message
-
+        
         int slotIndex = startRow * inventoryWidth + padding;
         for (int i = startIndex; i < endIndex; i++) {
             content.put(slotIndex++, questItems.get(i));
