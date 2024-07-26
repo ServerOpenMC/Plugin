@@ -21,6 +21,15 @@ permissions:
   ayw.command.teams:
     description: 'Teams'
     default: true
+  ayw.command.feature:
+    description: 'Feature'
+    default: true
+  ayw.command.guild:
+    description: 'Guild'
+    default: true
+  ayw.command.shop:
+    description: 'Shop'
+    default: true
   ayw.command.rules:
     description: 'Rules'
     default: true
@@ -42,7 +51,6 @@ permissions:
   ayw.command.trade:
     description: 'Effectuer un échange de money/items avec un joueur'
     default: true
-
   openmc.staff.players:
     description: 'players'
     default: false

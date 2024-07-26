@@ -95,7 +95,7 @@ public class QuizManager {
 
         event.setCancelled(true);
 
-        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
+        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer().getUniqueId(), money);
         currentQuiz = null;
         this.timeoutExecutor.shutdownNow();
         this.timeoutExecutor = Executors.newScheduledThreadPool(1);

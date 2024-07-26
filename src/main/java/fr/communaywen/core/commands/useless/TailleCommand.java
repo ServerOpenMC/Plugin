@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.useless;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;

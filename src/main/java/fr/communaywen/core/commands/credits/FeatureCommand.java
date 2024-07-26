@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.credits;
 
 import fr.communaywen.core.credit.FeatureData;
 import fr.communaywen.core.credit.FeatureManager;
@@ -6,14 +6,15 @@ import fr.communaywen.core.utils.CommandUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Command("feature")
 @Description("Get information about features")
+@CommandPermission("ayw.command.feature")
 public class FeatureCommand {
 
     private final FeatureManager featureManager;

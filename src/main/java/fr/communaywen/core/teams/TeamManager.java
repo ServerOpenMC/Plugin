@@ -48,7 +48,7 @@ public class TeamManager extends DatabaseConnector {
 
     @Getter
     private final List<Team> teams = new ArrayList<>();
-    private final Queue<UUID, Team> pendingInvites = new Queue<>(20);
+    private final Queue<UUID, Team> pendingInvites = new Queue<>(100);
 
     public Team createTeam(UUID owner, String name) {
         Team team = new Team(owner, name);

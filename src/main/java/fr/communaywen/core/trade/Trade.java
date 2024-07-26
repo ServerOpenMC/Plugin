@@ -103,8 +103,8 @@ public class Trade implements Listener {
     }
 
     public void cancel() {
-        plugin.getManagers().getEconomyManager().addBalance(player1, money1);
-        plugin.getManagers().getEconomyManager().addBalance(player2, money2);
+        plugin.getManagers().getEconomyManager().addBalance(player1.getUniqueId(), money1);
+        plugin.getManagers().getEconomyManager().addBalance(player2.getUniqueId(), money2);
 
         World player1World = player1.getWorld();
         Location player1Location = player1.getLocation();
@@ -162,8 +162,8 @@ public class Trade implements Listener {
     }
 
     public void conclude() {
-        plugin.getManagers().getEconomyManager().addBalance(player2, money1);
-        plugin.getManagers().getEconomyManager().addBalance(player1, money2);
+        plugin.getManagers().getEconomyManager().addBalance(player2.getUniqueId(), money1);
+        plugin.getManagers().getEconomyManager().addBalance(player1.getUniqueId(), money2);
 
 
         World player1World = player1.getWorld();

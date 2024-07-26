@@ -1,4 +1,4 @@
-package fr.communaywen.core.teams.menu;
+package fr.communaywen.core.utils.menu;
 
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
@@ -24,7 +24,7 @@ public class ConfirmationMenu extends Menu {
 
     @Override
     public @NotNull String getName() {
-        return ChatColor.GOLD + "Confirmation";
+        return "Confirmation";
     }
 
     @Override

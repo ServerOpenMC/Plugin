@@ -1,13 +1,12 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.teams.utils.MethodState;
+import fr.communaywen.core.utils.MethodState;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -154,7 +153,7 @@ public class Team extends DatabaseConnector {
         if (players.isEmpty()) {
             if (!AywenCraftPlugin.getInstance().getManagers().getTeamManager().deleteTeam(this)) {
                 players.add(player);
-                return MethodState.INVALID;
+                return MethodState.FAILURE;
             }
             return MethodState.WARNING;
         }
@@ -162,7 +161,7 @@ public class Team extends DatabaseConnector {
             owner = getRandomPlayer();
         }
         save();
-        return MethodState.VALID;
+        return MethodState.SUCCESS;
     }
 
     public boolean isOwner(UUID player) {

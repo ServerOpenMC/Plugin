@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.discord;
 
 import fr.communaywen.core.utils.LinkerAPI;
 import org.bukkit.entity.Player;

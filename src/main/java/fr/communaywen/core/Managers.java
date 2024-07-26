@@ -1,6 +1,8 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.commands.RewardCommand;
+import fr.communaywen.core.corporation.guilds.GuildManager;
+import fr.communaywen.core.corporation.shops.PlayerShopManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -17,10 +19,8 @@ import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @Credit("Xernas")
@@ -30,6 +30,8 @@ public class Managers {
     private AywenCraftPlugin plugin;
 
     private TeamManager teamManager;
+    private GuildManager guildManager;
+    private PlayerShopManager playerShopManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
     private CorpseManager corpseManager;
@@ -81,6 +83,7 @@ public class Managers {
         // Database
 
         this.teamManager = new TeamManager(plugin);
+        this.guildManager = new GuildManager();
         scoreboardManager = new ScoreboardManager();
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
@@ -88,6 +91,7 @@ public class Managers {
         corpseManager = new CorpseManager();
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
+        this.playerShopManager = new PlayerShopManager(economyManager);
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));

@@ -6,6 +6,7 @@ import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.utils.TeamUtils;
+import fr.communaywen.core.utils.menu.ConfirmationMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,12 +22,12 @@ import java.util.UUID;
 public class TeamMenu extends Menu {
 
     private final Team team;
-    private final boolean fromList;
+    private final boolean backButton;
 
-    public TeamMenu(Player owner, Team team, boolean fromList) {
+    public TeamMenu(Player owner, Team team, boolean backButton) {
         super(owner);
         this.team = team;
-        this.fromList = fromList;
+        this.backButton = backButton;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class TeamMenu extends Menu {
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> content = fill(Material.GRAY_STAINED_GLASS_PANE);
-        if (fromList) {
+        if (backButton) {
             content.put(49, new ItemBuilder(this, Material.ARROW, itemMeta -> {
                 itemMeta.setDisplayName(ChatColor.GRAY + "Retour");
             }).setBackButton());

@@ -257,7 +257,7 @@ public class QuestsManager {
                         player.sendMessage("» §7[§9§lQuêtes§7] §6+ " + quests.rewardsQt + " " + quests.rewardsMaterial);
                     }
                     case MONEY -> {
-                        AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quests.getRewardsQt());
+                        AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), quests.getRewardsQt());
                         player.sendMessage("» §7[§9§lQuêtes§7] §6+ " + quests.rewardsQt + "$");
                     }
                 }

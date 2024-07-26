@@ -3,13 +3,11 @@ package fr.communaywen.core.commands;
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.ClaimMenu;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.teams.menu.TeamListMenu;
 import fr.communaywen.core.teams.menu.TeamMenu;
-import fr.communaywen.core.teams.utils.MethodState;
+import fr.communaywen.core.utils.MethodState;
 import fr.communaywen.core.teams.utils.TeamUtils;
 import fr.communaywen.core.utils.CommandUtils;
 import net.kyori.adventure.audience.Audience;
@@ -25,7 +23,7 @@ import revxrsal.commands.help.CommandHelp;
 
 import java.util.UUID;
 
-@Command({"team"})
+@Command("team")
 @Description("Gestion des teams")
 @CommandPermission("ayw.command.teams")
 public class TeamCommand {
@@ -160,15 +158,15 @@ public class TeamCommand {
         }
         UUID targetUUID = target.getUniqueId();
         MethodState state = team.removePlayer(targetUUID);
-        if (state == MethodState.VALID || state == MethodState.WARNING)
+        if (state == MethodState.SUCCESS || state == MethodState.WARNING)
             CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " a été kické de la team !", false);
-        if (state == MethodState.INVALID) {
+        if (state == MethodState.FAILURE) {
             CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée et il reste des items dans l'inventaire !", true);
             return;
         }
         if (state == MethodState.WARNING)
             CommandUtils.sendMessage(player, ChatColor.DARK_RED + "La team a été supprimée !", false);
-        if (state == MethodState.VALID) {
+        if (state == MethodState.SUCCESS) {
             CommandUtils.sendMessage(target, ChatColor.DARK_RED + "Vous avez été kické de la team !", false);
         }
     }
