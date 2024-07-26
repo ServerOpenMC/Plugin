@@ -5,6 +5,7 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.Queue;
 import fr.communaywen.core.utils.database.DatabaseConnector;
+import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,10 @@ public class TeamManager extends DatabaseConnector {
     // Zeub - By Xernas 05/07/2024 à 00:05 (UTC+2)
     // Le createur de ce truc
 
+    AywenCraftPlugin plugin;
+
     public TeamManager(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
         try {
             ResultSet rs = connection.prepareStatement("SELECT * FROM teams").executeQuery();
 
@@ -29,8 +33,11 @@ public class TeamManager extends DatabaseConnector {
                 Team team = createTeam(UUID.fromString(rs.getString("owner")), rs.getString("teamName"));
                 PreparedStatement query = connection.prepareStatement("SELECT * FROM teams_player WHERE teamName = ?");
                 query.setString(1, rs.getString("teamName"));
-                ResultSet players = query.executeQuery();
 
+                ItemStack[] newInventory = new BukkitSerializer().deserializeItemStacks(rs.getBytes("inventory"));
+                team.setInventory(newInventory);
+
+                ResultSet players = query.executeQuery();
                 while (players.next()) {
                     System.out.println("Adding "+players.getString("player"));
                     team.addPlayerWithoutSave(UUID.fromString(players.getString("player")));
@@ -51,7 +58,7 @@ public class TeamManager extends DatabaseConnector {
     private final Queue<UUID, Team> pendingInvites = new Queue<>(20);
 
     public Team createTeam(UUID owner, String name) {
-        Team team = new Team(owner, name);
+        Team team = new Team(owner, name, plugin);
         if (!teamExists(name)) {
             teams.add(team);
         }
