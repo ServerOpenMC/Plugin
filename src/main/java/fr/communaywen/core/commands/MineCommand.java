@@ -17,8 +17,13 @@ public class MineCommand {
         FileConfiguration config = AywenCraftPlugin.getInstance().getConfig();
         MultiverseWorld mineWorld = AywenCraftPlugin.getInstance().mvCore.getMVWorldManager().getMVWorld(config.getString("mine.name"));
 
-        player.teleport(mineWorld.getSpawnLocation());
-        player.sendMessage("§aVous venez de vous téléporter à la mine.");
+        if(mineWorld != null || AywenCraftPlugin.getInstance().mvCore != null) {
+            player.teleport(mineWorld.getSpawnLocation());
+            player.sendMessage("§aVous venez de vous téléporter à la mine.");
+        } else {
+            player.sendMessage("§cLe monde dans lequel vous voulez vous téléporter n'existe pas ou plus.");
+        }
+
     }
 
 }
