@@ -1,7 +1,12 @@
 package fr.communaywen.core.economy;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.quests.PlayerQuests;
+import fr.communaywen.core.quests.QuestsManager;
+import fr.communaywen.core.quests.qenum.QUESTS;
+import fr.communaywen.core.quests.qenum.TYPE;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -26,7 +31,18 @@ public class EconomyManager {
     public void addBalance(Player player, double amount) {
         UUID uuid = player.getUniqueId();
         balances.put(uuid, getBalance(player) + amount);
+
         saveBalances();
+        for(QUESTS quests : QUESTS.values()) {
+            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
+            if(quests.getType() == TYPE.MONEY) {
+                if(!pq.isQuestCompleted(quests)) {
+                    AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(pq.getProgress(quests)));
+                    AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(getBalance(player)));
+                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+                }
+            }
+        }
     }
 
     public boolean withdrawBalance(Player player, double amount) {
