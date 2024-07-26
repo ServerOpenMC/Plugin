@@ -39,7 +39,6 @@ public class TeamManager extends DatabaseConnector {
 
                 ResultSet players = query.executeQuery();
                 while (players.next()) {
-                    System.out.println("Adding "+players.getString("player"));
                     team.addPlayerWithoutSave(UUID.fromString(players.getString("player")));
                 }
             }
