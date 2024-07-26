@@ -1,5 +1,6 @@
 package fr.communaywen.core;
 
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
@@ -69,7 +70,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private BukkitCommandHandler handler;
 
     public List<RegionManager> regions;
-
+    public MultiverseCore mvCore;
     @SneakyThrows
     @Override
     public void onEnable() {
@@ -81,6 +82,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+
+        mvCore = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
 
         LinkerAPI linkerAPI = new LinkerAPI(managers.getDatabaseManager());
 
@@ -152,7 +155,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new TradeAcceptCommand(this),
                 new QuestsCommands(),
                 new RewardCommand(this),
-                new FeatureCommand(managers.getFeatureManager())
+                new FeatureCommand(managers.getFeatureManager()),
+                new MineCommand()
         );
 
         /*  --------  */
