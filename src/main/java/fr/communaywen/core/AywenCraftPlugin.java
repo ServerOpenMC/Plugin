@@ -11,8 +11,10 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
+import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.tpa.TPACommand;
@@ -25,6 +27,7 @@ import fr.communaywen.core.trade.TradeListener;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -43,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +70,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public List<RegionManager> regions;
 
+    @SneakyThrows
     @Override
     public void onEnable() {
         // Logs
@@ -197,19 +202,25 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         createFarineRecipe();
 
-        getServer().getOnlinePlayers().forEach(QuestsManager::loadPlayerData);
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
+            QuestsManager.loadPlayerData(player);
         }
 
-       ClaimConfigDataBase.loadAllClaims();
+        QuestsManager.createQuestsTable();
+        ClaimConfigDataBase.loadAllClaims();
     }
 
+    @SneakyThrows
     @Override
     public void onDisable() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            for(QUESTS quests : QUESTS.values()) {
+                PlayerQuests pq = QuestsManager.getPlayerQuests(player);
+                QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests));
+            }
+        }
         managers.cleanup();
-        QuestsManager.saveAllPlayersData();
     }
 
     public void registerEvents(Listener... args) {
@@ -232,6 +243,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private void createFarineRecipe() {
         ItemStack farine = new ItemStack(Material.SUGAR);
         ItemMeta meta = farine.getItemMeta();
+        assert meta != null;
         meta.setDisplayName("Farine");
         farine.setItemMeta(meta);
 
@@ -250,7 +262,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
         return null;
     }
-
 
     /**
      * Format a permission with the permission prefix.
