@@ -2,6 +2,8 @@ package fr.communaywen.core;
 
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.claim.ClaimConfigDataBase;
+import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
@@ -20,7 +22,9 @@ import fr.communaywen.core.commands.useless.TailleCommand;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
+import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
@@ -30,6 +34,7 @@ import fr.communaywen.core.tpa.TpcancelCommand;
 import fr.communaywen.core.tpa.TpdenyCommand;
 import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
+import fr.communaywen.core.trade.TradeListener;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import lombok.Getter;
@@ -178,29 +183,29 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }.runTaskTimer(this, 0L, 100L);
 
         /* LISTENERS */
-//        registerEvents(
-//                new KebabListener(this),
-//                new AntiTrampling(),
-//                new RTPWand(this),
-//                onPlayers,
-//                new ExplosionListener(),
-//                new SleepListener(),
-//                new ChatListener(this, discordWebhook),
-//                new FreezeListener(this),
-//                new WelcomeMessage(managers.getWelcomeMessageConfig()),
-//                new Insomnia(),
-//                new VpnListener(this),
-//                new ThorHammer(),
-//                new FriendsListener(managers.getFriendsManager()),
-//                new TablistListener(this),
-//                new LevelsListeners(managers.getLevelsManager()),
-//                new CorpseListener(managers.getCorpseManager()),
-//                new TradeListener(),
-//                new QuestsListener(),
-//                new PasFraisListener(this),
-//                new ClaimListener(),
-//                new FarineListener()
-//        );
+        registerEvents(
+                new KebabListener(this),
+                new AntiTrampling(),
+                new RTPWand(this),
+                onPlayers,
+                new ExplosionListener(),
+                new SleepListener(),
+                new ChatListener(this, discordWebhook),
+                new FreezeListener(this),
+                new WelcomeMessage(managers.getWelcomeMessageConfig()),
+                new Insomnia(),
+                new VpnListener(this),
+                new ThorHammer(),
+                new FriendsListener(managers.getFriendsManager()),
+                new TablistListener(this),
+                new LevelsListeners(managers.getLevelsManager()),
+                new CorpseListener(managers.getCorpseManager()),
+                new TradeListener(),
+                new QuestsListener(),
+                new PasFraisListener(this),
+                new ClaimListener(),
+                new FarineListener()
+        );
         /* --------- */
 
         saveDefaultConfig();
@@ -213,7 +218,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             new GamePlayer(player.getName());
         }
 
-       //ClaimConfigDataBase.loadAllClaims();
+       ClaimConfigDataBase.loadAllClaims();
     }
 
     @Override
