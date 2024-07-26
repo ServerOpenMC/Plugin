@@ -1,6 +1,7 @@
 package fr.communaywen.core.claim;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.Bukkit;
@@ -27,9 +28,7 @@ public class ClaimConfigDataBase extends DatabaseConnector {
                 UUID uuid = UUID.fromString(result.getString("claimID"));
                 if (team != null) {
                     AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid));
-                    AywenCraftPlugin.getInstance().getLogger().info(AywenCraftPlugin.getInstance().regions.toString());
                 }
-                AywenCraftPlugin.getInstance().getLogger().info(result.getString("team"));
             }
 
 
@@ -84,9 +83,6 @@ public class ClaimConfigDataBase extends DatabaseConnector {
 
             if (rowsAffected > 0) {
                 AywenCraftPlugin.getInstance().regions.removeIf(region -> region.getTeam().getName().equals(teamName));
-                AywenCraftPlugin.getInstance().getLogger().info("Claims removed for team: " + teamName + ". Affected rows: " + rowsAffected);
-            } else {
-                AywenCraftPlugin.getInstance().getLogger().info("No claims found for team: " + teamName);
             }
 
             return true;
