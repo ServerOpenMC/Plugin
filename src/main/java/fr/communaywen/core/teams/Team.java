@@ -49,11 +49,6 @@ public class Team extends DatabaseConnector implements Listener{
         PreparedStatement statement = connection.prepareStatement("DELETE FROM teams_player WHERE teamName = ?");
         statement.setString(1, this.name);
         statement.executeUpdate();
-
-        // Remove team from teams
-        statement = connection.prepareStatement("DELETE FROM teams WHERE teamName = ?");
-        statement.setString(1, this.name);
-        statement.executeUpdate();
     }
 
     public void save(){
@@ -67,10 +62,9 @@ public class Team extends DatabaseConnector implements Listener{
                 statement.executeUpdate();
             }
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams VALUES (?, ?, 0, ?)");
-            statement.setString(1, this.name);
-            statement.setString(2, this.owner.toString());
-            statement.setBytes(3, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
+            PreparedStatement statement = connection.prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
+            statement.setBytes(1, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
+            statement.setString(2, name);
             statement.executeUpdate();
 
         } catch (Exception e){
