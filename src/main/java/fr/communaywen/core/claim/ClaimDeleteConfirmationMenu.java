@@ -37,9 +37,7 @@ public class ClaimDeleteConfirmationMenu extends Menu {
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent event) {
-        // This method is not needed as we're using ItemBuilder's setOnClick
-    }
+    public void onInventoryClick(InventoryClickEvent event) {}
 
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
