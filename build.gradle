@@ -26,6 +26,7 @@ repositories {
     maven {
         url = 'https://maven.enginehub.org/repo/'
     }
+    maven { url = "https://repo.onarandombox.com/content/groups/public/" }
 }
 
 dependencies {
@@ -54,6 +55,8 @@ dependencies {
     
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7+' // WorldEdit
     compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.10' // WorldGuard
+
+    compileOnly 'com.onarandombox.multiversecore:Multiverse-Core:4.3.+'
 }
 
 def targetJavaVersion = 21
