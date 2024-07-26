@@ -40,7 +40,14 @@ public class Team extends DatabaseConnector implements Listener{
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         if (e.getInventory().equals(inventory)) {
-            save();
+            try {
+                PreparedStatement statement = connection.prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
+                statement.setBytes(1, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
+                statement.setString(2, name);
+                statement.executeUpdate();
+            } catch (Exception exc) {
+                plugin.getLogger().severe("Impossible de sauvegarder l'inventaire de la team '"+this.name+"'");
+            }
         }
     }
 
@@ -49,28 +56,11 @@ public class Team extends DatabaseConnector implements Listener{
         PreparedStatement statement = connection.prepareStatement("DELETE FROM teams_player WHERE teamName = ?");
         statement.setString(1, this.name);
         statement.executeUpdate();
-    }
 
-    public void save(){
-        try {
-            delete();
-
-            for (UUID player : this.getPlayers()){
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO teams_player VALUES (?, ?)");
-                statement.setString(1, this.name);
-                statement.setString(2, player.toString());
-                statement.executeUpdate();
-            }
-
-            PreparedStatement statement = connection.prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
-            statement.setBytes(1, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
-            statement.setString(2, name);
-            statement.executeUpdate();
-
-        } catch (Exception e){
-            e.printStackTrace();
-            System.out.println("\u001B[31mErreur en sauvegardant la team '"+this.name+"'\u001B[0m");
-        }
+        // Delete team from teams
+        statement = connection.prepareStatement("DELETE FROM teams WHERE teamName = ?");
+        statement.setString(1, this.name);
+        statement.executeUpdate();
     }
 
 
@@ -152,7 +142,16 @@ public class Team extends DatabaseConnector implements Listener{
             return false;
         }
         players.add(player);
-        save();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams_player VALUES (?, ?)");
+            statement.setString(1, this.name);
+            statement.setString(2, player.toString());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            plugin.getLogger().severe("Impossible d'ajouter '"+player.toString()+"' dans '"+this.name+"'");
+        }
+
         return true;
     }
 
@@ -176,7 +175,15 @@ public class Team extends DatabaseConnector implements Listener{
         if (isOwner(player)) {
             owner = getRandomPlayer();
         }
-        save();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM teams_player WHERE player = ?");
+            statement.setString(2, player.toString());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            plugin.getLogger().severe("Impossible de supprimer '"+player.toString()+"' dans '"+this.name+"'");
+        }
+
         return MethodState.VALID;
     }
 

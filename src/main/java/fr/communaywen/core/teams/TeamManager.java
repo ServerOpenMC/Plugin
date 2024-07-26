@@ -61,6 +61,18 @@ public class TeamManager extends DatabaseConnector {
         if (!teamExists(name)) {
             teams.add(team);
         }
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams VALUE (?, ?, 0, ?)");
+            statement.setString(1, name);
+            statement.setString(2, owner.toString());
+            statement.setObject(3, null);
+
+            statement.executeUpdate();
+        } catch (Exception e) {
+            plugin.getLogger().severe("Impossible de sauvegarder la team '"+name+"'");
+        }
+
         return team;
     }
 
