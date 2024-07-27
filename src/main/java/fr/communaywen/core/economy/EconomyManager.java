@@ -37,8 +37,6 @@ public class EconomyManager {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player);
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
-                    AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(pq.getProgress(quests)));
-                    AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(getBalance(player)));
                     QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
                 }
             }

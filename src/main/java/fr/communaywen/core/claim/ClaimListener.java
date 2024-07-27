@@ -123,7 +123,6 @@ public class ClaimListener implements Listener {
 
                     double distance = gp.getPos1().distance(gp.getPos2());
                     double balance = EconomieTeam.getTeamBalances(playerTeam.getName());
-                    AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(distance));
                     double cost = (500 + (int) (distance * 12));
 
                     if(balance < cost) {

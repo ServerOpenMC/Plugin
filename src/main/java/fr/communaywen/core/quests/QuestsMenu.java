@@ -44,7 +44,6 @@ public class QuestsMenu extends Menu {
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
         int slot = event.getSlot();
-        System.out.println("Slot clicked: " + slot);
         if (slot == 18) {
             if (currentPage > 0) {
                 currentPage--;
