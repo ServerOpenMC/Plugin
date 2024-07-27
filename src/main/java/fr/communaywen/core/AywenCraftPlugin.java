@@ -57,6 +57,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Getter
     private final Managers managers = new Managers();
 
+    public EventsManager eventsManager; // TODO: include to Managers.java
+
     @Getter
     private static AywenCraftPlugin instance;
     public LuckPerms api;
@@ -82,6 +84,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+
+        eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
 
         mvCore = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
 
@@ -200,6 +204,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ClaimListener(),
                 new FarineListener()
         );
+
+        getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
+        
         /* --------- */
 
         saveDefaultConfig();
@@ -265,6 +272,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
             return invMenu;
         }
         return null;
+    }
+
+    // TODO: include to Managers.java
+    private FileConfiguration loadEventsManager() {
+        File eventsFile = new File(getDataFolder(), "events.yml");
+        if (!eventsFile.exists()) {
+            saveResource("events.yml", false);
+        }
+        return YamlConfiguration.loadConfiguration(eventsFile);
     }
 
     /**
