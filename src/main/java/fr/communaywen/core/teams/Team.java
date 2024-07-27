@@ -11,6 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -47,8 +48,13 @@ public class Team extends DatabaseConnector implements Listener{
                 e.getPlayer().sendMessage(ChatColor.RED+other.getName()+" est déjà entrain de regarder l'inventaire de team");
                 e.getPlayer().closeInventory();
                 e.setCancelled(true);
-                return;
             }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        if (e.getInventory() == inventory) {
             try {
                 PreparedStatement statement = connection.prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
                 statement.setBytes(1, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
