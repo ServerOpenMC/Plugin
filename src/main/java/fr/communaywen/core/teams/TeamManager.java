@@ -34,9 +34,11 @@ public class TeamManager extends DatabaseConnector {
                 PreparedStatement query = connection.prepareStatement("SELECT * FROM teams_player WHERE teamName = ?");
                 query.setString(1, rs.getString("teamName"));
 
-                ItemStack[] newInventory = new BukkitSerializer().deserializeItemStacks(rs.getBytes("inventory"));
-                if (newInventory != null) {
-                    team.setInventory(newInventory);
+                if (rs.getBytes("inventory") != null) {
+                    ItemStack[] newInventory = new BukkitSerializer().deserializeItemStacks(rs.getBytes("inventory"));
+                    if (newInventory != null) {
+                        team.setInventory(newInventory);
+                    }
                 }
 
                 ResultSet players = query.executeQuery();
@@ -65,12 +67,13 @@ public class TeamManager extends DatabaseConnector {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams (teamName, owner, balance) VALUES (?, ?, 0)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams (teamName, owner, balance) VALUES (?, ?, 0) ON DUPLICATE KEY UPDATE teamName = teamName");
             statement.setString(1, name);
             statement.setString(2, owner.toString());
 
             statement.executeUpdate();
         } catch (Exception e) {
+            e.printStackTrace();
             plugin.getLogger().severe("Impossible de sauvegarder la team '"+name+"'");
         }
 
