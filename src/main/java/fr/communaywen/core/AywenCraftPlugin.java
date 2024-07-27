@@ -47,6 +47,9 @@ import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
