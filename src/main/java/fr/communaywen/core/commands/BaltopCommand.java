@@ -47,7 +47,6 @@ public class BaltopCommand {
             } else if (Bukkit.getOfflinePlayer(playerBalance.playerId) != null) {
                 playerName = Bukkit.getOfflinePlayer(playerBalance.playerId).getName();
             }
-            System.out.println(getColor(index));
             lines.add(MessageFormat.format("{0}. {1}: {2}", getColor(index) + index, ChatColor.GRAY + playerName, ChatColor.GREEN + playerBalance.balance.toString()));
 
             index++;
