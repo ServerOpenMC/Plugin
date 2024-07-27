@@ -54,7 +54,7 @@ public class FeatureCommand {
     public void playerFeatures(Player player, @Named("player") String target) {
         CommandUtils.setSender(player);
         CommandUtils.sendMessage(ChatColor.GOLD, "=====================", true);
-        CommandUtils.sendMessage(ChatColor.GOLD, "Features de " + ChatColor.LIGHT_PURPLE + player.getName() + " :", true);
+        CommandUtils.sendMessage(ChatColor.GOLD, "Features de " + ChatColor.LIGHT_PURPLE + target + " :", true);
         for (FeatureData feature : featureManager.getFeatures()) {
             List<FeatureData> playerFeatures = new ArrayList<>();
             if (isDeveloper(target, feature)) {
