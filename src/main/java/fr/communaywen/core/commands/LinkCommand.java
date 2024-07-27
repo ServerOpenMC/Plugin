@@ -28,12 +28,11 @@ public class LinkCommand {
         try {
             if (!linkerAPI.getUserId(player).isEmpty()) {
                 player.sendMessage(ChatColor.RED + "Votre compte minecraft est déjà lié à un compte Discord.");
-            } else if (linkerAPI.playerAlreadyLinkTime(player)) {
+            } else if (!linkerAPI.playerAlreadyLinkTime(player)) {
                 int code = linkerAPI.generateCode();
 
                 do {
                     code = linkerAPI.generateCode();
-                    AywenCraftPlugin.getInstance().getLogger().info("regen code" + code);
                 } while (linkerAPI.codeAlreadyExist(code));
 
                 linkerAPI.linkWithCode(player, code);
