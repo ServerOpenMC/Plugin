@@ -173,9 +173,9 @@ public final class TradeCommand {
         }
 
         if (isPlayer1) {
-            trade.player1.sendMessage("$bArgent qui sera envoyé par " + trade.player2.getName() + " : §a" + trade.money2 + "$");
+            trade.player1.sendMessage("§bArgent qui sera envoyé par " + trade.player2.getName() + " : §a" + trade.money2 + "$");
         } else {
-            trade.player2.sendMessage("$bArgent qui sera envoyé par " + trade.player1.getName() + " : §a" + trade.money1 + "$");
+            trade.player2.sendMessage("§bArgent qui sera envoyé par " + trade.player1.getName() + " : §a" + trade.money1 + "$");
         }
 
         trade.openOtherItems(isPlayer1);

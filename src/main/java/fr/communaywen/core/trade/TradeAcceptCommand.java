@@ -47,7 +47,7 @@ public final class TradeAcceptCommand {
         trade.openOwnItems(false);
 
         final TextComponent textComponent =
-                Component.text("$3Trade avec §9" + player1.getName())
+                Component.text("§3Trade avec §9" + player1.getName())
                         .append(
                                 Component.text("\n> §b[§cModifier les items§b] ")
                                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/trade items"))
