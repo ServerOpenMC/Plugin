@@ -35,7 +35,9 @@ public class TeamManager extends DatabaseConnector {
                 query.setString(1, rs.getString("teamName"));
 
                 ItemStack[] newInventory = new BukkitSerializer().deserializeItemStacks(rs.getBytes("inventory"));
-                team.setInventory(newInventory);
+                if (newInventory != null) {
+                    team.setInventory(newInventory);
+                }
 
                 ResultSet players = query.executeQuery();
                 while (players.next()) {
@@ -63,10 +65,9 @@ public class TeamManager extends DatabaseConnector {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams VALUE (?, ?, 0, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams (teamName, owner, balance) VALUES (?, ?, 0)");
             statement.setString(1, name);
             statement.setString(2, owner.toString());
-            statement.setObject(3, null);
 
             statement.executeUpdate();
         } catch (Exception e) {

@@ -5,12 +5,13 @@ import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -38,8 +39,16 @@ public class Team extends DatabaseConnector implements Listener{
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e) {
-        if (e.getInventory().equals(inventory)) {
+    public void onInventoryOpen(InventoryOpenEvent e) {
+        Inventory inv = e.getInventory();
+        if (inv.equals(inventory)) {
+            if (inv.getViewers().size() > 1) {
+                Player other = (Player) inv.getViewers().getFirst();
+                e.getPlayer().sendMessage(ChatColor.RED+other.getName()+" est déjà entrain de regarder l'inventaire de team");
+                e.getPlayer().closeInventory();
+                e.setCancelled(true);
+                return;
+            }
             try {
                 PreparedStatement statement = connection.prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
                 statement.setBytes(1, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
