@@ -67,7 +67,8 @@ public class ClaimListener implements Listener {
         }
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if (player.getItemInHand().getType() == Material.STICK) {
+            ItemStack item = player.getItemInHand();
+            if (player.getItemInHand().getType() == Material.STICK && item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
                 event.setCancelled(true);
 
                 GamePlayer gp = GamePlayer.gamePlayers.get(player.getName());
