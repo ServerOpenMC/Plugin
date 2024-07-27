@@ -123,7 +123,7 @@ public class ClaimListener implements Listener {
                     double distance = gp.getPos1().distance(gp.getPos2());
                     double balance = EconomieTeam.getTeamBalances(playerTeam.getName());
                     AywenCraftPlugin.getInstance().getLogger().info(String.valueOf(distance));
-                    double cost = (1200 + (int) (distance * 12));
+                    double cost = (500 + (int) (distance * 12));
 
                     if(balance < cost) {
                         player.sendMessage("§cVotre équipe n'a pas assez d'argent pour créer ce claim. Coût: " + cost + "$.");
