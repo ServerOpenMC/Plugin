@@ -55,7 +55,7 @@ public class TeamCommand {
     @Description("Menu de la team")
     public void teamMenu(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (teamManager.isInTeam(player.getUniqueId())) {
+        if (!teamManager.isInTeam(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -188,7 +188,7 @@ public class TeamCommand {
     @Description("Inventaire de la team")
     public void teamInventory(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(player.getUniqueId())) {
+        if (!team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
