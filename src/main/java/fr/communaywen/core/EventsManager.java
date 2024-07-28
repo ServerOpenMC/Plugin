@@ -303,9 +303,7 @@ public class EventsManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.broadcastMessage("PLAYER JOIN");
-        
+    public void onPlayerJoin(PlayerJoinEvent event) {        
         clearTerrifyingNight(event.getPlayer());
         
         if (isInTerrifyingNight()) {
