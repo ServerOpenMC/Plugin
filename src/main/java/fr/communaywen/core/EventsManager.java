@@ -304,13 +304,11 @@ public class EventsManager implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.broadcastMessage("PLAYER JOIN");
         
         clearTerrifyingNight(event.getPlayer());
         
         if (isInTerrifyingNight()) {
             event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(new AttributeModifier("terrifyingNight", -0.2, Operation.MULTIPLY_SCALAR_1));
-            Bukkit.broadcastMessage("isInTerrifyingNight");
         }
     }
 
