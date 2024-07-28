@@ -27,6 +27,8 @@ public class ScoreboardManager {
         TeamManager teams = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
         boolean teambool = teams.isInTeam(player.getUniqueId());
         Team teamName = teams.getTeamByPlayer(player.getUniqueId());
+        String ipStr = "ᴘʟᴀʏ.ᴏᴘᴇɴᴍᴄ.ꜰʀ";
+
         Score vide1 = objective.getScore(" ");
         Score vide2 = objective.getScore("  ");
         Score vide3 = objective.getScore("   ");
@@ -38,6 +40,7 @@ public class ScoreboardManager {
         Score money = objective.getScore("§8• §fArgent§7: §6" + AywenCraftPlugin.getInstance().getManagers().getEconomyManager().getBalance(player));
         Score grade = objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade"));
         Score team = objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team."));
+        Score ip = objective.getScore("§d    " + ipStr);
 
         vide1.setScore(10);
         bars1.setScore(9);
@@ -48,6 +51,7 @@ public class ScoreboardManager {
         vide3.setScore(4);
         team.setScore(3);
         bars2.setScore(1);
+        ip.setScore(0);
 
         player.setScoreboard(scoreboard);
     }

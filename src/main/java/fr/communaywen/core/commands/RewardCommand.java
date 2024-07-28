@@ -37,6 +37,8 @@ public class RewardCommand extends DatabaseConnector {
             }
         } catch (Exception e) {
             player.sendMessage("§cUne erreur est survenue");
+            e.printStackTrace();
+            return true;
         }
         return false;
     }
@@ -50,6 +52,7 @@ public class RewardCommand extends DatabaseConnector {
             statement.executeUpdate();
         } catch (Exception e) {
             System.out.println("Erreur en récupérant "+scope+" pour "+ player.getUniqueId());
+            e.printStackTrace();
         }
     }
 
