@@ -4,10 +4,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.Queue;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
@@ -141,8 +138,8 @@ public class Trade implements Listener {
             }
         }
 
-        player1.playSound(player1.getEyeLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
-        player2.playSound(player2.getEyeLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
+        player1.playSound(player1.getEyeLocation(), Sound.ITEM_SHIELD_BREAK,  SoundCategory.PLAYERS, 1, 1);
+        player2.playSound(player2.getEyeLocation(), Sound.ITEM_SHIELD_BREAK,  SoundCategory.PLAYERS, 1, 1);
         player1.sendMessage("§6Trade annulé !");
         player2.sendMessage("§6Trade annulé !");
 
@@ -201,8 +198,8 @@ public class Trade implements Listener {
             }
         }
 
-        player1.playSound(player1.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, 1, 1);
-        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, 1, 1);
+        player1.playSound(player1.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE,  SoundCategory.PLAYERS,1, 1);
+        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE,  SoundCategory.PLAYERS,1, 1);
         player1.sendMessage("§aTrade réalisé !");
         player2.sendMessage("§aTrade réalisé !");
 

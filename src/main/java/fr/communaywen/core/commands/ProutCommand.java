@@ -49,8 +49,8 @@ public final class ProutCommand {
             world.spawnParticle(Particle.CLOUD, location, 3, 0.02d, -0.04d, 0.02d, 0.09d);
 
             // Funny sound!
-            world.playSound(location, Sound.ENTITY_VILLAGER_NO, 0.8f, 2.3f);
-            world.playSound(location, Sound.ENTITY_GOAT_EAT, 0.7f, 0.2f);
+            world.playSound(location, Sound.ENTITY_VILLAGER_NO,  SoundCategory.PLAYERS, 0.8f, 2.3f);
+            world.playSound(location, Sound.ENTITY_GOAT_EAT,  SoundCategory.PLAYERS,0.7f, 0.2f);
         }
 
         // Add glowing effect for 30 seconds
