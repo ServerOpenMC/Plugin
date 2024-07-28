@@ -6,6 +6,7 @@ public enum MethodState {
     WARNING,
     ERROR,
     FAILURE,
-    SPECIAL
+    SPECIAL,
+    ESCAPE
 
 }

@@ -7,6 +7,7 @@ import fr.communaywen.core.corporation.guilds.GuildManager;
 import fr.communaywen.core.corporation.shops.PlayerShopManager;
 import fr.communaywen.core.corporation.shops.Shop;
 import fr.communaywen.core.corporation.shops.ShopItem;
+import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.MethodState;
 import fr.communaywen.core.utils.menu.ConfirmationMenu;
 import org.bukkit.ChatColor;
@@ -22,8 +23,7 @@ import java.util.Map;
 
 public class ShopMenu extends Menu {
 
-    private static final List<ShopItem> ITEMS = new ArrayList<>();
-
+    private final List<ShopItem> items = new ArrayList<>();
     private final GuildManager guildManager;
     private final PlayerShopManager playerShopManager;
     private final Shop shop;
@@ -37,7 +37,7 @@ public class ShopMenu extends Menu {
         this.playerShopManager = playerShopManager;
         this.shop = shop;
         this.itemIndex = itemIndex;
-        ITEMS.addAll(shop.getItems());
+        items.addAll(shop.getItems());
     }
 
     @Override
@@ -135,12 +135,11 @@ public class ShopMenu extends Menu {
         }));
         if (getCurrentItem() != null)
             content.put(itemSlot, new ItemBuilder(this, getCurrentItem().getItem(), itemMeta -> {
-                itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.YELLOW + itemMeta.getDisplayName());
+                itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.WHITE + ShopItem.getItemName(getOwner(), getCurrentItem().getItem()));
                 List<String> lore = new ArrayList<>();
-                lore.add(ChatColor.GRAY + "■ Prix: " + ChatColor.WHITE + (getCurrentItem().getPricePerItem() * amountToBuy) + "€");
-                lore.add(ChatColor.GRAY + "■ Quantité: " + amountToBuy);
-                lore.add(ChatColor.GRAY + "■ En stock: " + ChatColor.WHITE + getCurrentItem().getAmount());
-                lore.add(ChatColor.GRAY + "■ Cliquez pour acheter");
+                lore.add(ChatColor.GRAY + "■ Prix: " + ChatColor.RED + (getCurrentItem().getPricePerItem() * amountToBuy) + "€");
+                lore.add(ChatColor.GRAY + "■ En stock: " + EconomyManager.formatValue(getCurrentItem().getAmount()));
+                lore.add(ChatColor.GRAY + "■ Cliquez pour en acheter " + ChatColor.WHITE + amountToBuy);
                 itemMeta.setLore(lore);
             }).setNextMenu(new ConfirmationMenu(getOwner(), inventoryClickEvent -> {
                 MethodState buyState = shop.buy(getCurrentItem(), amountToBuy, getOwner());
@@ -159,13 +158,17 @@ public class ShopMenu extends Menu {
                     getOwner().closeInventory();
                     return;
                 }
+                if (buyState == MethodState.ESCAPE) {
+                    getOwner().sendMessage(ChatColor.RED + "Erreur lors de l'achat");
+                    getOwner().closeInventory();
+                    return;
+                }
                 getOwner().sendMessage(ChatColor.GREEN + "Vous avez bien acheté " + amountToBuy + " " + getCurrentItem().getItem().getItemMeta().getDisplayName());
             })));
         content.put(greenAddOne, new ItemBuilder(this, Material.LIME_STAINED_GLASS_PANE, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.GREEN + "Ajouter 1");
         }).setOnClick(inventoryClickEvent -> {
             if (getCurrentItem() == null) return;
-            if (amountToBuy == getCurrentItem().getAmount()) return;
             amountToBuy++;
             open();
         }));
@@ -173,23 +176,15 @@ public class ShopMenu extends Menu {
             itemMeta.setDisplayName(ChatColor.GREEN + "Ajouter 10");
         }).setOnClick(inventoryClickEvent -> {
             if (getCurrentItem() == null) return;
-            if (amountToBuy + 10 > getCurrentItem().getAmount()) {
-                amountToBuy = getCurrentItem().getAmount();
-            } else {
-                amountToBuy += 10;
-            }
+            amountToBuy += 10;
             open();
         }));
         content.put(purpleAddSixtyFour, new ItemBuilder(this, Material.PURPLE_STAINED_GLASS_PANE, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.DARK_PURPLE + "Ajouter 64");
         }).setOnClick(inventoryClickEvent -> {
             if (getCurrentItem() == null) return;
-            if (amountToBuy + 64 > getCurrentItem().getAmount()) {
-                amountToBuy = getCurrentItem().getAmount();
-            } else {
-                if (amountToBuy == 1) amountToBuy = 64;
-                else amountToBuy += 64;
-            }
+            if (amountToBuy == 1) amountToBuy = 64;
+            else amountToBuy += 64;
             open();
         }));
         return content;
@@ -201,7 +196,7 @@ public class ShopMenu extends Menu {
         }).setNextMenu(new ConfirmationMenu(getOwner(), inventoryClickEvent -> {
             boolean isInGuild = guildManager.isInGuild(getOwner().getUniqueId());
             if (isInGuild) {
-                MethodState deleteState = guildManager.getGuild(getOwner().getUniqueId()).deleteShop(shop.getUuid());
+                MethodState deleteState = guildManager.getGuild(getOwner().getUniqueId()).deleteShop(getOwner(), shop.getUuid());
                 if (deleteState == MethodState.ERROR) {
                     getOwner().sendMessage(ChatColor.RED + "Ce shop n'existe pas dans votre guilde");
                     return;
@@ -210,11 +205,26 @@ public class ShopMenu extends Menu {
                     getOwner().sendMessage(ChatColor.RED + "Ce shop n'est pas vide");
                     return;
                 }
+                if (deleteState == MethodState.SPECIAL) {
+                    getOwner().sendMessage(ChatColor.RED + "Il vous faut au minimum le nombre d'argent remboursable pour supprimer un shop et obtenir un remboursement dans la banque de votre guilde");
+                    return;
+                }
+                if (deleteState == MethodState.ESCAPE) {
+                    getOwner().sendMessage(ChatColor.RED + "Caisse introuvable (appelez un admin)");
+                }
                 getOwner().sendMessage(ChatColor.GREEN + shop.getName() + " a été supprimé !");
                 getOwner().sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.GREEN + " +75€ de remboursés sur la banque de la guilde");
             }
             else {
-                playerShopManager.deleteShop(getOwner().getUniqueId());
+                MethodState methodState = playerShopManager.deleteShop(getOwner().getUniqueId());
+                if (methodState == MethodState.WARNING) {
+                    getOwner().sendMessage(ChatColor.RED + "Votre shop n'est pas vide");
+                    return;
+                }
+                if (methodState == MethodState.ESCAPE) {
+                    getOwner().sendMessage(ChatColor.RED + "Caisse introuvable (appelez un admin)");
+                    return;
+                }
                 getOwner().sendMessage(ChatColor.GREEN + "Votre shop a bien été supprimé !");
                 getOwner().sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.GREEN + " +400€ de remboursés sur votre compte personnel");
             }
@@ -248,10 +258,10 @@ public class ShopMenu extends Menu {
     }
 
     private ShopItem getCurrentItem() {
-        if (itemIndex < 0 || itemIndex >= ITEMS.size()) {
+        if (itemIndex < 0 || itemIndex >= items.size()) {
             return null;
         }
-        return ITEMS.get(itemIndex);
+        return items.get(itemIndex);
     }
 
     private boolean onFirstItem() {
@@ -259,6 +269,6 @@ public class ShopMenu extends Menu {
     }
 
     private boolean onLastItem() {
-        return itemIndex == ITEMS.size() - 1;
+        return itemIndex == items.size() - 1;
     }
 }

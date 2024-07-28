@@ -20,6 +20,9 @@ import fr.communaywen.core.commands.useless.FBoomCommand;
 import fr.communaywen.core.commands.useless.ProutCommand;
 import fr.communaywen.core.commands.useless.TailleCommand;
 import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.corporation.guilds.Guild;
+import fr.communaywen.core.corporation.shops.Shop;
+import fr.communaywen.core.corporation.shops.listener.ShopListener;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -43,12 +46,14 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Barrel;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -58,9 +63,14 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+
+    public static NamespacedKey GUILD_SHOP_KEY;
+    public static NamespacedKey PLAYER_SHOP_KEY;
+    public static NamespacedKey SUPPLIER_KEY;
 
     @Getter
     private final Managers managers = new Managers();
@@ -71,6 +81,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     @Getter
     private BukkitAudiences adventure;
+
     @Getter
     private InteractiveHelpMenu interactiveHelpMenu;
 
@@ -89,6 +100,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+
+        GUILD_SHOP_KEY = new NamespacedKey(this, "shop_guild");
+        PLAYER_SHOP_KEY = new NamespacedKey(this, "shop_player");
+        SUPPLIER_KEY = new NamespacedKey(this, "supplier");
 
         LinkerAPI linkerAPI = new LinkerAPI(managers.getDatabaseManager());
 
@@ -179,6 +194,26 @@ public final class AywenCraftPlugin extends JavaPlugin {
                         openedMenu.open();
                     }
                 }
+                List<Shop> allShops = new ArrayList<>(managers.getPlayerShopManager().getPlayerShops().values());
+                for (Guild guild : managers.getGuildManager().getGuilds()) {
+                    allShops.addAll(guild.getShops());
+                }
+                for (Shop shop : allShops) {
+                    Barrel barrelStockBlockState = (Barrel) shop.getStockBlock().getState();
+                    Inventory barrelStockInventory = barrelStockBlockState.getInventory();
+                    for (ItemStack item : barrelStockInventory.getContents()) {
+                        if (item != null && item.getType() != Material.AIR) {
+                            if (item.getItemMeta().getPersistentDataContainer().has(SUPPLIER_KEY, PersistentDataType.STRING)) {
+                                String supplierUUID = item.getItemMeta().getPersistentDataContainer().get(SUPPLIER_KEY, PersistentDataType.STRING);
+                                if (supplierUUID == null) {
+                                    continue;
+                                }
+                                shop.supply(item, UUID.fromString(supplierUUID));
+                                barrelStockInventory.remove(item);
+                            }
+                        }
+                    }
+                }
             }
         }.runTaskTimer(this, 0L, 100L);
 
@@ -204,7 +239,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsListener(),
                 new PasFraisListener(this),
                 new ClaimListener(),
-                new FarineListener()
+                new FarineListener(),
+                new ShopListener(managers.getGuildManager(), managers.getPlayerShopManager())
         );
         /* --------- */
 

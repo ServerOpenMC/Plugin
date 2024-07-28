@@ -1,6 +1,7 @@
 package fr.communaywen.core.corporation.guilds;
 
 import dev.xernas.menulib.utils.ItemUtils;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.corporation.guilds.data.MerchantData;
 import fr.communaywen.core.corporation.guilds.data.TransactionData;
 import fr.communaywen.core.corporation.shops.Shop;
@@ -8,11 +9,18 @@ import fr.communaywen.core.corporation.shops.ShopOwner;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.MethodState;
 import fr.communaywen.core.utils.Queue;
+import fr.communaywen.core.utils.WorldUtils;
+import fr.communaywen.core.utils.Yaw;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.*;
+import org.bukkit.block.Barrel;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
@@ -60,41 +68,48 @@ public class Guild {
         return null;
     }
 
-    public boolean createShop(Player whoCreated) {
+    public boolean createShop(Player whoCreated, Block barrel, Block cashRegister) {
         if (withdraw(100, whoCreated, "Création de shop", economyManager)) {
-            shops.add(new Shop(new ShopOwner(this), shopCounter, economyManager));
+            Shop newShop = new Shop(new ShopOwner(this), barrel, cashRegister, shopCounter, economyManager);
+            shops.add(newShop);
             economyManager.withdrawBalance(whoCreated, 100);
+            newShop.placeShop(whoCreated, true);
             shopCounter++;
             return true;
         }
         return false;
     }
 
-    public MethodState deleteShop(UUID uuid) {
+    public MethodState deleteShop(Player player, UUID uuid) {
         for (Shop shop : shops) {
             if (shop.getUuid().equals(uuid)) {
                 if (!shop.getItems().isEmpty()) {
                     return MethodState.WARNING;
                 }
+                if (!shop.removeShop()) {
+                    return MethodState.ESCAPE;
+                }
+                if (!deposit(75, player, "Suppression de shop", economyManager)) {
+                    return MethodState.SPECIAL;
+                };
                 shops.remove(shop);
+                economyManager.addBalance(player.getUniqueId(), 75);
                 return MethodState.SUCCESS;
             }
         }
         return MethodState.ERROR;
     }
 
-    public MethodState deleteShop(Player whoCreated, int shop) {
-        Shop toDeleteShop = getShop(shop);
-        if (toDeleteShop == null) {
-            return MethodState.ERROR;
+    public List<UUID> getAllMembers() {
+        List<UUID> members = new ArrayList<>();
+        if (owner.isPlayer()) {
+            members.add(owner.getPlayer());
         }
-        if (!toDeleteShop.getItems().isEmpty()) {
-            return MethodState.WARNING;
+        else {
+            members.addAll(owner.getTeam().getPlayers());
         }
-        shops.remove(toDeleteShop);
-        deposit(75, whoCreated, "Suppression de shop", economyManager);
-        economyManager.addBalance(whoCreated.getUniqueId(), 75);
-        return MethodState.SUCCESS;
+        members.addAll(merchants.keySet());
+        return members;
     }
 
     public List<UUID> getMerchantsUUID() {

@@ -58,6 +58,9 @@ public class GuildManager {
         if (guild.getBalance() > 0) {
             return false;
         }
+        if (!guild.getShops().isEmpty()) {
+            return false;
+        }
         guilds.remove(guild);
         return true;
     }
@@ -84,7 +87,7 @@ public class GuildManager {
         }
         MerchantData data = guild.getMerchant(player);
         guild.removeMerchant(player);
-        if (guild.getMerchants().isEmpty()) {
+        if (guild.getAllMembers().isEmpty()) {
             if (!liquidateGuild(guild)) {
                 guild.addMerchant(player, data);
                 return MethodState.WARNING;

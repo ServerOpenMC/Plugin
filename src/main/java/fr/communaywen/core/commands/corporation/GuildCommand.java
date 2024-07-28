@@ -128,7 +128,7 @@ public class GuildCommand {
             return;
         }
         if (!manager.liquidateGuild(guild)) {
-            player.sendMessage(ChatColor.RED + "La guilde ne peut pas être liquidée car elle possède encore de l'argent (merci de withdraw)!");
+            player.sendMessage(ChatColor.RED + "La guilde ne peut pas être liquidée car elle possède encore de l'argent ou des shops (merci de withdraw ou de supprimer vos shops)!");
             return;
         };
         player.sendMessage(ChatColor.GREEN + "La guilde a été liquidée avec succès !");
@@ -147,7 +147,7 @@ public class GuildCommand {
             return;
         }
         if (leaveResult == MethodState.WARNING) {
-            player.sendMessage(ChatColor.RED + "Vous êtes le dernier a quitter et la guilde ne peut pas être liquidée car elle possède encore de l'argent (merci de withdraw)!");
+            player.sendMessage(ChatColor.RED + "Vous êtes le dernier a quitter et la guilde ne peut pas être liquidée car elle possède encore de l'argent ou des shops (merci de withdraw ou de supprimer vos shops)!");
             return;
         }
         if (leaveResult == MethodState.SPECIAL) {

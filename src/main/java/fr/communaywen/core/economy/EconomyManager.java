@@ -60,6 +60,10 @@ public class EconomyManager {
         return value > 0 ? ChatColor.GREEN + String.valueOf(value) : ChatColor.RED + String.valueOf(value);
     }
 
+    public static String formatValue(int value) {
+        return value > 0 ? ChatColor.GREEN + String.valueOf(value) : ChatColor.RED + String.valueOf(value);
+    }
+
     private void saveBalances() {
         economyData.saveBalances(balances);
     }
