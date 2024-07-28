@@ -123,7 +123,7 @@ public class QuizManager {
                 }
                 case 2 ->
                         new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
-                case 3 -> new Quiz(MessageFormat.format("Quelle est le carrée de {0} ?", a), String.valueOf(a * a));
+                case 3 -> new Quiz(MessageFormat.format("Quel est le carrée de {0} ?", a), String.valueOf(a * a));
                 default -> throw new IllegalStateException("Unexpected value: " + type);
             };
         }
