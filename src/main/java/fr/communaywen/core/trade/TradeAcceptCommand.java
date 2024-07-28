@@ -7,6 +7,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
@@ -75,9 +76,9 @@ public final class TradeAcceptCommand {
                         );
 
         plugin.getAdventure().player(player1).sendMessage(textComponent);
-        player1.playSound(player1.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+        player1.playSound(player1.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL,  SoundCategory.PLAYERS,1, 1);
         plugin.getAdventure().player(player2).sendMessage(textComponent);
-        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL,  SoundCategory.PLAYERS, 1, 1);
     }
 
     public static void newPendingDemand(Player player1, Player player2) {

@@ -7,6 +7,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
@@ -59,7 +60,7 @@ public final class TradeCommand {
         TradeAcceptCommand.newPendingDemand(player1, player2);
 
         plugin.getAdventure().player(player2).sendMessage(textComponent);
-        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.PLAYERS, 1, 1);
 
         player1.sendMessage("§aLa demande de trade a été envoyée à " + player2.getName());
     }
