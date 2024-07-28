@@ -37,6 +37,7 @@ public class RewardCommand extends DatabaseConnector {
             }
         } catch (Exception e) {
             player.sendMessage("§cUne erreur est survenue");
+            return true;
         }
         return false;
     }
