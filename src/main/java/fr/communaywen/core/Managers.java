@@ -28,7 +28,6 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
-
     private TeamManager teamManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
