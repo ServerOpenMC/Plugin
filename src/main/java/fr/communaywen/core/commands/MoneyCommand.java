@@ -33,17 +33,21 @@ public class MoneyCommand {
     @Description("Afficher l'aide")
     public void sendHelp(BukkitCommandActor sender, CommandHelp<Component> help, ExecutableCommand thisHelpCommand, @Default("1") @Range(min = 1) int page) {
         Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
-        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§b§lTEAM");
+        AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§a§lMONEY");
     }
 
     @Subcommand("transfer")
-    @Description("Transférer de l'argent à un joueur")
+    @Description("Transfère de l'argent d'un joueur à un autre.")
     public void transfer(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
-        if (economyManager.transferBalance(player, target, amount)) {
-            player.sendMessage("Transféré " + amount + " à " + target.getName());
-            target.sendMessage("Reçu " + amount + " de " + player.getName());
+        if(!player.equals(target)) {
+            if (economyManager.transferBalance(player, target, amount)) {
+                player.sendMessage("§aVous venez de transférer §e" + amount + "$ §aà §e" + target.getName());
+                target.sendMessage("§aVous venez de recevoir §e" + amount + "$ §ade la part de §e" + player.getName());
+            } else {
+                player.sendMessage("§cVous n'avez pas assez d'argent.");
+            }
         } else {
-            player.sendMessage("Le transfert a échoué.");
+            player.sendMessage("§cVous ne pouvez pas transférer de l'argent à vous-même.");
         }
     }
 
@@ -52,8 +56,8 @@ public class MoneyCommand {
     @CommandPermission("openmc.money.add")
     public void add(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
         economyManager.addBalance(target, amount);
-        player.sendMessage("§aVous venez d'ajouter §f" + amount + " §aà " + target.getName());
-        target.sendMessage("§aVous venez de recevoir §f" + amount);
+        player.sendMessage("§aVous venez d'ajouter §e" + amount + "$ §aà " + target.getName());
+        target.sendMessage("§aVous venez de recevoir §e" + amount + "$");
     }
 
     @Subcommand("remove")
@@ -61,9 +65,7 @@ public class MoneyCommand {
     @CommandPermission("openmc.money.remove")
     public void remove(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
         economyManager.withdrawBalance(target, amount);
-        player.sendMessage("§aVous venez d'enlever §f" + amount + " §aà " + target.getName());
-        target.sendMessage("§aVous venez de perdre §f" + amount);
+        player.sendMessage("§aVous venez d'enlever §e" + amount + "$ §aà " + target.getName());
+        target.sendMessage("§aVous venez de perdre §e" + amount + "$");
     }
-
-
 }
