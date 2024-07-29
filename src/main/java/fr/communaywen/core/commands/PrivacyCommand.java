@@ -65,7 +65,7 @@ public class PrivacyCommand {
     }
 
     @Subcommand("unblock")
-    @Description("Retire quelqu'un à la blacklist")
+    @Description("Retire quelqu'un de la blacklist")
     public void unblock(Player player, @Named("player") Player blocked) throws SQLException {
         if (player.getUniqueId().equals(blocked.getUniqueId())) {
             player.sendMessage("Vous ne pouvez pas vous débloquer vous-même");

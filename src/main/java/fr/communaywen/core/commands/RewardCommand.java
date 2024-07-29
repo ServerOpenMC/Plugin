@@ -69,7 +69,7 @@ public class RewardCommand extends DatabaseConnector {
             }
 
             if (hasClaimReward(player, "peluche")) {
-                player.sendMessage("§cTu as déjà récupérer cette récompense");
+                player.sendMessage("§cTu as déjà récupéré cette récompense");
                 return;
             }
 

@@ -53,7 +53,7 @@ public class LinkCommand {
                 }.runTaskLater(AywenCraftPlugin.getInstance(), 300 * 20);
 
             } else {
-                player.sendMessage(ChatColor.RED + "Vous avez déjà un code de vérifications.");
+                player.sendMessage(ChatColor.RED + "Vous avez déjà un code de vérification.");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
