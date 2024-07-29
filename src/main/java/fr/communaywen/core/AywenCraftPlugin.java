@@ -164,7 +164,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsCommands(),
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
-                new MineCommand()
+                new MineCommand(),
+                new AdminShopCommand()
         );
 
         /*  --------  */
@@ -231,8 +232,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public void onDisable() {
         for(Player player : Bukkit.getOnlinePlayers()) {
             for(QUESTS quests : QUESTS.values()) {
-                PlayerQuests pq = QuestsManager.getPlayerQuests(player);
-                QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests));
+                PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
+                QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
+                player.closeInventory(); // Close inventory
             }
         }
         managers.cleanup();
