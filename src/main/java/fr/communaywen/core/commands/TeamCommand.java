@@ -5,6 +5,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.ClaimMenu;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.teams.menu.TeamListMenu;
@@ -210,8 +211,54 @@ public class TeamCommand {
     @Description("Ouvre la liste des claims")
     public void claimListMenu(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
         new ClaimMenu(player, team).open();
     }
 
+    @Subcommand("money add")
+    @Description("Transfère de l'argent de ton compte à la team.")
+    public void transferMoney(Player player, @Named("montant") int amount) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player, amount);
+        EconomieTeam.addBalance(team.getName(), amount);
+        player.sendMessage("§aVous venez de transférer §e" + amount + "$ §adans la banque de votre team.");
+    }
+
+    @Subcommand("money remove")
+    @Description("Retire de l'argent de la banque de la team vers ton compte.")
+    public void removeMoney(Player player, @Named("montant") int amount) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        double balances = EconomieTeam.getTeamBalances(team.getName());
+        if(balances >= amount) {
+            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, amount);
+            EconomieTeam.removeBalance(team.getName(), amount);
+            player.sendMessage("§aVous venez de prendre §e" + amount + "$ §ade la banque de votre team.");
+        } else {
+            player.sendMessage("§cVotre team n'a pas assez d'argent dans la banque.");
+        }
+    }
+
+    @Subcommand("money get")
+    @Description("Voir l'argent de la team")
+    public void getMoney(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        double balances = EconomieTeam.getTeamBalances(team.getName());
+        player.sendMessage("§aIl y a §e" + balances + "$ §adans la banque de votre team.");
+    }
 
 }

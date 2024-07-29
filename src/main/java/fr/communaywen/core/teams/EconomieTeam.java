@@ -39,9 +39,10 @@ public class EconomieTeam extends DatabaseConnector {
     public static void addBalance(String teamName, double amount) {
         double currentBalance = getTeamBalances(teamName);
         setTeamBalances(teamName, currentBalance + amount);
+        saveBalance(teamName);
     }
 
-    public static boolean removeBalance(String teamName, double amount) throws SQLException {
+    public static boolean removeBalance(String teamName, double amount) {
         double currentBalance = getTeamBalances(teamName);
         if (currentBalance >= amount) {
             setTeamBalances(teamName, currentBalance - amount);
@@ -51,11 +52,15 @@ public class EconomieTeam extends DatabaseConnector {
         return false;
     }
 
-    public static void saveBalance(String teamName) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("UPDATE teams SET balance = ? WHERE teamName = ?");
-        statement.setDouble(1, getTeamBalances(teamName));
-        statement.setString(2, teamName);
-        statement.executeUpdate();
+    public static void saveBalance(String teamName) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE teams SET balance = ? WHERE teamName = ?");
+            statement.setDouble(1, getTeamBalances(teamName));
+            statement.setString(2, teamName);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
