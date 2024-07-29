@@ -43,7 +43,7 @@ public class MoneyCommand {
             player.sendMessage("Transféré " + amount + " à " + target.getName());
             target.sendMessage("Reçu " + amount + " de " + player.getName());
         } else {
-            player.sendMessage("Transfert échoué.");
+            player.sendMessage("Le transfert a échoué.");
         }
     }
 
@@ -57,7 +57,7 @@ public class MoneyCommand {
     }
 
     @Subcommand("remove")
-    @Description("Enleve de l'argent à un joueur")
+    @Description("Enlève de l'argent à un joueur")
     @CommandPermission("openmc.money.remove")
     public void remove(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
         economyManager.withdrawBalance(target, amount);
