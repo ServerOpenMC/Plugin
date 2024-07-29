@@ -166,7 +166,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
                 new MineCommand(),
-                new AdminShopCommand()
+                new AdminShopCommand(),
                 new PayCommands()
         );
 
