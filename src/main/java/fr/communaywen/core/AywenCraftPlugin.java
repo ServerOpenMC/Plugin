@@ -132,6 +132,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
+                new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new VersionCommand(this),
                 new RulesCommand(managers.getBookConfig()),
