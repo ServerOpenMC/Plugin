@@ -32,7 +32,7 @@ quizzes:
     answer: "creeper"
   - question: "Quelle est la couleur des moutons par défaut dans Minecraft ?"
     answer: "blanc"
-  - question: "Combien de porte.s obtient-on lors du craft ?"
+  - question: "Combien de porte obtient-on lors du craft ?"
     answer: "3"
   - question: "Que vaut x si 7 * x + 5 = 47 ?"
     answer: "6"
