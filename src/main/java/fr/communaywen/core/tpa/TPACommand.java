@@ -74,7 +74,7 @@ public class TPACommand {
 
         if (tpQueue.TPA_REQUESTS2.containsKey(player)) {
             if (tpQueue.TPA_REQUESTS_TIME.get(player) >= System.currentTimeMillis() / 1000 - (2400 / 20)) {
-                player.sendMessage("Votre demande de téléportation a expirée...");
+                player.sendMessage("Votre demande de téléportation a expiré...");
                 tpQueue.TPA_REQUESTS.remove(target, player);
                 tpQueue.TPA_REQUESTS2.remove(player, target);
             }
