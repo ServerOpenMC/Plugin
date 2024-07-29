@@ -9,13 +9,13 @@ import fr.communaywen.core.credit.Feature;
 @Feature("AdminShop")
 public enum MiscItems implements BaseItems {
 
-    GLOWSTONE_DUST(13, 12, ShopType.BUY, "§7Poudre lumineuse"),
-    BLAZE_ROD(21, 12, ShopType.BUY, "§7Bâton de blaze"),
-    ENDER_PEARL(22, 12, ShopType.BUY, "§7Pearl de l'ender"),
-    SLIME_BALL(23, 12, ShopType.BUY, "§7Boule de slime"),
-    STICK(30, 12, ShopType.BUY, "§7Bâton"),
-    NETHER_STAR(31, 12, ShopType.BUY, "§7Etoile du nether"),
-    PAPER(32, 12, ShopType.BUY, "§7Papier")
+    GLOWSTONE_DUST(13, 3, ShopType.SELL_BUY, "§7Poudre lumineuse"),
+    BLAZE_ROD(21, 4, ShopType.BUY, "§7Bâton de blaze"),
+    ENDER_PEARL(22, 8, ShopType.BUY, "§7Pearl de l'ender"),
+    SLIME_BALL(23, 6, ShopType.BUY, "§7Boule de slime"),
+    STICK(30, 1, ShopType.BUY, "§7Bâton"),
+    NETHER_STAR(31, 10200, ShopType.BUY, "§7Etoile du nether"),
+    PAPER(32, 3, ShopType.BUY, "§7Papier")
     ;
 
     private final int slots;

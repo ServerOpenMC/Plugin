@@ -8,20 +8,20 @@ import fr.communaywen.core.credit.Feature;
 @Credit("Axeno")
 @Feature("AdminShop")
 public enum OresItems implements BaseItems {
-    COAL(13, 2, ShopType.SELL_BUY, "§7Charbon"),
-    COPPER_ORE(20, 2, ShopType.SELL_BUY, "§7Lingot de cuivre"),
-    IRON_INGOT(21, 2, ShopType.SELL_BUY, "§7Lingot de fer"),
-    GOLD_INGOT(22, 2, ShopType.SELL_BUY, "§7Lingot d'or"),
-    LAPIS_LAZULI(23, 2, ShopType.SELL_BUY, "§7Lapis lazuli"),
-    DIAMOND(24, 2, ShopType.SELL, "§7Diamant"),
-    RAW_COPPER(29, 2, ShopType.BUY, "§7Cuivre brut"),
-    RAW_IRON(30, 2, ShopType.BUY, "§7Fer brut"),
-    RAW_GOLD(31, 2, ShopType.BUY, "§7Or brut"),
-    AMETHYST_SHARD(32, 2, ShopType.SELL, "§7Eclat d'améthyste"),
-    QUARTZ(33, 2, ShopType.BUY, "§7Quartz"),
-    NETHERITE_SCRAP(39, 2, ShopType.SELL, "§7Fragment de netherite"),
-    EMERALD(40, 2, ShopType.SELL, "§7Emeraude"),
-    NETHERITE_INGOT(41, 2, ShopType.SELL, "§7Lingot de netherite"),
+    COAL(13, 3, ShopType.SELL_BUY, "§7Charbon"),
+    COPPER_ORE(20, 4, ShopType.SELL_BUY, "§7Lingot de cuivre"),
+    IRON_INGOT(21, 8, ShopType.SELL_BUY, "§7Lingot de fer"),
+    GOLD_INGOT(22, 12, ShopType.SELL_BUY, "§7Lingot d'or"),
+    LAPIS_LAZULI(23, 6, ShopType.SELL_BUY, "§7Lapis lazuli"),
+    DIAMOND(24, 20, ShopType.SELL, "§7Diamant"),
+    RAW_COPPER(29, 3, ShopType.BUY, "§7Cuivre brut"),
+    RAW_IRON(30, 6, ShopType.BUY, "§7Fer brut"),
+    RAW_GOLD(31, 10, ShopType.BUY, "§7Or brut"),
+    AMETHYST_SHARD(32, 5, ShopType.SELL, "§7Eclat d'améthyste"),
+    QUARTZ(33, 4, ShopType.BUY, "§7Quartz"),
+    NETHERITE_SCRAP(39, 5000, ShopType.BUY, "§7Fragment de netherite"),
+    EMERALD(40, 15, ShopType.SELL, "§7Emeraude"),
+    NETHERITE_INGOT(41, 10000, ShopType.BUY, "§7Lingot de netherite"),
     ;
 
     private final int slots;
