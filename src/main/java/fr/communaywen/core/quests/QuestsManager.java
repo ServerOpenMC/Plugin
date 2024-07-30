@@ -1,4 +1,5 @@
-package fr.communaywen.core.quests;
+ah merde
+    package fr.communaywen.core.quests;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
@@ -128,6 +129,7 @@ public class QuestsManager extends DatabaseConnector {
         } catch (SQLException ignored) {}
     }
     public static void savePlayerQuestProgress(Player player, QUESTS quest, int progress) throws SQLException {
+        CompletableFuture.runAsync(() -> {
         UUID playerId = player.getUniqueId();
         String sql = "UPDATE quests SET " + quest.name() + " = ? WHERE player = ?";
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -135,5 +137,6 @@ public class QuestsManager extends DatabaseConnector {
         stmt.setString(2, playerId.toString());
         stmt.executeUpdate();
         stmt.close();
+        });
     }
 }
