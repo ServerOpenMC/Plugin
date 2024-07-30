@@ -12,5 +12,6 @@ public class FreezeCommand {
     @CommandPermission("openmc.staff.freeze")
     public void onCommand(Player player, Player target) {
         FreezeUtils.switch_freeze(player, target);
+        player.sendMessage("le joueur a été freeze");
     }
 }
