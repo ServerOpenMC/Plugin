@@ -44,11 +44,11 @@ public class EventsManager implements Listener {
     private static final int TERRIFYING_NIGHT = 0;
     // private static final int DROUGHT = 1;    idée d'event
 
-    private static final Map<String, Integer> EVENTS = Map.of(
-        "terrifingNight", TERRIFYING_NIGHT
-        //"drought", DROUGHT
-    );
-    //private final int interval;
+    private static final Map<String, Integer> EVENTS = new HashMap<String, Integer>() {{
+        put("terrifingNight", TERRIFYING_NIGHT);
+        // put("drought", DROUGHT);
+    }};
+    
     private final List<Integer> enabledEvents;
     private BukkitRunnable eventRunnable;
 
@@ -60,7 +60,9 @@ public class EventsManager implements Listener {
     public EventsManager(AywenCraftPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
         List<String> disabledEvents = (List<String>) config.getList("disabledEvents");
-        if (disabledEvents == null) disabledEvents = List.of();
+        if (disabledEvents == null) {
+            disabledEvents = Arrays.asList(); // Empty list if null
+        }
 
         enabledEvents = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : EVENTS.entrySet()) {
@@ -114,7 +116,8 @@ public class EventsManager implements Listener {
                         int monsterCounter = 0;
 
                         for (Entity entity : playerChunk.getEntities()) {
-                            if (entity instanceof LivingEntity livingEntity && livingEntity instanceof Monster) {
+                            if (entity instanceof LivingEntity && entity instanceof Monster) {
+                                LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setHealth(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
                                 boostMonster(livingEntity, location.getWorld());
                                 monsterCounter++;
@@ -253,15 +256,9 @@ public class EventsManager implements Listener {
                 Random random = new Random();
                 float randomFloat = random.nextFloat();
                 ItemStack item = switch (entity.getType()) {
-                    case ZOMBIE -> {
-                        yield new ItemStack(Material.ZOMBIE_HEAD);
-                    }
-                    case SKELETON -> {
-                        yield new ItemStack(Material.SKELETON_SKULL);
-                    }
-                    case CREEPER -> {
-                        yield new ItemStack(Material.CREEPER_HEAD);
-                    }
+                    case ZOMBIE -> new ItemStack(Material.ZOMBIE_HEAD);
+                    case SKELETON -> new ItemStack(Material.SKELETON_SKULL);
+                    case CREEPER -> new ItemStack(Material.CREEPER_HEAD);
                     default -> null;
                 };
 
