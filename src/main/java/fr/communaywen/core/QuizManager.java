@@ -50,7 +50,7 @@ public class QuizManager {
                     "§8§m                                                     §r\n" +
                             "§7\n" +
                             "§6              Nouvelle question : \n§7" +
-                            " ".repeat(numberOfSpaces) + currentQuiz.question + "\n" +
+                            repeatString(" ", numberOfSpaces) + currentQuiz.question + "\n" +
                             "§b     Vous avez 30 secondes pour répondre\n" +
                             "§e         Le premier à répondre gagne !\n" +
                             "§7\n" +
@@ -80,7 +80,9 @@ public class QuizManager {
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (currentQuiz == null || !event.getMessage().trim().toLowerCase().equals(currentQuiz.answer)) return;
 
-        int money = random.nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
+        int minReward = config.getInt("rewards.money.min");
+        int maxReward = config.getInt("rewards.money.max");
+        int money = minReward + random.nextInt(maxReward - minReward + 1);
 
         Bukkit.broadcastMessage(
                 "§8§m                                                     §r\n" +
@@ -107,15 +109,15 @@ public class QuizManager {
             return quizzes.get(random.nextInt(quizzes.size()));
         } else {
             int type = random.nextInt(4);
-            int a = random.nextInt(1, 10);
+            int a = random.nextInt(10) + 1;
 
             return switch (type) {
                 case 0 -> {
-                    int b = random.nextInt(1, 10);
+                    int b = random.nextInt(10) + 1;
                     yield new Quiz(MessageFormat.format("Combien font {0} + {1} ?", a, b), String.valueOf(a + b));
                 }
                 case 1 -> {
-                    int b = random.nextInt(1, 10);
+                    int b = random.nextInt(10) + 1;
                     yield new Quiz(MessageFormat.format("Combien font {0} * {1} ?", a, b), String.valueOf(a * b));
                 }
                 case 2 -> new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
@@ -130,6 +132,14 @@ public class QuizManager {
         if (timeoutExecutor != null) {
             timeoutExecutor.shutdownNow();
         }
+    }
+
+    private String repeatString(String str, int times) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < times; i++) {
+            sb.append(str);
+        }
+        return sb.toString();
     }
 
     public class Quiz {
