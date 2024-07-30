@@ -61,15 +61,15 @@ public class AdminShopBuy extends Menu {
             content.put(i, new ItemBuilder(this, Material.BLACK_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
         }
 
-        content.put(10, createChangeButton(-64, Material.PURPLE_STAINED_GLASS_PANE, "§5Retiré 64"));
-        content.put(11, createChangeButton(-10, Material.RED_STAINED_GLASS_PANE, "§cRetiré 10"));
-        content.put(12, createChangeButton(-1, Material.RED_STAINED_GLASS_PANE, "§cRetiré 1"));
+        content.put(10, createChangeButton(-64, Material.PURPLE_STAINED_GLASS_PANE, "§5Retirer 64"));
+        content.put(11, createChangeButton(-10, Material.RED_STAINED_GLASS_PANE, "§cRetirer 10"));
+        content.put(12, createChangeButton(-1, Material.RED_STAINED_GLASS_PANE, "§cRetirer 1"));
 
         content.put(13, createItemDisplay());
 
-        content.put(14, createChangeButton(1, Material.GREEN_STAINED_GLASS_PANE, "§aAjouté 1"));
-        content.put(15, createChangeButton(10, Material.GREEN_STAINED_GLASS_PANE, "§aAjouté 10"));
-        content.put(16, createChangeButton(64, Material.PURPLE_STAINED_GLASS_PANE, "§5Ajouté 64"));
+        content.put(14, createChangeButton(1, Material.GREEN_STAINED_GLASS_PANE, "§aAjouter 1"));
+        content.put(15, createChangeButton(10, Material.GREEN_STAINED_GLASS_PANE, "§aAjouter 10"));
+        content.put(16, createChangeButton(64, Material.PURPLE_STAINED_GLASS_PANE, "§5Ajouter 64"));
 
         return content;
     }
@@ -105,7 +105,7 @@ public class AdminShopBuy extends Menu {
                 "  §8■ §7Quantité: §e" + number.get(),
                 "  §8■ §7Prix final: §e" + String.format("%.2f", finalPrize) + "$",
                 "",
-                "§eCliquez pour confirmer l'achat!"
+                "§eCliquez pour confirmer l'achat !"
         ));
     }
 

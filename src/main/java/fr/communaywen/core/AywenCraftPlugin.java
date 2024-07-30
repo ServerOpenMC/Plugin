@@ -189,6 +189,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new NoMoreLapins(),
                 new KebabListener(this),
                 new AntiTrampling(),
                 new RTPWand(this),
