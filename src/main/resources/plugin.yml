@@ -55,3 +55,6 @@ permissions:
   ayw.command.spawn:
     description: 'spawn'
     default: true
+  caca:
+    description: Fait caca à ta position et envoie un message à tout le monde.
+    usage: /caca

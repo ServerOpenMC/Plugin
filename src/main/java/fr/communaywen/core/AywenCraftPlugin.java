@@ -46,7 +46,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
-
+import fr.communaywen.core.CacaCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -123,8 +123,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         String botAvatarUrl = getConfig().getString("discord.webhookIconURL");
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
 
-        /*  COMMANDS  */
-
+        this.getCommand("caca").setExecutor(new CacaCommand());
         this.handler = BukkitCommandHandler.create(this);
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
@@ -214,7 +213,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
-        
+
         /* --------- */
 
         saveDefaultConfig();
