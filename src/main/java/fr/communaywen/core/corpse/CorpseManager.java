@@ -1,6 +1,8 @@
 package fr.communaywen.core.corpse;
 
 import dev.lone.itemsadder.api.CustomBlock;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@Feature("Tombe")
+@Credit("Martinouxx")
 public class CorpseManager implements Listener {
 
     private Map<CorpseBlock, CorpseMenu> corpses = new HashMap<>();

@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Feature("baltop")
+@Credit("ddemile")
 public class BaltopCommand {
     private AywenCraftPlugin plugin;
 
@@ -43,7 +47,6 @@ public class BaltopCommand {
             } else if (Bukkit.getOfflinePlayer(playerBalance.playerId) != null) {
                 playerName = Bukkit.getOfflinePlayer(playerBalance.playerId).getName();
             }
-            System.out.println(getColor(index));
             lines.add(MessageFormat.format("{0}. {1}: {2}", getColor(index) + index, ChatColor.GRAY + playerName, ChatColor.GREEN + playerBalance.balance.toString()));
 
             index++;
@@ -64,7 +67,7 @@ public class BaltopCommand {
     private List<PlayerBalance> getBalances() {
         List<PlayerBalance> balances = new ArrayList<>();
 
-        plugin.economyManager.getBalances().forEach((UUID uuid, Double balance) -> {
+        plugin.getManagers().getEconomyManager().getBalances().forEach((UUID uuid, Double balance) -> {
             balances.add(
                     new PlayerBalance(uuid, balance)
             );

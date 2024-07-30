@@ -2,6 +2,8 @@ package fr.communaywen.core.commands;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,12 +15,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+@Feature("Rewards")
+@Credit("Gyro3630")
 public class RewardCommand extends DatabaseConnector {
     AywenCraftPlugin plugin;
 
     public RewardCommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        connection = plugin.getDatabaseManager().getConnection();
+        connection = plugin.getManagers().getDatabaseManager().getConnection();
     }
 
     public boolean hasClaimReward(Player player, String scope) {
@@ -33,6 +37,8 @@ public class RewardCommand extends DatabaseConnector {
             }
         } catch (Exception e) {
             player.sendMessage("§cUne erreur est survenue");
+            e.printStackTrace();
+            return true;
         }
         return false;
     }
@@ -46,6 +52,7 @@ public class RewardCommand extends DatabaseConnector {
             statement.executeUpdate();
         } catch (Exception e) {
             System.out.println("Erreur en récupérant "+scope+" pour "+ player.getUniqueId());
+            e.printStackTrace();
         }
     }
 
@@ -62,7 +69,7 @@ public class RewardCommand extends DatabaseConnector {
             }
 
             if (hasClaimReward(player, "peluche")) {
-                player.sendMessage("§cTu as déjà récupérer cette récompense");
+                player.sendMessage("§cTu as déjà récupéré cette récompense");
                 return;
             }
 

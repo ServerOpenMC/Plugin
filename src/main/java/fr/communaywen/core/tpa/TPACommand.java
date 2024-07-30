@@ -1,6 +1,8 @@
 package fr.communaywen.core.tpa;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -12,6 +14,8 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+@Feature("TPA")
+@Credit({"ddemile", "misieur", "process"})
 public class TPACommand {
 
     TPAQueue tpQueue = TPAQueue.INSTANCE;
@@ -70,7 +74,7 @@ public class TPACommand {
 
         if (tpQueue.TPA_REQUESTS2.containsKey(player)) {
             if (tpQueue.TPA_REQUESTS_TIME.get(player) >= System.currentTimeMillis() / 1000 - (2400 / 20)) {
-                player.sendMessage("Votre demande de téléportation a expirée...");
+                player.sendMessage("Votre demande de téléportation a expiré...");
                 tpQueue.TPA_REQUESTS.remove(target, player);
                 tpQueue.TPA_REQUESTS2.remove(player, target);
             }

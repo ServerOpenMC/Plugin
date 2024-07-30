@@ -2,6 +2,7 @@ package fr.communaywen.core.quests;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.quests.qenum.QUESTS;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -18,31 +19,37 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
+
 public class QuestsListener implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
         QuestsManager.loadPlayerData(event.getPlayer());
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        QuestsManager.savePlayerData(event.getPlayer());
+    public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
+        PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer());
+        for(QUESTS quests : QUESTS.values())
+            QuestsManager.savePlayerQuestProgress(event.getPlayer(), quests, pq.getProgress(quests));
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if ((event.getBlock().getType().equals(Material.DIAMOND_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_DIAMOND_ORE))) {
-            QuestsManager.manageQuestsPlayer(event.getPlayer(), QuestsManager.QUESTS.BREAK_DIAMOND, 1, "diamants(s) miné(s)");
+            QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_DIAMOND, 1, "diamants(s) miné(s)");
         } else if ((event.getBlock().getType().equals(Material.STONE) || event.getBlock().getType().equals(Material.DEEPSLATE))) {
-            QuestsManager.manageQuestsPlayer(event.getPlayer(), QuestsManager.QUESTS.BREAK_STONE, 1, "stone(s) cassé(s)");
+            QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_STONE, 1, "stone(s) cassé(s)");
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player killer = event.getEntity().getKiller();
-        assert killer != null;
-        QuestsManager.manageQuestsPlayer(killer, QuestsManager.QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+        if(killer == null) return;
+        if(killer instanceof Player) {
+            QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+        }
     }
 
     @EventHandler
@@ -50,7 +57,7 @@ public class QuestsListener implements Listener {
         Player player = event.getEntity().getKiller();
         if (player == null) return;
         if (event.getEntity().getType().equals(EntityType.WARDEN)) {
-            QuestsManager.manageQuestsPlayer(player, QuestsManager.QUESTS.KILL_WARDENS, 1, "warden tué");
+            QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_WARDENS, 1, "warden tué");
         }
     }
 
@@ -62,7 +69,7 @@ public class QuestsListener implements Listener {
         assert to != null;
 
         if (to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player, QuestsManager.QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
         }
     }
 
@@ -73,10 +80,11 @@ public class QuestsListener implements Listener {
         ItemStack itemStackWAND = stackRTPWAND.getItemStack();
 
         if (event.getRecipe().getResult().getItemMeta().equals(itemStackWAND.getItemMeta())) {
-            QuestsManager.manageQuestsPlayer(player, QuestsManager.QUESTS.CRAFT_RTP_WAND, 1, "RTP WAND crafté");
+            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_RTP_WAND, 1, "RTP WAND crafté");
         } else if (event.getRecipe().getResult().getItemMeta().getDisplayName().equals("§fKebab")) {
-            QuestsManager.manageQuestsPlayer(player, QuestsManager.QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
+            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
         }
+
     }
 
     @EventHandler
@@ -86,7 +94,7 @@ public class QuestsListener implements Listener {
         ItemStack iron = new ItemStack(Material.IRON_INGOT);
 
         if (extractedItem.equals(iron)) {
-            QuestsManager.manageQuestsPlayer(player, QuestsManager.QUESTS.SMELT_IRON, event.getItemAmount(), "fer(s) cuit(s)");
+            QuestsManager.manageQuestsPlayer(player, QUESTS.SMELT_IRON, event.getItemAmount(), "fer(s) cuit(s)");
         }
     }
 

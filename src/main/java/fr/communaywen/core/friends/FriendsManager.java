@@ -1,43 +1,53 @@
 package fr.communaywen.core.friends;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.FriendsUtils;
+import fr.communaywen.core.utils.database.DatabaseManager;
+import lombok.Getter;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Feature("Amis")
+@Credit("Martinouxx")
+@Collaborators("Xernas")
 public class FriendsManager {
 
-    private final FriendsUtils friendsUtils;
+    private final DatabaseManager dbManager;
     private final AywenCraftPlugin plugin;
+
+    @Getter
     private final List<FriendsRequest> friendsRequests = new ArrayList<>();
 
-    public FriendsManager(FriendsUtils friendsUtils, AywenCraftPlugin plugin) {
-        this.friendsUtils = friendsUtils;
+    public FriendsManager(DatabaseManager dbManager, AywenCraftPlugin plugin) {
+        this.dbManager = dbManager;
         this.plugin = plugin;
     }
 
     public List<String> getFriends(String playerUUID) throws SQLException {
-        return friendsUtils.getAllFriends(playerUUID);
+        return FriendsUtils.getAllFriends(dbManager, playerUUID);
     }
 
     public void addFriend(String firstUUID, String secondUUID) throws SQLException {
-        friendsUtils.addInDatabase(firstUUID, secondUUID);
+        FriendsUtils.addInDatabase(dbManager, firstUUID, secondUUID);
         removeRequest(getRequest(firstUUID));
     }
 
     public void removeFriend(String firstUUID, String secondUUID) throws SQLException {
-        friendsUtils.removeInDatabase(firstUUID, secondUUID);
+        FriendsUtils.removeInDatabase(dbManager, firstUUID, secondUUID);
     }
 
     public boolean areFriends(String firstUUID, String secondUUID) throws SQLException {
-        return friendsUtils.areFriends(firstUUID, secondUUID);
+        return FriendsUtils.areFriends(dbManager, firstUUID, secondUUID);
     }
 
     public Timestamp getTimestamp(String firstUUID, String secondUUID) throws SQLException {
-        return friendsUtils.getTimestamp(firstUUID, secondUUID);
+        return FriendsUtils.getTimestamp(dbManager, firstUUID, secondUUID);
     }
 
     public void addRequest(String firstUUID, String secondUUID) {
@@ -73,7 +83,4 @@ public class FriendsManager {
         return friendsRequests.stream().anyMatch(request -> request.containsUUID(uuid));
     }
 
-    public List<FriendsRequest> getFriendsRequests() {
-        return friendsRequests;
-    }
 }

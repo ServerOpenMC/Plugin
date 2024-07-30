@@ -1,7 +1,7 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.scoreboard.ScoreboardManagers;
+import fr.communaywen.core.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -9,17 +9,17 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 
 public class ScoreboardCommand {
-    ScoreboardManagers scoreboardManagers = AywenCraftPlugin.getInstance().scoreboardManagers;
+    ScoreboardManager scoreboardManager = AywenCraftPlugin.getInstance().getManagers().getScoreboardManager();
 
     @Command({"scoreboard", "sb"})
     @Description("Désactive / active ton scoreboard")
     public void onDelete(Player player) {
-        if (scoreboardManagers.disableSBPlayerList.contains(player)) {
-            scoreboardManagers.disableSBPlayerList.remove(player);
+        if (scoreboardManager.disableSBPlayerList.contains(player)) {
+            scoreboardManager.disableSBPlayerList.remove(player);
             player.sendMessage("§aScoreboard activé !");
-            scoreboardManagers.setScoreboard(player);
+            scoreboardManager.setScoreboard(player);
         } else {
-            scoreboardManagers.disableSBPlayerList.add(player);
+            scoreboardManager.disableSBPlayerList.add(player);
             Scoreboard emptySB = Bukkit.getScoreboardManager().getNewScoreboard();
             player.setScoreboard(emptySB);
             player.sendMessage("§cScoreboard désactivé !");

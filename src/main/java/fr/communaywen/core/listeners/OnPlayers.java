@@ -42,7 +42,6 @@ public class OnPlayers implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) { // Donne une permissions en fonction du niveau
         Player player = event.getPlayer();
 
-        System.out.println(player.getUniqueId().toString());
         if (player.getUniqueId().toString().equals("1581225d-e6a2-44e8-af37-c71702c60665")) {
             Bukkit.getServer().dispatchCommand(player, "attribute " + player.getUniqueId().toString() + " minecraft:generic.scale base set 0.0625");
         }

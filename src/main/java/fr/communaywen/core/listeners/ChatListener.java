@@ -5,6 +5,7 @@ import fr.communaywen.core.utils.DiscordWebhook;
 import fr.communaywen.core.utils.database.Blacklist;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +24,7 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        plugin.quizManager.onPlayerChat(event);
+        plugin.getManagers().getQuizManager().onPlayerChat(event);
 
         String username = event.getPlayer().getName();
         String avatarUrl = "https://minotar.net/helm/" + username;
@@ -40,7 +41,7 @@ public class ChatListener implements Listener {
                 if (Blacklist.isBlacklisted(player, event.getPlayer())) {
                     return;
                 }
-                player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+                player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.PLAYERS, 1, 1);
             }
         });
     }

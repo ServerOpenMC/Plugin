@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.database.Blacklist;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -19,6 +21,8 @@ import java.util.UUID;
 
 @Command("privacy")
 @Description("Affiche un lien redirigeant vers le discord.")
+@Feature("Privacy")
+@Credit("Gyro3630")
 public class PrivacyCommand {
     private AywenCraftPlugin plugin;
 
@@ -61,7 +65,7 @@ public class PrivacyCommand {
     }
 
     @Subcommand("unblock")
-    @Description("Retire quelqu'un à la blacklist")
+    @Description("Retire quelqu'un de la blacklist")
     public void unblock(Player player, @Named("player") Player blocked) throws SQLException {
         if (player.getUniqueId().equals(blocked.getUniqueId())) {
             player.sendMessage("Vous ne pouvez pas vous débloquer vous-même");

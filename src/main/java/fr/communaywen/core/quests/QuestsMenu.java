@@ -2,6 +2,7 @@ package fr.communaywen.core.quests;
 
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
+import fr.communaywen.core.quests.qenum.QUESTS;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -43,14 +44,13 @@ public class QuestsMenu extends Menu {
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
         int slot = event.getSlot();
-        System.out.println("Slot clicked: " + slot);
         if (slot == 18) {
             if (currentPage > 0) {
                 currentPage--;
                 refresh();
             }
         } else if (slot == 26) {
-            int totalPages = (int) Math.ceil((double) QuestsManager.QUESTS.values().length / QUESTS_PER_PAGE);
+            int totalPages = (int) Math.ceil((double) QUESTS.values().length / QUESTS_PER_PAGE);
             if (currentPage < totalPages - 1) {
                 currentPage++;
                 refresh();
@@ -63,7 +63,7 @@ public class QuestsMenu extends Menu {
         Map<Integer, ItemStack> content = new HashMap<>();
         List<ItemStack> questItems = new ArrayList<>();
 
-        for (QuestsManager.QUESTS quest : QuestsManager.QUESTS.values()) {
+        for (QUESTS quest : QUESTS.values()) {
             ItemStack item = new ItemStack(quest.getMaterial());
             ItemMeta meta = item.getItemMeta();
             PlayerQuests pq = QuestsManager.getPlayerQuests(getOwner().getPlayer());
@@ -75,7 +75,7 @@ public class QuestsMenu extends Menu {
                 meta.setDisplayName("§a" + quest.getName());
                 List<String> lore = new ArrayList<>();
                 lore.add("§7Description: §f" + quest.getDesc());
-                lore.add("§7Récompense: §f" + (quest.getRewardsMaterial() != null ? "x" + quest.getRewardsQt() + " " + quest.getRewardsMaterial() : quest.getRewardsQt() + "$"));
+                lore.add("§7Récompense: §f" + (quest.getRewardsMaterial() != null ? "x" + quest.getRewardsQt() + " " + quest.getRewardsMaterial().getType().name() : quest.getRewardsQt() + "$"));
                 lore.add("§e" + (pq.isQuestCompleted(quest) ? "§aQuetes complété" : "En cours: " + pq.getProgress(quest) + "/" + quest.getQt()));
                 meta.setLore(lore);
                 item.setItemMeta(meta);
@@ -103,8 +103,6 @@ public class QuestsMenu extends Menu {
 
         int startIndex = currentPage * QUESTS_PER_PAGE;
         int endIndex = Math.min(startIndex + QUESTS_PER_PAGE, questItems.size());
-
-        System.out.println("currentPage: " + currentPage + ", startIndex: " + startIndex + ", endIndex: " + endIndex); // Debug message
 
         int slotIndex = startRow * inventoryWidth + padding;
         for (int i = startIndex; i < endIndex; i++) {

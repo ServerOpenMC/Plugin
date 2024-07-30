@@ -8,6 +8,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import fr.communaywen.core.teams.Team;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,7 +20,10 @@ import java.util.UUID;
 public class RegionManager {
 
     public Location minLoc, maxLoc;
+    @Getter
     private Team team;
+    @Getter
+    private UUID claimID;
     private static final double MIN_Y = -64.0;
     private static final double MAX_Y = 320.0;
 
@@ -27,6 +31,14 @@ public class RegionManager {
         minLoc = new Location(firstPoint.getWorld(), min(firstPoint.getX(), secondPoint.getX()), min(MIN_Y, MIN_Y), min(firstPoint.getZ(), secondPoint.getZ()));
         maxLoc = new Location(firstPoint.getWorld(), max(firstPoint.getX(), secondPoint.getX()), max(MAX_Y, MAX_Y), max(firstPoint.getZ(), secondPoint.getZ()));
         this.team = team;
+        this.claimID = UUID.randomUUID();
+    }
+
+    public RegionManager(Location firstPoint, Location secondPoint, Team team, UUID claimID) {
+        minLoc = new Location(firstPoint.getWorld(), min(firstPoint.getX(), secondPoint.getX()), min(MIN_Y, MIN_Y), min(firstPoint.getZ(), secondPoint.getZ()));
+        maxLoc = new Location(firstPoint.getWorld(), max(firstPoint.getX(), secondPoint.getX()), max(MAX_Y, MAX_Y), max(firstPoint.getZ(), secondPoint.getZ()));
+        this.team = team;
+        this.claimID = claimID;
     }
 
     public double min(double a, double b) {
@@ -65,14 +77,11 @@ public class RegionManager {
         return team.isIn(playerUuid);
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
     @Override
     public String toString() {
         return "RegionManager{" +
-                "team=" + team.getName() +
+                "team=" + team.getName() + "," +
+                "claimID=" + getClaimID() +
                 '}';
     }
 

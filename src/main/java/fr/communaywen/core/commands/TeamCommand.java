@@ -2,6 +2,10 @@ package fr.communaywen.core.commands;
 
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.ClaimMenu;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.teams.menu.TeamListMenu;
@@ -22,12 +26,12 @@ import revxrsal.commands.help.CommandHelp;
 
 import java.util.UUID;
 
-@Command({"team", "ekip", "gang", "clan", "faction", "guild", "equipe", "tribu"})
+@Command({"team"})
 @Description("Gestion des teams")
 @CommandPermission("ayw.command.teams")
 public class TeamCommand {
 
-    TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
+    TeamManager teamManager = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
 
     @DefaultFor("~")
     public void sendHelp(Player player, ExecutableCommand command, CommandHelp<Component> help, @Default("1") @Range(min = 1) int page) {
@@ -52,7 +56,7 @@ public class TeamCommand {
     @Description("Menu de la team")
     public void teamMenu(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (teamManager.isInTeam(player.getUniqueId())) {
+        if (!teamManager.isInTeam(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -63,13 +67,17 @@ public class TeamCommand {
     @Subcommand("create")
     @Description("Créer une team")
     public void createTeam(Player player, @Named("nom") String teamName) {
-        TeamManager teamManager = AywenCraftPlugin.getInstance().getTeamManager();
+        TeamManager teamManager = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
         if (teamManager.isInTeam(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous êtes déjà dans une team !", true);
             return;
         }
         if (teamName.length() > 16) {
             CommandUtils.sendMessage(player, "Le nom de la team ne doit pas dépasser 16 caractères !", true);
+            return;
+        }
+        if (teamManager.teamExists(teamName)) {
+            CommandUtils.sendMessage(player, "Une team avec ce nom existe déjà !", true);
             return;
         }
         Team createdTeam = teamManager.createTeam(player.getUniqueId(), teamName);
@@ -84,7 +92,7 @@ public class TeamCommand {
     @Subcommand("list")
     @Description("Liste des teams")
     public void listTeams(Player player) {
-        Menu menu = new TeamListMenu(player, AywenCraftPlugin.getInstance().getTeamManager());
+        Menu menu = new TeamListMenu(player, AywenCraftPlugin.getInstance().getManagers().getTeamManager());
         menu.open();
     }
 
@@ -143,7 +151,7 @@ public class TeamCommand {
     @Description("Kick un joueur de la team")
     public void kickPlayer(Player player, @Named("joueur") Player target) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(target.getUniqueId())) {
+        if (team == null || !team.isIn(target.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -170,7 +178,7 @@ public class TeamCommand {
     @Description("Quitter la team")
     public void leaveTeam(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team != null && team.isIn(player.getUniqueId())) {
+        if (team == null || !team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -181,7 +189,7 @@ public class TeamCommand {
     @Description("Inventaire de la team")
     public void teamInventory(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team.isIn(player.getUniqueId())) {
+        if (!team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
@@ -197,6 +205,60 @@ public class TeamCommand {
             return;
         }
         team.giveClaimStick(player);
+    }
+
+    @Subcommand("claimlist")
+    @Description("Ouvre la liste des claims")
+    public void claimListMenu(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        new ClaimMenu(player, team).open();
+    }
+
+    @Subcommand("money add")
+    @Description("Transfère de l'argent de ton compte à la team.")
+    public void transferMoney(Player player, @Named("montant") int amount) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player, amount);
+        EconomieTeam.addBalance(team.getName(), amount);
+        player.sendMessage("§aVous venez de transférer §e" + amount + "$ §adans la banque de votre team.");
+    }
+
+    @Subcommand("money remove")
+    @Description("Retire de l'argent de la banque de la team vers ton compte.")
+    public void removeMoney(Player player, @Named("montant") int amount) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        double balances = EconomieTeam.getTeamBalances(team.getName());
+        if(balances >= amount) {
+            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, amount);
+            EconomieTeam.removeBalance(team.getName(), amount);
+            player.sendMessage("§aVous venez de prendre §e" + amount + "$ §ade la banque de votre team.");
+        } else {
+            player.sendMessage("§cVotre team n'a pas assez d'argent dans la banque.");
+        }
+    }
+
+    @Subcommand("money get")
+    @Description("Voir l'argent de la team")
+    public void getMoney(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        double balances = EconomieTeam.getTeamBalances(team.getName());
+        player.sendMessage("§aIl y a §e" + balances + "$ §adans la banque de votre team.");
     }
 
 }

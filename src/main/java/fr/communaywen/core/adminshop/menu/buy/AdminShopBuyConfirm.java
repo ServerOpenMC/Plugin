@@ -1,0 +1,117 @@
+package fr.communaywen.core.adminshop.menu.buy;
+
+import dev.xernas.menulib.Menu;
+import dev.xernas.menulib.utils.InventorySize;
+import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
+import fr.communaywen.core.economy.EconomyManager;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+public class AdminShopBuyConfirm extends Menu {
+    private final BaseItems items;
+    private final int quantity;
+    private final String material;
+    public AdminShopBuyConfirm(Player player, BaseItems items, int quantity, String material) {
+        super(player);
+        this.items = items;
+        this.quantity = quantity;
+        this.material = material;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return "§6Confirmer l'achat";
+    }
+
+    @Override
+    public @NotNull InventorySize getInventorySize() {
+        return InventorySize.SMALLEST;
+    }
+
+    @Override
+    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
+
+    }
+
+    @Override
+    public @NotNull Map<Integer, ItemStack> getContent() {
+        Map<Integer, ItemStack> content = new HashMap<>();
+
+        for(int i = 0; i < getInventorySize().getSize(); i++) {
+            content.put(i, new ItemBuilder(this, Material.BLACK_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
+        }
+
+        content.put(2, new ItemBuilder(this, Material.GREEN_STAINED_GLASS_PANE, itemMeta -> {
+            itemMeta.setDisplayName("§aConfirmer");
+        }).setOnClick(event -> {
+            if (!hasEnoughSpace(getOwner(), Material.getMaterial(material == null ? items.named() : items.named() + "_" + material), quantity)) {
+                getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'espace dans votre inventaire !");
+                return;
+            } else {
+                EconomyManager economy = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
+                double balance = economy.getBalance(getOwner());
+                if(balance < (items.getPrize() * quantity)) {
+                    getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'argent pour acheter cette item.");
+                } else {
+                    int maxStackSize = 64;
+                    int totalQuantity = quantity;
+                    Material materials = Material.getMaterial((material == null) ? items.named() : (items.named() + "_" + material));
+
+                    economy.withdrawBalance(getOwner(), (items.getPrize() * totalQuantity));
+                    while (totalQuantity > 0) {
+                        int stackSize = Math.min(totalQuantity, maxStackSize);
+                        getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
+                        totalQuantity -= stackSize;
+                    }
+                    getOwner().sendMessage("§aAchat confirmé !");
+                }
+            }
+            getOwner().closeInventory();
+        }));
+
+        content.put(4, new ItemBuilder(this, Objects.requireNonNull(Material.getMaterial(material == null ? items.named() : items.named() + "_" + material)), itemMeta -> {
+            itemMeta.setDisplayName(items.getName());
+            double finalPrize = items.getPrize() * quantity;
+            itemMeta.setLore(Arrays.asList(
+                    "§7Quantité: §e" + quantity,
+                    "§7Prix total: §e" + String.format("%.2f", finalPrize) + "$"
+            ));
+        }));
+
+        content.put(6, new ItemBuilder(this, Material.RED_STAINED_GLASS_PANE, itemMeta -> {
+            itemMeta.setDisplayName("§cAnnuler");
+        }).setOnClick(event -> {
+            getOwner().closeInventory();
+        }));
+
+        return content;
+    }
+
+    private boolean hasEnoughSpace(Player player, Material item, int amount) {
+        int freeSlots = 0;
+        int partialSlots = 0;
+        ItemStack[] contents = player.getInventory().getContents();
+
+        for (ItemStack is : contents) {
+            if (is == null || is.getType() == Material.AIR) {
+                freeSlots++;
+            } else if (is.getType() == item && (is.getAmount() < is.getMaxStackSize())) {
+                partialSlots += is.getMaxStackSize() - is.getAmount();
+            }
+        }
+
+        int totalSpace = freeSlots * item.getMaxStackSize() + partialSlots;
+        return totalSpace >= amount;
+    }
+}

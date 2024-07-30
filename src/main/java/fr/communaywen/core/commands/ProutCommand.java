@@ -1,6 +1,8 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -22,6 +24,9 @@ import java.util.concurrent.TimeUnit;
  * Usage: /prout
  * Permission: PREFIX.command.prout
  */
+
+@Feature("Prout")
+@Credit("dandan")
 public final class ProutCommand {
     @Command("prout")
     @Description("Prout !")
@@ -44,8 +49,8 @@ public final class ProutCommand {
             world.spawnParticle(Particle.CLOUD, location, 3, 0.02d, -0.04d, 0.02d, 0.09d);
 
             // Funny sound!
-            world.playSound(location, Sound.ENTITY_VILLAGER_NO, 0.8f, 2.3f);
-            world.playSound(location, Sound.ENTITY_GOAT_EAT, 0.7f, 0.2f);
+            world.playSound(location, Sound.ENTITY_VILLAGER_NO,  SoundCategory.PLAYERS, 0.8f, 2.3f);
+            world.playSound(location, Sound.ENTITY_GOAT_EAT,  SoundCategory.PLAYERS,0.7f, 0.2f);
         }
 
         // Add glowing effect for 30 seconds

@@ -7,6 +7,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
@@ -59,7 +60,7 @@ public final class TradeCommand {
         TradeAcceptCommand.newPendingDemand(player1, player2);
 
         plugin.getAdventure().player(player2).sendMessage(textComponent);
-        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+        player2.playSound(player2.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.PLAYERS, 1, 1);
 
         player1.sendMessage("§aLa demande de trade a été envoyée à " + player2.getName());
     }
@@ -109,7 +110,7 @@ public final class TradeCommand {
         }
 
         if (!success) {
-            player.sendMessage("§6Tu n'as pas assez d'argent ! (" + plugin.economyManager.getBalance(player) + ")");
+            player.sendMessage("§6Tu n'as pas assez d'argent ! (" + plugin.getManagers().getEconomyManager().getBalance(player) + ")");
             return;
         }
 
@@ -173,9 +174,9 @@ public final class TradeCommand {
         }
 
         if (isPlayer1) {
-            trade.player1.sendMessage("$bArgent qui sera envoyé par " + trade.player2.getName() + " : §a" + trade.money2 + "$");
+            trade.player1.sendMessage("§bArgent qui sera envoyé par " + trade.player2.getName() + " : §a" + trade.money2 + "$");
         } else {
-            trade.player2.sendMessage("$bArgent qui sera envoyé par " + trade.player1.getName() + " : §a" + trade.money1 + "$");
+            trade.player2.sendMessage("§bArgent qui sera envoyé par " + trade.player1.getName() + " : §a" + trade.money1 + "$");
         }
 
         trade.openOtherItems(isPlayer1);

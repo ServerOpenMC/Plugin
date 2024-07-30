@@ -1,5 +1,7 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -13,13 +15,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Feature("Quiz")
+@Credit("ddemile")
 public class QuizManager {
     public Quiz currentQuiz;
     private ScheduledExecutorService timeoutExecutor;
-    private ScheduledExecutorService executor;
-    private List<Quiz> quizzes;
+    private final ScheduledExecutorService executor;
+    private final List<Quiz> quizzes;
     public FileConfiguration config;
-    private AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
 
     public QuizManager(AywenCraftPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
@@ -30,8 +34,7 @@ public class QuizManager {
             this.quizzes.add(
                     new Quiz((String) i.get("question"), (String) i.get("answer"))
             );
-        }
-        ;
+        };
 
         Runnable runnable = () -> {
             if (Bukkit.getOnlinePlayers().isEmpty()) return;
@@ -47,7 +50,7 @@ public class QuizManager {
                             "§6              Nouvelle question : \n§7" +
                             " ".repeat(numberOfSpaces) + currentQuiz.question + "\n" +
                             "§b     Vous avez 30 seconds pour répondre" + "\n" +
-                            "§e         Le premier a répondre gagne !\n" +
+                            "§e         Le premier à répondre gagne !\n" +
                             "§7\n" +
                             "§8§m                                                     §r"
             );
@@ -57,7 +60,7 @@ public class QuizManager {
 
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
-                                "§cAie aie aie ! Personne n'a trouvé la réponse ... \n§7" +
+                                "§cAïe aïe aïe ! Personne n'a trouvé la réponse ... \n§7" +
                                 "§7\n" +
                                 "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
                                 "§7\n" +
@@ -92,7 +95,7 @@ public class QuizManager {
 
         event.setCancelled(true);
 
-        this.plugin.economyManager.addBalance(event.getPlayer(), money);
+        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
         currentQuiz = null;
         this.timeoutExecutor.shutdownNow();
         this.timeoutExecutor = Executors.newScheduledThreadPool(1);
@@ -120,7 +123,7 @@ public class QuizManager {
                 }
                 case 2 ->
                         new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
-                case 3 -> new Quiz(MessageFormat.format("Quelle est le carrée de {0} ?", a), String.valueOf(a * a));
+                case 3 -> new Quiz(MessageFormat.format("Quel est le carré de {0} ?", a), String.valueOf(a * a));
                 default -> throw new IllegalStateException("Unexpected value: " + type);
             };
         }
