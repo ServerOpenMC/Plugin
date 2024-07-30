@@ -46,7 +46,7 @@ public class EconomyManager {
     public boolean withdrawBalance(Player player, double amount) {
         UUID uuid = player.getUniqueId();
         double balance = getBalance(player);
-        if (balance >= amount) {
+        if (balance >= amount && amount > 1) {
             balances.put(uuid, balance - amount);
             saveBalances(player);
             return true;
