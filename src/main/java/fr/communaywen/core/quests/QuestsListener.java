@@ -46,8 +46,10 @@ public class QuestsListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player killer = event.getEntity().getKiller();
-        assert killer != null;
-        QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+        if(killer == null) return;
+        if(killer instanceof Player) {
+            QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+        }
     }
 
     @EventHandler
