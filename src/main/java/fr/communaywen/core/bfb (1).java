@@ -1,4 +1,4 @@
-
+please stop
 package com.example;
 
 import org.bukkit.command.Command;
