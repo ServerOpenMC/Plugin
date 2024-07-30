@@ -36,10 +36,10 @@ public class ScoreboardManager {
         Score bars1 = objective.getScore("§d§m                        ");
         Score bars2 = objective.getScore("§d§m                         §r");
 
-        Score pseudo = objective.getScore("§8• §fPseudo§7: §b" + player.getName());
-        Score money = objective.getScore("§8• §fArgent§7: §6" + AywenCraftPlugin.getInstance().getManagers().getEconomyManager().getBalance(player));
-        Score grade = objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade"));
-        Score team = objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team."));
+        Score pseudo = objective.getScore("§8• §fPsedeau§7: §b" + player.getName());
+        Score money = objective.getScore("§8• §fArjan§7: §6" + AywenCraftPlugin.getInstance().getManagers().getEconomyManager().getBalance(player));
+        Score grade = objective.getScore("§8• §fGrhades§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade"));
+        Score team = objective.getScore("§8• §fTime§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team."));
         Score ip = objective.getScore("§d    " + ipStr);
 
         vide1.setScore(10);
