@@ -17,10 +17,8 @@ import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @Credit("Xernas")
@@ -65,9 +63,6 @@ public class Managers {
         databaseManager = new DatabaseManager(plugin, true);
         try {
             databaseManager.init(); // Créer les tables nécessaires
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
             databaseManager.register(
                     // Utilisation : NomDeLaClasse.class,
                     // Dans la classe, ajouter : extends DatabaseConnector, et vous pourrez accéder à la base de données avec l'attribut "connection"
@@ -76,10 +71,12 @@ public class Managers {
                     TeamManager.class,
                     Team.class
             );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        // Database
 
-        this.teamManager = new TeamManager(plugin);
+        // Initialisation des autres managers
+        teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager();
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
@@ -88,7 +85,6 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
 
-        LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
     }
 

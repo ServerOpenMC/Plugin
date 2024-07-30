@@ -18,13 +18,8 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
-import fr.communaywen.core.tpa.TPACommand;
-import fr.communaywen.core.tpa.TpacceptCommand;
-import fr.communaywen.core.tpa.TpcancelCommand;
-import fr.communaywen.core.tpa.TpdenyCommand;
-import fr.communaywen.core.trade.TradeAcceptCommand;
-import fr.communaywen.core.trade.TradeCommand;
-import fr.communaywen.core.trade.TradeListener;
+import fr.communaywen.core.tpa.*;
+import fr.communaywen.core.trade.*;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import lombok.Getter;
@@ -56,13 +51,13 @@ import java.util.List;
 import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    public static ArrayList<Player> frozenPlayers = new ArrayList<>();
-
+    public static final ArrayList<Player> FROZEN_PLAYERS = new ArrayList<>();
+    
     @Getter
     private final Managers managers = new Managers();
-
+    
     public EventsManager eventsManager; // TODO: include to Managers.java
-
+    
     @Getter
     private static AywenCraftPlugin instance;
     public LuckPerms api;
@@ -77,6 +72,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public List<RegionManager> regions;
     public MultiverseCore mvCore;
+
     @SneakyThrows
     @Override
     public void onEnable() {
@@ -102,21 +98,17 @@ public final class AywenCraftPlugin extends JavaPlugin {
         if (provider != null) {
             api = provider.getProvider();
             onPlayers.setLuckPerms(api);
-        }
-        else {
+        } else {
             getLogger().severe("LuckPerms not found !");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        MOTDChanger motdChanger = new MOTDChanger();
-        motdChanger.startMOTDChanger(this);
+        new MOTDChanger().startMOTDChanger(this);
 
-        this.adventure = BukkitAudiences.create(this);
+        adventure = BukkitAudiences.create(this);
 
-        this.regions = new ArrayList<>();
-
-        /* ----- */
+        regions = new ArrayList<>();
 
         String webhookUrl = getConfig().getString("discord.webhookURL");
         String botName = getConfig().getString("discord.webhookName");
@@ -124,14 +116,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
 
         /*  COMMANDS  */
+        handler = BukkitCommandHandler.create(this);
+        interactiveHelpMenu = InteractiveHelpMenu.create();
+        handler.accept(interactiveHelpMenu);
 
-        this.handler = BukkitCommandHandler.create(this);
-        this.interactiveHelpMenu = InteractiveHelpMenu.create();
-        this.handler.accept(interactiveHelpMenu);
+        handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
-        this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
-
-        this.handler.register(
+        handler.register(
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new VersionCommand(this),
@@ -169,8 +160,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new AdminShopCommand(),
                 new PayCommands()
         );
-
-        /*  --------  */
 
         new BukkitRunnable() {
             @Override
@@ -214,8 +203,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
-        
-        /* --------- */
 
         saveDefaultConfig();
 
@@ -233,8 +220,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onDisable() {
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            for(QUESTS quests : QUESTS.values()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
                 QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
                 player.closeInventory(); // Close inventory
@@ -243,29 +230,29 @@ public final class AywenCraftPlugin extends JavaPlugin {
         managers.cleanup();
     }
 
-    public void registerEvents(Listener... args) {
-        for (Listener listener : args) {
+    public void registerEvents(Listener... listeners) {
+        for (Listener listener : listeners) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
     }
 
     public ArrayList<Player> getFrozenPlayers() {
-        return frozenPlayers;
+        return FROZEN_PLAYERS;
     }
 
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
     }
 
-
     // Farine pour fabriquer du pain
 
     private void createFarineRecipe() {
         ItemStack farine = new ItemStack(Material.SUGAR);
         ItemMeta meta = farine.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName("Farine");
-        farine.setItemMeta(meta);
+        if (meta != null) {
+            meta.setDisplayName("Farine");
+            farine.setItemMeta(meta);
+        }
 
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "farine"), farine);
         recipe.shape(" A ", " B ", "   ");
@@ -277,8 +264,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     private Menu hasMenuOpened(Player player) {
         Inventory inv = player.getOpenInventory().getTopInventory();
-        if (inv.getHolder() instanceof Menu invMenu) {
-            return invMenu;
+        if (inv.getHolder() instanceof Menu) {
+            return (Menu) inv.getHolder();
         }
         return null;
     }
@@ -292,6 +279,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(eventsFile);
     }
 
+    
     /**
      * Format a permission with the permission prefix.
      *
@@ -300,6 +288,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @return The formatted permission.
      * @see PermissionCategory #PERMISSION_PREFIX
      */
+
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
                                                    final @NotNull String suffix) {
         return category.formatPermission(suffix);
