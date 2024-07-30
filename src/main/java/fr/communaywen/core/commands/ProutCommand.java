@@ -55,6 +55,7 @@ public final class ProutCommand {
 
         // Add glowing effect for 30 seconds
         addGlowingEffect(player);
+        addPoisonEffect(player); //By AGIUS Angelo
 
         // Broadcast the message
         String broadcastMessage = "[§c§l§ka§r] §f§lPROUT !!! §r" + player.getName() + " a §f§lpété§r. §2§lBeurk !";
