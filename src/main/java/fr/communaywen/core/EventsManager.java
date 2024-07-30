@@ -334,17 +334,17 @@ public class EventsManager implements Listener {
 
                             item = new ItemStack(Material.ZOMBIE_HEAD);
 
-                            // 30% lingots fer (1-3), 20% lingots or (1-3), 20% xp (+10-+30), 10% diamant, 10% émeraudes (2-5), 10% oeuf de zombie
+                            // 30% lingots fer (1-5), 20% lingots or (1-5), 20% xp (+10-+30), 15% émeraudes (2-5), 10% diamant, 5% oeuf de zombie
                             if (randomFloat < 0.3) {
-                                event.getDrops().add(new ItemStack(Material.IRON_INGOT, random.nextInt(2) + 1));
+                                event.getDrops().add(new ItemStack(Material.IRON_INGOT, random.nextInt(4) + 1));
                             } else if (randomFloat < 0.5) {
-                                event.getDrops().add(new ItemStack(Material.GOLD_INGOT, random.nextInt(2) + 1));
+                                event.getDrops().add(new ItemStack(Material.GOLD_INGOT, random.nextInt(4) + 1));
                             } else if (randomFloat < 0.7) {
                                 event.setDroppedExp(event.getDroppedExp() + random.nextInt(21) + 10);
-                            } else if (randomFloat < 0.8) {
-                                event.getDrops().add(new ItemStack(Material.DIAMOND));
-                            } else if (randomFloat < 0.9) {
+                            } else if (randomFloat < 0.85) {
                                 event.getDrops().add(new ItemStack(Material.EMERALD, random.nextInt(4) + 2));
+                            } else if (randomFloat < 0.95) {
+                                event.getDrops().add(new ItemStack(Material.DIAMOND));
                             }  else if (randomFloat <= 1) {
                                 event.getDrops().add(new ItemStack(Material.ZOMBIE_SPAWN_EGG));
                             }
@@ -355,16 +355,16 @@ public class EventsManager implements Listener {
 
                             item = new ItemStack(Material.SKELETON_SKULL);
 
-                            // 30% lingots fer (1-3), 20% os (5-10), 20% xp (+10-+30), 10% flèches (10-15), 10% émeraudes (2-5), 10% oeuf de squelette
+                            // 30% lingots fer (1-5), 20% os (5-10), 20% xp (+10-+30), 15% flèches (10-15), 10% émeraudes (2-5), 5% oeuf de squelette
                             if (randomFloat < 0.3) {
-                                event.getDrops().add(new ItemStack(Material.IRON_INGOT, random.nextInt(2) + 1));
+                                event.getDrops().add(new ItemStack(Material.IRON_INGOT, random.nextInt(5) + 1));
                             } else if (randomFloat < 0.5) {
                                 event.getDrops().add(new ItemStack(Material.BONE, random.nextInt(6) + 5));
                             } else if (randomFloat < 0.7) {
                                 event.setDroppedExp(event.getDroppedExp() + random.nextInt(21) + 10);
-                            } else if (randomFloat < 0.8) {
+                            } else if (randomFloat < 0.85) {
                                 event.getDrops().add(new ItemStack(Material.ARROW, random.nextInt(6) + 10));
-                            } else if (randomFloat < 0.9) {
+                            } else if (randomFloat < 0.95) {
                                 event.getDrops().add(new ItemStack(Material.EMERALD, random.nextInt(4) + 2));
                             }  else if (randomFloat <= 1) {
                                 event.getDrops().add(new ItemStack(Material.SKELETON_SPAWN_EGG));
@@ -376,14 +376,14 @@ public class EventsManager implements Listener {
                         
                             item = new ItemStack(Material.CREEPER_HEAD);
                         
-                            // 30% poudres à canon (5-10), 30% fireworks (5-10), 20% tnt (3-5), 10% fire charge (3-8), 10% oeuf de creeper
+                            // 30% poudres à canon (6-12), 30% fireworks (5-10), 20% tnt (3-5), 15% fire charge (3-8), 5% oeuf de creeper
                             if (randomFloat < 0.3) {
-                                event.getDrops().add(new ItemStack(Material.GUNPOWDER, random.nextInt(6) + 5));
+                                event.getDrops().add(new ItemStack(Material.GUNPOWDER, random.nextInt(7) + 6));
                             } else if (randomFloat < 0.6) {
                                 event.getDrops().add(new ItemStack(Material.FIREWORK_ROCKET, random.nextInt(6) + 5));
                             } else if (randomFloat < 0.8) {
                                 event.getDrops().add(new ItemStack(Material.TNT, random.nextInt(4) + 2));
-                            } else if (randomFloat < 0.9) {
+                            } else if (randomFloat < 0.95) {
                                 event.getDrops().add(new ItemStack(Material.FIRE_CHARGE, random.nextInt(6) + 3));
                             }  else if (randomFloat <= 1) {
                                 event.getDrops().add(new ItemStack(Material.CREEPER_SPAWN_EGG));

@@ -57,17 +57,17 @@ public class AdminShopSell extends Menu {
                 content.put(i, new ItemBuilder(this, Material.BLACK_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
             }
 
-            content.put(9, createChangeButton(0, Material.BLUE_STAINED_GLASS_PANE, "§9Retiré tous"));
-            content.put(10, createChangeButton(-64, Material.PURPLE_STAINED_GLASS_PANE, "§5Retiré 64"));
-            content.put(11, createChangeButton(-10, Material.RED_STAINED_GLASS_PANE, "§cRetiré 10"));
-            content.put(12, createChangeButton(-1, Material.ORANGE_STAINED_GLASS_PANE, "§cRetiré 1"));
+            content.put(9, createChangeButton(0, Material.BLUE_STAINED_GLASS_PANE, "§9Retirer tous"));
+            content.put(10, createChangeButton(-64, Material.PURPLE_STAINED_GLASS_PANE, "§5Retirer 64"));
+            content.put(11, createChangeButton(-10, Material.RED_STAINED_GLASS_PANE, "§cRetirer 10"));
+            content.put(12, createChangeButton(-1, Material.ORANGE_STAINED_GLASS_PANE, "§cRetirer 1"));
 
             content.put(13, createItemDisplay());
 
-            content.put(14, createChangeButton(1, Material.LIME_STAINED_GLASS_PANE, "§aAjouté 1"));
-            content.put(15, createChangeButton(10, Material.GREEN_STAINED_GLASS_PANE, "§aAjouté 10"));
-            content.put(16, createChangeButton(64, Material.PURPLE_STAINED_GLASS_PANE, "§5Ajouté 64"));
-            content.put(17, createChangeButton(100, Material.BLUE_STAINED_GLASS_PANE, "§9Ajouté tous"));
+            content.put(14, createChangeButton(1, Material.LIME_STAINED_GLASS_PANE, "§aAjouter 1"));
+            content.put(15, createChangeButton(10, Material.GREEN_STAINED_GLASS_PANE, "§aAjouter 10"));
+            content.put(16, createChangeButton(64, Material.PURPLE_STAINED_GLASS_PANE, "§5Ajouter 64"));
+            content.put(17, createChangeButton(100, Material.BLUE_STAINED_GLASS_PANE, "§9Ajouter tous"));
 
             return content;
         }
@@ -126,7 +126,7 @@ public class AdminShopSell extends Menu {
                 "  §8■ §7Quantité: §e" + number.get(),
                 "  §8■ §7Prix final: §e" + String.format("%.2f", finalPrize) + "$",
                 "",
-                "§eCliquez pour confirmer la vente!"
+                "§eCliquez pour confirmer la vente !"
         ));
     }
 
