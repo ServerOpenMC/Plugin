@@ -17,17 +17,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AdminShopBuy extends Menu {
-    BaseItems items;
+    private final BaseItems items;
     private final AtomicInteger number;
     private final AtomicDouble prize;
     private static final int MAX_ITEMS = 255;
-    private String material = null;
+    private final String material;
 
     public AdminShopBuy(Player player, BaseItems items) {
-        super(player);
-        this.items = items;
-        this.number = new AtomicInteger(1);
-        this.prize = new AtomicDouble(items.getPrize());
+        this(player, items, null);
     }
 
     public AdminShopBuy(Player player, BaseItems items, String material) {
@@ -50,23 +47,24 @@ public class AdminShopBuy extends Menu {
 
     @Override
     public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
-
+        // To be implemented
     }
 
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> content = new HashMap<>();
+        int inventorySize = getInventorySize().getSize();
 
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
-            content.put(i, new ItemBuilder(this, Material.BLACK_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
+        for (int i = 0; i < inventorySize; i++) {
+            content.put(i, new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
+                    .setDisplayName(" ")
+                    .build());
         }
 
         content.put(10, createChangeButton(-64, Material.PURPLE_STAINED_GLASS_PANE, "§5Retirer 64"));
         content.put(11, createChangeButton(-10, Material.RED_STAINED_GLASS_PANE, "§cRetirer 10"));
         content.put(12, createChangeButton(-1, Material.RED_STAINED_GLASS_PANE, "§cRetirer 1"));
-
         content.put(13, createItemDisplay());
-
         content.put(14, createChangeButton(1, Material.GREEN_STAINED_GLASS_PANE, "§aAjouter 1"));
         content.put(15, createChangeButton(10, Material.GREEN_STAINED_GLASS_PANE, "§aAjouter 10"));
         content.put(16, createChangeButton(64, Material.PURPLE_STAINED_GLASS_PANE, "§5Ajouter 64"));
@@ -74,39 +72,42 @@ public class AdminShopBuy extends Menu {
         return content;
     }
 
-    private ItemStack createChangeButton(int amount, Material materials, String displayName) {
-        return new ItemBuilder(this, materials, itemMeta -> {
-            itemMeta.setDisplayName(displayName);
-        }).setOnClick(event -> {
-            int newNumber = number.get() + amount;
-            if (newNumber >= 1 && newNumber <= MAX_ITEMS) {
-                number.set(newNumber);
-                updateDisplay(event.getInventory());
-            } else if (newNumber > MAX_ITEMS) {
-                number.set(MAX_ITEMS);
-                updateDisplay(event.getInventory());
-                getOwner().sendMessage("§cVous ne pouvez pas acheter plus de " + MAX_ITEMS + " items à la fois.");
-            }
-        });
+    private ItemStack createChangeButton(int amount, Material material, String displayName) {
+        return new ItemBuilder(material)
+                .setDisplayName(displayName)
+                .setOnClick(event -> {
+                    int newNumber = number.get() + amount;
+                    if (newNumber >= 1 && newNumber <= MAX_ITEMS) {
+                        number.set(newNumber);
+                        updateDisplay(event.getInventory());
+                    } else if (newNumber > MAX_ITEMS) {
+                        number.set(MAX_ITEMS);
+                        updateDisplay(event.getInventory());
+                        getOwner().sendMessage("§cVous ne pouvez pas acheter plus de " + MAX_ITEMS + " items à la fois.");
+                    }
+                })
+                .build();
     }
 
     private ItemStack createItemDisplay() {
-        return new ItemBuilder(this, Objects.requireNonNull(Material.getMaterial(material == null ? items.named() : items.named() + "_" + material)), itemMeta -> {
-            itemMeta.setDisplayName(items.getName());
-            updateItemMeta(itemMeta);
-        }).setOnClick(event -> {
-            new AdminShopBuyConfirm(getOwner(), items, number.get(), material).open();
-        });
+        Material itemMaterial = Material.getMaterial(material == null ? items.named() : items.named() + "_" + material);
+        Objects.requireNonNull(itemMaterial, "Material cannot be null");
+
+        return new ItemBuilder(itemMaterial)
+                .setDisplayName(items.getName())
+                .setLore(getItemLore())
+                .setOnClick(event -> new AdminShopBuyConfirm(getOwner(), items, number.get(), material).open())
+                .build();
     }
 
-    private void updateItemMeta(ItemMeta itemMeta) {
+    private List<String> getItemLore() {
         double finalPrize = prize.get() * number.get();
-        itemMeta.setLore(Arrays.asList(
+        return Arrays.asList(
                 "  §8■ §7Quantité: §e" + number.get(),
                 "  §8■ §7Prix final: §e" + String.format("%.2f", finalPrize) + "$",
                 "",
                 "§eCliquez pour confirmer l'achat !"
-        ));
+        );
     }
 
     private void updateDisplay(Inventory inventory) {
@@ -114,7 +115,7 @@ public class AdminShopBuy extends Menu {
         if (itemStack != null) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta != null) {
-                updateItemMeta(itemMeta);
+                itemMeta.setLore(getItemLore());
                 itemStack.setItemMeta(itemMeta);
             }
         }
