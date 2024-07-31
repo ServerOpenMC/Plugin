@@ -5,6 +5,7 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -42,12 +43,13 @@ public class AdminShopBuy extends Menu {
 
     @Override
     public @NotNull InventorySize getInventorySize() {
-        return InventorySize.NORMAL;
+        return InventorySize.NORMAL; // Assuming NORMAL returns 27 slots (3 rows)
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
-        // To be implemented
+    public void onInventoryClick(InventoryClickEvent event) {
+        // To be implemented: Handle click events here
+        event.setCancelled(true); // Cancel the event to prevent players from taking items
     }
 
     @Override
