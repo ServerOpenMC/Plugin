@@ -31,4 +31,9 @@ public class PlayerQuests {
         return getProgress(quest) >= quest.getQt();
     }
 
+    public void removeProgress(QUESTS quest, int amount) {
+        int newProgress = questsProgress.getOrDefault(quest, 0) - amount;
+        questsProgress.put(quest, newProgress);
+    }
+
 }

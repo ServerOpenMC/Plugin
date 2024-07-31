@@ -49,6 +49,14 @@ public class EconomyManager {
         if (balance >= amount && amount > 0) {
             balances.put(uuid, balance - amount);
             saveBalances(player);
+            for(QUESTS quests : QUESTS.values()) {
+                PlayerQuests pq = QuestsManager.getPlayerQuests(player);
+                if(quests.getType() == TYPE.MONEY) {
+                    if(!pq.isQuestCompleted(quests)) {
+                        pq.removeProgress(quests, (int) amount);
+                    }
+                }
+            }
             return true;
         } else {
             return false;
