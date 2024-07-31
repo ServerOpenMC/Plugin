@@ -19,9 +19,9 @@ public enum OresItems implements BaseItems {
     RAW_GOLD(31, 10, ShopType.BUY, "§7Or brut"),
     AMETHYST_SHARD(32, 5, ShopType.SELL, "§7Eclat d'améthyste"),
     QUARTZ(33, 4, ShopType.BUY, "§7Quartz"),
-    NETHERITE_SCRAP(39, 5000, ShopType.BUY, "§7Fragment de netherite"),
+    NETHERITE_SCRAP(39, 500000, ShopType.BUY, "§7Fragment de netherite"),
     EMERALD(40, 15, ShopType.SELL, "§7Emeraude"),
-    NETHERITE_INGOT(41, 10000, ShopType.BUY, "§7Lingot de netherite"),
+    NETHERITE_INGOT(41, 1000000, ShopType.BUY, "§7Lingot de netherite"),
     ;
 
     private final int slots;

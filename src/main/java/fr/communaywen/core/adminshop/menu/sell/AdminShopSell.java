@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.adminshop.menu.category.ShopType;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
@@ -121,6 +122,8 @@ public class AdminShopSell extends Menu {
     }
 
     private void updateItemMeta(ItemMeta itemMeta) {
+        double prizes;
+        if(items.getType() == ShopType.SELL_BUY) prizes = (prize.get() / 2);
         double finalPrize = prize.get() * number.get();
         itemMeta.setLore(Arrays.asList(
                 "  §8■ §7Quantité: §e" + number.get(),

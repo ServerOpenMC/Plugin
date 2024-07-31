@@ -52,6 +52,7 @@ public class DatabaseManager {
 
         // Système de claims
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS claim (" +
+                "  claimID varchar(36) NOT NULL PRIMARY KEY," +
                 "  team varchar(16) NOT NULL," +
                 "  pos1x double NOT NULL," +
                 "  pos1z double NOT NULL," +
