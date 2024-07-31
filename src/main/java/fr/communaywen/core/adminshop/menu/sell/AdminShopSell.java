@@ -122,9 +122,10 @@ public class AdminShopSell extends Menu {
     }
 
     private void updateItemMeta(ItemMeta itemMeta) {
-        double prizes;
+        double prizes = 0;
         if(items.getType() == ShopType.SELL_BUY) prizes = (prize.get() / 2);
-        double finalPrize = prize.get() * number.get();
+        else prizes = prize.get();
+        double finalPrize = prizes * number.get();
         itemMeta.setLore(Arrays.asList(
                 "  §8■ §7Quantité: §e" + number.get(),
                 "  §8■ §7Prix final: §e" + String.format("%.2f", finalPrize) + "$",
