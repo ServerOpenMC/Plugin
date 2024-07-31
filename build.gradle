@@ -15,7 +15,7 @@ repositories {
     }
     maven {
         name = "reposiliteRepositoryReleases"
-        url = "https://openmc-mvn.notri1.fr/releases"
+        url = "https://openmc-mvn.notri1.fr/release"
     }
     maven {
         url 'https://jitpack.io'
