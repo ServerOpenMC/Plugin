@@ -12,7 +12,7 @@ rtp:
   rtp_wand: "wand:rtpwand"
   max_try: 3
 feed:
-  cooldown: 60
+  cooldown: 300
 spawn:
   x: 5611.5
   y: 65.0
