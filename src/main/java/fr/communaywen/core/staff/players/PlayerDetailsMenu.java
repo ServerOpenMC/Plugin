@@ -5,6 +5,7 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.FreezeUtils;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -21,6 +22,8 @@ import java.util.Map;
 
 public class PlayerDetailsMenu extends Menu {
     private final Player target;
+    private final AywenCraftPlugin instance = AywenCraftPlugin.getInstance();
+    private final TeamManager teamManager = new TeamManager(instance);
 
     public PlayerDetailsMenu(Player owner, Player target) {
         super(owner);
@@ -71,6 +74,7 @@ public class PlayerDetailsMenu extends Menu {
 
         map.put(4, new ItemBuilder(this, ItemUtils.getPlayerSkull(target.getUniqueId()), itemMeta -> {
             itemMeta.setDisplayName(ChatColor.DARK_GREEN + target.getDisplayName());
+            itemMeta.setLore(List.of(ChatColor.BLUE + "Team : " + teamManager.getTeamByPlayer(target.getUniqueId()).getName()));
         }));
 
         map.put(5, new ItemBuilder(this, Material.EXPERIENCE_BOTTLE, itemMeta -> {
@@ -118,7 +122,7 @@ public class PlayerDetailsMenu extends Menu {
     public boolean checkAuthorized() {
         if (getOwner().hasPermission("openmc.staff.players")) return true;
 
-        getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas la permission de faire celà");
+        getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas la permission de faire cela");
         return false;
     }
 }

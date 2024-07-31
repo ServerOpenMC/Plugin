@@ -4,6 +4,7 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.adminshop.menu.category.ShopType;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
@@ -70,10 +71,13 @@ public class AdminShopSellConfirm extends Menu {
 
         content.put(4, new ItemBuilder(this, Material.getMaterial(items.named()), itemMeta -> {
             itemMeta.setDisplayName(items.getName());
-            double totalAmount = items.getPrize() * quantity;
+            double prizes = 0;
+            if(items.getType() == ShopType.SELL_BUY) prizes = (items.getPrize() / 2);
+            else prizes = items.getPrize();
+            double finalPrize = prizes * quantity;
             itemMeta.setLore(Arrays.asList(
                     "§7Quantité: §e" + quantity,
-                    "§7Prix total: §e" + String.format("%.2f", totalAmount) + "$"
+                    "§7Prix total: §e" + String.format("%.2f", finalPrize) + "$"
             ));
         }));
 
