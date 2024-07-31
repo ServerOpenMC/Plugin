@@ -226,7 +226,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             QuestsManager.loadPlayerData(player);
         }
 
-        QuestsManager.createQuestsTable();
+        QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.loadAllClaims();
     }
 

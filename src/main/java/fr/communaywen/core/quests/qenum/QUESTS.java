@@ -12,7 +12,7 @@ public enum QUESTS {
     CRAFT_RTP_WAND(Material.ENDER_PEARL, 1, TYPE.CRAFT, "Attention, ça va aller loin ...", "RTP wand", REWARD.MONEY, 500, TIER.TIER_1),
     EAT_KEBAB(Material.COOKED_BEEF, 10, TYPE.EAT, "Miam Miam", "Kebabs", REWARD.MONEY, 100, TIER.TIER_1),
     CRAFT_KEBAB(Material.BREAD, 1, TYPE.CRAFT, "Kebabier un jour, Kebabier toujours", "Kebab", REWARD.MONEY, 62, TIER.TIER_1),
-    // WALK_BLOCKS(Material.LEATHER_BOOTS, 20000, TYPE.WALK, "Le randonneur", "block", REWARD.MONEY, 10000, TIER.TIER_1),
+    WALK_BLOCKS(Material.LEATHER_BOOTS, 20000, TYPE.WALK, "Le randonneur", "block", REWARD.MONEY, 10000, TIER.TIER_1),
     SMELT_IRON(Material.IRON_ORE, 256, TYPE.SMELT, "Chaud devant !", "de fer", REWARD.MONEY, 2000, TIER.TIER_1),
     MONEY_500K(Material.DIAMOND_BLOCK, 500000, TYPE.MONEY, "Devient Elon", "$", REWARD.ITEMS, 1, new ItemStack(Material.NETHERITE_INGOT), TIER.TIER_1),
     ;
