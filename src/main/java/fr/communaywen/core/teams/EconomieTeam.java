@@ -44,7 +44,7 @@ public class EconomieTeam extends DatabaseConnector {
 
     public static boolean removeBalance(String teamName, double amount) {
         double currentBalance = getTeamBalances(teamName);
-        if (currentBalance >= amount) {
+        if (currentBalance >= amount && amount > 0) {
             setTeamBalances(teamName, currentBalance - amount);
             saveBalance(teamName);
             return true;
