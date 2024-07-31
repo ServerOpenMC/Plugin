@@ -38,8 +38,12 @@ public class ClaimListener implements Listener {
         UUID playerUuid = player.getUniqueId();
         for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
             if (region.isInArea(event.getBlock().getLocation()) && !region.isTeamMember(playerUuid)) {
-                event.setCancelled(true);
-                player.sendMessage("§cCe n'est pas chez vous");
+                if(player.isOp()){
+                    //la personne est OP elle peut donc casser des blocs
+                }else{
+                    event.setCancelled(true);
+                    player.sendMessage("§cCe n'est pas chez vous");
+                }
                 return;
             }
         }
@@ -51,8 +55,12 @@ public class ClaimListener implements Listener {
         UUID playerUuid = player.getUniqueId();
         for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
             if (region.isInArea(event.getBlock().getLocation()) && !region.isTeamMember(playerUuid)) {
-                event.setCancelled(true);
-                player.sendMessage("§cCe n'est pas chez vous");
+                if(player.isOp()){
+                    //la personne est OP elle peut donc poser des blocs
+                }else{
+                    event.setCancelled(true);
+                    player.sendMessage("§cCe n'est pas chez vous");
+                }
                 return;
             }
         }
@@ -88,8 +96,13 @@ public class ClaimListener implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
                 if (region.isInArea(event.getClickedBlock().getLocation()) && !region.isTeamMember(playerUuid)) {
+                    if(player.isOp()){
+                    //la personne est OP elle peut donc interagir
+                }else{
                     event.setCancelled(true);
                     player.sendMessage("§cCe n'est pas chez vous");
+                }
+                return;
                 }
             }
         }
