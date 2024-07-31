@@ -44,7 +44,7 @@ public class FallBloodListener implements Listener {
         if (item != null && item.getType().equals(Material.PAPER) && item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
 
-            if (Objects.requireNonNull(meta).hasDisplayName() && ChatColor.stripColor(meta.getDisplayName()).equals("Bandage")) {
+            if (Objects.requireNonNull(meta).hasDisplayName() && ChatColor.stripColor(meta.getDisplayName()).equals("§lBandage")) {
                 event.setCancelled(true);
 
                 if (player.hasPotionEffect(PotionEffectType.POISON)) {
@@ -70,7 +70,7 @@ public class FallBloodListener implements Listener {
         }
         if (e.getInventory().getType() == InventoryType.ANVIL) {
             if(e.getSlotType() == InventoryType.SlotType.RESULT) {
-                if (e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().getDisplayName().equals("Bandage")) {
+                if (e.getCurrentItem().getType().equals(Material.PAPER) && e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().getDisplayName().equals("§lBandage")) {
                     e.setCancelled(true);
                 }
             }

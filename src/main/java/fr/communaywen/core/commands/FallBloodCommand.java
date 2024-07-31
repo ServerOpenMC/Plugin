@@ -19,7 +19,7 @@ public class FallBloodCommand implements CommandExecutor {
             if (player.isOp()) {
                 ItemStack bandage = new ItemStack(Material.PAPER, 1);
                 ItemMeta bandageMeta = bandage.getItemMeta();
-                Objects.requireNonNull(bandageMeta).setDisplayName(ChatColor.translateAlternateColorCodes('&', "Bandage"));
+                Objects.requireNonNull(bandageMeta).setDisplayName(ChatColor.translateAlternateColorCodes('&', "§lBandage"));
                 bandage.setItemMeta(bandageMeta);
                 player.getInventory().addItem(bandage);
                 player.updateInventory();
