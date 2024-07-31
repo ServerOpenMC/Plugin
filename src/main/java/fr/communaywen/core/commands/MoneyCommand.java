@@ -40,6 +40,11 @@ public class MoneyCommand {
     @Description("Transfère de l'argent d'un joueur à un autre.")
     public void transfer(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
         if(!player.equals(target)) {
+            if(economyManager.getBalance(player) <= 0){
+                player.sendMessage("§cVous ne pouvez pas transférer une somme inférieure ou égale à 0 !");
+                return;
+            }
+
             if (economyManager.transferBalance(player, target, amount)) {
                 player.sendMessage("§aVous venez de transférer §e" + amount + "$ §aà §e" + target.getName());
                 target.sendMessage("§aVous venez de recevoir §e" + amount + "$ §ade la part de §e" + player.getName());
