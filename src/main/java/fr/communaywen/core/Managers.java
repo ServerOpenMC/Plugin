@@ -15,6 +15,7 @@ import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.waypoints.commands.WaypointManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,12 +39,14 @@ public class Managers {
     private QuizManager quizManager;
     private FallingBlocksExplosionManager fbeManager;
     private LevelsManager levelsManager;
+    private WaypointManager waypointManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
     private FileConfiguration welcomeMessageConfig;
     private FileConfiguration levelsConfig;
     private FileConfiguration quizzesConfig;
+    private FileConfiguration waypointConfig;
 
     public void initConfig(AywenCraftPlugin plugin) {
         plugin.saveDefaultConfig();
@@ -52,6 +55,7 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
+        waypointConfig = ConfigUtils.loadConfig(plugin, "waypoints.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {
@@ -87,6 +91,7 @@ public class Managers {
         corpseManager = new CorpseManager();
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
+        waypointManager = new WaypointManager(waypointConfig);
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));

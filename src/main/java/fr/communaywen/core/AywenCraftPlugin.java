@@ -27,6 +27,7 @@ import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
+import fr.communaywen.core.waypoints.commands.WaypointCommand;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -167,7 +168,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FeatureCommand(managers.getFeatureManager()),
                 new MineCommand(),
                 new AdminShopCommand(),
-                new PayCommands()
+                new PayCommands(),
+                new WaypointCommand(managers.getWaypointManager())
         );
 
         /*  --------  */

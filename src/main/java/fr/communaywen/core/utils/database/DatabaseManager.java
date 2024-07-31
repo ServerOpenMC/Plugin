@@ -49,6 +49,7 @@ public class DatabaseManager {
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS events_rewards (player VARCHAR(36) NOT NULL PRIMARY KEY, scope VARCHAR(32) NOT NULL, isClaimed BOOLEAN)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS teams_player (teamName VARCHAR(16) NOT NULL, player VARCHAR(36) NOT NULL)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS teams (teamName VARCHAR(16) NOT NULL PRIMARY KEY, owner VARCHAR(36) NOT NULL, balance BIGINT UNSIGNED, inventory LONGBLOB)").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS waypoints (player_uuid VARCHAR(36) NOT NULL, waypoint_name VARCHAR(32) NOT NULL, x DOUBLE NOT NULL, y DOUBLE NOT NULL, z DOUBLE NOT NULL, world VARCHAR(32) NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)").executeUpdate();
 
         // Système de claims
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS claim (" +
