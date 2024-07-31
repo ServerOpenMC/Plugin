@@ -35,7 +35,7 @@ public class MoneyCommand {
         Audience audience = AywenCraftPlugin.getInstance().getAdventure().sender(sender.getSender());
         AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§a§lMONEY");
     }
-
+    /*
     @Subcommand("transfer")
     @Description("Transfère de l'argent d'un joueur à un autre.")
     public void transfer(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
@@ -49,7 +49,7 @@ public class MoneyCommand {
         } else {
             player.sendMessage("§cVous ne pouvez pas transférer de l'argent à vous-même.");
         }
-    }
+    } */
 
     @Subcommand("add")
     @Description("Ajoute de l'argent à un joueur")
