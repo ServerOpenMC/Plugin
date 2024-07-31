@@ -96,7 +96,14 @@ public class WaypointCommand {
             return;
         }
 
-        StringBuilder message = new StringBuilder("§7---------- §6§lWaypoints §7----------\n");
+        int nbOfWaypoints = waypoints.size();
+        int maxWaypoints = waypointManager.getMaxWaypoints();
+
+        StringBuilder message = new StringBuilder("§7---------- §6§lWaypoints (")
+                .append(nbOfWaypoints)
+                .append("/")
+                .append(maxWaypoints)
+                .append(") §7----------\n");
 
         for (Waypoint waypoint : waypoints) {
 
@@ -156,16 +163,17 @@ public class WaypointCommand {
 
     private void sendHelpMessage(Player player) {
 
-        String message = """
+        String message = String.format("""
                 §7---------- §6§lWaypoints §7----------
                 §7Utilité: §fPermet de poser des balises pour marquer des coordonnées
                 §7Aliases: §b/waypoint§7, §b/wp§7, §b/balise
+                §7Nombre de waypoints MAX : §b%s
                 §7- §bwaypoint §eadd [nom] §7: Ajoute un waypoint
                 §7- §bwaypoint §eremove [nom] §7: Supprime un waypoint
                 §7- §bwaypoint §elist §7: Liste les waypoints
                 §7- §bwaypoint §egoto [nom] §7: Ré-oriente la caméra vers un waypoint
                 §7- §bwaypoint §ecredits §7: Affiche les crédits
-                """;
+                """, waypointManager.getMaxWaypoints());
 
         player.sendMessage(message);
     }
