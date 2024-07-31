@@ -11,7 +11,7 @@ import revxrsal.commands.annotation.*;
 
 import java.util.List;
 
-@Command({"waypoint", "wp", "balise"})
+@Command({"waypoint", "waypoints", "wp", "balise"})
 @Credit("Fnafgameur")
 public class WaypointCommand {
 
