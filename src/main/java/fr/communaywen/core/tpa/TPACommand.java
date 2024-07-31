@@ -114,7 +114,6 @@ public class TPACommand implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
-        // Use getView().getTitle() instead of getTitle() directly from Inventory
         if (!event.getView().getTitle().equals(INVENTORY_TITLE)) return;
 
         event.setCancelled(true);
