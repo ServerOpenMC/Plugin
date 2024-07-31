@@ -1,10 +1,7 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.credit.Credit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,13 +21,15 @@ public class FallBloodListener implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            double degats = player.getFallDistance() / 1.5;
-            player.damage(degats);
-            player.addPotionEffect(getPotionEffectType());
-            player.sendMessage("§l§cVous saignez !");
-            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
-            player.spawnParticle(Particle.EXPLOSION, player.getLocation(), 9999, dustOptions);
+        if (!player.getGameMode().equals(GameMode.CREATIVE)) {
+            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                double degats = player.getFallDistance() / 1.5;
+                player.damage(degats);
+                player.addPotionEffect(getPotionEffectType());
+                player.sendMessage("§l§cVous saignez !");
+                Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
+                player.spawnParticle(Particle.EXPLOSION, player.getLocation(), 9999, dustOptions);
+            }
         }
     }
 
