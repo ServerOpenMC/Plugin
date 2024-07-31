@@ -1,5 +1,6 @@
 package fr.communaywen.core.utils.database;
 
+import fr.communaywen.core.waypoints.Waypoint;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -51,8 +52,8 @@ public class Waypoints extends DatabaseConnector {
         return true;
     }
 
-    public static List<String> getWaypoints(String playerUUID) {
-        List<String> waypoints = new ArrayList<>();
+    public static List<Waypoint> getWaypoints(String playerUUID) {
+        List<Waypoint> waypoints = new ArrayList<>();
 
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM waypoints WHERE player_uuid=?");
@@ -60,11 +61,13 @@ public class Waypoints extends DatabaseConnector {
             ResultSet result = statement.executeQuery();
 
             while (result.next()) {
-                waypoints.add(result.getString("waypoint_name") + " -> " +
-                        result.getString("world") +
-                        " - X: " + result.getDouble("x") +
-                        " - Y: " + result.getDouble("y") +
-                        " - Z: " + result.getDouble("z"));
+                waypoints.add(new Waypoint(
+                        result.getString("waypoint_name"),
+                        result.getString("world"),
+                        result.getDouble("x"),
+                        result.getDouble("y"),
+                        result.getDouble("z")
+                ));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,5 +100,26 @@ public class Waypoints extends DatabaseConnector {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static Waypoint getWaypoint(String playerUUID, String waypointName) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM waypoints WHERE player_uuid=? AND waypoint_name=?");
+            statement.setString(1, playerUUID);
+            statement.setString(2, waypointName);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return new Waypoint(
+                        result.getString("waypoint_name"),
+                        result.getString("world"),
+                        result.getDouble("x"),
+                        result.getDouble("y"),
+                        result.getDouble("z")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

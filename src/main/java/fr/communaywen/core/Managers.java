@@ -15,13 +15,11 @@ import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
-import fr.communaywen.core.waypoints.commands.WaypointManager;
+import fr.communaywen.core.waypoints.managers.WaypointManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @Credit("Xernas")

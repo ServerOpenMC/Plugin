@@ -1,16 +1,14 @@
-package fr.communaywen.core.waypoints.commands;
+package fr.communaywen.core.waypoints.managers;
 
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class WaypointManager {
 
-    private FileConfiguration waypointConfig;
     @Getter
-    private int maxWaypoints;
+    private final int maxWaypoints;
 
     public WaypointManager(FileConfiguration waypointConfig) {
-        this.waypointConfig = waypointConfig;
         this.maxWaypoints = waypointConfig.getInt("maxWaypoints");
     }
 }
