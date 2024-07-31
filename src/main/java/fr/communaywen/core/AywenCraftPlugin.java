@@ -1,6 +1,8 @@
 package fr.communaywen.core;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import dev.xernas.menulib.Menu;
+import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
 import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
