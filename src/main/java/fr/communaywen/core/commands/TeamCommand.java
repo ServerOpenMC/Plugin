@@ -201,11 +201,26 @@ public class TeamCommand {
     @Description("Claim une zone définit par un stick")
     public void claimStickGive(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        long Time = System.currentTimeMillis() / 1000;
+        COOLDOWN_TIME = 300;
+
+        if (cooldowns.containsKey(player.getUniqueId())) {
+            long lastUsed = cooldowns.get(player.getUniqueId());
+            long timeSinceLastUse = Time - lastUsed;
+
+            if (timeSinceLastUse < COOLDOWN_TIME) {
+                long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
+                player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
+                return;
+            }
+        }
+
         if(team != null && !team.isIn(player.getUniqueId())) {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
         team.giveClaimStick(player);
+        cooldowns.put(player.getUniqueId(), Time);
     }
 
     @Subcommand("claimlist")
