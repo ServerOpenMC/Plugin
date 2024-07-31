@@ -38,7 +38,7 @@ public class MoneyCommand {
 
     @Subcommand("transfer")
     @Description("Transfère de l'argent d'un joueur à un autre.")
-    public void transfer(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
+    public void transfer(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
         if(!player.equals(target)) {
             if (economyManager.transferBalance(player, target, amount)) {
                 player.sendMessage("§aVous venez de transférer §e" + amount + "$ §aà §e" + target.getName());
@@ -54,7 +54,7 @@ public class MoneyCommand {
     @Subcommand("add")
     @Description("Ajoute de l'argent à un joueur")
     @CommandPermission("openmc.money.add")
-    public void add(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
+    public void add(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
         economyManager.addBalance(target, amount);
         player.sendMessage("§aVous venez d'ajouter §e" + amount + "$ §aà " + target.getName());
         target.sendMessage("§aVous venez de recevoir §e" + amount + "$");
@@ -63,7 +63,7 @@ public class MoneyCommand {
     @Subcommand("remove")
     @Description("Enlève de l'argent à un joueur")
     @CommandPermission("openmc.money.remove")
-    public void remove(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
+    public void remove(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
         economyManager.withdrawBalance(target, amount);
         player.sendMessage("§aVous venez d'enlever §e" + amount + "$ §aà " + target.getName());
         target.sendMessage("§aVous venez de perdre §e" + amount + "$");

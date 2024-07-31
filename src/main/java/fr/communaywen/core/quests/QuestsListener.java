@@ -46,8 +46,10 @@ public class QuestsListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player killer = event.getEntity().getKiller();
-        assert killer != null;
-        QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+        if(killer == null) return;
+        if(killer instanceof Player) {
+            QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+        }
     }
 
     @EventHandler
@@ -59,17 +61,17 @@ public class QuestsListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Location from = event.getFrom();
-        Location to = event.getTo();
-        assert to != null;
+    // @EventHandler
+    // public void onPlayerMove(PlayerMoveEvent event) {
+    //     Player player = event.getPlayer();
+    //     Location from = event.getFrom();
+    //     Location to = event.getTo();
+    //     assert to != null;
 
-        if (to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
-        }
-    }
+    //     if (to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()) {
+    //         QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+    //     }
+    // }
 
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {

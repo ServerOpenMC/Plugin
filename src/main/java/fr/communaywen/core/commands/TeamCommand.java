@@ -5,6 +5,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.ClaimMenu;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
@@ -226,9 +227,15 @@ public class TeamCommand {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
-        AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player, amount);
-        EconomieTeam.addBalance(team.getName(), amount);
-        player.sendMessage("§aVous venez de transférer §e" + amount + "$ §adans la banque de votre team.");
+        EconomyManager economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
+
+        if(amount > 0 && economyManager.getBalance(player) >= amount) {
+            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player, amount);
+            EconomieTeam.addBalance(team.getName(), amount);
+            player.sendMessage("§aVous venez de transférer §e" + amount + "$ §adans la banque de votre team.");
+        } else {
+            player.sendMessage("§cVous n'avez pas assez d'argent ou vous avez entré un montant invalide.");
+        }
     }
 
     @Subcommand("money remove")
@@ -240,12 +247,12 @@ public class TeamCommand {
             return;
         }
         double balances = EconomieTeam.getTeamBalances(team.getName());
-        if(balances >= amount) {
+        if(balances >= amount && amount > 0) {
             AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, amount);
             EconomieTeam.removeBalance(team.getName(), amount);
             player.sendMessage("§aVous venez de prendre §e" + amount + "$ §ade la banque de votre team.");
         } else {
-            player.sendMessage("§cVotre team n'a pas assez d'argent dans la banque.");
+            player.sendMessage("§cVotre team n'a pas assez d'argent dans la banque, ou vous avez entré un montant invalide.");
         }
     }
 

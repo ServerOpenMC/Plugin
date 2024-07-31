@@ -52,6 +52,7 @@ public class DatabaseManager {
 
         // Système de claims
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS claim (" +
+                "  claimID varchar(36) NOT NULL PRIMARY KEY," +
                 "  team varchar(16) NOT NULL," +
                 "  pos1x double NOT NULL," +
                 "  pos1z double NOT NULL," +
@@ -59,6 +60,13 @@ public class DatabaseManager {
                 "  pos2z double NOT NULL," +
                 "  world varchar(20) NOT NULL" +
                 ")").executeUpdate();
+
+        // Système d'économie
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS economie (" +
+                "  player varchar(36) NOT NULL PRIMARY KEY," +
+                "  balance double NOT NULL" +
+                ")").executeUpdate();
+
         System.out.println("Les tables ont été créer si besoin");
     }
 
