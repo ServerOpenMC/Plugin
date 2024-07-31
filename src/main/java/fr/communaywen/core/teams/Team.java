@@ -4,6 +4,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,9 +25,13 @@ import java.util.*;
 
 public class Team extends DatabaseConnector implements Listener{
 
+    @Getter
     private UUID owner;
+    @Getter
     private final String name;
+    @Getter
     private final List<UUID> players = new ArrayList<>();
+    @Getter
     private final Inventory inventory;
 
     AywenCraftPlugin plugin;
@@ -77,21 +82,9 @@ public class Team extends DatabaseConnector implements Listener{
         statement.setString(1, this.name);
         statement.executeUpdate();
     }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public UUID getOwner() {
-        return owner;
-    }
-
-    public List<UUID> getPlayers() {
-        return players;
-    }
-
-    public List<UUID> getPlayers(int first, int last) {
+	
+	
+	public List<UUID> getPlayers(int first, int last) {
         List<UUID> result = new ArrayList<>();
         for (int i = first; i < last; i++) {
             UUID player = getPlayer(i);
@@ -127,12 +120,8 @@ public class Team extends DatabaseConnector implements Listener{
         itemStack.setItemMeta(itemMeta);
         player.getInventory().addItem(itemStack);
     }
-
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    public UUID getPlayerByUsername(String username) {
+	
+	public UUID getPlayerByUsername(String username) {
         Player bukkitPlayer = Bukkit.getPlayer(username);
         if (bukkitPlayer == null) {
             return null;

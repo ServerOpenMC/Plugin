@@ -4,6 +4,8 @@ import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
 import dev.xernas.menulib.utils.StaticSlots;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayersMenu extends PaginatedMenu {
+    private final AywenCraftPlugin instance = new AywenCraftPlugin();
+    private final TeamManager teamManager = new TeamManager(instance);
     public PlayersMenu(Player owner) {
         super(owner);
     }
@@ -42,7 +46,8 @@ public class PlayersMenu extends PaginatedMenu {
                 itemMeta.setDisplayName(ChatColor.WHITE + player.getName());
                 itemMeta.setLore(List.of(
                         ChatColor.GOLD + "Vie : " + ChatColor.RED + player.getHealth(),
-                        ChatColor.GOLD + "XP : " + ChatColor.AQUA + player.getExp()
+                        ChatColor.GOLD + "XP : " + ChatColor.AQUA + player.getExp(),
+                        ChatColor.BLUE + "Team : " + teamManager.getTeamByPlayer(player.getUniqueId()).getName()
                 ));
             }).setNextMenu(new PlayerDetailsMenu(this.getOwner(), player)));
         }
