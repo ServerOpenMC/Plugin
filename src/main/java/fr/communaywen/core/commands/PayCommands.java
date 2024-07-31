@@ -1,6 +1,7 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
@@ -11,12 +12,18 @@ import revxrsal.commands.annotation.Named;
 
 @Feature("Money")
 @Credit({"Axeno", "Koneiii", "TheR0001"})
+@Collaborators("Martinouxx")
 public class PayCommands {
     @Command("pay")
     @Description("Transfère de l'argent d'un joueur à un autre.")
     public void payCommands(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
         EconomyManager economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
         if(!player.equals(target)) {
+            if(economyManager.getBalance(player) <= 0){
+                player.sendMessage("§cVous ne pouvez pas transférer une somme inférieure ou égale à 0 !");
+                return;
+            }
+
             if (economyManager.transferBalance(player, target, amount)) {
                 player.sendMessage("§aVous venez de transférer §e" + amount + "$ §aà §e" + target.getName());
                 target.sendMessage("§aVous venez de recevoir §e" + amount + "$ §ade la part de §e" + player.getName());
