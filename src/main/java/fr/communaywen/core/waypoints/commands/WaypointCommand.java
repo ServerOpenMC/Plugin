@@ -158,6 +158,7 @@ public class WaypointCommand {
 
         String message = """
                 §7---------- §6§lWaypoints §7----------
+                §7Utilité: §fPermet de poser des balises pour marquer des coordonnées
                 §7Aliases: §b/waypoint§7, §b/wp§7, §b/balise
                 §7- §bwaypoint §eadd [nom] §7: Ajoute un waypoint
                 §7- §bwaypoint §eremove [nom] §7: Supprime un waypoint

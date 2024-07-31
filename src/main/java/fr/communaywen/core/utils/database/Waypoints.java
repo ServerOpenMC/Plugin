@@ -12,6 +12,13 @@ import java.util.List;
 
 public class Waypoints extends DatabaseConnector {
 
+    /**
+     * Add a waypoint to the database
+     * @param playerUUID UUID of the player
+     * @param waypointName Name of the waypoint
+     * @param location Location of the waypoint
+     * @return true if the waypoint has been added, false otherwise
+     */
     public static boolean addWaypoint(String playerUUID, String waypointName, Location location) {
 
         // Round at 2 decimals MAX
@@ -38,6 +45,12 @@ public class Waypoints extends DatabaseConnector {
         return true;
     }
 
+    /**
+     * Remove a waypoint from the database by its name
+     * @param playerUUID UUID of the player
+     * @param waypointName Name of the waypoint
+     * @return true if the waypoint has been removed, false otherwise
+     */
     public static boolean removeWaypoint(String playerUUID, String waypointName) {
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM waypoints WHERE player_uuid=? AND waypoint_name=?");
@@ -52,6 +65,11 @@ public class Waypoints extends DatabaseConnector {
         return true;
     }
 
+    /**
+     * Get all waypoints of a player
+     * @param playerUUID UUID of the player
+     * @return List of waypoints
+     */
     public static List<Waypoint> getWaypoints(String playerUUID) {
         List<Waypoint> waypoints = new ArrayList<>();
 
@@ -76,6 +94,11 @@ public class Waypoints extends DatabaseConnector {
         return waypoints;
     }
 
+    /**
+     * Get the number of waypoints of a player
+     * @param playerUUID UUID of the player
+     * @return Number of waypoints
+     */
     public static int getWaypointsCount(String playerUUID) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM waypoints WHERE player_uuid=?");
@@ -89,6 +112,12 @@ public class Waypoints extends DatabaseConnector {
         }
     }
 
+    /**
+     * Check if a waypoint exists
+     * @param playerUUID UUID of the player
+     * @param waypointName Name of the waypoint
+     * @return true if the waypoint exists, false otherwise
+     */
     public static boolean waypointExist(String playerUUID, String waypointName) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM waypoints WHERE player_uuid=? AND waypoint_name=?");
@@ -102,6 +131,12 @@ public class Waypoints extends DatabaseConnector {
         }
     }
 
+    /**
+     * Get a waypoint by its name
+     * @param playerUUID UUID of the player
+     * @param waypointName Name of the waypoint
+     * @return Waypoint object
+     */
     public static Waypoint getWaypoint(String playerUUID, String waypointName) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM waypoints WHERE player_uuid=? AND waypoint_name=?");
