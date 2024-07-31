@@ -34,7 +34,8 @@ dependencies {
     implementation 'dev.xernas:menulib:1.1.0'
     // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
-    implementation 'org.json:json:20231013'
+    implementation 'org.json:json:20210307'
+    implementation 'revxrsal:commands:3.1.0'
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
     compileOnly 'me.clip:placeholderapi:2.11.6'
