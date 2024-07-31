@@ -6,7 +6,6 @@ import fr.communaywen.core.waypoints.Waypoint;
 import fr.communaywen.core.waypoints.managers.WaypointManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockType;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 
