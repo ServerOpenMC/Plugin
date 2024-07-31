@@ -5,17 +5,23 @@ import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -48,6 +54,28 @@ public class ClaimListener implements Listener {
                 event.setCancelled(true);
                 player.sendMessage("§cCe n'est pas chez vous");
                 return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event) {
+        handleExplosion(event.blockList());
+    }
+
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent event) {
+        handleExplosion(event.blockList());
+    }
+
+    private void handleExplosion(List<Block> blocks) {
+        Iterator<Block> iterator = blocks.iterator();
+        while (iterator.hasNext()) {
+            Block block = iterator.next();
+            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+                if (region.isInArea(block.getLocation())) {
+                    iterator.remove();
+                }
             }
         }
     }
