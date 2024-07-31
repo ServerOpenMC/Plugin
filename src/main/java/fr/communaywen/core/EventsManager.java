@@ -201,25 +201,26 @@ public class EventsManager implements Listener {
         eventRunnable.runTaskTimer(plugin, 0, 100);
     }
 
+    // Les monstres pourront être rendus plus puissants avec la progression des joueurs
     private void boostMonster(LivingEntity livingEntity, World world) {
         livingEntity.addPotionEffect(new PotionEffect(
                 PotionEffectType.SPEED,
                 terrifyingNightDuration,
-                1,
+                0,
                 false,
                 false
             ));
         livingEntity.addPotionEffect(new PotionEffect(
             PotionEffectType.RESISTANCE,
             terrifyingNightDuration,
-            1,
+            0,
             false,
             true
         ));
         livingEntity.addPotionEffect(new PotionEffect(
             PotionEffectType.GLOWING,
             terrifyingNightDuration,
-            1,
+            0,
             false,
             false
         ));
@@ -276,7 +277,7 @@ public class EventsManager implements Listener {
 
                 Creeper creeper = (Creeper) livingEntity;
 
-                creeper.setExplosionRadius(6);
+                // creeper.setExplosionRadius(6); can be uncommented later
                 creeper.setVisualFire(true);
 
                 world.spawnEntity(livingEntity.getLocation(), EntityType.CREEPER);
