@@ -54,7 +54,7 @@ public class TeamAdminCommand {
 
     @Subcommand("add")
     @CommandPermission("ayw.mods.teams")
-    public void addPlayer(CommandSender sender, String teamName, Player player) {
+    public void addPlayer(CommandSender sender, Player player, String teamName) {
         if (!teamManager.teamExists(teamName)) {
             sender.sendMessage("§cL'équipe '"+teamName+"' n'existe pas.");
             return;

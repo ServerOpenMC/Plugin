@@ -137,7 +137,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new VersionCommand(this),
                 new RulesCommand(managers.getBookConfig()),
                 new TeamCommand(),
-                new MoneyCommand(managers.getEconomyManager()),
+                new MoneyCommand(this),
                 new ScoreboardCommand(),
                 new ProutCommand(),
                 new FeedCommand(this),

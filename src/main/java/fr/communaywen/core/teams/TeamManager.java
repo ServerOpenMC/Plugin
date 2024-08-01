@@ -146,7 +146,7 @@ public class TeamManager extends DatabaseConnector {
 
     public Team getTeamByName(String name) {
         for (Team team : teams) {
-            if (team.getName().equals(name)) {
+            if (team.getName().equalsIgnoreCase(name)) {
                 return team;
             }
         }
