@@ -8,6 +8,7 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -50,7 +51,6 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
@@ -186,6 +186,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 0L, 100L);
+
+        new CompassClockTask().runTaskTimer(this, 0L, 5L);
 
         /* LISTENERS */
         registerEvents(
