@@ -50,6 +50,7 @@ public class RegionManager {
     }
 
     public boolean isInArea(Location loc) {
+        if(!minLoc.getWorld().equals(loc.getWorld())) return false;
         return (minLoc.getX() <= loc.getX() && minLoc.getY() <= loc.getY() && minLoc.getZ() <= loc.getZ() && maxLoc.getX() >= loc.getX() && maxLoc.getY() >= loc.getY() && maxLoc.getZ() >= loc.getZ());
     }
 
