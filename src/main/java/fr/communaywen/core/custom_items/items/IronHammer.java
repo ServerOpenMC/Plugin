@@ -8,6 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -43,5 +45,34 @@ public class IronHammer implements CustomItems {
         ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
 
         CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 0, itemToDamage);
+    }
+
+    @Override
+    public void onEnchant(EnchantItemEvent event) {
+
+        Player player = event.getEnchanter();
+
+        player.sendMessage("§cVous ne pouvez pas enchanter cet objet");
+        event.setCancelled(true);
+    }
+
+    @Override
+    public void onAnvil(PrepareAnvilEvent event) {
+
+        ItemStack item0 = event.getInventory().getItem(0);
+
+        if (item0 == null) {
+            return;
+        }
+
+        if (!CustomItemsUtils.isSimilarIgnoringDamage(getItemStack(), item0)) {
+            return;
+        }
+
+        Player player = (Player) event.getView().getPlayer();
+
+        player.sendMessage("§cVous ne pouvez pas modifier cet objet");
+        player.getInventory().addItem(item0);
+        player.closeInventory();
     }
 }
