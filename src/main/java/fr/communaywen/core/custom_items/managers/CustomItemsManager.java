@@ -3,6 +3,7 @@ package fr.communaywen.core.custom_items.managers;
 import fr.communaywen.core.custom_items.items.DiamondHammer;
 import fr.communaywen.core.custom_items.items.IronHammer;
 import fr.communaywen.core.custom_items.objects.CustomItems;
+import fr.communaywen.core.custom_items.utils.CustomItemsUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -10,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,18 +29,9 @@ public class CustomItemsManager {
         createDiamondHammer();
     }
 
-    public boolean isCustomItem(ItemStack itemStack) {
-        for (CustomItems customItem : customItems) {
-            if (itemStack.isSimilar(customItem.getItemStack())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public CustomItems getCustomItem(ItemStack itemStack) {
         for (CustomItems customItem : customItems) {
-            if (itemStack.isSimilar(customItem.getItemStack())) {
+            if (CustomItemsUtils.isSimilarIgnoringDamage(itemStack, customItem.getItemStack())) {
                 return customItem;
             }
         }
