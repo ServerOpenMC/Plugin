@@ -15,6 +15,7 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -77,6 +78,15 @@ public class ClaimListener implements Listener {
                     iterator.remove();
                 }
             }
+        }
+    }
+
+    // Check if player craft with claim stick
+    @EventHandler
+    public void onCraftItem(CraftItemEvent event) {
+        ItemStack item = event.getCurrentItem();
+        if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+            event.setCancelled(true);
         }
     }
 
