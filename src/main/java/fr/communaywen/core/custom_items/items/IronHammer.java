@@ -4,6 +4,9 @@ import fr.communaywen.core.custom_items.objects.CustomItems;
 import fr.communaywen.core.custom_items.utils.CustomItemsUtils;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,8 +31,17 @@ public class IronHammer implements CustomItems {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
+        Block brokenBlock = event.getBlock();
+        Player player = event.getPlayer();
+        BlockFace playerFacing = CustomItemsUtils.getDestroyedBlockFace(player);
 
+        if (playerFacing == null) {
+            return;
+        }
+
+        playerFacing = playerFacing.getOppositeFace();
+        ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
+
+        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 0, itemToDamage);
     }
-
-
 }
