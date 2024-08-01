@@ -8,6 +8,7 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
@@ -232,6 +233,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.loadAllClaims();
+        new BandageRecipe();
     }
 
     @SneakyThrows

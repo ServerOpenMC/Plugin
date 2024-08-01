@@ -9,7 +9,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import net.luckperms.api.model.user.User;
 import org.bukkit.entity.Player;
 
-public class Tablist {
+public class TabList {
 
     ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 

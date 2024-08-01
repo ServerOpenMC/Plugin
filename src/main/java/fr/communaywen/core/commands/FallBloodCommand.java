@@ -17,17 +17,20 @@ public class FallBloodCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (player.isOp()) {
-                ItemStack bandage = new ItemStack(Material.PAPER, 1);
-                ItemMeta bandageMeta = bandage.getItemMeta();
-                Objects.requireNonNull(bandageMeta).setDisplayName(ChatColor.translateAlternateColorCodes('&', "§lBandage"));
-                bandage.setItemMeta(bandageMeta);
-                player.getInventory().addItem(bandage);
+                player.getInventory().addItem(getBandage());
                 player.updateInventory();
 
             }
         }
         return true;
 
+    }
+    public static ItemStack getBandage() {
+        ItemStack bandage = new ItemStack(Material.PAPER, 1);
+        ItemMeta bandageMeta = bandage.getItemMeta();
+        Objects.requireNonNull(bandageMeta).setDisplayName(ChatColor.translateAlternateColorCodes('&', "§lBandage"));
+        bandage.setItemMeta(bandageMeta);
+        return bandage;
     }
 
 }
