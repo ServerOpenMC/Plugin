@@ -4,8 +4,11 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.Transaction;
+import fr.communaywen.core.utils.database.TransactionsManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.BukkitCommandActor;
@@ -19,9 +22,13 @@ import revxrsal.commands.help.CommandHelp;
 @Credit({"Axeno", "Koneiii", "TheR0001"})
 public class MoneyCommand {
     private final EconomyManager economyManager;
+    AywenCraftPlugin plugin;
+    TransactionsManager transactionsManager;
 
-    public MoneyCommand(EconomyManager economyManager) {
-        this.economyManager = economyManager;
+    public MoneyCommand(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+        this.economyManager = plugin.getManagers().getEconomyManager();
+        this.transactionsManager = plugin.getManagers().getTransactionsManager();
     }
 
     @DefaultFor("~")
@@ -36,6 +43,23 @@ public class MoneyCommand {
         AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§a§lMONEY");
     }
 
+    @Command("history")
+    @Description("Affiche votre historique de transactions")
+    public void history(CommandSender sender, @Optional Player target){
+        if (!(sender instanceof Player player)) { return; }
+
+        if (target == null) {
+            target = player;
+        } else {
+            if (!sender.hasPermission("ayw.mods.history")){
+                target = player;
+            }
+        }
+
+        player.sendMessage("En cours");
+    }
+
+
     @Subcommand("transfer")
     @Description("Transfère de l'argent d'un joueur à un autre.")
     public void transfer(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
@@ -43,6 +67,13 @@ public class MoneyCommand {
             if (economyManager.transferBalance(player, target, amount)) {
                 player.sendMessage("§aVous venez de transférer §e" + amount + "$ §aà §e" + target.getName());
                 target.sendMessage("§aVous venez de recevoir §e" + amount + "$ §ade la part de §e" + player.getName());
+
+                transactionsManager.addTransaction(new Transaction(
+                        player.getUniqueId().toString(),
+                        player.getUniqueId().toString(),
+                        amount,
+                        "Transfert"
+                ));
             } else {
                 player.sendMessage("§cVous n'avez pas assez d'argent.");
             }
@@ -58,6 +89,12 @@ public class MoneyCommand {
         economyManager.addBalance(target, amount);
         player.sendMessage("§aVous venez d'ajouter §e" + amount + "$ §aà " + target.getName());
         target.sendMessage("§aVous venez de recevoir §e" + amount + "$");
+        transactionsManager.addTransaction(new Transaction(
+                player.getUniqueId().toString(),
+                "CONSOLE",
+                amount,
+                "Give"
+        ));
     }
 
     @Subcommand("remove")
@@ -67,5 +104,11 @@ public class MoneyCommand {
         economyManager.withdrawBalance(target, amount);
         player.sendMessage("§aVous venez d'enlever §e" + amount + "$ §aà " + target.getName());
         target.sendMessage("§aVous venez de perdre §e" + amount + "$");
+        transactionsManager.addTransaction(new Transaction(
+                player.getUniqueId().toString(),
+                "CONSOLE",
+                amount,
+                "Remove"
+        ));
     }
 }

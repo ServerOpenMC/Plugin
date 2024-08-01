@@ -1,6 +1,5 @@
 package fr.communaywen.core.utils.database;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.Transaction;
 
 import java.sql.PreparedStatement;

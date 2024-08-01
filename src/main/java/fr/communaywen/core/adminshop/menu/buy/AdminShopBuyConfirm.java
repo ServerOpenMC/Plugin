@@ -6,6 +6,8 @@ import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.Transaction;
+import fr.communaywen.core.utils.database.TransactionsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,6 +24,9 @@ public class AdminShopBuyConfirm extends Menu {
     private final BaseItems items;
     private final int quantity;
     private final String material;
+
+    TransactionsManager transactionsManager = new TransactionsManager();
+
     public AdminShopBuyConfirm(Player player, BaseItems items, int quantity, String material) {
         super(player);
         this.items = items;
@@ -74,6 +79,14 @@ public class AdminShopBuyConfirm extends Menu {
                         getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
                         totalQuantity -= stackSize;
                     }
+
+                    transactionsManager.addTransaction(new Transaction(
+                            "CONSOLE",
+                            getOwner().getUniqueId().toString(),
+                            (items.getPrize() * totalQuantity),
+                            "Achat adminshop"
+                    ));
+
                     getOwner().sendMessage("§aAchat confirmé !");
                 }
             }
