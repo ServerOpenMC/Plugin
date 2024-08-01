@@ -8,6 +8,8 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.commands.socials.DiscordCommand;
+import fr.communaywen.core.commands.socials.GithubCommand;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -170,6 +172,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new AdminShopCommand(),
                 new PayCommands(),
                 new FallBloodCommand()
+                new FallBloodCommand(),
+                new DiscordCommand(this)
         );
 
         /*  --------  */
