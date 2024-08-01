@@ -9,7 +9,7 @@ import org.bukkit.inventory.ShapedRecipe;
 
 public class BandageRecipe {
     public BandageRecipe() {
-        NamespacedKey key = new NamespacedKey(AywenCraftPlugin.getInstance(), "bandage");
+       NamespacedKey key = new NamespacedKey(AywenCraftPlugin.getInstance(), "bandage");
         ShapedRecipe recipe = new ShapedRecipe(key, FallBloodCommand.getBandage());
         recipe.shape("PWP");
         recipe.setIngredient('P', Material.PAPER);

@@ -61,7 +61,7 @@ public class ClaimConfigDataBase extends DatabaseConnector {
 
     public static boolean removeClaims(String teamName, UUID claimID) {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE INTO claim WHERE team = ? AND claimID = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM claim WHERE team = ? AND claimID = ?");
 
             statement.setString(1, teamName);
             statement.setString(2, String.valueOf(claimID));
