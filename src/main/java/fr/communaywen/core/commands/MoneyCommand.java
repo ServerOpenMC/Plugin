@@ -5,6 +5,7 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
+import fr.communaywen.core.utils.TransactionsMenu;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -43,7 +44,7 @@ public class MoneyCommand {
         AywenCraftPlugin.getInstance().getInteractiveHelpMenu().sendInteractiveMenu(audience, help, page, thisHelpCommand, "§a§lMONEY");
     }
 
-    @Command("history")
+    @Subcommand("history")
     @Description("Affiche votre historique de transactions")
     public void history(CommandSender sender, @Optional Player target){
         if (!(sender instanceof Player player)) { return; }
@@ -56,7 +57,7 @@ public class MoneyCommand {
             }
         }
 
-        player.sendMessage("En cours");
+        new TransactionsMenu(player, target.getUniqueId()).open();
     }
 
 

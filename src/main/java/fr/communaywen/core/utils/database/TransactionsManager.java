@@ -1,6 +1,7 @@
 package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.utils.Transaction;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,13 +11,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class TransactionsManager extends DatabaseConnector {
-    public List<Transaction> getTransactionsByPlayers(UUID player) {
-        List<Transaction> transactions = new ArrayList<Transaction>();
+    public List<Transaction> getTransactionsByPlayers(UUID player, int limit) {
+        List<Transaction> transactions = new ArrayList<>();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM transactions WHERE recipient = ? AND sender = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM transactions WHERE recipient = ? OR sender = ? ORDER BY date DESC LIMIT ?");
             statement.setString(1, player.toString());
             statement.setString(2, player.toString());
+            statement.setInt(3, limit);
+
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 transactions.add(new Transaction(
@@ -36,7 +39,7 @@ public class TransactionsManager extends DatabaseConnector {
 
     public boolean addTransaction(Transaction transaction) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO transactions VALUES (?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO transactions VALUES (?, ?, ?, ?, DEFAULT)");
             statement.setString(1, transaction.recipient);
             statement.setString(2, transaction.sender);
             statement.setDouble(3, transaction.amount);

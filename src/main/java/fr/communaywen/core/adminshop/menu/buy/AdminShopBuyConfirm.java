@@ -74,11 +74,6 @@ public class AdminShopBuyConfirm extends Menu {
                     Material materials = Material.getMaterial((material == null) ? items.named() : (items.named() + "_" + material));
 
                     economy.withdrawBalance(getOwner(), (items.getPrize() * totalQuantity));
-                    while (totalQuantity > 0) {
-                        int stackSize = Math.min(totalQuantity, maxStackSize);
-                        getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
-                        totalQuantity -= stackSize;
-                    }
 
                     transactionsManager.addTransaction(new Transaction(
                             "CONSOLE",
@@ -86,6 +81,12 @@ public class AdminShopBuyConfirm extends Menu {
                             (items.getPrize() * totalQuantity),
                             "Achat adminshop"
                     ));
+
+                    while (totalQuantity > 0) {
+                        int stackSize = Math.min(totalQuantity, maxStackSize);
+                        getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
+                        totalQuantity -= stackSize;
+                    }
 
                     getOwner().sendMessage("§aAchat confirmé !");
                 }
