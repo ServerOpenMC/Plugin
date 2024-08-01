@@ -26,7 +26,7 @@ public class IronHammer implements CustomItems {
     @Override
     public ItemStack getItemStack() {
         return CustomItemsUtils.createItem(Material.IRON_PICKAXE, "§6Marteau en fer", new ArrayList<>() {{
-            add("§7Casse une zone de 3x3 blocs");
+            add("§7Permet de creuser une zone de 3x3 blocs");
         }});
     }
 
