@@ -136,6 +136,15 @@ public class ClaimListener implements Listener {
 
                 if (gp.getPos1() == null) {
 
+                    // Check if player is in world
+                    if (!player.getWorld().getName().equals("world")) {
+                        removeClaimStick(player);
+                        player.sendMessage("§cVous ne pouvez pas créer de région dans ce monde !");
+                        gp.setPos1(null);
+                        gp.setPos2(null);
+                        return;
+                    }
+
                     if (playerTeam == null) {
                         removeClaimStick(player);
                         player.sendMessage("§cVous devez être dans une équipe pour créer une région !");
