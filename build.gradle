@@ -34,12 +34,11 @@ dependencies {
     implementation 'dev.xernas:menulib:1.1.0'
     // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
-    implementation 'org.json:json:20231013'
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'com.github.dmulloy2:ProtocolLib:-SNAPSHOT'
-
+    implementation 'org.json:json:20230618'
     implementation 'com.github.Revxrsal.Lamp:common:3.2.1'
     implementation 'com.github.Revxrsal.Lamp:bukkit:3.2.1'
 
