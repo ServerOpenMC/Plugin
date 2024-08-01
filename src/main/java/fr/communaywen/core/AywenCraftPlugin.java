@@ -8,6 +8,7 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
+import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -186,6 +187,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 0L, 100L);
+
+        new CompassClockTask().runTaskTimer(this, 0L, 5L);
 
         /* LISTENERS */
         registerEvents(
