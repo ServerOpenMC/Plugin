@@ -16,6 +16,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +53,7 @@ public class ClaimListener implements Listener {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();
         for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
-            if (region.isInArea(event.getBlock().getLocation()) && !region.isTeamMember(playerUuid)) {
+            if (event.getBlock() != null && region.isInArea(event.getBlock().getLocation()) && !region.isTeamMember(playerUuid)) {
                 event.setCancelled(true);
                 player.sendMessage("§cCe n'est pas chez vous");
                 return;
@@ -81,6 +83,23 @@ public class ClaimListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+        Block block = event.getBlockClicked().getRelative(event.getBlockFace());
+
+        if (event.getBucket().equals(Material.WATER_BUCKET) || event.getBucket().equals(Material.LAVA_BUCKET) || event.getBucket().equals(Material.POWDER_SNOW_BUCKET) || event.getBucket().equals(Material.BUCKET)) {
+            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+                if (region.isInArea(block.getLocation()) && !region.isTeamMember(playerUuid)) {
+                    event.setCancelled(true);
+                    player.sendMessage("§cCe n'est pas chez vous");
+                    return;
+                }
+            }
+        }
+    }
+
     // Check if player craft with claim stick
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
@@ -96,10 +115,13 @@ public class ClaimListener implements Listener {
         UUID playerUuid = player.getUniqueId();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block block = event.getClickedBlock().getRelative(event.getBlockFace());
+
             for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
-                if (region.isInArea(event.getClickedBlock().getLocation()) && !region.isTeamMember(playerUuid)) {
+                if (region.isInArea(block.getLocation()) && !region.isTeamMember(playerUuid)) {
                     event.setCancelled(true);
                     player.sendMessage("§cCe n'est pas chez vous");
+                    return;
                 }
             }
         }
