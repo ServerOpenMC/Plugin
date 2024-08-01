@@ -1,6 +1,5 @@
 package fr.communaywen.core.custom_items.managers;
 
-import fr.communaywen.core.custom_items.items.DiamondHammer;
 import fr.communaywen.core.custom_items.items.IronHammer;
 import fr.communaywen.core.custom_items.objects.CustomItems;
 import fr.communaywen.core.custom_items.utils.CustomItemsUtils;
