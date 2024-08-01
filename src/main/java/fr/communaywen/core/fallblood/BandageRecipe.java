@@ -11,10 +11,9 @@ public class BandageRecipe {
     public BandageRecipe() {
         NamespacedKey key = new NamespacedKey(AywenCraftPlugin.getInstance(), "bandage");
         ShapedRecipe recipe = new ShapedRecipe(key, FallBloodCommand.getBandage());
-        recipe.shape("A", "P", "A");
-        recipe.shape("A", "W", "A");
-        recipe.shape("A", "P", "A");
-        recipe.setIngredient('A', Material.AIR);
+        recipe.shape("P");
+        recipe.shape("W");
+        recipe.shape("P");
         recipe.setIngredient('P', Material.PAPER);
         recipe.setIngredient('W', Material.GLASS_BOTTLE);
         Bukkit.addRecipe(recipe);
