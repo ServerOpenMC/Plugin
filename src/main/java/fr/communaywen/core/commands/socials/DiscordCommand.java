@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.socials;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import net.kyori.adventure.text.Component;

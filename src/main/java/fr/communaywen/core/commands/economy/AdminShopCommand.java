@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.economy;
 
 import fr.communaywen.core.adminshop.menu.AdminShopMenu;
 import org.bukkit.entity.Player;

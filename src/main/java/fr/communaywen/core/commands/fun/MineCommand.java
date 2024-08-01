@@ -1,9 +1,7 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.fun;
 
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import fr.communaywen.core.AywenCraftPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;

@@ -1,7 +1,7 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.commands.ExplodeRandomCommand;
+import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;

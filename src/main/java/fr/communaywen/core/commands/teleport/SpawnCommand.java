@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.teleport;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Location;

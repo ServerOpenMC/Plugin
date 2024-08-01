@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.utils;
 
 import fr.communaywen.core.credit.Credit;
 import org.bukkit.ChatColor;

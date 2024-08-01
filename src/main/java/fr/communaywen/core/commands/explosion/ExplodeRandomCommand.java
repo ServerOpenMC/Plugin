@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.explosion;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;

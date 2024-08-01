@@ -1,10 +1,8 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.teams;
 
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.ClaimMenu;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;

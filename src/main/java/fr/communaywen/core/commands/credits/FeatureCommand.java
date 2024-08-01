@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands;
+package fr.communaywen.core.commands.credits;
 
 import fr.communaywen.core.credit.FeatureData;
 import fr.communaywen.core.credit.FeatureManager;
@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
