@@ -70,7 +70,7 @@ public class TPACommand implements Listener {
 
         final Component message = Component.text(player.getName() + " vous a envoyé une demande de téléportation. Tapez /tpaccept pour accepter.")
                 .color(TextColor.color(255, 255, 255))
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"))
+                .clickEvent(ClickEvent.runCommand("/tpaccept"))
                 .hoverEvent(HoverEvent.showText(Component.text("§7[§aCliquez pour accepter§7]")));
 
         plugin.getAdventure().player(target).sendMessage(message);
@@ -123,7 +123,7 @@ public class TPACommand implements Listener {
 
         SkullMeta meta = (SkullMeta) clickedItem.getItemMeta();
         if (meta != null && meta.getOwningPlayer() != null) {
-            Player target = meta.getOwningPlayer().getPlayer();
+            Player target = Bukkit.getPlayer(meta.getOwningPlayer().getUniqueId());
             if (target != null) {
                 sendTPARequest(player, target);
                 player.closeInventory();
@@ -131,4 +131,3 @@ public class TPACommand implements Listener {
         }
     }
 }
-
