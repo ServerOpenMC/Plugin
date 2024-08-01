@@ -66,9 +66,18 @@ public class CompassClockTask extends BukkitRunnable {
             int respawnY = respawnLocation.getBlockY();
             int respawnZ = respawnLocation.getBlockZ();
 
+            // Get player's direction
+            int yaw = (int) playerLocation.getYaw();
+            String directionFacing = getDirectionFacing(yaw);
+
             player.spigot().sendMessage(
                     ChatMessageType.ACTION_BAR,
-                    new TextComponent("§6Position: §e" + x + " " + y + " " + z + " §7| " + "§6Spawn: §e" + spawnX + " " + spawnY + " " + spawnZ + " §7| " + "§6Respawn: §e" + respawnX + " " + respawnY + " " + respawnZ)
+                    new TextComponent(
+                            "§6Position: §e" + x + " " + y + " " + z + " §7| " +
+                            "§6Spawn: §e" + spawnX + " " + spawnY + " " + spawnZ + " §7| " +
+                            "§6Respawn: §e" + respawnX + " " + respawnY + " " + respawnZ + " §7| " +
+                            "§6Direction: §e" + directionFacing
+                    )
             );
 
         }
@@ -93,5 +102,29 @@ public class CompassClockTask extends BukkitRunnable {
         }
 
         return null;
+    }
+
+    /**
+     * Get the direction the player is facing
+     * @param yaw The yaw of the player
+     * @return The direction the player is facing (North, East, South or West)
+     */
+    private String getDirectionFacing(int yaw) {
+
+        if (yaw < 0) {
+            yaw += 360;
+        }
+
+        if (yaw >= 315 || yaw < 45) {
+            return "Sud (+Z)";
+        }
+        if (yaw < 135) {
+            return "Ouest (-X)";
+        }
+        if (yaw < 225) {
+            return "Nord (-Z)";
+        }
+
+        return "Est (+X)";
     }
 }
