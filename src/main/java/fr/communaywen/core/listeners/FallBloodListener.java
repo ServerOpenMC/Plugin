@@ -1,5 +1,6 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.commands.FallBloodCommand;
 import fr.communaywen.core.credit.Credit;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -25,12 +26,15 @@ public class FallBloodListener implements Listener {
         Player player = (Player) event.getEntity();
         if (!player.getGameMode().equals(GameMode.CREATIVE)) {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                double degats = player.getFallDistance() / 1.5;
-                player.damage(degats);
-                player.addPotionEffect(getPotionEffectType());
-                player.sendMessage("§l§cVous saignez !");
-                Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
-                player.spawnParticle(Particle.EXPLOSION, player.getLocation(), 9999, dustOptions);
+                float fallDistance = player.getFallDistance();
+                if (fallDistance >= 7) {
+                    double degats = fallDistance / 2.5;
+                    player.damage(degats);
+                    player.addPotionEffect(getPotionEffectType());
+                    player.sendMessage("§l§cVous saignez !");
+                    Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
+                    player.spawnParticle(Particle.EXPLOSION, player.getLocation(), 9999, dustOptions);
+                }
             }
         }
     }
@@ -41,10 +45,7 @@ public class FallBloodListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
-        if (item != null && item.getType().equals(Material.PAPER) && item.hasItemMeta()) {
-            ItemMeta meta = item.getItemMeta();
-
-            if (Objects.requireNonNull(meta).hasDisplayName() && ChatColor.stripColor(meta.getDisplayName()).equals("§lBandage")) {
+        if (item != null && item.isSimilar(FallBloodCommand.getBandage())) {
                 event.setCancelled(true);
 
                 if (player.hasPotionEffect(PotionEffectType.POISON)) {
@@ -58,7 +59,7 @@ public class FallBloodListener implements Listener {
                 }
             }
         }
-    }
+
     @EventHandler
     public void onAnvil(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
@@ -70,13 +71,13 @@ public class FallBloodListener implements Listener {
         }
         if (e.getInventory().getType() == InventoryType.ANVIL) {
             if(e.getSlotType() == InventoryType.SlotType.RESULT) {
-                if (e.getCurrentItem().getType().equals(Material.PAPER) && e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().getDisplayName().equals("§lBandage")) {
+                if (e.getCurrentItem().isSimilar(FallBloodCommand.getBandage())) {
                     e.setCancelled(true);
                 }
             }
         }
     }
     private PotionEffect getPotionEffectType() {
-       return new PotionEffect(PotionEffectType.POISON, 110, 1);
+       return new PotionEffect(PotionEffectType.POISON, 70, 1);
     }
 }
