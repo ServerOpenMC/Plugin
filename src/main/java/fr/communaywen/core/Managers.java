@@ -4,7 +4,7 @@ import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
-import fr.communaywen.core.custom_items.managers.CustomItemsManager;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;

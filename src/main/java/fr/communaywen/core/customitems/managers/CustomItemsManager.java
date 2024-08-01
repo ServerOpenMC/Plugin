@@ -1,8 +1,8 @@
-package fr.communaywen.core.custom_items.managers;
+package fr.communaywen.core.customitems.managers;
 
-import fr.communaywen.core.custom_items.items.IronHammer;
-import fr.communaywen.core.custom_items.objects.CustomItems;
-import fr.communaywen.core.custom_items.utils.CustomItemsUtils;
+import fr.communaywen.core.customitems.items.IronHammer;
+import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
