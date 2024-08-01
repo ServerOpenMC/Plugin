@@ -51,7 +51,7 @@ public class CompassClockTask extends BukkitRunnable {
             int y = playerLocation.getBlockY();
             int z = playerLocation.getBlockZ();
 
-            // Get player's spawn location
+            // Get world's spawn location
             Location spawnLocation = player.getWorld().getSpawnLocation();
             int spawnX = spawnLocation.getBlockX();
             int spawnY = spawnLocation.getBlockY();
@@ -74,6 +74,11 @@ public class CompassClockTask extends BukkitRunnable {
         }
     }
 
+    /**
+     * Check if the player is holding a compass or a clock in their main hand or offhand
+     * @param player The player to check
+     * @return The material of the item if the player is holding a compass or a clock, null otherwise
+     */
     private Material containsCompassOrClock(Player player) {
         Material itemInMainHand = player.getInventory().getItemInMainHand().getType();
 
