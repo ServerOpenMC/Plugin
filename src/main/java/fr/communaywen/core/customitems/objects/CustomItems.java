@@ -1,4 +1,4 @@
-package fr.communaywen.core.custom_items.objects;
+package fr.communaywen.core.customitems.objects;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;

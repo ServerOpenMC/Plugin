@@ -1,7 +1,7 @@
-package fr.communaywen.core.custom_items.items;
+package fr.communaywen.core.customitems.items;
 
-import fr.communaywen.core.custom_items.objects.CustomItems;
-import fr.communaywen.core.custom_items.utils.CustomItemsUtils;
+import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

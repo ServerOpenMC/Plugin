@@ -1,7 +1,7 @@
-package fr.communaywen.core.custom_items.listeners;
+package fr.communaywen.core.customitems.listeners;
 
-import fr.communaywen.core.custom_items.managers.CustomItemsManager;
-import fr.communaywen.core.custom_items.objects.CustomItems;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
+import fr.communaywen.core.customitems.objects.CustomItems;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;

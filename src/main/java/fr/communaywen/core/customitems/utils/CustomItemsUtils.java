@@ -1,4 +1,4 @@
-package fr.communaywen.core.custom_items.utils;
+package fr.communaywen.core.customitems.utils;
 
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
