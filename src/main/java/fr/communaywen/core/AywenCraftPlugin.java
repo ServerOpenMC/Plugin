@@ -9,6 +9,8 @@ import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.custom_items.listeners.CIBreakBlockListener;
+import fr.communaywen.core.custom_items.listeners.CIEnchantListener;
+import fr.communaywen.core.custom_items.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -217,7 +219,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ClaimListener(),
                 new FarineListener(),
                 new FallBloodListener(),
-                new CIBreakBlockListener(managers.getCustomItemsManager())
+                new CIBreakBlockListener(managers.getCustomItemsManager()),
+                new CIEnchantListener(managers.getCustomItemsManager()),
+                new CIPrepareAnvilListener(managers.getCustomItemsManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor

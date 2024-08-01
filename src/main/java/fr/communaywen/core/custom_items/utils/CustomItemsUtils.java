@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -42,21 +43,16 @@ public class CustomItemsUtils {
      * @param depth The depth of the area
      * @param itemToDamage The item to damage
      */
-    public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, @Nullable ItemStack itemToDamage) {
+    public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, ItemStack itemToDamage) {
 
         int x;
         int y;
         int z;
         int damageToDeal = 0;
-        ItemMeta itemMeta = null;
-        Damageable damageable = null;
+        ItemMeta itemMeta = itemToDamage.getItemMeta();
+        Damageable damageable = (Damageable) itemMeta;
         Block blockToBrake;
         Material brokenBlockType = brokenBlock.getType();
-
-        if (itemToDamage != null) {
-            itemMeta = itemToDamage.getItemMeta();
-            damageable = (Damageable) itemMeta;
-        }
 
         switch (face) {
             case NORTH:
@@ -75,16 +71,15 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
+                            if (blockToBrake.getType().getHardness() > 41) {
+                                continue;
+                            }
+
                             if (!blockToBrake.getType().equals(brokenBlock.getType())) {
                                 continue;
                             }
 
                             blockToBrake.breakNaturally(itemToDamage);
-
-                            if (itemToDamage == null) {
-                                continue;
-                            }
-
                             damageToDeal++;
                         }
                     }
@@ -96,10 +91,6 @@ public class CustomItemsUtils {
                     for (y = -radius; y <= radius; y++) {
                         for (z = -radius; z <= radius; z++) {
 
-                            if (brokenBlock.getRelative(x, y, z) == brokenBlock) {
-                                continue;
-                            }
-
                             if (brokenBlock.getType().isAir()) {
                                 brokenBlock.setType(brokenBlockType);
                             }
@@ -110,16 +101,15 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
+                            if (blockToBrake.getType().getHardness() > 41) {
+                                continue;
+                            }
+
                             if (!blockToBrake.getType().equals(brokenBlock.getType())) {
                                 continue;
                             }
 
                             blockToBrake.breakNaturally(itemToDamage);
-
-                            if (itemToDamage == null) {
-                                continue;
-                            }
-
                             damageToDeal++;
                         }
                     }
@@ -131,10 +121,6 @@ public class CustomItemsUtils {
                     for (y = -depth; y <= depth; y++) {
                         for (z = -radius; z <= radius; z++) {
 
-                            if (brokenBlock.getRelative(x, y, z) == brokenBlock) {
-                                continue;
-                            }
-
                             if (brokenBlock.getType().isAir()) {
                                 brokenBlock.setType(brokenBlockType);
                             }
@@ -145,28 +131,22 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
+                            if (blockToBrake.getType().getHardness() > 41) {
+                                continue;
+                            }
+
                             if (!blockToBrake.getType().equals(brokenBlock.getType())) {
                                 continue;
                             }
 
                             blockToBrake.breakNaturally(itemToDamage);
-
-                            if (itemToDamage == null) {
-                                continue;
-                            }
-
                             damageToDeal++;
                         }
                     }
                 }
                 break;
         }
-
-        if (itemToDamage == null) {
-            return;
-        }
-
-        damageable.setDamage((damageable.getDamage() + damageToDeal) - 1);
+        damageable.setDamage(damageable.getDamage() + (damageToDeal/2));
         itemToDamage.setItemMeta(itemMeta);
     }
 
