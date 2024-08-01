@@ -4,6 +4,7 @@ import fr.communaywen.core.commands.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.custom_items.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
@@ -38,6 +39,7 @@ public class Managers {
     private FallingBlocksExplosionManager fbeManager;
     private LevelsManager levelsManager;
     private TransactionsManager transactionsManager;
+    private CustomItemsManager customItemsManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -89,6 +91,7 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
+        customItemsManager = new CustomItemsManager();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
