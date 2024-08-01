@@ -16,6 +16,13 @@ import java.util.ArrayList;
 
 public class CustomItemsUtils {
 
+    /**
+     * Create an item with a type, a name and a lore
+     * @param material The type of the item
+     * @param name The name of the item
+     * @param lore The lore of the item
+     * @return The item created
+     */
     public static ItemStack createItem(Material material, String name, ArrayList<String> lore) {
 
         ItemStack itemStack = new ItemStack(material);
@@ -27,6 +34,14 @@ public class CustomItemsUtils {
         return itemStack;
     }
 
+    /**
+     * Destroy an area around a block
+     * @param face The face of the block
+     * @param brokenBlock The block to break
+     * @param radius The radius of the area
+     * @param depth The depth of the area
+     * @param itemToDamage The item to damage
+     */
     public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, @Nullable ItemStack itemToDamage) {
 
         int x;
@@ -120,6 +135,11 @@ public class CustomItemsUtils {
         itemToDamage.setItemMeta(itemMeta);
     }
 
+    /**
+     * Get the face of the block destroyed by the player
+     * @param player The player
+     * @return The face of the block destroyed
+     */
     public static BlockFace getDestroyedBlockFace(Player player) {
         Location eyeLoc = player.getEyeLocation();
         RayTraceResult result = player.getLocation().getWorld().rayTraceBlocks(eyeLoc,eyeLoc.getDirection(),10, FluidCollisionMode.NEVER);
@@ -131,6 +151,12 @@ public class CustomItemsUtils {
         return result.getHitBlockFace();
     }
 
+    /**
+     * Check if two ItemStack are similar ignoring the damage (durability)
+     * @param itemStack1 The first ItemStack
+     * @param itemStack2 The second ItemStack
+     * @return True if the ItemStack are similar ignoring the damage, false otherwise
+     */
     public static boolean isSimilarIgnoringDamage(ItemStack itemStack1, ItemStack itemStack2) {
         ItemStack cloneItem1 = itemStack1.clone();
         ItemStack cloneItem2 = itemStack2.clone();

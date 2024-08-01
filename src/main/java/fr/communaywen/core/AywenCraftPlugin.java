@@ -164,7 +164,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new GithubCommand(this),
                 new TradeCommand(this),
                 new TradeAcceptCommand(this),
-                //new QuestsCommands(),
+                new QuestsCommands(),
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
                 new MineCommand(),
@@ -212,7 +212,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LevelsListeners(managers.getLevelsManager()),
                 new CorpseListener(managers.getCorpseManager()),
                 new TradeListener(),
-                //new QuestsListener(),
+                new QuestsListener(),
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
@@ -230,10 +230,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
-            //QuestsManager.loadPlayerData(player);
+            QuestsManager.loadPlayerData(player);
         }
 
-        //QuestsManager.initializeQuestsTable();
+        QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.loadAllClaims();
         new BandageRecipe();
     }
