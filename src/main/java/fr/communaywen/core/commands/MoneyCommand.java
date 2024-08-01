@@ -20,7 +20,7 @@ import revxrsal.commands.help.CommandHelp;
 @Command("money")
 @Description("Transférer de l'argent entre joueurs")
 @Feature("Money")
-@Credit({"Axeno", "Koneiii", "TheR0001"})
+@Credit({"Axeno", "Koneiii", "TheR0001", "Gyro3630"})
 public class MoneyCommand {
     private final EconomyManager economyManager;
     AywenCraftPlugin plugin;
