@@ -8,9 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.units.qual.C;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.SecretCommand;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.UUID;
@@ -56,7 +54,7 @@ public class TeamAdminCommand {
 
     @Subcommand("add")
     @CommandPermission("ayw.mods.teams")
-    public void addPlayer(CommandSender sender, String teamName, Player player) {
+    public void addPlayer(CommandSender sender, Player player, String teamName) {
         if (!teamManager.teamExists(teamName)) {
             sender.sendMessage("§cL'équipe '"+teamName+"' n'existe pas.");
             return;
@@ -103,4 +101,19 @@ public class TeamAdminCommand {
         team.setInventory(new ItemStack[36]);
         sender.sendMessage("§aL'inventaire de l'équipe '"+teamname+"' a bien été vidée.");
     }
+
+    @Subcommand("inventory")
+    @Description("Open team inventory")
+    public void openInventory(Player player, String teamName) {
+        if (!teamManager.teamExists(teamName)) {
+            player.sendMessage("§cL'équipe '"+teamName+"' n'existe pas.");
+            return;
+        }
+
+        Team team = teamManager.getTeamByName(teamName);
+        team.openInventory(player);
+    }
+
+
+
 }

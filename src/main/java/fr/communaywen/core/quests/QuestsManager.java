@@ -2,7 +2,9 @@ package fr.communaywen.core.quests;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
+import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.database.DatabaseConnector;
+import fr.communaywen.core.utils.database.TransactionsManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
@@ -142,6 +144,15 @@ public class QuestsManager extends DatabaseConnector {
                 break;
             case MONEY:
                 AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt());
+
+
+                new TransactionsManager().addTransaction(new Transaction(
+                        player.getUniqueId().toString(),
+                        "CONSOLE",
+                        quest.getRewardsQt(),
+                        "Quest"
+                ));
+
                 player.sendMessage("» §7[§9§lQuêtes§7] §6+ " + quest.getRewardsQt() + "$");
                 break;
         }

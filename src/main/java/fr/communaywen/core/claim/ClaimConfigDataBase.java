@@ -64,7 +64,7 @@ public class ClaimConfigDataBase extends DatabaseConnector {
             PreparedStatement statement = connection.prepareStatement("DELETE INTO claim WHERE team = ? AND claimID = ?");
 
             statement.setString(1, teamName);
-            statement.setObject(2, claimID);
+            statement.setString(2, String.valueOf(claimID));
 
             statement.executeUpdate();
 
