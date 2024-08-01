@@ -9,7 +9,7 @@ import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.commands.*;
 import fr.communaywen.core.fallblood.BandageRecipe;
-import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
+import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;

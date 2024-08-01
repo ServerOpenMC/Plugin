@@ -1,4 +1,4 @@
-package fr.communaywen.core.compass_clock_infos.tasks;
+package fr.communaywen.core.clockinfos.tasks;
 
 import fr.communaywen.core.credit.Credit;
 import net.md_5.bungee.api.ChatMessageType;
