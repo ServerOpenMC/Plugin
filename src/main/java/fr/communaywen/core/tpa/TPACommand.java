@@ -54,6 +54,7 @@ public class TPACommand implements Listener {
         sendTPARequest(player, target);
     }
 
+
     private void sendTPARequest(Player player, Player target) {
         if (player.equals(target)) {
             player.sendMessage("§cVous ne pouvez pas vous téléporter à vous-même.");
