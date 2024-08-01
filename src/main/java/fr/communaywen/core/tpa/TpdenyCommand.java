@@ -1,25 +1,25 @@
 package fr.communaywen.core.tpa;
 
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 public class TpdenyCommand {
 
-    TPAQueue tpQueue = TPAQueue.INSTANCE;
+    private final TPAQueue tpQueue = TPAQueue.INSTANCE;
 
     @Command("tpdeny")
     @CommandPermission("ayw.command.tpa")
     public void onCommand(Player player) {
-        Player tpaplayer = tpQueue.TPA_REQUESTS.get(player);
-        if (tpaplayer == null) {
-            player.sendMessage(ChatColor.RED + "Vous n'avez pas de demande de téléporation");
+        Player requester = tpQueue.getRequester(player);
+        if (requester == null) {
+            player.sendMessage("§cVous n'avez pas de demande de téléportation.");
             return;
         }
-        tpQueue.TPA_REQUESTS.remove(player);
-        tpQueue.TPA_REQUESTS2.remove(tpaplayer);
-        tpaplayer.sendMessage(ChatColor.RED + player.getName() + " a refusé votre demande de téléportation");
-        player.sendMessage("Vous avez refusé la demande de téléporation de " + tpaplayer.getName());
+
+        tpQueue.removeRequest(player);
+        requester.sendMessage("§c" + player.getName() + " a refusé votre demande de téléportation.");
+        player.sendMessage("§cVous avez refusé la demande de téléportation de §f" + requester.getName() + "§c.");
     }
 }
+
