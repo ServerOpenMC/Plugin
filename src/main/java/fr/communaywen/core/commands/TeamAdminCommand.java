@@ -113,7 +113,4 @@ public class TeamAdminCommand {
         Team team = teamManager.getTeamByName(teamName);
         team.openInventory(player);
     }
-
-
-
 }
