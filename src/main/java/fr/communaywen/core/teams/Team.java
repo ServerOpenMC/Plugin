@@ -182,7 +182,7 @@ public class Team extends DatabaseConnector implements Listener{
 
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM teams_player WHERE player = ?");
-            statement.setString(2, player.toString());
+            statement.setString(1, player.toString());
             statement.executeUpdate();
         } catch (Exception e) {
             plugin.getLogger().severe("Impossible de supprimer '"+player.toString()+"' dans '"+this.name+"'");
