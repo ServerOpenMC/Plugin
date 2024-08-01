@@ -47,9 +47,11 @@ public class CustomItemsUtils {
         int x;
         int y;
         int z;
+        int damageToDeal = 0;
         ItemMeta itemMeta = null;
         Damageable damageable = null;
         Block blockToBrake;
+        Material brokenBlockType = brokenBlock.getType();
 
         if (itemToDamage != null) {
             itemMeta = itemToDamage.getItemMeta();
@@ -63,7 +65,15 @@ public class CustomItemsUtils {
                     for (y = -radius; y <= radius; y++) {
                         for (z = -depth; z <= depth; z++) {
 
+                            if (brokenBlock.getType().isAir()) {
+                                brokenBlock.setType(brokenBlockType);
+                            }
+
                             blockToBrake = brokenBlock.getRelative(x, y, z);
+
+                            if (blockToBrake.equals(brokenBlock)) {
+                                continue;
+                            }
 
                             if (!blockToBrake.getType().equals(brokenBlock.getType())) {
                                 continue;
@@ -75,7 +85,7 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
-                            damageable.setDamage(damageable.getDamage() + 1);
+                            damageToDeal++;
                         }
                     }
                 }
@@ -86,7 +96,19 @@ public class CustomItemsUtils {
                     for (y = -radius; y <= radius; y++) {
                         for (z = -radius; z <= radius; z++) {
 
+                            if (brokenBlock.getRelative(x, y, z) == brokenBlock) {
+                                continue;
+                            }
+
+                            if (brokenBlock.getType().isAir()) {
+                                brokenBlock.setType(brokenBlockType);
+                            }
+
                             blockToBrake = brokenBlock.getRelative(x, y, z);
+
+                            if (blockToBrake.equals(brokenBlock)) {
+                                continue;
+                            }
 
                             if (!blockToBrake.getType().equals(brokenBlock.getType())) {
                                 continue;
@@ -98,7 +120,7 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
-                            damageable.setDamage(damageable.getDamage() + 1);
+                            damageToDeal++;
                         }
                     }
                 }
@@ -109,7 +131,19 @@ public class CustomItemsUtils {
                     for (y = -depth; y <= depth; y++) {
                         for (z = -radius; z <= radius; z++) {
 
+                            if (brokenBlock.getRelative(x, y, z) == brokenBlock) {
+                                continue;
+                            }
+
+                            if (brokenBlock.getType().isAir()) {
+                                brokenBlock.setType(brokenBlockType);
+                            }
+
                             blockToBrake = brokenBlock.getRelative(x, y, z);
+
+                            if (blockToBrake.equals(brokenBlock)) {
+                                continue;
+                            }
 
                             if (!blockToBrake.getType().equals(brokenBlock.getType())) {
                                 continue;
@@ -121,7 +155,7 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
-                            damageable.setDamage(damageable.getDamage() + 1);
+                            damageToDeal++;
                         }
                     }
                 }
@@ -132,6 +166,7 @@ public class CustomItemsUtils {
             return;
         }
 
+        damageable.setDamage((damageable.getDamage() + damageToDeal) - 1);
         itemToDamage.setItemMeta(itemMeta);
     }
 
