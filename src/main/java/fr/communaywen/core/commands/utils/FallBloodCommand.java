@@ -3,28 +3,26 @@ package fr.communaywen.core.commands;
 import fr.communaywen.core.credit.Credit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
+
 import java.util.Objects;
+
 @Credit("fuzeblocks")
-public class FallBloodCommand implements CommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (player.isOp()) {
-                player.getInventory().addItem(getBandage());
-                player.updateInventory();
+public class FallBloodCommand {
 
-            }
-        }
-        return true;
-
+    @Command("fallblood")
+    @Description("Give a bandage")
+    @CommandPermission("ayw.command.use.fallblood")
+    public void giveCommands(Player player) {
+        player.getInventory().addItem(getBandage());
+        player.updateInventory();
     }
+
     public static ItemStack getBandage() {
         ItemStack bandage = new ItemStack(Material.PAPER, 1);
         ItemMeta bandageMeta = bandage.getItemMeta();
