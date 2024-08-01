@@ -55,3 +55,6 @@ permissions:
   ayw.command.spawn:
     description: 'spawn'
     default: true
+  ayw.command.bandage:
+    description: 'Donne un bandage'
+
