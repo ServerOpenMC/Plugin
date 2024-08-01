@@ -183,7 +183,7 @@ public class ClaimListener implements Listener {
 
                     double distance = gp.getPos1().distance(gp.getPos2());
                     double balance = EconomieTeam.getTeamBalances(playerTeam.getName());
-                    double cost = (500 + (int) (distance * 12));
+                    double cost = (50 + (int) (distance * 2));
 
                     if(balance < cost) {
                         player.sendMessage("§cVotre équipe n'a pas assez d'argent pour créer ce claim. Coût: " + cost + "$.");
