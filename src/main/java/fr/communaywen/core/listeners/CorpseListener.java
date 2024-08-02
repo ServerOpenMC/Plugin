@@ -1,6 +1,8 @@
 package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.corpse.CorpseMenu;
 import org.bukkit.Material;
@@ -61,7 +63,17 @@ public class CorpseListener implements Listener {
         }
 
         e.getDrops().clear();
-        if (waterNearby) {
+
+        boolean isArea = false;
+
+        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+            if(region.isInArea(deathLocation)){
+                isArea = true;
+                break;
+            }
+        }
+        
+        if (waterNearby || isArea) {
             List<Item> items = new ArrayList<>();
             for (ItemStack itemStack : player.getInventory().getContents()) {
                 if (itemStack != null) {
