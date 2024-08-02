@@ -1,10 +1,13 @@
 package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.corpse.CorpseMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,6 +39,14 @@ public class CorpseListener implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
 
+        Location deathLocation = player.getLocation();
+        Block blockBelow = deathLocation.getBlock();
+
+        Material typeBelow = blockBelow.getType();
+        if (isHalfBlock(typeBelow)) {
+            deathLocation.add(0, 1, 0);
+        }
+
         boolean waterNearby = false;
         for (int x = -7; x <= 7; x++) {
             for (int y = -7; y <= 7; y++) {
@@ -52,7 +63,17 @@ public class CorpseListener implements Listener {
         }
 
         e.getDrops().clear();
-        if (waterNearby) {
+
+        boolean isArea = false;
+
+        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+            if(region.isInArea(deathLocation)){
+                isArea = true;
+                break;
+            }
+        }
+
+        if (waterNearby || isArea) {
             List<Item> items = new ArrayList<>();
             for (ItemStack itemStack : player.getInventory().getContents()) {
                 if (itemStack != null) {
@@ -62,9 +83,19 @@ public class CorpseListener implements Listener {
             }
             waterDeaths.put(player.getUniqueId(), items);
         } else {
-            corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory());
+            corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory(), deathLocation);
         }
     }
+
+    private boolean isHalfBlock(Material type) {
+        return switch (type) {
+            case DIRT_PATH, OAK_SLAB, SPRUCE_SLAB, BIRCH_SLAB, JUNGLE_SLAB, ACACIA_SLAB, DARK_OAK_SLAB, STONE_SLAB,
+                 SANDSTONE_SLAB, COBBLESTONE_SLAB, BRICK_SLAB, STONE_BRICK_SLAB, NETHER_BRICK_SLAB, QUARTZ_SLAB,
+                 RED_SANDSTONE_SLAB, PURPUR_SLAB, PRISMARINE_SLAB, PRISMARINE_BRICK_SLAB, DARK_PRISMARINE_SLAB -> true;
+            default -> false;
+        };
+    }
+
 
     @EventHandler
     public void onBlockInteract(PlayerInteractEvent e) {
