@@ -1,7 +1,7 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.commands.FallBloodCommand;
+import fr.communaywen.core.commands.utils.FallBloodCommand;
 import fr.communaywen.core.credit.Credit;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -12,12 +12,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Objects;
 @Credit("fuzeblocks")
 public class FallBloodListener implements Listener {
     @EventHandler
