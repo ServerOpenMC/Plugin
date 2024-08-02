@@ -1,5 +1,6 @@
 package fr.communaywen.core.customitems.utils;
 
+import lombok.Getter;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,23 +16,8 @@ import java.util.ArrayList;
 
 public class CustomItemsUtils {
 
-    /**
-     * Create an item with a type, a name and a lore
-     * @param material The type of the item
-     * @param name The name of the item
-     * @param lore The lore of the item
-     * @return The item created
-     */
-    public static ItemStack createItem(Material material, String name, ArrayList<String> lore) {
-
-        ItemStack itemStack = new ItemStack(material);
-        ItemMeta itemStackMeta = itemStack.getItemMeta();
-        itemStackMeta.setDisplayName(name);
-        itemStackMeta.setLore(lore);
-        itemStack.setItemMeta(itemStackMeta);
-
-        return itemStack;
-    }
+    @Getter
+    private static final String namespaceStart = "customitems:";
 
     /**
      * Destroy an area around a block
@@ -39,16 +25,13 @@ public class CustomItemsUtils {
      * @param brokenBlock The block to break
      * @param radius The radius of the area
      * @param depth The depth of the area
-     * @param itemToDamage The item to damage
+     * @param itemInHand The item to damage
      */
-    public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, ItemStack itemToDamage) {
+    public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, ItemStack itemInHand) {
 
         int x;
         int y;
         int z;
-        int damageToDeal = 0;
-        ItemMeta itemMeta = itemToDamage.getItemMeta();
-        Damageable damageable = (Damageable) itemMeta;
         Block blockToBrake;
         Material brokenBlockType = brokenBlock.getType();
 
@@ -77,8 +60,7 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
-                            blockToBrake.breakNaturally(itemToDamage);
-                            damageToDeal++;
+                            blockToBrake.breakNaturally(itemInHand);
                         }
                     }
                 }
@@ -107,8 +89,7 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
-                            blockToBrake.breakNaturally(itemToDamage);
-                            damageToDeal++;
+                            blockToBrake.breakNaturally(itemInHand);
                         }
                     }
                 }
@@ -137,15 +118,12 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
-                            blockToBrake.breakNaturally(itemToDamage);
-                            damageToDeal++;
+                            blockToBrake.breakNaturally(itemInHand);
                         }
                     }
                 }
                 break;
         }
-        damageable.setDamage(damageable.getDamage() + (damageToDeal/2));
-        itemToDamage.setItemMeta(itemMeta);
     }
 
     /**
