@@ -28,7 +28,7 @@ public class GlobalTeamManager {
 
     public void createTeams() {
         List<Group> groups = new ArrayList<>(luckPerms.getGroupManager().getLoadedGroups());
-        
+
         groups.sort((g1, g2) -> Integer.compare(g2.getWeight().orElse(0), g1.getWeight().orElse(0)));
 
         for (int i = 0; i < groups.size(); i++) {
