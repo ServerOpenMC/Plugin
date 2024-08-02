@@ -1,5 +1,6 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.commands.FallBloodCommand;
 import fr.communaywen.core.credit.Credit;
 import org.bukkit.*;
@@ -52,7 +53,7 @@ public class FallBloodListener implements Listener {
                             player.spawnParticle(Particle.DUST, player.getLocation(), 9999, 0, 0, 0, dustOptions);
                             counter++;
                         }
-                    }.runTaskTimer(FallBloodOpenMC.getInstance(), 0, 20);
+                    }.runTaskTimer(AywenCraftPlugin.getInstance(), 0, 20);
                 }
             }
         }
