@@ -3,56 +3,96 @@ package fr.communaywen.core.scoreboard;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ScoreboardManager {
 
-    public List<Player> disableSBPlayerList = new ArrayList<>();
+    private final AywenCraftPlugin plugin;
+    private final LuckPerms luckPerms;
+    private final TeamManager teamManager;
+    private final GlobalTeamManager globalTeamManager;
+    private final Map<UUID, Scoreboard> playerScoreboards;
+    public List<UUID> disabledPlayers = new ArrayList<>();
+
+    public ScoreboardManager(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+        this.luckPerms = plugin.api;
+        this.teamManager = plugin.getManagers().getTeamManager();
+        this.playerScoreboards = new HashMap<>();
+
+        this.globalTeamManager = new GlobalTeamManager(plugin, playerScoreboards);
+
+        // Planifier les mises à jour périodiques
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updateAllScoreboards, 0L, 20L * 5); // Mise à jour toutes les 5 secondes
+    }
 
     public void setScoreboard(Player player) {
-        User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
-        QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
-        org.bukkit.scoreboard.ScoreboardManager scoreboardManagers = Bukkit.getScoreboardManager();
-        Scoreboard scoreboard = scoreboardManagers.getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy");
-        objective.setDisplayName("\uE253");
+        if (disabledPlayers.contains(player.getUniqueId())) return;
+
+        Scoreboard scoreboard = playerScoreboards.computeIfAbsent(player.getUniqueId(), k -> createNewScoreboard(player));
+        player.setScoreboard(scoreboard);
+    }
+
+    private Scoreboard createNewScoreboard(Player player) {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy", "\uE253");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        TeamManager teams = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
-        boolean teambool = teams.isInTeam(player.getUniqueId());
-        Team teamName = teams.getTeamByPlayer(player.getUniqueId());
+
+        updateScoreboard(player, scoreboard, objective);
+
+        globalTeamManager.createTeams();
+
+        return scoreboard;
+    }
+
+    private void updateAllScoreboards() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (disabledPlayers.contains(player.getUniqueId())) continue;
+
+            updateScoreboard(player);
+        }
+    }
+
+    private void updateScoreboard(Player player) {
+        Scoreboard scoreboard = playerScoreboards.get(player.getUniqueId());
+        if (scoreboard == null) return;
+
+        Objective objective = scoreboard.getObjective("sb_aywen");
+        if (objective == null) return;
+
+        updateScoreboard(player, scoreboard, objective);
+    }
+
+    private void updateScoreboard(Player player, Scoreboard scoreboard, Objective objective) {
+        for (String entry : scoreboard.getEntries()) {
+            scoreboard.resetScores(entry);
+        }
+
+        User userlp = luckPerms.getUserManager().getUser(player.getUniqueId());
+        QueryOptions queryOptions = luckPerms.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+        boolean teambool = teamManager.isInTeam(player.getUniqueId());
+        Team teamName = teamManager.getTeamByPlayer(player.getUniqueId());
         String ipStr = "ᴘʟᴀʏ.ᴏᴘᴇɴᴍᴄ.ꜰʀ";
 
-        Score vide1 = objective.getScore(" ");
-        Score vide2 = objective.getScore("  ");
-        Score vide3 = objective.getScore("   ");
+        objective.getScore(" ").setScore(9);
+        objective.getScore("§d§m                        ").setScore(8);
+        objective.getScore("§8• §fPseudo§7: §b" + player.getName()).setScore(7);
+        objective.getScore("  ").setScore(6);
+        objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(5);
+        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(4);
+        objective.getScore("   ").setScore(3);
+        objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(2);
+        objective.getScore("§d§m                         §r").setScore(1);
+        objective.getScore("§d    " + ipStr).setScore(0);
 
-        Score bars1 = objective.getScore("§d§m                        ");
-        Score bars2 = objective.getScore("§d§m                         §r");
-
-        Score pseudo = objective.getScore("§8• §fPseudo§7: §b" + player.getName());
-        Score money = objective.getScore("§8• §fArgent§7: §6" + AywenCraftPlugin.getInstance().getManagers().getEconomyManager().getBalance(player));
-        Score grade = objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade"));
-        Score team = objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team."));
-        Score ip = objective.getScore("§d    " + ipStr);
-
-        vide1.setScore(10);
-        bars1.setScore(9);
-        pseudo.setScore(8);
-        vide2.setScore(7);
-        grade.setScore(6);
-        money.setScore(5);
-        vide3.setScore(4);
-        team.setScore(3);
-        bars2.setScore(1);
-        ip.setScore(0);
-
-        player.setScoreboard(scoreboard);
+        globalTeamManager.updatePlayerTeam(player);
     }
 }
