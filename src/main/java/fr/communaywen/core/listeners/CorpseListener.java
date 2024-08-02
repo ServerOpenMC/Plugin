@@ -72,7 +72,7 @@ public class CorpseListener implements Listener {
                 break;
             }
         }
-        
+
         if (waterNearby || isArea) {
             List<Item> items = new ArrayList<>();
             for (ItemStack itemStack : player.getInventory().getContents()) {
