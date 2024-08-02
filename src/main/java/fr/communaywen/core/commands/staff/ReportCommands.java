@@ -12,7 +12,6 @@ import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import org.bukkit.ChatColor;
-
 import java.sql.Timestamp;
 
 @Feature("Report")
