@@ -2,15 +2,15 @@ package fr.communaywen.core.scoreboard;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.NodeType;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class GlobalTeamManager {
 
@@ -27,62 +27,70 @@ public class GlobalTeamManager {
     }
 
     public void createTeams() {
-        for (Scoreboard scoreboard : playerScoreboards.values()) {
-            createTeam(scoreboard, "a", "admin");
-            createTeam(scoreboard, "b", "modo");
-            createTeam(scoreboard, "c", "default");
+        List<Group> groups = new ArrayList<>(luckPerms.getGroupManager().getLoadedGroups());
+        
+        groups.sort((g1, g2) -> Integer.compare(g2.getWeight().orElse(0), g1.getWeight().orElse(0)));
+
+        for (int i = 0; i < groups.size(); i++) {
+            Group group = groups.get(i);
+            String teamName = String.valueOf((char) ('a' + i));
+            for (Scoreboard scoreboard : playerScoreboards.values()) {
+                createTeam(scoreboard, teamName, group);
+            }
         }
     }
 
-    private void createTeam(Scoreboard scoreboard, String teamName, String groupName) {
+    private void createTeam(Scoreboard scoreboard, String teamName, Group group) {
         Team team = scoreboard.getTeam(teamName);
         if (team == null) {
             team = scoreboard.registerNewTeam(teamName);
         }
-        team.setPrefix(Objects.requireNonNull(ChatColor.translateAlternateColorCodes('&', luckPerms.getGroupManager().getGroup(groupName)
-                .getCachedData().getMetaData(QueryOptions.defaultContextualOptions()).getPrefix())));
+        team.setPrefix(Objects.requireNonNull(ChatColor.translateAlternateColorCodes('&',
+                group.getCachedData().getMetaData(QueryOptions.defaultContextualOptions()).getPrefix())));
     }
 
     public void updatePlayerTeam(Player player) {
         for (Scoreboard scoreboard : playerScoreboards.values()) {
-            // Ensure teams are created for this scoreboard
             createTeamsIfNotExists(scoreboard);
 
-            int teamIndex = getTeam(player);
-            scoreboard.getTeam("a").removeEntry(player.getName());
-            scoreboard.getTeam("b").removeEntry(player.getName());
-            scoreboard.getTeam("c").removeEntry(player.getName());
-            switch (teamIndex) {
-                case 0: // Admin
-                    scoreboard.getTeam("a").addEntry(player.getName());
-                    break;
-                case 1: // Mod
-                    scoreboard.getTeam("b").addEntry(player.getName());
-                    break;
-                case 2: // Player
-                    scoreboard.getTeam("c").addEntry(player.getName());
-                    break;
-                default:
-                    break;
+            Group playerGroup = luckPerms.getUserManager().getUser(player.getUniqueId())
+                    .getNodes(NodeType.INHERITANCE).stream()
+                    .map(NodeType.INHERITANCE::cast)
+                    .map(inheritanceNode -> luckPerms.getGroupManager().getGroup(inheritanceNode.getGroupName()))
+                    .max(Comparator.comparingInt(group -> group.getWeight().orElse(0)))
+                    .orElse(null);
+
+            if (playerGroup != null) {
+                String teamName = getTeamNameByGroup(playerGroup);
+                if (teamName != null) {
+                    for (Team team : scoreboard.getTeams()) {
+                        team.removeEntry(player.getName());
+                    }
+                    scoreboard.getTeam(teamName).addEntry(player.getName());
+                }
             }
         }
     }
 
     private void createTeamsIfNotExists(Scoreboard scoreboard) {
-        if (scoreboard.getTeam("a") == null) {
-            createTeam(scoreboard, "a", "admin");
-        }
-        if (scoreboard.getTeam("b") == null) {
-            createTeam(scoreboard, "b", "modo");
-        }
-        if (scoreboard.getTeam("c") == null) {
-            createTeam(scoreboard, "c", "default");
+        for (Group group : luckPerms.getGroupManager().getLoadedGroups()) {
+            String teamName = getTeamNameByGroup(group);
+            if (teamName != null && scoreboard.getTeam(teamName) == null) {
+                createTeam(scoreboard, teamName, group);
+            }
         }
     }
 
-    private int getTeam(Player player) {
-        if (player.hasPermission("group.admin")) return 0;
-        if (player.hasPermission("group.modo")) return 1;
-        return 2;
+    private String getTeamNameByGroup(Group group) {
+        List<Group> groups = new ArrayList<>(luckPerms.getGroupManager().getLoadedGroups());
+
+        groups.sort((g1, g2) -> Integer.compare(g2.getWeight().orElse(0), g1.getWeight().orElse(0)));
+
+        for (int i = 0; i < groups.size(); i++) {
+            if (groups.get(i).equals(group)) {
+                return String.valueOf((char) ('a' + i));
+            }
+        }
+        return null;
     }
 }
