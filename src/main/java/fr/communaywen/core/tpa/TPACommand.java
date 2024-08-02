@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
@@ -23,8 +24,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Feature("TPA")
 @Credit({"ddemile", "Axillity", "misieur", "process"})
@@ -72,7 +71,7 @@ public class TPACommand implements Listener {
         player.sendMessage("§aDemande de téléportation envoyée à §f" + target.getName() + "§a.");
 
         final Component message = Component.text(player.getName() + " vous a envoyé une demande de téléportation. Tapez /tpaccept pour accepter.")
-                .color(TextColor.color(255, 255, 255))
+                .color(TextColor.color(30, 100, 150))
                 .clickEvent(ClickEvent.runCommand("/tpaccept"))
                 .hoverEvent(HoverEvent.showText(Component.text("§7[§aCliquez pour accepter§7]")));
 
@@ -158,7 +157,7 @@ public class TPACommand implements Listener {
             }
         } else if (type == Material.ARROW) {
             String itemName = clickedItem.getItemMeta().getDisplayName();
-            int currentPage = getCurrentPage(event.getInventory());
+            int currentPage = getCurrentPage(event.getView().getTitle());
             if (itemName.equals("§aPage suivante")) {
                 openPlayerListGUI(player, currentPage + 1);
             } else if (itemName.equals("§aPage précédente")) {
@@ -167,8 +166,7 @@ public class TPACommand implements Listener {
         }
     }
 
-    private int getCurrentPage(Inventory inventory) {
-        String title = inventory.getTitle();
+    private int getCurrentPage(String title) {
         if (title.contains(" - Page ")) {
             try {
                 return Integer.parseInt(title.split(" - Page ")[1]);
