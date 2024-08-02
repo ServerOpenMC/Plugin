@@ -28,12 +28,12 @@ public class FallBloodListener implements Listener {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 float fallDistance = player.getFallDistance();
                 if (fallDistance >= 7) {
-                    double degats = fallDistance / 2.5;
+                    double degats = fallDistance / 3.0;
                     player.damage(degats);
                     player.addPotionEffect(getPotionEffectType());
-                    player.sendMessage("§l§cVous saignez !");
+                    player.sendMessage("§l§cVous saignez, utilisé un bandage pour arrêter le saignement");
                     Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
-                    player.spawnParticle(Particle.EXPLOSION, player.getLocation(), 9999, dustOptions);
+                    player.spawnParticle(Particle.DUST, player.getLocation(), 9999, 0, 0, 0, dustOptions);
                 }
             }
         }
@@ -62,7 +62,6 @@ public class FallBloodListener implements Listener {
 
     @EventHandler
     public void onAnvil(InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
         if (e.getCurrentItem() == null) {
             return;
         }
@@ -70,14 +69,13 @@ public class FallBloodListener implements Listener {
             return;
         }
         if (e.getInventory().getType() == InventoryType.ANVIL) {
-            if(e.getSlotType() == InventoryType.SlotType.RESULT) {
                 if (e.getCurrentItem().isSimilar(FallBloodCommand.getBandage())) {
                     e.setCancelled(true);
                 }
             }
         }
-    }
+
     private PotionEffect getPotionEffectType() {
-       return new PotionEffect(PotionEffectType.POISON, 70, 1);
+       return new PotionEffect(PotionEffectType.POISON, 90, 1);
     }
 }
