@@ -1,5 +1,9 @@
 package fr.communaywen.core.tpa;
 
+import dev.xernas.menulib.MenuBuilder;
+import dev.xernas.menulib.MenuItemClickContext;
+import dev.xernas.menulib.MenuListener;
+import dev.xernas.menulib.items.ClickableItem;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
@@ -10,10 +14,6 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -86,29 +86,56 @@ public class TPACommand implements Listener {
     }
 
     private void openPlayerListGUI(Player player, int page) {
-        Inventory gui = Bukkit.createInventory(null, 54, INVENTORY_TITLE);
-
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         int totalPlayers = onlinePlayers.size();
         int startIndex = page * PLAYERS_PER_PAGE;
         int endIndex = Math.min(startIndex + PLAYERS_PER_PAGE, totalPlayers);
 
+        MenuBuilder menuBuilder = new MenuBuilder(INVENTORY_TITLE, 54)
+                .withListener(new MenuListener() {
+                    @Override
+                    public void onItemClick(MenuItemClickContext context) {
+                        ItemStack clickedItem = context.getClickedItem();
+                        Player clicker = context.getClicker();
+                        if (clickedItem == null) return;
+
+                        Material type = clickedItem.getType();
+                        if (type == Material.PLAYER_HEAD) {
+                            SkullMeta meta = (SkullMeta) clickedItem.getItemMeta();
+                            if (meta != null && meta.getOwningPlayer() != null) {
+                                Player target = Bukkit.getPlayer(meta.getOwningPlayer().getUniqueId());
+                                if (target != null) {
+                                    sendTPARequest(clicker, target);
+                                    clicker.closeInventory();
+                                }
+                            }
+                        } else if (type == Material.ARROW) {
+                            String itemName = clickedItem.getItemMeta().getDisplayName();
+                            if (itemName.equals("§aPage suivante")) {
+                                openPlayerListGUI(clicker, page + 1);
+                            } else if (itemName.equals("§aPage précédente")) {
+                                openPlayerListGUI(clicker, page - 1);
+                            }
+                        }
+                    }
+                });
+
         for (int i = startIndex; i < endIndex; i++) {
             Player onlinePlayer = onlinePlayers.get(i);
             if (!onlinePlayer.equals(player)) {
                 ItemStack head = createPlayerHead(onlinePlayer);
-                gui.addItem(head);
+                menuBuilder.addItem(new ClickableItem(head));
             }
         }
 
         if (page > 0) {
-            gui.setItem(45, createNavigationItem("§aPage précédente", Material.ARROW));
+            menuBuilder.setItem(45, new ClickableItem(createNavigationItem("§aPage précédente", Material.ARROW)));
         }
         if (endIndex < totalPlayers) {
-            gui.setItem(53, createNavigationItem("§aPage suivante", Material.ARROW));
+            menuBuilder.setItem(53, new ClickableItem(createNavigationItem("§aPage suivante", Material.ARROW)));
         }
 
-        player.openInventory(gui);
+        menuBuilder.build().open(player);
     }
 
     private ItemStack createPlayerHead(Player player) {
@@ -130,49 +157,5 @@ public class TPACommand implements Listener {
             item.setItemMeta(meta);
         }
         return item;
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
-
-        Player player = (Player) event.getWhoClicked();
-
-        if (!event.getView().getTitle().equals(INVENTORY_TITLE)) return;
-
-        event.setCancelled(true);
-
-        ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem == null) return;
-
-        Material type = clickedItem.getType();
-        if (type == Material.PLAYER_HEAD) {
-            SkullMeta meta = (SkullMeta) clickedItem.getItemMeta();
-            if (meta != null && meta.getOwningPlayer() != null) {
-                Player target = Bukkit.getPlayer(meta.getOwningPlayer().getUniqueId());
-                if (target != null) {
-                    sendTPARequest(player, target);
-                    player.closeInventory();
-                }
-            }
-        } else if (type == Material.ARROW) {
-            String itemName = clickedItem.getItemMeta().getDisplayName();
-            int currentPage = getCurrentPage(event.getView().getTitle());
-            if (itemName.equals("§aPage suivante")) {
-                openPlayerListGUI(player, currentPage + 1);
-            } else if (itemName.equals("§aPage précédente")) {
-                openPlayerListGUI(player, currentPage - 1);
-            }
-        }
-    }
-
-    private int getCurrentPage(String title) {
-        if (title.contains(" - Page ")) {
-            try {
-                return Integer.parseInt(title.split(" - Page ")[1]);
-            } catch (NumberFormatException e) {
-            }
-        }
-        return 0;
     }
 }
