@@ -1,7 +1,7 @@
 package fr.communaywen.core.fallblood;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.commands.FallBloodCommand;
+import fr.communaywen.core.commands.utils.FallBloodCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

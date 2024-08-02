@@ -1,6 +1,6 @@
 package fr.communaywen.core;
 
-import fr.communaywen.core.commands.RewardCommand;
+import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;

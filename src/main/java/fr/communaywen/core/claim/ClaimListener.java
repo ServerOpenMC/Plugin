@@ -8,11 +8,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -83,6 +81,38 @@ public class ClaimListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().getType() == Material.BONE_MEAL) {
+            Block clickedBlock = event.getClickedBlock();
+            if (clickedBlock != null && clickedBlock.getType() == Material.MOSS_BLOCK) {
+                Player player = event.getPlayer();
+
+                int radius = 6;
+                boolean isInAnyRegion = false;
+                outerLoop:
+                for (int x = -radius; x <= radius; x++) {
+                    for (int y = -radius; y <= radius; y++) {
+                        for (int z = -radius; z <= radius; z++) {
+                            Block nearbyBlock = clickedBlock.getRelative(x, y, z);
+                            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+                                if (region.isInArea(nearbyBlock.getLocation())) {
+                                    isInAnyRegion = true;
+                                    break outerLoop;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (isInAnyRegion) {
+                    event.setCancelled(true);
+                    player.sendMessage("§cLa propagation de la mousse est désactivée car il y a un claim à proximité.");
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
@@ -135,6 +165,15 @@ public class ClaimListener implements Listener {
                 Team playerTeam = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByPlayer(playerUuid);
 
                 if (gp.getPos1() == null) {
+
+                    // Check if player is in world
+                    if (!player.getWorld().getName().equals("world")) {
+                        removeClaimStick(player);
+                        player.sendMessage("§cVous ne pouvez pas créer de région dans ce monde !");
+                        gp.setPos1(null);
+                        gp.setPos2(null);
+                        return;
+                    }
 
                     if (playerTeam == null) {
                         removeClaimStick(player);
