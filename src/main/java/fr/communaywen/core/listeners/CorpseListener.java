@@ -32,39 +32,39 @@ public class CorpseListener implements Listener {
         this.corpseManager = corpseManager;
     }
 
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
-        Player player = e.getEntity();
-
-        boolean waterNearby = false;
-        for (int x = -7; x <= 7; x++) {
-            for (int y = -7; y <= 7; y++) {
-                for (int z = -7; z <= 7; z++) {
-                    Block block = player.getLocation().add(x, y, z).getBlock();
-                    if (block.getType() == Material.WATER) {
-                        waterNearby = true;
-                        break;
-                    }
-                }
-                if (waterNearby) break;
-            }
-            if (waterNearby) break;
-        }
-
-        e.getDrops().clear();
-        if (waterNearby) {
-            List<Item> items = new ArrayList<>();
-            for (ItemStack itemStack : player.getInventory().getContents()) {
-                if (itemStack != null) {
-                    Item item = player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                    items.add(item);
-                }
-            }
-            waterDeaths.put(player.getUniqueId(), items);
-        } else {
-            corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory());
-        }
-    }
+//    @EventHandler
+//    public void onDeath(PlayerDeathEvent e) {
+//        Player player = e.getEntity();
+//
+//        boolean waterNearby = false;
+//        for (int x = -7; x <= 7; x++) {
+//            for (int y = -7; y <= 7; y++) {
+//                for (int z = -7; z <= 7; z++) {
+//                    Block block = player.getLocation().add(x, y, z).getBlock();
+//                    if (block.getType() == Material.WATER) {
+//                        waterNearby = true;
+//                        break;
+//                    }
+//                }
+//                if (waterNearby) break;
+//            }
+//            if (waterNearby) break;
+//        }
+//
+//        e.getDrops().clear();
+//        if (waterNearby) {
+//            List<Item> items = new ArrayList<>();
+//            for (ItemStack itemStack : player.getInventory().getContents()) {
+//                if (itemStack != null) {
+//                    Item item = player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+//                    items.add(item);
+//                }
+//            }
+//            waterDeaths.put(player.getUniqueId(), items);
+//        } else {
+//            corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory());
+//        }
+//    }
 
     @EventHandler
     public void onBlockInteract(PlayerInteractEvent e) {
