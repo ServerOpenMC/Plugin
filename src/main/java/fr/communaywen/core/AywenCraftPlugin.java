@@ -7,9 +7,26 @@ import fr.communaywen.core.claim.ClaimConfigDataBase;
 import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
-import fr.communaywen.core.commands.*;
+import fr.communaywen.core.commands.credits.CreditCommand;
+import fr.communaywen.core.commands.credits.FeatureCommand;
+import fr.communaywen.core.commands.economy.AdminShopCommand;
+import fr.communaywen.core.commands.economy.BaltopCommand;
+import fr.communaywen.core.commands.economy.MoneyCommand;
+import fr.communaywen.core.commands.economy.PayCommands;
+import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
+import fr.communaywen.core.commands.explosion.FBoomCommand;
+import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.commands.teleport.RTPCommand;
+import fr.communaywen.core.commands.teleport.SpawnCommand;
+import fr.communaywen.core.commands.link.LinkCommand;
+import fr.communaywen.core.commands.link.ManualLinkCommand;
+import fr.communaywen.core.commands.socials.DiscordCommand;
+import fr.communaywen.core.commands.socials.GithubCommand;
+import fr.communaywen.core.commands.teams.TeamAdminCommand;
+import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.fallblood.BandageRecipe;
-import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
+import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -135,7 +152,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.register(
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
-                new VersionCommand(this),
                 new RulesCommand(managers.getBookConfig()),
                 new TeamCommand(),
                 new MoneyCommand(this),
@@ -169,7 +185,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MineCommand(),
                 new AdminShopCommand(),
                 new PayCommands(),
-                new FallBloodCommand()
+                new FallBloodCommand(),
+                new DiscordCommand(this)
         );
 
         /*  --------  */
