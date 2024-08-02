@@ -38,7 +38,7 @@ public class CorpseManager implements Listener {
 
                     remove(corpseBlock);
                 }
-            }.runTaskLater(AywenCraftPlugin.getInstance(), 20*6*10);
+            }.runTaskLater(AywenCraftPlugin.getInstance(), 20*60*10);
         }
 
     }
