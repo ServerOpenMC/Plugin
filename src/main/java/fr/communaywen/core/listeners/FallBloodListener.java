@@ -1,6 +1,6 @@
 package fr.communaywen.core.listeners;
 
-import fr.communaywen.core.commands.FallBloodCommand;
+import fr.communaywen.core.commands.utils.FallBloodCommand;
 import fr.communaywen.core.credit.Credit;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ public class FallBloodListener implements Listener {
                     player.addPotionEffect(getPotionEffectType());
                     player.sendMessage("§l§cVous saignez !");
                     Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
-                    player.spawnParticle(Particle.EXPLOSION, player.getLocation(), 9999, dustOptions);
+                    player.spawnParticle(Particle.DUST, player.getLocation(), 9999, dustOptions);
                 }
             }
         }
