@@ -9,6 +9,7 @@ import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
@@ -38,6 +39,7 @@ public class Managers {
     private FallingBlocksExplosionManager fbeManager;
     private LevelsManager levelsManager;
     private TransactionsManager transactionsManager;
+    private ReportManager reportManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -89,6 +91,7 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
+        reportManager = new ReportManager();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
