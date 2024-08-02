@@ -96,6 +96,6 @@ public class FallBloodListener implements Listener {
         }
 
     private PotionEffect getPotionEffectType() {
-       return new PotionEffect(PotionEffectType.POISON, 90, 1);
+       return new PotionEffect(PotionEffectType.POISON, 20 * 20, 1);
     }
 }
