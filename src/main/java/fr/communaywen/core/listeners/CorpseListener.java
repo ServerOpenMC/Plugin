@@ -4,20 +4,29 @@ import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.corpse.CorpseMenu;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.*;
+
 public class CorpseListener implements Listener {
 
-    private CorpseManager corpseManager;
+    private final CorpseManager corpseManager;
+    private final Map<UUID, List<Item>> waterDeaths = new HashMap<>();
 
     public CorpseListener(CorpseManager corpseManager) {
         this.corpseManager = corpseManager;
@@ -25,9 +34,36 @@ public class CorpseListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
-        e.getDrops().clear();
+        Player player = e.getEntity();
 
-        corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory());
+        boolean waterNearby = false;
+        for (int x = -7; x <= 7; x++) {
+            for (int y = -7; y <= 7; y++) {
+                for (int z = -7; z <= 7; z++) {
+                    Block block = player.getLocation().add(x, y, z).getBlock();
+                    if (block.getType() == Material.WATER) {
+                        waterNearby = true;
+                        break;
+                    }
+                }
+                if (waterNearby) break;
+            }
+            if (waterNearby) break;
+        }
+
+        e.getDrops().clear();
+        if (waterNearby) {
+            List<Item> items = new ArrayList<>();
+            for (ItemStack itemStack : player.getInventory().getContents()) {
+                if (itemStack != null) {
+                    Item item = player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+                    items.add(item);
+                }
+            }
+            waterDeaths.put(player.getUniqueId(), items);
+        } else {
+            corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory());
+        }
     }
 
     @EventHandler
@@ -77,6 +113,44 @@ public class CorpseListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent e) {
         if (corpseManager.isCorpseInventory(e.getInventory())) {
             corpseManager.close(e.getInventory());
+        }
+    }
+
+    @EventHandler
+    public void onPickup(PlayerPickupItemEvent e) {
+        Player player = e.getPlayer();
+        Item item = e.getItem();
+
+        for (UUID uuid : waterDeaths.keySet()) {
+            List<Item> items = waterDeaths.get(uuid);
+            if (items.contains(item)) {
+                if (!player.getUniqueId().equals(uuid)) {
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(PlayerBucketEmptyEvent e) {
+        Player player = e.getPlayer();
+
+        Location blockLocation = e.getBlock().getLocation();
+        List<Location> graveLocations = corpseManager.getGraveLocations();
+
+        for (Location graveLocation : graveLocations) {
+            if (blockLocation.getWorld().equals(graveLocation.getWorld())) {
+                double distance = blockLocation.distance(graveLocation);
+                if (distance <= 12 ||
+                        (blockLocation.getBlockX() == graveLocation.getBlockX() &&
+                                blockLocation.getBlockZ() == graveLocation.getBlockZ() &&
+                                blockLocation.getBlockY() >= graveLocation.getBlockY())) {
+                    e.setCancelled(true);
+                    player.sendMessage("§cVous ne pouvez pas placer de l'eau près d'une tombe.");
+                    return;
+                }
+            }
         }
     }
 
