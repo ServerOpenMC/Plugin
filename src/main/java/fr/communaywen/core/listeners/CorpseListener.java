@@ -34,9 +34,9 @@ public class CorpseListener implements Listener {
         Player player = e.getEntity();
 
         boolean waterNearby = false;
-        for (int x = -3; x <= 3; x++) {
-            for (int y = -3; y <= 3; y++) {
-                for (int z = -3; z <= 3; z++) {
+        for (int x = -10; x <= 10; x++) {
+            for (int y = -10; y <= 10; y++) {
+                for (int z = -10; z <= 10; z++) {
                     Block block = player.getLocation().add(x, y, z).getBlock();
                     if (block.getType() == Material.WATER) {
                         waterNearby = true;
