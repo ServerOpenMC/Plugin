@@ -28,9 +28,10 @@ public class FallBloodListener implements Listener {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 float fallDistance = player.getFallDistance();
                 if (fallDistance >= 7) {
-                    double degats = fallDistance / 3.5;
+                    double degats = fallDistance / 4.5;
                     player.damage(degats);
                     player.addPotionEffect(getPotionEffectType());
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,20 * 20,0));
                     player.sendMessage("§l§cVous saignez, utilisé un bandage pour arrêter le saignement");
                     new BukkitRunnable() {
                         private int counter = 0;
@@ -45,6 +46,9 @@ public class FallBloodListener implements Listener {
                             if (counter >= 20) {
                                 cancel();
                                 return;
+                            }
+                            if (!player.hasPotionEffect(PotionEffectType.POISON)) {
+                                counter = 21;
                             }
 
                             Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
@@ -67,6 +71,7 @@ public class FallBloodListener implements Listener {
                 event.setCancelled(true);
 
                 if (player.hasPotionEffect(PotionEffectType.POISON)) {
+                        player.removePotionEffect(PotionEffectType.SLOWNESS);
                         player.removePotionEffect(PotionEffectType.POISON);
                     int amount = item.getAmount();
                     if (amount > 1) {
@@ -94,6 +99,6 @@ public class FallBloodListener implements Listener {
         }
 
     private PotionEffect getPotionEffectType() {
-       return new PotionEffect(PotionEffectType.POISON, 20 * 20, 1);
+       return new PotionEffect(PotionEffectType.POISON, 20 * 20, 0);
     }
 }

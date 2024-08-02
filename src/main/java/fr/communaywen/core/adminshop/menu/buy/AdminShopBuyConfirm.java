@@ -8,10 +8,12 @@ import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.database.TransactionsManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,7 +86,13 @@ public class AdminShopBuyConfirm extends Menu {
 
                     while (totalQuantity > 0) {
                         int stackSize = Math.min(totalQuantity, maxStackSize);
-                        getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
+                        ItemStack itemStack = new ItemStack(materials, stackSize);
+                        boolean value = hasAvaliableSlot(getOwner().getPlayer(), itemStack);
+                        if (value) {
+                            getOwner().getInventory().addItem(itemStack);
+                        } else {
+                            Bukkit.getServer().getWorld(getOwner().getWorld().getUID()).dropItem(getOwner().getLocation(), itemStack);
+                        }
                         totalQuantity -= stackSize;
                     }
 
@@ -127,5 +135,14 @@ public class AdminShopBuyConfirm extends Menu {
 
         int totalSpace = freeSlots * item.getMaxStackSize() + partialSlots;
         return totalSpace >= amount;
+    }
+    private boolean hasAvaliableSlot(Player player,ItemStack buyedItem){
+        Inventory inv = player.getInventory();
+        for (ItemStack item: inv.getContents()) {
+            if(item == null || item.isSimilar(buyedItem)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
