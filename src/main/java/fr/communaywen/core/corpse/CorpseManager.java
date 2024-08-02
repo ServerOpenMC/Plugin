@@ -47,7 +47,7 @@ public class CorpseManager implements Listener {
         for (CorpseBlock corpseBlock : corpses.keySet()) {
             Location corpseLocation = corpseBlock.getLocation();
 
-            if (areLocationsClose(loc, corpseLocation, 2)) {
+            if (areLocationsClose(loc, corpseLocation, 1.2)) {
                 CorpseMenu corpseMenu = corpses.get(corpseBlock);
 
                 if (corpseMenu != null && corpseMenu.isOwner(p)) {

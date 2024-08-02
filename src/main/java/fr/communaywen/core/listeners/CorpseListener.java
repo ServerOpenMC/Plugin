@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.Location;
@@ -36,9 +37,9 @@ public class CorpseListener implements Listener {
         Player player = e.getEntity();
 
         boolean waterNearby = false;
-        for (int x = -10; x <= 10; x++) {
-            for (int y = -10; y <= 10; y++) {
-                for (int z = -10; z <= 10; z++) {
+        for (int x = -7; x <= 7; x++) {
+            for (int y = -7; y <= 7; y++) {
+                for (int z = -7; z <= 7; z++) {
                     Block block = player.getLocation().add(x, y, z).getBlock();
                     if (block.getType() == Material.WATER) {
                         waterNearby = true;
@@ -132,25 +133,22 @@ public class CorpseListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e) {
+    public void onBlockPlace(PlayerBucketEmptyEvent e) {
         Player player = e.getPlayer();
-        Block block = e.getBlockPlaced();
 
-        if (block.getType() == Material.WATER || block.getType() == Material.WATER_BUCKET) {
-            Location blockLocation = block.getLocation();
-            List<Location> graveLocations = corpseManager.getGraveLocations();
+        Location blockLocation = e.getBlock().getLocation();
+        List<Location> graveLocations = corpseManager.getGraveLocations();
 
-            for (Location graveLocation : graveLocations) {
-                if (blockLocation.getWorld().equals(graveLocation.getWorld())) {
-                    double distance = blockLocation.distance(graveLocation);
-                    if (distance <= 20 ||
-                            (blockLocation.getBlockX() == graveLocation.getBlockX() &&
-                                    blockLocation.getBlockZ() == graveLocation.getBlockZ() &&
-                                    blockLocation.getBlockY() >= graveLocation.getBlockY())) {
-                        e.setCancelled(true);
-                        player.sendMessage("§cVous ne pouvez pas placer de l'eau près d'une tombe.");
-                        return;
-                    }
+        for (Location graveLocation : graveLocations) {
+            if (blockLocation.getWorld().equals(graveLocation.getWorld())) {
+                double distance = blockLocation.distance(graveLocation);
+                if (distance <= 12 ||
+                        (blockLocation.getBlockX() == graveLocation.getBlockX() &&
+                                blockLocation.getBlockZ() == graveLocation.getBlockZ() &&
+                                blockLocation.getBlockY() >= graveLocation.getBlockY())) {
+                    e.setCancelled(true);
+                    player.sendMessage("§cVous ne pouvez pas placer de l'eau près d'une tombe.");
+                    return;
                 }
             }
         }
