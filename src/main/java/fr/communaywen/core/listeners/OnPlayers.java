@@ -6,11 +6,13 @@ import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import net.luckperms.api.query.QueryOptions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,6 +43,11 @@ public class OnPlayers implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // Donne une permissions en fonction du niveau
         Player player = event.getPlayer();
+
+        User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
+        QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+
+        event.setJoinMessage("§8[§a+§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
 
         if (player.getUniqueId().toString().equals("1581225d-e6a2-44e8-af37-c71702c60665")) {
             Bukkit.getServer().dispatchCommand(player, "attribute " + player.getUniqueId().toString() + " minecraft:generic.scale base set 0.0625");
@@ -96,6 +103,15 @@ public class OnPlayers implements Listener {
                 }
             }
         });
+    }
 
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
+        QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+
+        event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
     }
 }
