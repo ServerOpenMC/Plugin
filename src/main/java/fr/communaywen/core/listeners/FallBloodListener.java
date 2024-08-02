@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
 @Credit("fuzeblocks")
@@ -28,12 +29,30 @@ public class FallBloodListener implements Listener {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 float fallDistance = player.getFallDistance();
                 if (fallDistance >= 7) {
-                    double degats = fallDistance / 3.0;
+                    double degats = fallDistance / 3.5;
                     player.damage(degats);
                     player.addPotionEffect(getPotionEffectType());
                     player.sendMessage("§l§cVous saignez, utilisé un bandage pour arrêter le saignement");
-                    Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
-                    player.spawnParticle(Particle.DUST, player.getLocation(), 9999, 0, 0, 0, dustOptions);
+                    new BukkitRunnable() {
+                        private int counter = 0;
+
+                        @Override
+                        public void run() {
+                            if (player == null || !player.isOnline()) {
+                                cancel();
+                                return;
+                            }
+
+                            if (counter >= 20) {
+                                cancel();
+                                return;
+                            }
+
+                            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
+                            player.spawnParticle(Particle.DUST, player.getLocation(), 9999, 0, 0, 0, dustOptions);
+                            counter++;
+                        }
+                    }.runTaskTimer(FallBloodOpenMC.getInstance(), 0, 20);
                 }
             }
         }
