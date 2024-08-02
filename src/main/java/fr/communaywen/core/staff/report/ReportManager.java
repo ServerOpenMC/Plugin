@@ -46,7 +46,7 @@ public class ReportManager extends DatabaseConnector {
 
             // Vérifier si des rapports ont été trouvés
             if (!rs.isBeforeFirst()) {
-                player.sendMessage(" \n Vous n'avez effectué aucun signalement");
+                player.sendMessage(" \nVous n'avez effectué aucun signalement");
                 return;
             }
             player.sendMessage("\nVos signalements : \n  \n");
@@ -54,7 +54,7 @@ public class ReportManager extends DatabaseConnector {
                 // Récupérer les données de chaque colonne
                 String reported = rs.getString("reported");
                 String reason = rs.getString("reason");
-                String timecode = rs.getString("timecode");
+                String timestamp = rs.getString("timestamp");
 
                 OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(UUID.fromString(reported));
                 String reportedName = reportedPlayer.getName();
@@ -63,7 +63,7 @@ public class ReportManager extends DatabaseConnector {
                 // Construire le message à envoyer au joueur
                 historyMessage.append("Vous avez signalé ").append(ChatColor.GREEN).append(reportedName).append(ChatColor.WHITE).append("\n")
                         .append("Motif : ").append(reason).append("\n")
-                        .append("Date : ").append(timecode).append("\n")
+                        .append("Date : ").append(timestamp).append("\n")
                         .append("--------\n");
             }
 
@@ -86,16 +86,16 @@ public class ReportManager extends DatabaseConnector {
 
             // Vérifier si des rapports ont été trouvés
             if (!rs.isBeforeFirst()) {
-                player.sendMessage(" \n Aucun signalement pour " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " !");
+                player.sendMessage(" \nAucun signalement pour " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " !");
                 return;
             }
-            player.sendMessage("\n Signalements de " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " : \n  \n");
+            player.sendMessage("\nSignalements de " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " : \n  \n");
             while (rs.next()) {
                 // Récupérer les données de chaque colonne
                 String sender = rs.getString("sender");
                 String reported = rs.getString("reported");
                 String reason = rs.getString("reason");
-                String timecode = rs.getString("timecode");
+                String timestamp = rs.getString("timestamp");
 
                 OfflinePlayer senderPlayer = Bukkit.getOfflinePlayer(UUID.fromString(sender));
                 String senderName = senderPlayer.getName();
@@ -104,7 +104,7 @@ public class ReportManager extends DatabaseConnector {
                 // Construire le message à envoyer au joueur
                 reportMessage.append("Signalé par : ").append(senderName).append("\n")
                         .append("Motif : ").append(reason).append("\n")
-                        .append("Date : ").append(timecode).append("\n")
+                        .append("Date : ").append(timestamp).append("\n")
                         .append("--------\n");
             }
 

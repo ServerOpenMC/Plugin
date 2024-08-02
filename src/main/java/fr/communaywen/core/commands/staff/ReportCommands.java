@@ -6,23 +6,21 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Subcommand;
-import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import org.bukkit.ChatColor;
 import java.sql.Timestamp;
 
+
 @Feature("Report")
 @Credit("rafael_trx")
-@Command("Report")
+@Command("report")
 public class ReportCommands {
-    @Subcommand("create")
+    @DefaultFor("~")
     @Description("Signale un joueur pour un motif spécifique")
     @CommandPermission("ayw.command.report")
 
-    public boolean create(CommandSender sender, @Named("Joueur") Player target, @Named("Motif") String reason) {
+    public boolean report(CommandSender sender, @Named("Joueur") Player target, @Named("Motif") String reason) {
         ReportManager reportManager = AywenCraftPlugin.getInstance().getManagers().getReportManager();
         if (sender instanceof Player) {
             Player player = (Player) sender;
