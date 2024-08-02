@@ -8,7 +8,6 @@ import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.database.TransactionsManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -55,20 +54,21 @@ public class AdminShopBuyConfirm extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> content = new HashMap<>();
 
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
+        for (int i = 0; i < getInventorySize().getSize(); i++) {
             content.put(i, new ItemBuilder(this, Material.BLACK_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
         }
 
         content.put(2, new ItemBuilder(this, Material.GREEN_STAINED_GLASS_PANE, itemMeta -> {
             itemMeta.setDisplayName("§aConfirmer");
         }).setOnClick(event -> {
+            System.out.println(hasEnoughSpace(getOwner(), Material.getMaterial(material == null ? items.named() : items.named() + "_" + material), quantity));
             if (!hasEnoughSpace(getOwner(), Material.getMaterial(material == null ? items.named() : items.named() + "_" + material), quantity)) {
                 getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'espace dans votre inventaire !");
                 return;
             } else {
                 EconomyManager economy = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
                 double balance = economy.getBalance(getOwner());
-                if(balance < (items.getPrize() * quantity)) {
+                if (balance < (items.getPrize() * quantity)) {
                     getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'argent pour acheter cette item.");
                 } else {
                     int maxStackSize = 64;
@@ -86,13 +86,7 @@ public class AdminShopBuyConfirm extends Menu {
 
                     while (totalQuantity > 0) {
                         int stackSize = Math.min(totalQuantity, maxStackSize);
-                        ItemStack itemStack = new ItemStack(materials, stackSize);
-                        boolean value = hasAvaliableSlot(getOwner().getPlayer(), itemStack);
-                        if (value) {
-                            getOwner().getInventory().addItem(itemStack);
-                        } else {
-                            Bukkit.getServer().getWorld(getOwner().getWorld().getUID()).dropItem(getOwner().getLocation(), itemStack);
-                        }
+                        getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
                         totalQuantity -= stackSize;
                     }
 
@@ -120,29 +114,23 @@ public class AdminShopBuyConfirm extends Menu {
         return content;
     }
 
-    private boolean hasEnoughSpace(Player player, Material item, int amount) {
-        int freeSlots = 0;
-        int partialSlots = 0;
-        ItemStack[] contents = player.getInventory().getContents();
+    private boolean hasEnoughSpace(Player player, Material itemType, int amount) {
+        int totalFreeSpace = 0;
+        ItemStack[] inventoryContents = player.getInventory().getStorageContents();
 
-        for (ItemStack is : contents) {
-            if (is == null || is.getType() == Material.AIR) {
-                freeSlots++;
-            } else if (is.getType() == item && (is.getAmount() < is.getMaxStackSize())) {
-                partialSlots += is.getMaxStackSize() - is.getAmount();
+        for (ItemStack itemStack : inventoryContents) {
+            if (itemStack != null) {
+            } else {
             }
         }
 
-        int totalSpace = freeSlots * item.getMaxStackSize() + partialSlots;
-        return totalSpace >= amount;
-    }
-    private boolean hasAvaliableSlot(Player player,ItemStack buyedItem){
-        Inventory inv = player.getInventory();
-        for (ItemStack item: inv.getContents()) {
-            if(item == null || item.isSimilar(buyedItem)) {
-                return true;
+        for (ItemStack itemStack : inventoryContents) {
+            if (itemStack == null || itemStack.getType() == Material.AIR) {
+                totalFreeSpace += itemType.getMaxStackSize();
+            } else if (itemStack.getType() == itemType && itemStack.getAmount() < itemStack.getMaxStackSize()) {
+                totalFreeSpace += itemStack.getMaxStackSize() - itemStack.getAmount();
             }
         }
-        return false;
+        return totalFreeSpace >= amount;
     }
 }
