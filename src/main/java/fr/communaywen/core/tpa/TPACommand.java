@@ -21,16 +21,19 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Feature("TPA")
-@Credit({"ddemile", "misieur", "process", "Axillity"})
+@Credit({"ddemile", "Axillity", "misieur", "process"})
 public class TPACommand implements Listener {
 
     private final TPAQueue tpQueue = TPAQueue.INSTANCE;
     private final AywenCraftPlugin plugin;
     private static final String INVENTORY_TITLE = "Sélectionnez un joueur";
+    private static final int PLAYERS_PER_PAGE = 45;
 
     public TPACommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
@@ -41,7 +44,7 @@ public class TPACommand implements Listener {
     @CommandPermission("ayw.command.tpa")
     public void onCommand(Player player, @Named("joueur") String targetName) {
         if (targetName == null || targetName.isEmpty()) {
-            openPlayerListGUI(player);
+            openPlayerListGUI(player, 0);
             return;
         }
 
@@ -53,7 +56,6 @@ public class TPACommand implements Listener {
 
         sendTPARequest(player, target);
     }
-
 
     private void sendTPARequest(Player player, Player target) {
         if (player.equals(target)) {
@@ -84,15 +86,27 @@ public class TPACommand implements Listener {
         }.runTaskLater(plugin, 2400);
     }
 
-    private void openPlayerListGUI(Player player) {
+    private void openPlayerListGUI(Player player, int page) {
         Inventory gui = Bukkit.createInventory(null, 54, INVENTORY_TITLE);
 
-        int index = 0;
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+        int totalPlayers = onlinePlayers.size();
+        int startIndex = page * PLAYERS_PER_PAGE;
+        int endIndex = Math.min(startIndex + PLAYERS_PER_PAGE, totalPlayers);
+
+        for (int i = startIndex; i < endIndex; i++) {
+            Player onlinePlayer = onlinePlayers.get(i);
             if (!onlinePlayer.equals(player)) {
                 ItemStack head = createPlayerHead(onlinePlayer);
-                gui.setItem(index++, head);
+                gui.addItem(head);
             }
+        }
+
+        if (page > 0) {
+            gui.setItem(45, createNavigationItem("§aPage précédente", Material.ARROW));
+        }
+        if (endIndex < totalPlayers) {
+            gui.setItem(53, createNavigationItem("§aPage suivante", Material.ARROW));
         }
 
         player.openInventory(gui);
@@ -109,6 +123,16 @@ public class TPACommand implements Listener {
         return head;
     }
 
+    private ItemStack createNavigationItem(String name, Material material) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -120,15 +144,37 @@ public class TPACommand implements Listener {
         event.setCancelled(true);
 
         ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem == null || clickedItem.getType() != Material.PLAYER_HEAD) return;
+        if (clickedItem == null) return;
 
-        SkullMeta meta = (SkullMeta) clickedItem.getItemMeta();
-        if (meta != null && meta.getOwningPlayer() != null) {
-            Player target = Bukkit.getPlayer(meta.getOwningPlayer().getUniqueId());
-            if (target != null) {
-                sendTPARequest(player, target);
-                player.closeInventory();
+        Material type = clickedItem.getType();
+        if (type == Material.PLAYER_HEAD) {
+            SkullMeta meta = (SkullMeta) clickedItem.getItemMeta();
+            if (meta != null && meta.getOwningPlayer() != null) {
+                Player target = Bukkit.getPlayer(meta.getOwningPlayer().getUniqueId());
+                if (target != null) {
+                    sendTPARequest(player, target);
+                    player.closeInventory();
+                }
+            }
+        } else if (type == Material.ARROW) {
+            String itemName = clickedItem.getItemMeta().getDisplayName();
+            int currentPage = getCurrentPage(event.getInventory());
+            if (itemName.equals("§aPage suivante")) {
+                openPlayerListGUI(player, currentPage + 1);
+            } else if (itemName.equals("§aPage précédente")) {
+                openPlayerListGUI(player, currentPage - 1);
             }
         }
+    }
+
+    private int getCurrentPage(Inventory inventory) {
+        String title = inventory.getTitle();
+        if (title.contains(" - Page ")) {
+            try {
+                return Integer.parseInt(title.split(" - Page ")[1]);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return 0;
     }
 }
