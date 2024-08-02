@@ -1,7 +1,9 @@
 package fr.communaywen.core.customitems.listeners;
 
+import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -24,12 +26,22 @@ public class CIPrepareAnvilListener implements Listener {
             return;
         }
 
-        CustomItems customItem = customItemsManager.getCustomItem(item);
+        CustomStack customStack = CustomStack.byItemStack(item);
 
-        if (customItem == null) {
+        if (customStack == null) {
             return;
         }
 
-        customItem.onAnvil(event);
+        if (!customStack.getNamespacedID().startsWith(CustomItemsUtils.getNamespaceStart())) {
+            return;
+        }
+
+        CustomItems customItems = customItemsManager.getCustomItem(customStack);
+
+        if (customItems == null) {
+            return;
+        }
+
+        customItems.onAnvil(event);
     }
 }
