@@ -10,11 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -124,6 +126,31 @@ public class CorpseListener implements Listener {
                 if (!player.getUniqueId().equals(uuid)) {
                     e.setCancelled(true);
                     return;
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        Player player = e.getPlayer();
+        Block block = e.getBlockPlaced();
+
+        if (block.getType() == Material.WATER || block.getType() == Material.WATER_BUCKET) {
+            Location blockLocation = block.getLocation();
+            List<Location> graveLocations = corpseManager.getGraveLocations();
+
+            for (Location graveLocation : graveLocations) {
+                if (blockLocation.getWorld().equals(graveLocation.getWorld())) {
+                    double distance = blockLocation.distance(graveLocation);
+                    if (distance <= 20 ||
+                            (blockLocation.getBlockX() == graveLocation.getBlockX() &&
+                                    blockLocation.getBlockZ() == graveLocation.getBlockZ() &&
+                                    blockLocation.getBlockY() >= graveLocation.getBlockY())) {
+                        e.setCancelled(true);
+                        player.sendMessage("§cVous ne pouvez pas placer de l'eau près d'une tombe.");
+                        return;
+                    }
                 }
             }
         }

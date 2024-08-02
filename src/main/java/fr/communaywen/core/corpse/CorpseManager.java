@@ -12,9 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @Feature("Tombe")
 @Credit("Martinouxx")
@@ -126,4 +124,13 @@ public class CorpseManager implements Listener {
         }
         return false;
     }
+
+    public List<Location> getGraveLocations() {
+        List<Location> locations = new ArrayList<>();
+        for (CorpseBlock corpseBlock : corpses.keySet()) {
+            locations.add(corpseBlock.getLocation());
+        }
+        return locations;
+    }
+
 }
