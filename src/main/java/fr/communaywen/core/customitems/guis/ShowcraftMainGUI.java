@@ -15,11 +15,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ShowCraftMainGUI extends PaginatedMenu {
+public class ShowcraftMainGUI extends PaginatedMenu {
 
     private final CustomItemsManager customItemsManager;
 
-    public ShowCraftMainGUI(Player owner, CustomItemsManager customItemsManager) {
+    public ShowcraftMainGUI(Player owner, CustomItemsManager customItemsManager) {
         super(owner);
         this.customItemsManager = customItemsManager;
     }

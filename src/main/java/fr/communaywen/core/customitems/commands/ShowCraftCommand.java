@@ -1,7 +1,7 @@
 package fr.communaywen.core.customitems.commands;
 
 import dev.xernas.menulib.Menu;
-import fr.communaywen.core.customitems.guis.ShowCraftMainGUI;
+import fr.communaywen.core.customitems.guis.ShowcraftMainGUI;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
@@ -19,7 +19,7 @@ public class ShowCraftCommand {
     @DefaultFor("~")
     public void showCraft(Player player) {
 
-        Menu menu = new ShowCraftMainGUI(player, customItemsManager);
+        Menu menu = new ShowcraftMainGUI(player, customItemsManager);
         menu.open();
     }
 }
