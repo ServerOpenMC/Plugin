@@ -24,12 +24,12 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 import fr.communaywen.core.tpa.TPACommandGUI;
 
 @Feature("TPA")
-@Credit({"ddemile", "misieur", "process", "Axillity"})
+@Credit({"ddemile", "Axillity", "misieur", "process"})
 public class TPACommand implements Listener {
 
     private final TPAQueue tpQueue = TPAQueue.INSTANCE;
     private final AywenCraftPlugin plugin;
-    private static final int PLAYERS_PER_PAGE = 45;  // 54 slots in total, 45 for player heads, 9 for navigation
+    private static final int PLAYERS_PER_PAGE = 45;
 
     public TPACommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;

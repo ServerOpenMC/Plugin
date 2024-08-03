@@ -80,6 +80,5 @@ public class TPACommandGUI extends PaginatedMenu {
 
     @Override
     public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
-        // Handle other click events if necessary
     }
 }

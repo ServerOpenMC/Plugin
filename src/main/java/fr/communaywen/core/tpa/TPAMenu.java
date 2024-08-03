@@ -51,7 +51,7 @@ public class TPAMenu extends PaginatedMenu {
                             ChatColor.GRAY + "Cliquez pour envoyer une demande de téléportation"
                     ));
                 }).setOnClick(event -> {
-                    TPACommand.sendTPARequest(getOwner(), onlinePlayer, plugin); // Added the 'plugin' argument here
+                    TPACommand.sendTPARequest(getOwner(), onlinePlayer, plugin);
                     getOwner().closeInventory();
                 }));
             }
@@ -78,6 +78,5 @@ public class TPAMenu extends PaginatedMenu {
 
     @Override
     public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
-        // Handle other click events if necessary
     }
 }
