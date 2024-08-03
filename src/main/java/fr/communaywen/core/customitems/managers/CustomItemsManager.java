@@ -2,7 +2,9 @@ package fr.communaywen.core.customitems.managers;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
+import fr.communaywen.core.customitems.items.DiamondHammer;
 import fr.communaywen.core.customitems.items.IronHammer;
+import fr.communaywen.core.customitems.items.NetheriteHammer;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,6 +17,8 @@ public class CustomItemsManager {
 
     public CustomItemsManager() {
         customItems.add(new IronHammer());
+        customItems.add(new DiamondHammer());
+        customItems.add(new NetheriteHammer());
 
         initCustomItems();
     }
