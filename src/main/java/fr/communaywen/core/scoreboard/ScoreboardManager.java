@@ -30,8 +30,7 @@ public class ScoreboardManager {
 
         this.globalTeamManager = new GlobalTeamManager(plugin, playerScoreboards);
 
-        // Planifier les mises à jour périodiques
-        Bukkit.getScheduler().runTaskTimer(plugin, this::updateAllScoreboards, 0L, 20L * 5); // Mise à jour toutes les 5 secondes
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updateAllScoreboards, 0L, 20L * 5);
     }
 
     public void setScoreboard(Player player) {

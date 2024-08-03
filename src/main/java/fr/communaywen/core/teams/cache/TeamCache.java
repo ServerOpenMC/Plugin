@@ -53,17 +53,17 @@ public class TeamCache {
     }
 
     public void saveCacheToDatabase() {
-        try (Connection connection = plugin.getManagers().getDatabaseManager().getConnection()) {
+        try {
             for (Map.Entry<String, List<UUID>> entry : teamCache.entrySet()) {
                 String teamName = entry.getKey();
                 List<UUID> players = entry.getValue();
 
-                PreparedStatement clearStatement = connection.prepareStatement("DELETE FROM teams_player WHERE teamName = ?");
+                PreparedStatement clearStatement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("DELETE FROM teams_player WHERE teamName = ?");
                 clearStatement.setString(1, teamName);
                 clearStatement.executeUpdate();
 
                 for (UUID player : players) {
-                    PreparedStatement statement = connection.prepareStatement("INSERT INTO teams_player (teamName, player) VALUES (?, ?)");
+                    PreparedStatement statement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("INSERT INTO teams_player (teamName, player) VALUES (?, ?)");
                     statement.setString(1, teamName);
                     statement.setString(2, player.toString());
                     statement.executeUpdate();

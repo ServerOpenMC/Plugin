@@ -30,7 +30,6 @@ public class TeamManager extends DatabaseConnector {
 
     public TeamManager(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        this.teamCache = new TeamCache(plugin);
         try {
             ResultSet rs = connection.prepareStatement("SELECT * FROM teams").executeQuery();
 
@@ -59,6 +58,8 @@ public class TeamManager extends DatabaseConnector {
             plugin.getLogger().severe("Impossible de charger les teams :'(");
             plugin.getPluginLoader().disablePlugin(plugin);
         }
+
+        this.teamCache = new TeamCache(plugin);
     }
 
     @Getter
