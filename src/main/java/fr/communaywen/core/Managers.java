@@ -98,5 +98,6 @@ public class Managers {
         databaseManager.close();
         quizManager.close();
         corpseManager.removeAll();
+        teamManager.getTeamCache().saveAllTeamsToDatabase();
     }
 }
