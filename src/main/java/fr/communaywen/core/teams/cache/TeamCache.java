@@ -6,6 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -16,6 +17,7 @@ public class TeamCache {
 
     public TeamCache(AywenCraftPlugin plugin) {
         this.plugin = plugin;
+        loadTeamsFromDatabase();
         startAutoSaveTask();
     }
 
@@ -47,7 +49,7 @@ public class TeamCache {
             public void run() {
                 saveCacheToDatabase();
             }
-        }.runTaskTimerAsynchronously(plugin, 0, 36000);
+        }.runTaskTimerAsynchronously(plugin, 36000L, 36000L);
     }
 
     public void saveCacheToDatabase() {
@@ -68,6 +70,22 @@ public class TeamCache {
                 }
             }
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void loadTeamsFromDatabase() {
+        try (Connection connection = plugin.getManagers().getDatabaseManager().getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT teamName, player FROM teams_player");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String teamName = resultSet.getString("teamName");
+                UUID playerUUID = UUID.fromString(resultSet.getString("player"));
+                addPlayer(teamName, playerUUID);
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Impossible de charger les équipes depuis la base de données.");
             throw new RuntimeException(e);
         }
     }
