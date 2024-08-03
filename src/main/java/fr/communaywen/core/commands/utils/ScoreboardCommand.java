@@ -14,12 +14,11 @@ public class ScoreboardCommand {
     @Command({"scoreboard", "sb"})
     @Description("Désactive / active ton scoreboard")
     public void onDelete(Player player) {
-        if (scoreboardManager.disableSBPlayerList.contains(player)) {
-            scoreboardManager.disableSBPlayerList.remove(player);
+        if (scoreboardManager.disabledPlayers.contains(player.getUniqueId())) {
+            scoreboardManager.disabledPlayers.remove(player.getUniqueId());
             player.sendMessage("§aScoreboard activé !");
-            scoreboardManager.setScoreboard(player);
         } else {
-            scoreboardManager.disableSBPlayerList.add(player);
+            scoreboardManager.disabledPlayers.add(player.getUniqueId());
             Scoreboard emptySB = Bukkit.getScoreboardManager().getNewScoreboard();
             player.setScoreboard(emptySB);
             player.sendMessage("§cScoreboard désactivé !");

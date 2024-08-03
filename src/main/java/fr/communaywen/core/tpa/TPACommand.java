@@ -1,5 +1,8 @@
 package fr.communaywen.core.tpa;
 
+import dev.xernas.menulib.PaginatedMenu;
+import dev.xernas.menulib.utils.ItemBuilder;
+import dev.xernas.menulib.utils.ItemUtils;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
@@ -13,24 +16,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
-
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import fr.communaywen.core.tpa.TPACommandGUI;
 
 @Feature("TPA")
-@Credit({"ddemile", "misieur", "process", "Axillity"})
+@Credit({"ddemile", "Axillity", "misieur", "process"})
 public class TPACommand implements Listener {
 
     private final TPAQueue tpQueue = TPAQueue.INSTANCE;
     private final AywenCraftPlugin plugin;
-    private static final String INVENTORY_TITLE = "Sélectionnez un joueur";
+    private static final int PLAYERS_PER_PAGE = 45;
 
     public TPACommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
@@ -41,7 +40,7 @@ public class TPACommand implements Listener {
     @CommandPermission("ayw.command.tpa")
     public void onCommand(Player player, @Named("joueur") String targetName) {
         if (targetName == null || targetName.isEmpty()) {
-            openPlayerListGUI(player);
+            new TPACommandGUI(player, plugin).open();
             return;
         }
 
@@ -51,22 +50,21 @@ public class TPACommand implements Listener {
             return;
         }
 
-        sendTPARequest(player, target);
+        sendTPARequest(player, target, plugin);
     }
 
-
-    private void sendTPARequest(Player player, Player target) {
+    public static void sendTPARequest(Player player, Player target, AywenCraftPlugin plugin) {
         if (player.equals(target)) {
             player.sendMessage("§cVous ne pouvez pas vous téléporter à vous-même.");
             return;
         }
 
-        if (tpQueue.hasPendingRequest(player)) {
+        if (TPAQueue.INSTANCE.hasPendingRequest(player)) {
             player.sendMessage("§cVous avez déjà une demande de téléportation en attente...");
             return;
         }
 
-        tpQueue.addRequest(player, target);
+        TPAQueue.INSTANCE.addRequest(player, target);
         player.sendMessage("§aDemande de téléportation envoyée à §f" + target.getName() + "§a.");
 
         final Component message = Component.text(player.getName() + " vous a envoyé une demande de téléportation. Tapez /tpaccept pour accepter.")
@@ -79,56 +77,8 @@ public class TPACommand implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                tpQueue.expireRequest(player, target);
+                TPAQueue.INSTANCE.expireRequest(player, target);
             }
         }.runTaskLater(plugin, 2400);
-    }
-
-    private void openPlayerListGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, INVENTORY_TITLE);
-
-        int index = 0;
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!onlinePlayer.equals(player)) {
-                ItemStack head = createPlayerHead(onlinePlayer);
-                gui.setItem(index++, head);
-            }
-        }
-
-        player.openInventory(gui);
-    }
-
-    private ItemStack createPlayerHead(Player player) {
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        if (meta != null) {
-            meta.setOwningPlayer(player);
-            meta.setDisplayName("§a" + player.getName());
-            head.setItemMeta(meta);
-        }
-        return head;
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
-
-        Player player = (Player) event.getWhoClicked();
-
-        if (!event.getView().getTitle().equals(INVENTORY_TITLE)) return;
-
-        event.setCancelled(true);
-
-        ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem == null || clickedItem.getType() != Material.PLAYER_HEAD) return;
-
-        SkullMeta meta = (SkullMeta) clickedItem.getItemMeta();
-        if (meta != null && meta.getOwningPlayer() != null) {
-            Player target = Bukkit.getPlayer(meta.getOwningPlayer().getUniqueId());
-            if (target != null) {
-                sendTPARequest(player, target);
-                player.closeInventory();
-            }
-        }
     }
 }

@@ -18,27 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Objects;
 @Credit("fuzeblocks")
 public class FallBloodListener implements Listener {
-    @EventHandler
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        Player player = (Player) event.getEntity();
-        if (!player.getGameMode().equals(GameMode.CREATIVE)) {
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                float fallDistance = player.getFallDistance();
-                if (fallDistance >= 7) {
-                    double degats = fallDistance / 2.5;
-                    player.damage(degats);
-                    player.addPotionEffect(getPotionEffectType());
-                    player.sendMessage("§l§cVous saignez !");
-                    Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(90, 7, 25), 1.0F);
-                    player.spawnParticle(Particle.DUST, player.getLocation(), 9999, dustOptions);
-                }
-            }
-        }
-    }
-
+    /*
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
 
@@ -59,7 +39,7 @@ public class FallBloodListener implements Listener {
                 }
             }
         }
-
+    */
     @EventHandler
     public void onAnvil(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();

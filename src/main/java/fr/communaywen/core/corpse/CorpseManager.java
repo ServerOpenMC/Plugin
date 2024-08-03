@@ -20,15 +20,15 @@ public class CorpseManager implements Listener {
 
     private Map<CorpseBlock, CorpseMenu> corpses = new HashMap<>();
 
-    public void addCorpse(Player p, Inventory inv) {
+    public void addCorpse(Player p, Inventory inv, Location deathLocation) {
         CorpseMenu corpseMenu = new CorpseMenu(p, inv);
 
         CustomBlock block = CustomBlock.getInstance("omc_blocks:grave");
 
         if (block != null) {
-            block.place(p.getLocation());
+            block.place(deathLocation);
 
-            CorpseBlock corpseBlock = new CorpseBlock(block, p.getLocation(), p.getUniqueId());
+            CorpseBlock corpseBlock = new CorpseBlock(block, deathLocation, p.getUniqueId());
             corpses.put(corpseBlock, corpseMenu);
 
             new BukkitRunnable(){
@@ -38,7 +38,7 @@ public class CorpseManager implements Listener {
 
                     remove(corpseBlock);
                 }
-            }.runTaskLater(AywenCraftPlugin.getInstance(), 20*6*10);
+            }.runTaskLater(AywenCraftPlugin.getInstance(), 20*60*10);
         }
 
     }

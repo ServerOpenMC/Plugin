@@ -3,17 +3,29 @@ package fr.communaywen.core.tab;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import fr.communaywen.core.AywenCraftPlugin;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TabList {
 
-    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    private final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
-    public void sendTabList(Player player, String header, String footer) {
+    public void updateHeaderFooter(Player player, String header, String footer) {
         try {
             PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
             packet.getChatComponents().write(0, WrappedChatComponent.fromText(header))
@@ -21,20 +33,6 @@ public class TabList {
             protocolManager.sendServerPacket(player, packet);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        updatePlayerPrefix(player);
-    }
-
-    private void updatePlayerPrefix(Player player) {
-        User user = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
-        if (user != null) {
-            String prefix = user.getCachedData().getMetaData().getPrefix();
-            if (prefix != null) {
-                player.setPlayerListName(prefix.replace("&", "§") + player.getName().replace("&", "§"));
-            } else {
-                player.setPlayerListName(player.getName());
-            }
         }
     }
 

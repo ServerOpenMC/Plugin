@@ -1,11 +1,14 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.util.Objects;
 
 // show messages/title at the player's connection
 // configuration file -> welcomeMessage.Config.yml
@@ -49,7 +52,7 @@ public class WelcomeMessage implements Listener {
             }
         }
 
+        event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(event.getJoinMessage())));
         AywenCraftPlugin.getInstance().getManagers().getScoreboardManager().setScoreboard(player);
-
     }
 }

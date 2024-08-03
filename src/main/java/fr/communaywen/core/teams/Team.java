@@ -1,6 +1,7 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.cache.TeamCache;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
@@ -23,7 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Team extends DatabaseConnector implements Listener{
+public class Team implements Listener {
 
     @Getter
     private UUID owner;
@@ -34,14 +35,18 @@ public class Team extends DatabaseConnector implements Listener{
     @Getter
     private final Inventory inventory;
 
-    AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
+    private final TeamCache cacheManager;
 
-    public Team(UUID owner, String name, AywenCraftPlugin plugin) {
+    public Team(UUID owner, String name, AywenCraftPlugin plugin, TeamCache cacheManager) {
         this.plugin = plugin;
         this.owner = owner;
         this.name = name;
+        this.cacheManager = cacheManager;
         this.inventory = Bukkit.createInventory(null, 27, name + " - Inventory");
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
+        this.players.addAll(cacheManager.getTeamPlayers(name));
     }
 
     @EventHandler
@@ -49,8 +54,8 @@ public class Team extends DatabaseConnector implements Listener{
         Inventory inv = e.getInventory();
         if (inv.equals(inventory)) {
             if (inv.getViewers().size() > 1) {
-                Player other = (Player) inv.getViewers().getFirst();
-                e.getPlayer().sendMessage(ChatColor.RED+other.getName()+" est déjà entrain de regarder l'inventaire de team");
+                Player other = (Player) inv.getViewers().get(0);
+                e.getPlayer().sendMessage(ChatColor.RED + other.getName() + " est déjà entrain de regarder l'inventaire de team");
                 e.getPlayer().closeInventory();
                 e.setCancelled(true);
             }
@@ -61,38 +66,18 @@ public class Team extends DatabaseConnector implements Listener{
     public void onInventoryClose(InventoryCloseEvent e) {
         if (e.getInventory() == inventory) {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
+                PreparedStatement statement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("UPDATE teams SET inventory = ? WHERE teamName = ?");
                 statement.setBytes(1, new BukkitSerializer().serializeItemStacks(inventory.getContents()));
                 statement.setString(2, name);
                 statement.executeUpdate();
             } catch (Exception exc) {
-                plugin.getLogger().severe("Impossible de sauvegarder l'inventaire de la team '"+this.name+"'");
+                plugin.getLogger().severe("Impossible de sauvegarder l'inventaire de la team '" + this.name + "'");
             }
         }
     }
 
-    public void delete() throws SQLException {
-        // Remove players from teams_players
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM teams_player WHERE teamName = ?");
-        statement.setString(1, this.name);
-        statement.executeUpdate();
-
-        // Delete team from teams
-        statement = connection.prepareStatement("DELETE FROM teams WHERE teamName = ?");
-        statement.setString(1, this.name);
-        statement.executeUpdate();
-    }
-	
-	
-	public List<UUID> getPlayers(int first, int last) {
-        List<UUID> result = new ArrayList<>();
-        for (int i = first; i < last; i++) {
-            UUID player = getPlayer(i);
-            if (player != null) {
-                result.add(player);
-            }
-        }
-        return result;
+    public void delete() {
+        cacheManager.getTeams().remove(this.name);
     }
 
     public boolean isIn(UUID player) {
@@ -104,8 +89,9 @@ public class Team extends DatabaseConnector implements Listener{
     }
 
     public void setInventory(ItemStack[] newinv) {
-        // Woooooh dangereux
-        if (newinv == null) { return; }
+        if (newinv == null) {
+            return;
+        }
         inventory.setContents(newinv);
     }
 
@@ -120,8 +106,8 @@ public class Team extends DatabaseConnector implements Listener{
         itemStack.setItemMeta(itemMeta);
         player.getInventory().addItem(itemStack);
     }
-	
-	public UUID getPlayerByUsername(String username) {
+
+    public UUID getPlayerByUsername(String username) {
         Player bukkitPlayer = Bukkit.getPlayer(username);
         if (bukkitPlayer == null) {
             return null;
@@ -146,16 +132,7 @@ public class Team extends DatabaseConnector implements Listener{
             return false;
         }
         players.add(player);
-
-        try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO teams_player VALUES (?, ?)");
-            statement.setString(1, this.name);
-            statement.setString(2, player.toString());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            plugin.getLogger().severe("Impossible d'ajouter '"+player.toString()+"' dans '"+this.name+"'");
-        }
-
+        cacheManager.addPlayer(this.name, player);
         return true;
     }
 
@@ -169,6 +146,7 @@ public class Team extends DatabaseConnector implements Listener{
 
     public MethodState removePlayer(UUID player) {
         players.remove(player);
+        cacheManager.removePlayer(this.name, player);
         if (players.isEmpty()) {
             if (!AywenCraftPlugin.getInstance().getManagers().getTeamManager().deleteTeam(this)) {
                 players.add(player);
@@ -179,15 +157,6 @@ public class Team extends DatabaseConnector implements Listener{
         if (isOwner(player)) {
             owner = getRandomPlayer();
         }
-
-        try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM teams_player WHERE player = ?");
-            statement.setString(1, player.toString());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            plugin.getLogger().severe("Impossible de supprimer '"+player.toString()+"' dans '"+this.name+"'");
-        }
-
         return MethodState.VALID;
     }
 
@@ -197,5 +166,16 @@ public class Team extends DatabaseConnector implements Listener{
 
     private UUID getRandomPlayer() {
         return players.get((int) (Math.random() * players.size()));
+    }
+
+    public List<UUID> getPlayers(int first, int last) {
+        List<UUID> result = new ArrayList<>();
+        for (int i = first; i < last; i++) {
+            UUID player = getPlayer(i);
+            if (player != null) {
+                result.add(player);
+            }
+        }
+        return result;
     }
 }

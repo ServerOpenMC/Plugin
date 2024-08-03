@@ -81,7 +81,7 @@ public class Managers {
         // Database
 
         this.teamManager = new TeamManager(plugin);
-        scoreboardManager = new ScoreboardManager();
+        scoreboardManager = new ScoreboardManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
@@ -98,5 +98,6 @@ public class Managers {
         databaseManager.close();
         quizManager.close();
         corpseManager.removeAll();
+        teamManager.getTeamCache().saveAllTeamsToDatabase();
     }
 }
