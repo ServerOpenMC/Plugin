@@ -16,7 +16,7 @@ public class FeedCommand {
     public FeedCommand(@NotNull AywenCraftPlugin plugin) {
         COOLDOWN_TIME = plugin.getConfig().getLong("feed.cooldown");
     }
-
+/*
     @Command("feed")
     @CommandPermission("ayw.command.feed")
     public void onCommand(Player player) {
@@ -39,5 +39,5 @@ public class FeedCommand {
         player.setExhaustion(0);
         player.sendMessage("Vous avez été nourri \uE032"); //émoji baguette
         cooldowns.put(playerId, Time);
-    }
+    }*/
 }
