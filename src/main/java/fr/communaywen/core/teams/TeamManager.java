@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
-@Credit({"Xernas", "Axeno", "Gyro3630"})
+@Credit({"Xernas", "Axeno", "Gyro3630", "Martinouxx"})
 @Feature("Teams")
 public class TeamManager extends DatabaseConnector {
 
