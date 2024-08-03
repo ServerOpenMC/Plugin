@@ -174,7 +174,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new AdminShopCommand(),
                 new PayCommands(),
                 new FallBloodCommand(),
-                new ShowCraftCommand()
+                new ShowCraftCommand(managers.getCustomItemsManager())
         );
 
         /*  --------  */

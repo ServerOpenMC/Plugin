@@ -2,6 +2,9 @@ package fr.communaywen.core.customitems.items;
 
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -9,7 +12,31 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class IronHammer implements CustomItems {
+
+    @Getter
+    @Setter
+    private String name;
+
+    @Getter
+    @Setter
+    private ItemStack itemStack;
+
+    @Getter
+    private final ArrayList<String> recipe = new ArrayList<>() {{
+        add("BBB");
+        add("BSB");
+        add("XSX");
+    }};
+
+    @Getter
+    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
+        put('B', new ItemStack(Material.IRON_BLOCK));
+        put('S', new ItemStack(Material.STICK));
+    }};
 
     @Override
     public String getNamespacedID() {
