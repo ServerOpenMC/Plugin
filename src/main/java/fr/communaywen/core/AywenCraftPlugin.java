@@ -171,7 +171,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MoneyCommand(this),
                 new ScoreboardCommand(),
                 new ProutCommand(),
-                new FeedCommand(this),
                 new TPACommand(this),
                 new TpacceptCommand(this),  // Pass the plugin instance
                 new TpcancelCommand(),
