@@ -180,22 +180,34 @@ public class CustomItemsUtils {
 
         ArrayList<ItemBuilder> navigationButtons = new ArrayList<>();
 
+        String previousName = "§cPrécédent";
+        String cancelName = "§cAnnuler";
+        String nextName = "§aSuivant";
+
         for (CustomStack customStack : ItemsAdder.getAllItems("_iainternal")) {
             if (customStack.getNamespacedID().equals("_iainternal:icon_back_orange")) {
-                navigationButtons.addFirst(new ItemBuilder(menu, customStack.getItemStack()));
+                navigationButtons.addFirst(itemBuilderSetName(new ItemBuilder(menu, customStack.getItemStack()), previousName));
             } else if (customStack.getNamespacedID().equals("_iainternal:icon_cancel")) {
-                navigationButtons.add(1, new ItemBuilder(menu, customStack.getItemStack()));
+                navigationButtons.add(1, itemBuilderSetName(new ItemBuilder(menu, customStack.getItemStack()), cancelName));
             } else if (customStack.getNamespacedID().equals("_iainternal:icon_next_orange")) {
-                navigationButtons.addLast(new ItemBuilder(menu, customStack.getItemStack()));
+                navigationButtons.addLast(itemBuilderSetName(new ItemBuilder(menu, customStack.getItemStack()), nextName));
             }
         }
 
         if (navigationButtons.size() != 3) {
-            navigationButtons.add(new ItemBuilder(menu, Material.RED_WOOL));
-            navigationButtons.add(new ItemBuilder(menu, Material.BARRIER));
-            navigationButtons.add(new ItemBuilder(menu, Material.GREEN_WOOL));
+            navigationButtons.add(itemBuilderSetName(new ItemBuilder(menu, Material.RED_WOOL), previousName));
+            navigationButtons.add(itemBuilderSetName(new ItemBuilder(menu, Material.BARRIER), cancelName));
+            navigationButtons.add(itemBuilderSetName(new ItemBuilder(menu, Material.GREEN_WOOL), nextName));
         }
 
         return navigationButtons;
+    }
+
+    private static ItemBuilder itemBuilderSetName(ItemBuilder itemBuilder, String name) {
+        ItemMeta itemMeta = itemBuilder.getItemMeta();
+        itemMeta.setDisplayName(name);
+        itemBuilder.setItemMeta(itemMeta);
+
+        return itemBuilder;
     }
 }

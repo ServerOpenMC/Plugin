@@ -3,8 +3,9 @@ package fr.communaywen.core.customitems.guis;
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
+import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,8 +17,11 @@ import java.util.*;
 
 public class ShowCraftMainGUI extends PaginatedMenu {
 
-    public ShowCraftMainGUI(Player owner) {
+    private final CustomItemsManager customItemsManager;
+
+    public ShowCraftMainGUI(Player owner, CustomItemsManager customItemsManager) {
         super(owner);
+        this.customItemsManager = customItemsManager;
     }
 
     @Override
@@ -32,7 +36,24 @@ public class ShowCraftMainGUI extends PaginatedMenu {
 
     @Override
     public @NotNull List<ItemStack> getItems() {
-        return List.of();
+
+        List<ItemStack> content = new ArrayList<>();
+        ArrayList<CustomItems> customItems = customItemsManager.getCustomItems();
+
+        for (CustomItems customItem : customItems) {
+            ItemStack itemStack = customItem.getItemStack();
+
+            if (itemStack == null) {
+                itemStack = new ItemBuilder(this, Material.AIR);
+            } else {
+                itemStack = new ItemBuilder(this, itemStack)
+                        .setNextMenu(new ShowcraftMenuGUI(getOwner(), customItem));
+            }
+
+            content.add(itemStack);
+        }
+
+        return content;
     }
 
     @Override
@@ -50,7 +71,7 @@ public class ShowCraftMainGUI extends PaginatedMenu {
 
     @Override
     public @NotNull String getName() {
-        return "";
+        return "Showcraft";
     }
 
     @Override

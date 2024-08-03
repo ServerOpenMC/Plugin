@@ -1,10 +1,13 @@
 package fr.communaywen.core.customitems.managers;
 
 import dev.lone.itemsadder.api.CustomStack;
+import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.customitems.items.IronHammer;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomItemsManager {
 
@@ -12,6 +15,8 @@ public class CustomItemsManager {
 
     public CustomItemsManager() {
         customItems.add(new IronHammer());
+
+        initCustomItems();
     }
 
     /**
@@ -27,5 +32,30 @@ public class CustomItemsManager {
         }
 
         return null;
+    }
+
+    public ArrayList<CustomItems> getCustomItems() {
+        return customItems;
+    }
+
+    private void initCustomItems() {
+
+        List<CustomStack> itemsAdderNamespaces = ItemsAdder.getAllItems();
+
+        if (itemsAdderNamespaces == null) {
+            return;
+        }
+
+        List<CustomItems> customItems = getCustomItems();
+
+        for (CustomStack customStack : itemsAdderNamespaces) {
+            for (CustomItems customItem : customItems) {
+                if (customItem.getNamespacedID().equals(customStack.getNamespacedID())) {
+                    ItemStack itemStack = customStack.getItemStack();
+                    customItem.setName(itemStack.getItemMeta().getDisplayName());
+                    customItem.setItemStack(itemStack);
+                }
+            }
+        }
     }
 }
