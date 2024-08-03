@@ -17,7 +17,6 @@ public class TeamCache {
 
     public TeamCache(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        loadTeamsFromDatabase();
         startAutoSaveTask();
     }
 
@@ -54,13 +53,12 @@ public class TeamCache {
 
     public void saveCacheToDatabase() {
         try {
+            PreparedStatement clearAllStatement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("DELETE FROM teams_player");
+            clearAllStatement.executeUpdate();
+
             for (Map.Entry<String, List<UUID>> entry : teamCache.entrySet()) {
                 String teamName = entry.getKey();
                 List<UUID> players = entry.getValue();
-
-                PreparedStatement clearStatement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("DELETE FROM teams_player WHERE teamName = ?");
-                clearStatement.setString(1, teamName);
-                clearStatement.executeUpdate();
 
                 for (UUID player : players) {
                     PreparedStatement statement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("INSERT INTO teams_player (teamName, player) VALUES (?, ?)");
@@ -74,21 +72,6 @@ public class TeamCache {
         }
     }
 
-    private void loadTeamsFromDatabase() {
-        try (Connection connection = plugin.getManagers().getDatabaseManager().getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT teamName, player FROM teams_player");
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                String teamName = resultSet.getString("teamName");
-                UUID playerUUID = UUID.fromString(resultSet.getString("player"));
-                addPlayer(teamName, playerUUID);
-            }
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Impossible de charger les équipes depuis la base de données.");
-            throw new RuntimeException(e);
-        }
-    }
 
     public void saveAllTeamsToDatabase() {
         saveCacheToDatabase();

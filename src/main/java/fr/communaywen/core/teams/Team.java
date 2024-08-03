@@ -46,7 +46,6 @@ public class Team implements Listener {
         this.inventory = Bukkit.createInventory(null, 27, name + " - Inventory");
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
-        // Load players from cache
         this.players.addAll(cacheManager.getTeamPlayers(name));
     }
 
