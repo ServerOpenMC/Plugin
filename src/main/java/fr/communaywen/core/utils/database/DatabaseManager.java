@@ -72,7 +72,7 @@ public class DatabaseManager {
                 "  balance double NOT NULL" +
                 ")").executeUpdate();
 
-        System.out.println("Les tables ont été créer si besoin");
+        System.out.println("Les tables ont été créées si besoin");
     }
 
     public void close() {
