@@ -38,8 +38,8 @@ public class TPACommand implements Listener {
 
     @Command("tpa")
     @CommandPermission("ayw.command.tpa")
-    public void onCommand(Player player, @Named("joueur") String targetName) {
-        if (targetName == null || targetName.isEmpty()) {
+    public void onCommand(Player player, @Named("joueur") @Default("none") String targetName) {
+        if (targetName.equals("none")) {
             new TPACommandGUI(player, plugin).open();
             return;
         }
