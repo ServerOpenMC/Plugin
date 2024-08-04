@@ -92,15 +92,18 @@ public class Managers {
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
         reportManager = new ReportManager();
+        reportManager.loadReports();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
     }
 
     public void cleanup() {
+        reportManager.saveReports();
         databaseManager.close();
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
+
     }
 }

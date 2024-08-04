@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 
 import java.sql.*;
-import java.util.UUID;
+import java.util.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -18,179 +18,162 @@ import java.time.temporal.ChronoUnit;
 
 public class ReportManager extends DatabaseConnector {
 
-    public boolean addReport(Player player, Player target, String reason, Timestamp timestamp) {
+    private final Map<UUID, List<Report>> reportCache = new HashMap<>();
 
+    public class Report {
+        private final UUID sender;
+        private final UUID reported;
+        private final String reason;
+        private final Timestamp timestamp;
+
+        public Report(UUID sender, UUID reported, String reason, Timestamp timestamp) {
+            this.sender = sender;
+            this.reported = reported;
+            this.reason = reason;
+            this.timestamp = timestamp;
+        }
+
+        // Getters
+        public UUID getSender() { return sender; }
+        public UUID getReported() { return reported; }
+        public String getReason() { return reason; }
+        public Timestamp getTimestamp() { return timestamp; }
+    }
+
+    public void loadReports() {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO reports (sender, reported, reason, timestamp) VALUES (?, ?, ?, ?);");
-            statement.setString(1, player.getUniqueId().toString());
-            statement.setString(2, target.getUniqueId().toString());
-            statement.setString(3, reason);
-            statement.setTimestamp(4, timestamp);
-            statement.executeUpdate();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM reports");
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                UUID sender = UUID.fromString(rs.getString("sender"));
+                UUID reported = UUID.fromString(rs.getString("reported"));
+                String reason = rs.getString("reason");
+                Timestamp timestamp = rs.getTimestamp("timestamp");
 
-            return true;
-
+                Report report = new Report(sender, reported, reason, timestamp);
+                reportCache.computeIfAbsent(reported, k -> new ArrayList<>()).add(report);
+            }
         } catch (SQLException ignored) {}
-        return false;
+    }
 
+    public void saveReports() {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM reports");
+            deleteStatement.executeUpdate();
+
+            PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO reports (sender, reported, reason, timestamp) VALUES (?, ?, ?, ?)");
+            for (List<Report> reports : reportCache.values()) {
+                for (Report report : reports) {
+                    insertStatement.setString(1, report.getSender().toString());
+                    insertStatement.setString(2, report.getReported().toString());
+                    insertStatement.setString(3, report.getReason());
+                    insertStatement.setTimestamp(4, report.getTimestamp());
+                    insertStatement.addBatch();
+                }
+            }
+            insertStatement.executeBatch();
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException ignored) {}
+    }
+
+    public boolean addReport(Player player, OfflinePlayer target, String reason, Timestamp timestamp) {
+        UUID senderUUID = player.getUniqueId();
+        UUID targetUUID = target.getUniqueId();
+        Report report = new Report(senderUUID, targetUUID, reason, timestamp);
+
+        reportCache.computeIfAbsent(targetUUID, k -> new ArrayList<>()).add(report);
+        return true;
     }
 
     public void seeHistory(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        List<Report> reports = reportCache.getOrDefault(playerUUID, new ArrayList<>());
 
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM reports WHERE sender = ?");
-            statement.setString(1, player.getUniqueId().toString());
+        if (reports.isEmpty()) {
+            player.sendMessage(" \nVous n'avez effectué aucun signalement");
+            return;
+        }
 
-            ResultSet rs = statement.executeQuery();
-            StringBuilder historyMessage = new StringBuilder();
+        StringBuilder historyMessage = new StringBuilder("\nVos signalements : \n  \n");
+        for (Report report : reports) {
+            OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(report.getReported());
+            String reportedName = reportedPlayer.getName();
 
-            // Vérifier si des rapports ont été trouvés
-            if (!rs.isBeforeFirst()) {
-                player.sendMessage(" \nVous n'avez effectué aucun signalement");
-                return;
-            }
-            player.sendMessage("\nVos signalements : \n  \n");
-            while (rs.next()) {
-                // Récupérer les données de chaque colonne
-                String reported = rs.getString("reported");
-                String reason = rs.getString("reason");
-                String timestamp = rs.getString("timestamp");
-
-                OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(UUID.fromString(reported));
-                String reportedName = reportedPlayer.getName();
-
-
-                // Construire le message à envoyer au joueur
-                historyMessage.append("Vous avez signalé ").append(ChatColor.GREEN).append(reportedName).append(ChatColor.WHITE).append("\n")
-                        .append("Motif : ").append(reason).append("\n")
-                        .append("Date : ").append(timestamp).append("\n")
-                        .append("--------\n");
-            }
-
-            // Envoyer tous les rapports au joueur
-            player.sendMessage(historyMessage.toString());
-
-        } catch (SQLException ignored) {}
-
-
+            historyMessage.append("Vous avez signalé ").append(ChatColor.GREEN).append(reportedName).append(ChatColor.WHITE).append("\n")
+                    .append("Motif : ").append(report.getReason()).append("\n")
+                    .append("Date : ").append(report.getTimestamp()).append("\n")
+                    .append("--------\n");
+        }
+        player.sendMessage(historyMessage.toString());
     }
 
-    public void seeReports(Player player, Player target) {
+    public void seeReports(Player player, OfflinePlayer target) {
+        UUID targetUUID = target.getUniqueId();
+        List<Report> reports = reportCache.getOrDefault(targetUUID, new ArrayList<>());
 
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM reports WHERE reported = ?");
-            statement.setString(1, target.getUniqueId().toString());
+        if (reports.isEmpty()) {
+            player.sendMessage(" \nAucun signalement pour " + ChatColor.GREEN + target.getName() + ChatColor.WHITE + " !");
+            return;
+        }
 
-            ResultSet rs = statement.executeQuery();
-            StringBuilder reportMessage = new StringBuilder();
+        StringBuilder reportMessage = new StringBuilder("\nSignalements de " + ChatColor.GREEN + target.getName() + ChatColor.WHITE + " : \n  \n");
+        for (Report report : reports) {
+            OfflinePlayer senderPlayer = Bukkit.getOfflinePlayer(report.getSender());
+            String senderName = senderPlayer.getName();
 
-            // Vérifier si des rapports ont été trouvés
-            if (!rs.isBeforeFirst()) {
-                player.sendMessage(" \nAucun signalement pour " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " !");
-                return;
-            }
-            player.sendMessage("\nSignalements de " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " : \n  \n");
-            while (rs.next()) {
-                // Récupérer les données de chaque colonne
-                String sender = rs.getString("sender");
-                String reported = rs.getString("reported");
-                String reason = rs.getString("reason");
-                String timestamp = rs.getString("timestamp");
-
-                OfflinePlayer senderPlayer = Bukkit.getOfflinePlayer(UUID.fromString(sender));
-                String senderName = senderPlayer.getName();
-
-
-                // Construire le message à envoyer au joueur
-                reportMessage.append("Signalé par : ").append(senderName).append("\n")
-                        .append("Motif : ").append(reason).append("\n")
-                        .append("Date : ").append(timestamp).append("\n")
-                        .append("--------\n");
-            }
-
-            // Envoyer tous les rapports au joueur
-            player.sendMessage(reportMessage.toString());
-
-        } catch (SQLException ignored) {}
-
-
+            reportMessage.append("Signalé par : ").append(senderName).append("\n")
+                    .append("Motif : ").append(report.getReason()).append("\n")
+                    .append("Date : ").append(report.getTimestamp()).append("\n")
+                    .append("--------\n");
+        }
+        player.sendMessage(reportMessage.toString());
     }
 
     public void topReports(Player player) {
-
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT reported, COUNT(*) AS num_reports FROM reports GROUP BY reported ORDER BY num_reports DESC LIMIT 5;");
-
-            ResultSet rs = statement.executeQuery();
-            StringBuilder topreportMessage = new StringBuilder();
-
-            // Vérifier si des rapports ont été trouvés
-            if (!rs.isBeforeFirst()) {
-                player.sendMessage(" \n Aucun joueur n'a de signalement ! ");
-                return;
+        Map<UUID, Integer> reportCount = new HashMap<>();
+        for (List<Report> reports : reportCache.values()) {
+            for (Report report : reports) {
+                reportCount.put(report.getReported(), reportCount.getOrDefault(report.getReported(), 0) + 1);
             }
-            player.sendMessage("\n Top des signalements : \n \n");
-            while (rs.next()) {
-                // Récupérer les données de chaque colonne
-                String reported = rs.getString("reported");
-                String count = rs.getString("num_reports");
+        }
 
-                OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(UUID.fromString(reported));
-                String reportedName = reportedPlayer.getName();
+        List<Map.Entry<UUID, Integer>> topReports = new ArrayList<>(reportCount.entrySet());
+        topReports.sort((e1, e2) -> e2.getValue() - e1.getValue());
 
+        if (topReports.isEmpty()) {
+            player.sendMessage(" \nAucun joueur n'a de signalement ! ");
+            return;
+        }
 
-                // Construire le message à envoyer au joueur
-                topreportMessage.append("- ").append(ChatColor.GREEN).append(reportedName).append(ChatColor.WHITE).append(" - ")
-                        .append(count).append(" signalement(s)");
+        StringBuilder topReportMessage = new StringBuilder("\nTop des signalements : \n \n");
+        for (int i = 0; i < Math.min(5, topReports.size()); i++) {
+            Map.Entry<UUID, Integer> entry = topReports.get(i);
+            OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(entry.getKey());
+            String reportedName = reportedPlayer.getName();
 
-            }
-
-            // Envoyer tous les rapports au joueur
-            player.sendMessage(topreportMessage.toString());
-            player.sendMessage("\n -------- \n");
-
-        } catch (SQLException ignored) {}
-
-
+            topReportMessage.append("- ").append(ChatColor.GREEN).append(reportedName).append(ChatColor.WHITE).append(" - ")
+                    .append(entry.getValue()).append(" signalement(s)\n");
+        }
+        player.sendMessage(topReportMessage.toString());
+        player.sendMessage("\n -------- \n");
     }
 
     public boolean clearReports(Player target) {
-
-        try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM reports WHERE reported = ?;");
-            statement.setString(1, target.getUniqueId().toString());
-
-            statement.executeUpdate();
-
+        UUID targetUUID = target.getUniqueId();
+        if (reportCache.containsKey(targetUUID)) {
+            reportCache.remove(targetUUID);
             return true;
-
-        } catch (SQLException ignored) {}
+        }
         return false;
-
-
     }
 
-    public boolean checkReportability(Player target) {
-        try {
+    public boolean checkReportability(OfflinePlayer target) {
+        UUID targetUUID = target.getUniqueId();
+        List<Report> reports = reportCache.getOrDefault(targetUUID, new ArrayList<>());
 
-            Timestamp last24Hours = Timestamp.from(Instant.now().minus(24, ChronoUnit.HOURS));
-
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM reports WHERE reported = ? AND timestamp > ?");
-            statement.setString(1, target.getUniqueId().toString());
-            statement.setTimestamp(2, last24Hours);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                int count = rs.getInt("COUNT(*)");
-                return count == 0;
-            }
-            else {
-                return false;
-            }
-
-        } catch (SQLException ignored) {return false;}
-
+        Timestamp last24Hours = Timestamp.from(Instant.now().minus(24, ChronoUnit.HOURS));
+        return reports.stream().noneMatch(report -> report.getTimestamp().after(last24Hours));
     }
-
 }
-

@@ -4,6 +4,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
@@ -20,8 +21,9 @@ public class ReportCommands {
     @Description("Signale un joueur pour un motif spécifique")
     @CommandPermission("ayw.command.report")
 
-    public boolean report(CommandSender sender, @Named("Joueur") Player target, @Named("Motif") String reason) {
+    public boolean report(CommandSender sender, @Named("Joueur") OfflinePlayer target, @Named("Motif") String reason) {
         ReportManager reportManager = AywenCraftPlugin.getInstance().getManagers().getReportManager();
+
         if (sender instanceof Player) {
             Player player = (Player) sender;
             String senderName = sender.getName();
@@ -35,7 +37,6 @@ public class ReportCommands {
             if(reportManager.checkReportability(target)) {
                 if (reportManager.addReport(player, target, reason, currentTimestamp)) {
                     player.sendMessage("Vous avez signalé " + ChatColor.GREEN + reportedPlayer + ChatColor.WHITE + " pour : " + reason);
-                    /* Insérer ce report dans la base de données */
                     return true;
                 }
             }
@@ -73,7 +74,7 @@ public class ReportCommands {
     @Description("Consulte les signalements d'un joueur")
     @CommandPermission("ayw.mods.report")
 
-    public boolean see(CommandSender sender, @Named("Joueur") Player target) {
+    public boolean see(CommandSender sender, @Named("Joueur") OfflinePlayer target) {
         ReportManager reportManager = AywenCraftPlugin.getInstance().getManagers().getReportManager();
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -94,12 +95,13 @@ public class ReportCommands {
 
     public boolean toplist(CommandSender sender) {
         ReportManager reportManager = AywenCraftPlugin.getInstance().getManagers().getReportManager();
-
+        if (sender instanceof Player) {
             Player player = (Player) sender;
 
             reportManager.topReports(player);
             return true;
-
+        }
+        return false;
 
     }
 
