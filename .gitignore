@@ -135,6 +135,9 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+#config.yml contains bdd logins and passwords
+/src/main/resources/config.yml
+
 ### Project ###
 
 /builds/
