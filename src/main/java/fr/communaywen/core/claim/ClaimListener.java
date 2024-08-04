@@ -6,16 +6,19 @@ import fr.communaywen.core.teams.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -43,6 +46,70 @@ public class ClaimListener implements Listener {
                 player.sendMessage("§cCe n'est pas chez vous");
                 return;
             }
+        }
+    }
+
+    @EventHandler
+    public static void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+            if (region.isInArea(event.getRightClicked().getLocation()) && !region.isTeamMember(playerUuid)) {
+                event.setCancelled(true);
+                player.sendMessage("§cCe n'est pas chez vous");
+                return;
+            }
+        }
+    
+        if (event.getRightClicked().getType() == EntityType.ITEM_FRAME) {
+            ItemStack item = player.getItemInHand();
+            if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                event.setCancelled(true);
+                player.sendMessage("§cVous ne pouvez pas utiliser un BATON DE CLAIM sur un cadre d'item.");
+            }
+        }
+    }
+    
+    @EventHandler
+    public static void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if(event.getClickedInventory() != null && event.getWhoClicked() instanceof Player) {
+            ItemStack item = event.getCursor();
+            if(item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                switch (event.getClickedInventory().getType()) {
+                    case CHEST, ENDER_CHEST, DISPENSER, DROPPER, HOPPER, BARREL, SHULKER_BOX, WORKBENCH, FURNACE, LOOM, GRINDSTONE, SMOKER, BLAST_FURNACE, CARTOGRAPHY, STONECUTTER, BEACON, ENCHANTING, ANVIL, BREWING, MERCHANT, CRAFTING:
+                        event.setCancelled(true);
+                        ((Player) event.getWhoClicked()).sendMessage("§cVous ne pouvez pas utiliser un BATON DE CLAIM dans cet inventaire.");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } 
+
+        if (event.getAction() == InventoryAction.HOTBAR_SWAP || event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD) {
+            ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
+            if (hotbarItem != null && hotbarItem.getType() == Material.STICK && Objects.requireNonNull(hotbarItem.getItemMeta()).hasDisplayName() && hotbarItem.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                event.setCancelled(true);
+                player.sendMessage("§cVous ne pouvez pas placer un BATON DE CLAIM dans cet inventaire.");
+            }
+        }
+
+        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            ItemStack currentItem = event.getCurrentItem();
+            if (currentItem != null && currentItem.getType() == Material.STICK && Objects.requireNonNull(currentItem.getItemMeta()).hasDisplayName() && currentItem.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                event.setCancelled(true);
+                player.sendMessage("§cVous ne pouvez pas déplacer un BATON DE CLAIM dans cet inventaire.");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent event) {
+        ItemStack item = event.getItemDrop().getItemStack();
+        if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage("§cVous ne pouvez pas jeter un BATON DE CLAIM.");
         }
     }
 
@@ -96,7 +163,7 @@ public class ClaimListener implements Listener {
                         for (int z = -radius; z <= radius; z++) {
                             Block nearbyBlock = clickedBlock.getRelative(x, y, z);
                             for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
-                                if (region.isInArea(nearbyBlock.getLocation())) {
+                                if (region.isInArea(nearbyBlock.getLocation()) && !region.isTeamMember(player.getUniqueId())) {
                                     isInAnyRegion = true;
                                     break outerLoop;
                                 }
@@ -130,12 +197,17 @@ public class ClaimListener implements Listener {
         }
     }
 
-    // Check if player craft with claim stick
+    // Check if player craft with claim stick and cancel the event
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
-        ItemStack item = event.getCurrentItem();
-        if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
-            event.setCancelled(true);
+        for (ItemStack item : event.getInventory().getMatrix()) {
+            if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                event.setCancelled(true);
+                if (event.getWhoClicked() instanceof Player) {
+                    ((Player) event.getWhoClicked()).sendMessage("§cVous ne pouvez pas utiliser un BATON DE CLAIM pour crafter.");
+                }
+                break;
+            }
         }
     }
 
@@ -254,6 +326,15 @@ public class ClaimListener implements Listener {
                 }
             }
         }
+    }
+
+    public static boolean getClaimStick(Player player) {
+        for(ItemStack item : player.getInventory().getContents()) {
+            if (item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void removeClaimStick(Player player) {

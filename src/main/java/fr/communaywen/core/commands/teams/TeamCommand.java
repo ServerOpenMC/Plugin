@@ -2,6 +2,7 @@ package fr.communaywen.core.commands.teams;
 
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.ClaimMenu;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.EconomieTeam;
@@ -203,6 +204,18 @@ public class TeamCommand {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
+
+        // Check if the player's inventory is full
+        if (player.getInventory().firstEmpty() == -1) {
+            CommandUtils.sendMessage(player, "Votre inventaire est plein !", true);
+            return;
+        }
+
+        if(ClaimListener.getClaimStick(player)) {
+            CommandUtils.sendMessage(player, "Vous avez déjà un claim stick !", true);
+            return;
+        }
+
         team.giveClaimStick(player);
     }
 
