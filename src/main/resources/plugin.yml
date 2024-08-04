@@ -27,9 +27,6 @@ permissions:
   ayw.command.rtp:
     description: 'rtp'
     default: true
-  ayw.command.feed:
-    description: 'feed'
-    default: true
   ayw.command.tpa:
     description: 'tpa'
     default: true
