@@ -2,13 +2,14 @@ package fr.communaywen.core.tpa;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
-import dev.xernas.menulib.utils.ItemUtils;
+import dev.xernas.menulib.utils.StaticSlots;
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,12 +27,12 @@ public class TPACommandGUI extends PaginatedMenu {
 
     @Override
     public Material getBorderMaterial() {
-        return Material.BLACK_STAINED_GLASS_PANE;
+        return Material.GRAY_STAINED_GLASS_PANE;
     }
 
     @Override
     public List<Integer> getStaticSlots() {
-        return dev.xernas.menulib.utils.StaticSlots.BOTTOM;
+        return StaticSlots.BOTTOM;
     }
 
     @Override
@@ -39,9 +40,12 @@ public class TPACommandGUI extends PaginatedMenu {
         List<ItemStack> items = new ArrayList<>();
         Bukkit.getOnlinePlayers().forEach(target -> {
             if (!target.equals(getOwner())) {
-                ItemStack item = new ItemBuilder(this, Material.PLAYER_HEAD, itemMeta -> {
-                    itemMeta.setDisplayName("§a" + target.getName());
-                }).build();
+                ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null) {
+                    meta.setDisplayName("§a" + target.getName());
+                    item.setItemMeta(meta);
+                }
                 items.add(item);
             }
         });
@@ -51,13 +55,20 @@ public class TPACommandGUI extends PaginatedMenu {
     @Override
     public Map<Integer, ItemStack> getButtons() {
         Map<Integer, ItemStack> buttons = new HashMap<>();
-        buttons.put(48, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> itemMeta.setDisplayName("§cPrevious"))
-                .setPreviousPageButton());
-        buttons.put(49, new ItemBuilder(this, Material.BARRIER, itemMeta -> itemMeta.setDisplayName("§7Close"))
-                .setCloseButton());
-        buttons.put(50, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName("§aNext"))
-                .setNextPageButton());
+        buttons.put(48, createButton(Material.RED_CONCRETE, "§cPrevious"));
+        buttons.put(49, createButton(Material.BARRIER, "§7Close"));
+        buttons.put(50, createButton(Material.GREEN_CONCRETE, "§aNext"));
         return buttons;
+    }
+
+    private ItemStack createButton(Material material, String name) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
     @Override
@@ -70,7 +81,8 @@ public class TPACommandGUI extends PaginatedMenu {
         if (event.getCurrentItem() != null) {
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem.getType() == Material.PLAYER_HEAD) {
-                String playerName = ItemUtils.getItemDisplayName(clickedItem);
+                ItemMeta meta = clickedItem.getItemMeta();
+                String playerName = meta != null ? meta.getDisplayName().replace("§a", "") : "Unknown";
                 Player target = Bukkit.getPlayer(playerName);
                 if (target != null) {
                     TPACommand.sendTPARequest(getOwner(), target, plugin);
