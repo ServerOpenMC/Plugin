@@ -1,7 +1,6 @@
 package fr.communaywen.core.dreamdim;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
@@ -45,5 +44,10 @@ public class DreamChunkGenerator extends ChunkGenerator {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean shouldGenerateMobs() {
+        return true;
     }
 }
