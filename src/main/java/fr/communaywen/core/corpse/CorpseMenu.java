@@ -102,6 +102,8 @@ public class CorpseMenu {
         placeItems(contents, inv, HOTBAR_SLOTS);
         placeItems(contents, inv, INVENTORY_SLOTS);
         placeItems(contents, inv, ARMOR_SLOTS);
+
+        //inv.setItem(13, new ItemBuilder(Material.PAPER).setName("§aʀᴇᴄᴜᴘᴇʀᴇʀ ʟᴇ sᴛᴜғғ").toItemStack());
     }
 
     private void placeItems(Inventory fromInventory, Inventory toInventory, Map<Integer, Integer> slotsMap) {

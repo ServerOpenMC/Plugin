@@ -27,9 +27,6 @@ permissions:
   ayw.command.rtp:
     description: 'rtp'
     default: true
-  ayw.command.feed:
-    description: 'feed'
-    default: true
   ayw.command.tpa:
     description: 'tpa'
     default: true
@@ -55,3 +52,6 @@ permissions:
   ayw.command.spawn:
     description: 'spawn'
     default: true
+  ayw.command.bandage:
+    description: 'Donne un bandage'
+

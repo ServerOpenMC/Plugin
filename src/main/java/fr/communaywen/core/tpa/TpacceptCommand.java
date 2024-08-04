@@ -1,31 +1,79 @@
 package fr.communaywen.core.tpa;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 public class TpacceptCommand {
-    TPAQueue tpQueue = TPAQueue.INSTANCE;
+    private final TPAQueue tpQueue = TPAQueue.INSTANCE;
+    private final AywenCraftPlugin plugin;
+
+    public TpacceptCommand(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Command("tpaccept")
     @CommandPermission("ayw.command.tpa")
     public void onCommand(Player player) {
-        Player tpaplayer = tpQueue.TPA_REQUESTS.get(player);
-        if (tpaplayer == null) {
-            player.sendMessage(ChatColor.RED + "Vous n'avez pas de demande de téléporation");
+        Player requester = tpQueue.getRequester(player);
+        if (requester == null) {
+            player.sendMessage("§cVous n'avez pas de demande de téléportation.");
             return;
         }
-        tpQueue.TPA_REQUESTS.remove(player);
-        player.sendMessage(tpaplayer.getName() + " va être téléporté à vous !");
-        tpaplayer.sendTitle("§0", "§a§lTéléportation à " + player.getName(), 20, 10, 10);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                tpaplayer.teleport(player);
+
+        tpQueue.removeRequest(player);
+
+        player.sendMessage("§a" + requester.getName() + " sera téléporté à vous dans 5 secondes. Ne bougez pas !");
+        requester.sendMessage("§aVous serez téléporté à " + player.getName() + " dans 5 secondes. Ne bougez pas !");
+
+        new TeleportCountdown(plugin, requester, player).runTaskTimer(plugin, 0, 20);
+    }
+
+    private static class TeleportCountdown extends BukkitRunnable {
+        private final AywenCraftPlugin plugin;
+        private final Player requester;
+        private final Player target;
+        private int countdown = 5;
+        private final double requesterInitialX;
+        private final double requesterInitialY;
+        private final double requesterInitialZ;
+
+        TeleportCountdown(AywenCraftPlugin plugin, Player requester, Player target) {
+            this.plugin = plugin;
+            this.requester = requester;
+            this.target = target;
+            this.requesterInitialX = requester.getLocation().getX();
+            this.requesterInitialY = requester.getLocation().getY();
+            this.requesterInitialZ = requester.getLocation().getZ();
+        }
+
+        @Override
+        public void run() {
+            if (countdown <= 0) {
+                requester.teleport(target);
+                requester.sendMessage("§aTéléportation réussie !");
+                target.sendMessage("§a" + requester.getName() + " a été téléporté à vous.");
+                cancel();
+                return;
             }
-        }.runTaskLater(AywenCraftPlugin.getInstance(), 25);
+
+            if (requesterHasMoved()) {
+                requester.sendMessage("§cTéléportation annulée car vous avez bougé.");
+                target.sendMessage("§cTéléportation de " + requester.getName() + " annulée car il a bougé.");
+                cancel();
+                return;
+            }
+
+            countdown--;
+        }
+
+        private boolean requesterHasMoved() {
+            return requester.getLocation().getX() != requesterInitialX ||
+                    requester.getLocation().getY() != requesterInitialY ||
+                    requester.getLocation().getZ() != requesterInitialZ;
+        }
     }
 }
+

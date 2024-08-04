@@ -1,7 +1,7 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.tab.Tablist;
+import fr.communaywen.core.tab.TabList;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +34,6 @@ public class TablistListener implements Listener {
         String header = PlaceholderAPI.setPlaceholders(player, "\n\n\n\n\n\n\uE253\n\n  §eJoueurs en ligne §7: §6%server_online%§7/§e%server_max_players%  \n");
         String footer = "\n§dplay.openmc.fr\n";
 
-        new Tablist().sendTabList(player, header, footer);
+        plugin.getTabList().updateHeaderFooter(player, header, footer);
     }
-
 }
