@@ -62,12 +62,12 @@ public class TPACommand implements Listener {
         player.sendMessage(Component.text("[TPA] ✅ Demande de téléportation envoyée à ")
                 .color(TextColor.color(0, 255, 0))
                 .append(Component.text(target.getName())
-                        .color(TextColor.color(0, 255, 255))) // Light blue color for the target's name
+                        .color(TextColor.color(0, 255, 255)))
                 .append(Component.text(" ✅"))
                 .color(TextColor.color(0, 255, 0)));
 
         final Component message = Component.text(player.getName() + " vous a envoyé une demande de téléportation. Tapez /tpaccept pour accepter.")
-                .color(TextColor.color(0, 255, 255)) // Light blue color for the neutral text
+                .color(TextColor.color(0, 255, 255))
                 .clickEvent(ClickEvent.runCommand("/tpaccept"))
                 .hoverEvent(HoverEvent.showText(Component.text("[TPA] §7[§aCliquez pour accepter§7]")));
 
