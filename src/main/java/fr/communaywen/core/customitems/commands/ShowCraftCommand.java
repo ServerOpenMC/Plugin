@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
 
-@Command("showcraft")
+@Command({"showcraft", "showcrafts", "sc"})
 public class ShowCraftCommand {
 
     private final CustomItemsManager customItemsManager;
