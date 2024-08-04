@@ -34,7 +34,7 @@ public class DimensionManager implements Listener {
         plugin.registerEvents(
                 new EatListener(plugin),
                 new EnterWorldListener(plugin),
-                new DisableSculkExp()
+                new DisableSculk()
         );
     }
 
