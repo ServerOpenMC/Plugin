@@ -23,6 +23,6 @@ public class EnterWorldListener implements Listener {
         Player player = event.getPlayer();
         if (!player.getWorld().equals(dreamworld)){ return; }
 
-        player.sendMessage("§4Mets ta luminosité au minimum pour une experience plus immersive");
+        player.sendMessage("§4Mets la luminosité par défaut pour une experience plus immersive");
     }
 }
