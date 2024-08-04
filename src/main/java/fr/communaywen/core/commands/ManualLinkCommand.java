@@ -1,35 +1,31 @@
 package fr.communaywen.core.commands;
 
 import fr.communaywen.core.utils.LinkerAPI;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Named;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.sql.SQLException;
 
-public class ManualLinkCommand implements CommandExecutor {
+public class ManualLinkCommand {
 
     private final LinkerAPI linkerAPI;
 
-    public ManualLinkCommand(LinkerAPI linkerAPI) { this.linkerAPI = linkerAPI; }
+    public ManualLinkCommand(LinkerAPI linkerAPI) {
+        this.linkerAPI = linkerAPI;
+    }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) { return false; }
-        if (args.length != 1) {
-            sender.sendMessage("Un userId est requis en argument");
-            return true;
-        }
-        Player player = (Player) sender;
-
+    @Command("manuallink")
+    @Description("Lie un compte Minecraft à Discord manuellement (sans verif)")
+    @CommandPermission("ayw.command.manuallink")
+    public void onCommand(Player player, @Named("user_id") String userId) {
         try {
-            this.linkerAPI.setDatabase(player, args[0]);
+            this.linkerAPI.setDatabase(player, userId);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(e);
         }
-
-        return true;
     }
 }

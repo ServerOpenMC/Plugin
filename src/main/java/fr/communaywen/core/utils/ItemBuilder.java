@@ -88,7 +88,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addFlag(ItemFlag itemsflags){
+    public ItemBuilder addFlag(ItemFlag itemsflags) {
         ItemMeta im = is.getItemMeta();
         assert im != null;
         im.addItemFlags(itemsflags);

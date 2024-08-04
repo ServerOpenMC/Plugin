@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 public class LinkerAPI {
 
@@ -29,7 +30,44 @@ public class LinkerAPI {
             statement.executeUpdate();
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public boolean linkWithCode(Player player, int code) throws SQLException { // Ajoute un lien à la DB
+        try {
+            String playerUUID = player.getUniqueId().toString();
+            Connection connection = dbmanager.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO link_verif (minecraft_uuid, code) VALUES (?, ?)");
+
+            statement.setString(1, playerUUID);
+            statement.setString(2, String.valueOf(code));
+
+            statement.executeUpdate();
+
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public boolean delayRemoveCode(Player player) throws SQLException { // Ajoute un lien à la DB
+        try {
+            String playerUUID = player.getUniqueId().toString();
+            Connection connection = dbmanager.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM link_verif WHERE minecraft_uuid = ?");
+
+            statement.setString(1, playerUUID);
+
+            statement.executeUpdate();
+
+            return true;
+        } catch (Exception e) {
             System.out.println(e.toString());
             return false;
         }
@@ -46,7 +84,7 @@ public class LinkerAPI {
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                System.out.println("Discord ID found for "+player.getName()+": "+resultSet.getString("discord_id"));
+                System.out.println("Discord ID found for " + player.getName() + ": " + resultSet.getString("discord_id"));
                 return resultSet.getString("discord_id");
             } else {
                 return "";
@@ -57,4 +95,73 @@ public class LinkerAPI {
             return "";
         }
     }
+
+    public boolean isVerified(Player player) throws SQLException {
+        try {
+            String uuid = player.getUniqueId().toString();
+            Connection connection = dbmanager.getConnection();
+
+            String sql = "SELECT * FROM link WHERE minecraft_uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, uuid);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public boolean codeAlreadyExist(int code) throws SQLException {
+        try {
+            Connection connection = dbmanager.getConnection();
+
+            String sql = "SELECT * FROM link_verif WHERE code = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, String.valueOf(code));
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public boolean playerAlreadyLinkTime(Player player) throws SQLException {
+        try {
+            Connection connection = dbmanager.getConnection();
+
+            String sql = "SELECT * FROM link_verif WHERE minecraft_uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, String.valueOf(player.getUniqueId()));
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public int generateCode() {
+        return new Random().nextInt(9000) + 1000;
+    }
+
 }

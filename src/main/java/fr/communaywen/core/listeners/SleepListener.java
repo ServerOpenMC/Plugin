@@ -1,55 +1,66 @@
 package fr.communaywen.core.listeners;
 
-import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class SleepListener implements Listener {
 
     @EventHandler
-    public void onSleep(PlayerBedEnterEvent event) {
-        if(event.getBedEnterResult() == PlayerBedEnterEvent.BedEnterResult.OK){
-            int sleepNumber = 1;
-            for(Player player : Bukkit.getOnlinePlayers()){
-                if(player.isSleeping()) sleepNumber++;
-            }
-            if(sleepNumber >= getMinSleeper(event.getPlayer().getWorld())) passNight(event.getPlayer().getWorld());
-        }
+    public void onJoin(PlayerJoinEvent event) {
+        World world = event.getPlayer().getWorld();
+        world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE, getPercentage(world.getPlayers().size() + 1));
     }
 
-    private int getMinSleeper(World world){
-        int playersNumber = world.getPlayers().size();
-        if(playersNumber < 2){
-            return 1;
-        }else if(playersNumber < 5){
-            return 2;
-        }else if(playersNumber < 7){
-            return 3;
-        }else if(playersNumber < 15){
-            return 4;
-        }else if(playersNumber < 20){
-            return 5;
-        }else if(playersNumber < 30){
-            return 6;
-        }else if(playersNumber < 40){
-            return 7;
-        }else if(playersNumber < 60){
-            return 8;
-        }else if(playersNumber < 90){
-            return 9;
-        }else if(playersNumber < 200){
-            return 10;
-        }else{
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        World world = event.getPlayer().getWorld();
+        world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE, getPercentage(world.getPlayers().size() - 1));
+    }
+
+    @EventHandler
+    public void onChangeWorld(PlayerChangedWorldEvent event) {
+        World oldWorld = event.getFrom();
+        World newWorld = event.getPlayer().getWorld();
+        oldWorld.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE, getPercentage(oldWorld.getPlayers().size()));
+        newWorld.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE, getPercentage(newWorld.getPlayers().size()));
+    }
+
+    private int getPercentage(int playersNumber) {
+        if (playersNumber < 4) {
+            return 51;
+        } else if (playersNumber < 10) {
+            return 43;
+        } else if (playersNumber < 20) {
+            return 31;
+        } else if (playersNumber < 27) {
+            return 26;
+        } else if (playersNumber < 35) {
+            return 23;
+        } else if (playersNumber < 39) {
+            return 21;
+        } else if (playersNumber < 45) {
+            return 18;
+        } else if (playersNumber < 57) {
+            return 16;
+        } else if (playersNumber < 61) {
+            return 15;
+        } else if (playersNumber < 65) {
+            return 14;
+        } else if (playersNumber < 70) {
+            return 13;
+        } else if (playersNumber < 76) {
+            return 12;
+        } else if (playersNumber < 91) {
             return 11;
+        } else if (playersNumber < 101) {
+            return 10;
+        } else {
+            return 9;
         }
-    }
-
-    private void passNight(World world){
-        world.setStorm(false);
-        world.setThundering(false);
-        world.setTime(0);
     }
 }

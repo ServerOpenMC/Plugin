@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
@@ -23,15 +23,17 @@ public class VpnListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event) {
+    public void OnPlayerJoin(PlayerJoinEvent event) {
 
         Player player = event.getPlayer();
 
         if (player.hasPermission("aywencraft.antivpn.bypass")) {
             return;
         }
-        
-        String ip = event.getAddress().getHostAddress();
+
+        String ip = player.getAddress().getAddress().getHostAddress();
+
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -53,14 +55,18 @@ public class VpnListener implements Listener {
                     String response = content.toString();
                     if (response.contains("\"proxy\":true")) {
                         Bukkit.getScheduler().runTask(plugin, () -> {
-                            event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                                    "§l§cOpenMc - Sécuritée\n" +
-                                            "§l§eConnexion Non Permise !§r\n" +
-                                            "§6Vous essayez actuellement de vous connecter au serveur\n" +
-                                            "§6avec un vpn ou un proxy.\n" +
-                                            "§3Merci de le désactiver et de réessayer\n" +
-                                            "§cSi vous pensez qu'il s'agit d'une erreur, vous pouvez\n" +
-                                            "§cavoir de l'assistance sur discord.gg/aywen");
+                            player.kickPlayer("§l§cOpenMc - Sécurité\n" +
+                                    "\n" +
+                                    "§l§eConnexion non permise !§r\n" +
+                                    "\n" +
+                                    "§6Vous essayez actuellement de vous connecter au serveur\n" +
+                                    "§6avec un vpn ou un proxy.\n" +
+                                    "\n" +
+                                    "§3Merci de le désactiver et de réessayer\n" +
+                                    "\n" +
+                                    "§cSi vous pensez qu'il s'agit d'une erreur, vous pouvez\n" +
+                                    "§cavoir de l'assistance sur discord.gg/aywen");
+
                             Bukkit.broadcast(ChatColor.YELLOW + event.getPlayer().getName() + " a essayé de se connecter mais il avait un vpn.",
                                     "aywencraft.antivpn.notification");
                         });

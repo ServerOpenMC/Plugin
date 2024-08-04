@@ -1,88 +1,64 @@
 package fr.communaywen.core.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Cooldown;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * THE Prout command.
- *
+ * <p>
  * Usage: /prout
  * Permission: PREFIX.command.prout
  */
-public final class ProutCommand implements CommandExecutor {
 
-    private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN_TIME = 300; // 5 minutes in seconds
+@Feature("Prout")
+@Credit("dandan")
+public final class ProutCommand {
+    @Command("prout")
+    @Description("Prout !")
+    @CommandPermission("ayw.command.prout")
+    @Cooldown(value = 5, unit = TimeUnit.MINUTES)
+    public void onCommand(Player player) {
+        player.sendMessage("§2Beuuurk, ça pue !");
 
-    @Override
-    public boolean onCommand(final @NotNull CommandSender sender,
-                             final @NotNull Command command,
-                             final @NotNull String label,
-                             final @NotNull String[] args) {
-        if (sender instanceof Player player) {
-            UUID playerId = player.getUniqueId();
-            long currentTime = System.currentTimeMillis() / 1000;
+        // Make the player jump
+        final Vector currentVelocity = player.getVelocity();
+        currentVelocity.setY(0.55d);
 
-            if (cooldowns.containsKey(playerId)) {
-                long lastUsed = cooldowns.get(playerId);
-                long timeSinceLastUse = currentTime - lastUsed;
+        player.setVelocity(currentVelocity);
 
-                if (timeSinceLastUse < COOLDOWN_TIME) {
-                    long timeLeft = COOLDOWN_TIME - timeSinceLastUse;
-                    player.sendMessage("Vous devez attendre encore " + timeLeft + " secondes avant d'utiliser cette commande à nouveau.");
-                    return true;
-                }
-            }
+        // Spawn some cloud particles
+        final Location location = player.getLocation();
+        final @Nullable World world = location.getWorld();
 
-            player.sendMessage("§2Beuuurk, ça pue !");
+        if (world != null) {
+            world.spawnParticle(Particle.CLOUD, location, 3, 0.02d, -0.04d, 0.02d, 0.09d);
 
-            // Make the player jump
-            final Vector currentVelocity = player.getVelocity();
-            currentVelocity.setY(0.55d);
-
-            player.setVelocity(currentVelocity);
-
-            // Spawn some cloud particles
-            final Location location = player.getLocation();
-            final @Nullable World world = location.getWorld();
-
-            if (world != null) {
-                world.spawnParticle(Particle.CLOUD, location, 3, 0.02d, -0.04d, 0.02d, 0.09d);
-
-                // Funny sound!
-                world.playSound(location, Sound.ENTITY_VILLAGER_NO, 0.8f, 2.3f);
-                world.playSound(location, Sound.ENTITY_GOAT_EAT, 0.7f, 0.2f);
-            }
-
-            // Add glowing effect for 30 seconds
-            addGlowingEffect(player);
-
-            // Broadcast the message
-            String broadcastMessage = "[§c§l§ka§r] §f§lPROUT !!! §r" + player.getName() + " a §f§lpété§r. §2§lBeurk !";
-            Bukkit.broadcastMessage(broadcastMessage);
-
-            // Update cooldown
-            cooldowns.put(playerId, currentTime);
+            // Funny sound!
+            world.playSound(location, Sound.ENTITY_VILLAGER_NO,  SoundCategory.PLAYERS, 0.8f, 2.3f);
+            world.playSound(location, Sound.ENTITY_GOAT_EAT,  SoundCategory.PLAYERS,0.7f, 0.2f);
         }
 
-        return true;
+        // Add glowing effect for 30 seconds
+        addGlowingEffect(player);
+
+        // Broadcast the message
+        String broadcastMessage = "[§c§l§ka§r] §f§lPROUT !!! §r" + player.getName() + " a §f§lpété§r. §2§lBeurk !";
+        Bukkit.broadcastMessage(broadcastMessage);
     }
 
     private void addGlowingEffect(Player player) {
@@ -100,6 +76,6 @@ public final class ProutCommand implements CommandExecutor {
         team.addEntry(player.getName());
         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0, false, false, true));
 
-        Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("AywenCraftPlugin"), () -> finalTeam.removeEntry(player.getName()), 600L);
+        Bukkit.getScheduler().runTaskLater(AywenCraftPlugin.getInstance(), () -> finalTeam.removeEntry(player.getName()), 600L);
     }
 }

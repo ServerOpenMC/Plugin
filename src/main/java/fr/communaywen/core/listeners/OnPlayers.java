@@ -1,10 +1,12 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.DraftAPI;
 import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,45 +39,63 @@ public class OnPlayers implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) throws IOException, SQLException { // Donne une permissions en fonction du niveau
+    public void onPlayerJoin(PlayerJoinEvent event) { // Donne une permissions en fonction du niveau
         Player player = event.getPlayer();
-        DraftAPI draftAPI = new DraftAPI();
 
-        JSONObject data = new JSONObject(draftAPI.getTop());
-        JSONArray users = data.getJSONArray("users");
-
-        String DiscordPlayerId = this.linkerAPI.getUserId(player);
-
-        if (DiscordPlayerId.isEmpty()){
-            player.sendMessage("Profitez de récompenses en lient votre compte Discord à Minecraft");
-            return;
+        if (player.getUniqueId().toString().equals("1581225d-e6a2-44e8-af37-c71702c60665")) {
+            Bukkit.getServer().dispatchCommand(player, "attribute " + player.getUniqueId().toString() + " minecraft:generic.scale base set 0.0625");
         }
 
-        for (int i = 0; i < users.length(); i++) {
-            JSONObject user = users.getJSONObject(i);
-            String discordId = user.getString("id");
+        Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            DraftAPI draftAPI = new DraftAPI();
 
-            if (DiscordPlayerId.equals(discordId)){
-                User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
+            JSONObject data = null;
+            String discordPlayerId = null;
+            JSONArray users = null;
+            try {
+                data = new JSONObject(draftAPI.getTop());
 
-                int level = user.getInt("level");
-                if (level < 10){ break; }
+                users = data.getJSONArray("users");
 
-                addPermission(lpPlayer, "ayw.levels.10");
-                if (level >= 20){
-                    addPermission(lpPlayer, "ayw.levels.20");
-                }
-                if (level >= 30){
-                    addPermission(lpPlayer, "ayw.levels.30");
-                }
-                if (level >= 40){
-                    addPermission(lpPlayer, "ayw.levels.40");
-                }
-                if (level >= 50) {
-                    addPermission(lpPlayer, "ayw.levels.50");
-                }
+                discordPlayerId = this.linkerAPI.getUserId(player);
+            } catch (IOException | SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (discordPlayerId.isEmpty()) {
+                player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
                 return;
             }
-        }
+
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject user = users.getJSONObject(i);
+                String discordId = user.getString("id");
+
+                if (discordPlayerId.equals(discordId)) {
+                    User lpPlayer = this.luckPerms.getPlayerAdapter(Player.class).getUser(player);
+
+                    int level = user.getInt("level");
+                    if (level < 10) {
+                        break;
+                    }
+
+                    addPermission(lpPlayer, "ayw.levels.10");
+                    if (level >= 20) {
+                        addPermission(lpPlayer, "ayw.levels.20");
+                    }
+                    if (level >= 30) {
+                        addPermission(lpPlayer, "ayw.levels.30");
+                    }
+                    if (level >= 40) {
+                        addPermission(lpPlayer, "ayw.levels.40");
+                    }
+                    if (level >= 50) {
+                        addPermission(lpPlayer, "ayw.levels.50");
+                    }
+                    return;
+                }
+            }
+        });
+
     }
 }

@@ -1,21 +1,29 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Feature("Quiz")
+@Credit("ddemile")
 public class QuizManager {
-    public static Quiz currentQuiz;
-    public ScheduledExecutorService executor;
-    private List<Quiz> quizzes;
+    public Quiz currentQuiz;
+    private ScheduledExecutorService timeoutExecutor;
+    private final ScheduledExecutorService executor;
+    private final List<Quiz> quizzes;
     public FileConfiguration config;
-    private AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
 
     public QuizManager(AywenCraftPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
@@ -29,43 +37,100 @@ public class QuizManager {
         };
 
         Runnable runnable = () -> {
-            this.executor = Executors.newScheduledThreadPool(1);
+            if (Bukkit.getOnlinePlayers().isEmpty()) return;
 
-            int index = new Random().nextInt(this.quizzes.size());
+            this.timeoutExecutor = Executors.newScheduledThreadPool(1);
 
-            currentQuiz = this.quizzes.get(index);
+            currentQuiz = getRandomQuiz();
+
+            int numberOfSpaces = Math.max(0, 23 - (currentQuiz.question.length() / 2));
             Bukkit.broadcastMessage(
-                    "Nouvelle question : " + currentQuiz.question + "\n" +
-                    "Vous avez 30 seconds pour répondre" + "\n" +
-                    "Le premier a répondre gagne !"
+                    "§8§m                                                     §r\n" +
+                            "§7\n" +
+                            "§6              Nouvelle question : \n§7" +
+                            " ".repeat(numberOfSpaces) + currentQuiz.question + "\n" +
+                            "§b     Vous avez 30 seconds pour répondre" + "\n" +
+                            "§e         Le premier à répondre gagne !\n" +
+                            "§7\n" +
+                            "§8§m                                                     §r"
             );
 
             Runnable tellAnswer = () -> {
-                Bukkit.broadcastMessage("Personne n'as trouvée la réponse au quizz après 30 secondes");
-                Bukkit.broadcastMessage("La réponse était : " + currentQuiz.answer);
+                Bukkit.broadcastMessage(
+
+                        "§8§m                                                     §r\n" +
+                                "§7\n" +
+                                "§cAïe aïe aïe ! Personne n'a trouvé la réponse ... \n§7" +
+                                "§7\n" +
+                                "§bLa réponse était: §7" + currentQuiz.answer + "\n" +
+                                "§7\n" +
+                                "§8§m                                                     §r"
+                );
                 currentQuiz = null;
             };
 
-            this.executor.schedule(tellAnswer, 30, TimeUnit.SECONDS);
+            this.timeoutExecutor.schedule(tellAnswer, 30, TimeUnit.SECONDS);
         };
 
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(runnable, 5, config.getInt("interval"), TimeUnit.MINUTES);
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(runnable, 1, config.getInt("interval"), TimeUnit.MINUTES);
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max") - 1);
-
         if (currentQuiz == null) return;
 
-        if (event.getMessage().toLowerCase().equals(currentQuiz.answer)) {
-            String message = MessageFormat.format("{0} a trouvé la réponse en premier, il remporte {1} de monnaie", event.getPlayer().getDisplayName(), money);
-            Bukkit.broadcastMessage(message);
-            this.plugin.economyManager.addBalance(event.getPlayer(), money);
-            currentQuiz = null;
-            this.executor.shutdownNow();
-            this.executor = Executors.newScheduledThreadPool(1);
+        if (!event.getMessage().toLowerCase().equals(currentQuiz.answer)) return;
+
+        int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
+
+        Bukkit.broadcastMessage(
+                "§8§m                                                     §r\n" +
+                        "§7\n" +
+                        "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
+                        "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
+                        "§bIl remporte §7" + money + " §bde monnaie !\n" +
+                        "§7\n" +
+                        "§8§m                                                     §r"
+        );
+
+        event.setCancelled(true);
+
+        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
+        currentQuiz = null;
+        this.timeoutExecutor.shutdownNow();
+        this.timeoutExecutor = Executors.newScheduledThreadPool(1);
+    }
+
+    public Quiz getRandomQuiz() {
+        boolean isPredefinedQuiz = new Random().nextInt(3) < 2;
+
+        if (isPredefinedQuiz) {
+            int index = new Random().nextInt(this.quizzes.size());
+
+            return this.quizzes.get(index);
+        } else {
+            int type = new Random().nextInt(4);
+            int a = new Random().nextInt(1, 10);
+
+            return switch (type) {
+                case 0 -> {
+                    int b = new Random().nextInt(1, 10);
+                    yield new Quiz(MessageFormat.format("Combien font {0} + {1} ?", a, b), String.valueOf(a + b));
+                }
+                case 1 -> {
+                    int b = new Random().nextInt(1, 10);
+                    yield new Quiz(MessageFormat.format("Combien font {0} * {1} ?", a, b), String.valueOf(a * b));
+                }
+                case 2 ->
+                        new Quiz(MessageFormat.format("Quelle est la racine carrée de {0} ?", a * a), String.valueOf(a));
+                case 3 -> new Quiz(MessageFormat.format("Quel est le carré de {0} ?", a), String.valueOf(a * a));
+                default -> throw new IllegalStateException("Unexpected value: " + type);
+            };
         }
+    }
+
+    public void close() {
+        executor.shutdownNow();
     }
 
     public class Quiz {

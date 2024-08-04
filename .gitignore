@@ -138,3 +138,7 @@ gradle-app.setting
 ### Project ###
 
 /builds/
+
+bin/
+
+/server/
