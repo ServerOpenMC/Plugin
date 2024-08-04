@@ -34,7 +34,8 @@ public class DimensionManager implements Listener {
         plugin.registerEvents(
                 new EatListener(plugin),
                 new EnterWorldListener(plugin),
-                new DisableSculk()
+                new DisableSculk(),
+                new MobListener()
         );
     }
 
@@ -42,22 +43,19 @@ public class DimensionManager implements Listener {
         WorldCreator creator = new WorldCreator("dreamworld");
         creator.generator(new DreamChunkGenerator());
         creator.environment(World.Environment.NORMAL);
+        creator.biomeProvider(new DreamBiomeProvider());
         World dreamworld = creator.createWorld();
 
-        if (dreamworld != null) {
-            dreamworld.getPopulators().add(new LightPopulator());
-            dreamworld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            dreamworld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            dreamworld.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-            dreamworld.setGameRule(GameRule.DISABLE_RAIDS, true);
-            dreamworld.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
-            dreamworld.setGameRule(GameRule.DO_TRADER_SPAWNING, false);
+        assert dreamworld != null;
+        dreamworld.getPopulators().add(new LightPopulator());
+        dreamworld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        dreamworld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        dreamworld.setGameRule(GameRule.DISABLE_RAIDS, true);
+        dreamworld.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
+        dreamworld.setGameRule(GameRule.DO_TRADER_SPAWNING, false);
 
-            dreamworld.setTime(18000);
+        dreamworld.setTime(18000);
 
-            plugin.getLogger().info("Dream World created successfully!");
-        } else {
-            plugin.getLogger().warning("Failed to create sculk dimension!");
-        }
+        plugin.getLogger().info("Dream World created successfully!");
     }
 }
