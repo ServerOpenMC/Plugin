@@ -207,6 +207,11 @@ public class Trade implements Listener {
     }
 
     private void delete() {
+        inventory1.clear();
+        inventory2.clear();
+        player1.closeInventory();
+        player2.closeInventory();
+
         money1 = 0;
         money2 = 0;
         inventory1 = null;
