@@ -23,6 +23,6 @@ public class Utils {
         int range = 1000;
         int x = r.nextInt(range - (range * -1)) + (range * -1);
         int y = r.nextInt(range - (range * -1)) + (range * -1);
-        player.teleport(dreamworld.getHighestBlockAt(x, y).getLocation());
+        player.teleport(dreamworld.getHighestBlockAt(x, y).getLocation().add(0,1,0));
     }
 }
