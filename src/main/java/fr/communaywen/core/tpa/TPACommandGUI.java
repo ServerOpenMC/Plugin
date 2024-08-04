@@ -31,7 +31,7 @@ public class TPACommandGUI extends PaginatedMenu {
 
     @Override
     public List<Integer> getStaticSlots() {
-        return StaticSlots.BOTTOM;
+        return dev.xernas.menulib.utils.StaticSlots.BOTTOM;
     }
 
     @Override
@@ -39,9 +39,9 @@ public class TPACommandGUI extends PaginatedMenu {
         List<ItemStack> items = new ArrayList<>();
         Bukkit.getOnlinePlayers().forEach(target -> {
             if (!target.equals(getOwner())) {
-                ItemStack item = new ItemBuilder(Material.PLAYER_HEAD)
-                        .name("§a" + target.getName())
-                        .build();
+                ItemStack item = new ItemBuilder(this, Material.PLAYER_HEAD, itemMeta -> {
+                    itemMeta.setDisplayName("§a" + target.getName());
+                }).build();
                 items.add(item);
             }
         });
@@ -70,7 +70,8 @@ public class TPACommandGUI extends PaginatedMenu {
         if (event.getCurrentItem() != null) {
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem.getType() == Material.PLAYER_HEAD) {
-                Player target = Bukkit.getPlayer(ItemUtils.getItemName(clickedItem));
+                String playerName = ItemUtils.getItemDisplayName(clickedItem);
+                Player target = Bukkit.getPlayer(playerName);
                 if (target != null) {
                     TPACommand.sendTPARequest(getOwner(), target, plugin);
                     getOwner().closeInventory();
