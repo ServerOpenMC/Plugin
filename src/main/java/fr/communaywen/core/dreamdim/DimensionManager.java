@@ -3,6 +3,7 @@ package fr.communaywen.core.dreamdim;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import lombok.Getter;
 import org.bukkit.GameRule;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -19,6 +20,9 @@ public class DimensionManager implements Listener {
     AywenCraftPlugin plugin;
     Server server;
 
+    @Getter
+    Utils utils;
+
     public DimensionManager(AywenCraftPlugin Plugin) {
         this.plugin = Plugin;
         this.server = plugin.getServer();
@@ -26,6 +30,7 @@ public class DimensionManager implements Listener {
 
     public void init() {
         createDimension();
+        this.utils = new Utils(plugin);
         plugin.registerEvents(
                 new EatListener(plugin),
                 new EnterWorldListener(plugin)
