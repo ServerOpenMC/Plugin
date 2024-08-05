@@ -1,5 +1,6 @@
 package fr.communaywen.core.dreamdim.listeners;
 
+import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -13,9 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class EnterWorldListener implements Listener {
@@ -44,6 +48,18 @@ public class EnterWorldListener implements Listener {
         ));
     }
 
+    public void death(Player p) {
+        Inventory inv = p.getInventory();
+        for (ItemStack itemStack : inv.getContents()) {
+            CustomStack customStack = CustomStack.byItemStack(itemStack);
+            if (customStack != null) {
+                if (List.of("aywen:stripped_dream_log", "aywen:dream_log", "aywen:cloud", "aywen:dream_planks").contains(customStack.getNamespacedID())) {
+                    inv.remove(itemStack);
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
         if (e.getPlayer().getWorld() == dreamworld) { return; }
@@ -57,6 +73,7 @@ public class EnterWorldListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         //Même chose que quand le joueur meurt
+        death(e.getPlayer());
         teleportBack(e.getPlayer());
     }
 
@@ -66,7 +83,7 @@ public class EnterWorldListener implements Listener {
         World world = p.getWorld();
 
         if (world.getName().equals("dreamworld")) {
-            //TODO: Supprimer tout les objets qui viennent du rêves
+            death(e.getPlayer());
             p.setHealth(2);
             teleportBack(p);
             e.setCancelled(true);
