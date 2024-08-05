@@ -41,9 +41,9 @@ public class DimensionManager implements Listener {
 
     public void createDimension() {
         WorldCreator creator = new WorldCreator("dreamworld");
+        creator.biomeProvider(new DreamBiomeProvider(creator.seed()));
         creator.generator(new DreamChunkGenerator());
         creator.environment(World.Environment.NORMAL);
-        creator.biomeProvider(new DreamBiomeProvider());
         World dreamworld = creator.createWorld();
 
         assert dreamworld != null;
