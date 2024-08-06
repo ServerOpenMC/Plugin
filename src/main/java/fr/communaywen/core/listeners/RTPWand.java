@@ -121,7 +121,7 @@ public class RTPWand implements Listener {
                     }.runTaskAsynchronously(plugin);
                 }
                 else{
-                    player.sendActionBar( Component.text("§cLe RTPWand n'es disponible que dans l'overworld et le monde minage"));
+                    player.sendActionBar( Component.text("§cLe RTPWand n'es disponible que dans l'overworld"));
                 }
             }
         }

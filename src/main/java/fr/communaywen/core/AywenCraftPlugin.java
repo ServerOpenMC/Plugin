@@ -236,7 +236,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
-                new FallBloodListener()
+                new FallBloodListener(),
+                new RTPCommand(this)
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
