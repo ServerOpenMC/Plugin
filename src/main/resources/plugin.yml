@@ -55,3 +55,5 @@ permissions:
     default: true
   ayw.command.bandage:
     description: 'Donne un bandage'
+  ayw.command.report:
+    description: 'Permet de signaler un joueur'

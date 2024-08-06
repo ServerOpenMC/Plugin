@@ -16,6 +16,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.staff.ReportCommands;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
@@ -197,7 +198,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PayCommands(),
                 new FallBloodCommand(),
                 new DiscordCommand(this),
-                new ShowCraftCommand(managers.getCustomItemsManager())
+                new ShowCraftCommand(managers.getCustomItemsManager()),
+                new ReportCommands()
         );
 
         /*  --------  */

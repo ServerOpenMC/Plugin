@@ -10,6 +10,7 @@ import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
@@ -40,6 +41,7 @@ public class Managers {
     private LevelsManager levelsManager;
     private TransactionsManager transactionsManager;
     private CustomItemsManager customItemsManager;
+    private ReportManager reportManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -92,15 +94,19 @@ public class Managers {
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
         customItemsManager = new CustomItemsManager();
+        reportManager = new ReportManager();
+        reportManager.loadReports();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
     }
 
     public void cleanup() {
+        reportManager.saveReports();
         databaseManager.close();
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
+
     }
 }
