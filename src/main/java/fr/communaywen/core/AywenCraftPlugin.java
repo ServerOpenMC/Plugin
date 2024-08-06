@@ -247,6 +247,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         saveDefaultConfig();
 
+        createSandRecipe();
         createFarineRecipe();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -300,6 +301,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
         recipe.shape(" A ", " B ", "   ");
         recipe.setIngredient('A', Material.GUNPOWDER);
         recipe.setIngredient('B', Material.WHEAT);
+
+        Bukkit.addRecipe(recipe);
+    }
+
+    private void createSandRecipe() {
+        ItemStack sand = new ItemStack(Material.SAND, 4);
+
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "sand_craft"), sand);
+        recipe.shape("A");
+        recipe.setIngredient('A', Material.SANDSTONE);
 
         Bukkit.addRecipe(recipe);
     }
