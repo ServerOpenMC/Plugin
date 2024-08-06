@@ -31,9 +31,10 @@ public class DimensionManager implements Listener {
     public void init() {
         createDimension();
         this.utils = new Utils(plugin);
+        AdvancementRegister register = new AdvancementRegister(plugin);
         plugin.registerEvents(
                 new EatListener(plugin),
-                new EnterWorldListener(plugin),
+                new EnterWorldListener(plugin, register),
                 new DisableSculk(),
                 new MobListener()
         );
