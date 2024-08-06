@@ -2,6 +2,7 @@ package fr.communaywen.core.commands.teams;
 
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.ClaimMenu;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.EconomieTeam;
@@ -195,7 +196,7 @@ public class TeamCommand {
         team.openInventory(player);
     }
 
-    @Subcommand("claim")
+    @Subcommand("claim add")
     @Description("Claim une zone définit par un stick")
     public void claimStickGive(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
@@ -203,10 +204,22 @@ public class TeamCommand {
             CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
             return;
         }
+
+        // Check if the player's inventory is full
+        if (player.getInventory().firstEmpty() == -1) {
+            CommandUtils.sendMessage(player, "Votre inventaire est plein !", true);
+            return;
+        }
+
+        if(ClaimListener.getClaimStick(player)) {
+            CommandUtils.sendMessage(player, "Vous avez déjà un claim stick !", true);
+            return;
+        }
+
         team.giveClaimStick(player);
     }
 
-    @Subcommand("claimlist")
+    @Subcommand("claim list")
     @Description("Ouvre la liste des claims")
     public void claimListMenu(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
@@ -215,6 +228,24 @@ public class TeamCommand {
             return;
         }
         new ClaimMenu(player, team).open();
+    }
+
+    @Subcommand("claim bypass")
+    @Description("Bypass les claims de la team")
+    @CommandPermission("ayw.claims.bypass")
+    public void claimBypass(Player player) {
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+        if (team == null || !team.isIn(player.getUniqueId())) {
+            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+            return;
+        }
+        if(AywenCraftPlugin.playerClaimsByPass.contains(player)) {
+            AywenCraftPlugin.playerClaimsByPass.remove(player);
+            CommandUtils.sendMessage(player, "Vous n'êtes plus en bypass des claims de teams !", false);
+        } else {
+            AywenCraftPlugin.playerClaimsByPass.add(player);
+            CommandUtils.sendMessage(player, "Vous êtes maintenant en bypass des claims de teams !", false);
+        }
     }
 
     @Subcommand("money add")

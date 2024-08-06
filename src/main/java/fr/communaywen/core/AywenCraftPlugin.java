@@ -78,6 +78,7 @@ import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+    public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
     @Getter
     private final Managers managers = new Managers();
