@@ -5,8 +5,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -31,11 +31,10 @@ public class RTPWand implements Listener {
     private int COOLDOWN_ERROR;
     private int MIN_X;
     private int MAX_X;
-    private int MIN_Y;
-    private int MAX_Y;
     private int MIN_Z;
     private int MAX_Z;
     private int MAX_TRY;
+
     private String RTP_WAND_NAME;
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
@@ -66,7 +65,7 @@ public class RTPWand implements Listener {
             CustomStack customStack = CustomStack.byItemStack(item);
             if (customStack != null && customStack.getNamespacedID().equals(RTP_WAND_NAME)) {
                 event.setCancelled(true);
-                if (player.getWorld().getName().contains("world")) {
+                if (player.getWorld().getName().equals("world")) {
 
                     UUID playerId = player.getUniqueId();
                     long Time = System.currentTimeMillis() / 1000;
@@ -82,6 +81,7 @@ public class RTPWand implements Listener {
                         }
                     }
                     World world = player.getWorld();
+                    cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
@@ -100,7 +100,18 @@ public class RTPWand implements Listener {
                                                 player.sendTitle(" §aRTP réussi", "x: " + x + " y: " + y + " z: " + z);
                                                 cooldowns.put(playerId, Time);
                                                 player.setCooldown(item.getType(), COOLDOWN_TIME * 20);
-                                                setCustomItemDurability(item,getCustomItemDurability(item)-1);
+                                                if (getCustomItemDurability(item) <= 1) {
+                                                    player.getInventory().remove(item);
+                                                    new BukkitRunnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            player.playSound(player, Sound.ENTITY_ITEM_BREAK,5,1);
+                                                        }
+                                                    }.runTaskLater(plugin,1);
+                                                }
+                                                else{
+                                                    setCustomItemDurability(item,getCustomItemDurability(item)-1);
+                                                }
                                             }
                                         }.runTask(plugin);
                                         return;

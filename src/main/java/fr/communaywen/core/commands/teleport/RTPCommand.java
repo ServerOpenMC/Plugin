@@ -45,6 +45,7 @@ public class RTPCommand implements Listener {
     private final int MIN_Z;
     private final int MAX_Z;
     private int MAX_TRY;
+    private String MINE_NAME;
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
@@ -62,13 +63,14 @@ public class RTPCommand implements Listener {
         MAX_Z = plugin.getConfig().getInt("rtp.maxz");
         MAX_TRY = plugin.getConfig().getInt("rtp.max_try");
         RTP_WAND_NAME = plugin.getConfig().getString("rtp.rtp_wand");
+        MINE_NAME = plugin.getConfig().getString("mine.name");
 
     }
 
 
     @DefaultFor("~")
     public void onCommand(Player player) {
-        if (player.getWorld().getName().contains("mine")) {
+        if (player.getWorld().getName().equals(MINE_NAME)) {
             UUID playerId = player.getUniqueId();
             long Time = System.currentTimeMillis() / 1000;
             long ExactTime = System.currentTimeMillis();
@@ -84,6 +86,7 @@ public class RTPCommand implements Listener {
                 }
             }
             World world = player.getWorld();
+            cooldowns.put(playerId, Time - COOLDOWN_TIME + COOLDOWN_ERROR);
             new BukkitRunnable() {
                 @Override
                 public void run() {
