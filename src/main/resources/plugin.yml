@@ -4,6 +4,7 @@ main: fr.communaywen.core.AywenCraftPlugin
 api-version: '1.20'
 depend:
   - ProtocolLib
+  - ItemsAdder
 
 permissions:
   ayw.command.wiki:
@@ -56,4 +57,3 @@ permissions:
     description: 'Donne un bandage'
   ayw.command.report:
     description: 'Permet de signaler un joueur'
-

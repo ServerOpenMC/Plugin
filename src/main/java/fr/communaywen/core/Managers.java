@@ -4,6 +4,7 @@ import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
@@ -39,6 +40,7 @@ public class Managers {
     private FallingBlocksExplosionManager fbeManager;
     private LevelsManager levelsManager;
     private TransactionsManager transactionsManager;
+    private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
 
     private FileConfiguration bookConfig;
@@ -91,6 +93,7 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
+        customItemsManager = new CustomItemsManager();
         reportManager = new ReportManager();
         reportManager.loadReports();
 
