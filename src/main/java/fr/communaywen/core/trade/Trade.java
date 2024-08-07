@@ -71,9 +71,19 @@ public class Trade implements Listener {
 
     public void openOtherItems(boolean isPlayer1) {
         if (isPlayer1) {
-            player1.openInventory(inventory2);
+            player1.sendMessage("Contenu de l'inventaire:");
+            for (ItemStack item : inventory2.getContents()) {
+                if (item != null) {
+                    player1.sendMessage(item.getType().toString() + " x" + item.getAmount());
+                }
+            }
         } else {
-            player2.openInventory(inventory1);
+            player2.sendMessage("Contenu de l'inventaire:");
+            for (ItemStack item : inventory1.getContents()) {
+                if (item != null) {
+                    player2.sendMessage(item.getType().toString() + " x" + item.getAmount());
+                }
+            }
         }
     }
 
