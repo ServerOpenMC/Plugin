@@ -65,7 +65,7 @@ public class TeamListMenu extends PaginatedMenu {
                         ChatColor.GRAY + "■ Membres: " + team.getPlayers().size(),
                         ChatColor.GRAY + "■ Cliquez pour voir les détails"
                 ));
-            }).setNextMenu(new TeamMenu(getOwner(), team, true));
+            });
         });
     }
 
@@ -95,6 +95,14 @@ public class TeamListMenu extends PaginatedMenu {
         if (clickedItem == null || clickedItem.getType() == Material.AIR) {
             return;  // Meekiavelique : Ignore les clicks sur les slots vide
         }
-        handleMenuClick(event);
+
+        if (!getStaticSlots().contains(slot)) {
+            int index = getPage() * (getInventorySize().getSize() - getStaticSlots().size()) + slot;
+            List<Team> teams = manager.getTeams();
+            if (index < teams.size()) {
+                Team selectedTeam = teams.get(index);
+                new TeamMenu(getOwner(), selectedTeam, true).open();
+            }
+        }
     }
 }
