@@ -1,8 +1,11 @@
 package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.CustomEntity;
+import dev.lone.itemsadder.api.Events.CustomEntityDeathEvent;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.utils.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -37,6 +40,12 @@ public class BabyFuzeListener implements Listener {
             case 0:
                 CustomEntity entity = CustomEntity.spawn("omc_entities:babyfuze", player.getLocation());
                 entities.put(player.getUniqueId(), entity);
+
+                if(player.getUniqueId().equals(UUID.fromString("e5056dba-daa5-4b4e-a08c-eac27a4d2c07"))){
+                    player.playSound(entity.getLocation(), "omc_sounds:babyfuze.martinouxx", 1f, 1f);
+                } else {
+                    player.playSound(entity.getLocation(), "omc_sounds:babyfuze.salut", 1f, 1f);
+                }
                 break;
             default:
                 break;
@@ -53,6 +62,15 @@ public class BabyFuzeListener implements Listener {
             if(customEntity != null) {
                 customEntity.destroy();
             }
+        }
+    }
+
+    @EventHandler
+    public void onCustomEntityDeah(CustomEntityDeathEvent e){
+        Entity entity = e.getEntity();
+
+        if(e.getNamespacedID().equalsIgnoreCase("omc_entities:babyfuze")){
+            entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner("FuzeIII").setName("§6§lTête de Fuze").toItemStack());
         }
     }
 
