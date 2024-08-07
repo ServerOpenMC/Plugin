@@ -4,82 +4,80 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Feature("TPA")
-@Credit({"ddemile", "misieur", "process"})
-public class TPACommand {
+@Credit({"ddemile", "Axillity", "misieur", "process"})
+public class TPACommand implements Listener {
 
-    TPAQueue tpQueue = TPAQueue.INSTANCE;
-
-    private AywenCraftPlugin plugin;
+    private final AywenCraftPlugin plugin;
 
     public TPACommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @Command("tpa")
     @CommandPermission("ayw.command.tpa")
-    public void onCommand(Player player, @Named("joueur") Player target) {
-        if (player == target) {
-            player.sendMessage("Pourquoi pas ?");
-            tpQueue.TPA_REQUESTS.put(target, player);
-            tpQueue.TPA_REQUESTS2.put(player, target);
-            tpQueue.TPA_REQUESTS_TIME.put(player, System.currentTimeMillis() / 1000);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    expire_tpa(player, target);
-                }
-            }.runTaskLater(AywenCraftPlugin.getInstance(), 2400);
+    public void onCommand(Player player, @Named("joueur") String targetName) {
+        if (targetName == null || targetName.trim().isEmpty()) {
+            player.sendMessage(Component.text("[TPA] ❌ Vous devez spécifier un joueur.")
+                    .color(TextColor.color(255, 0, 0)));
             return;
         }
 
-        if (tpQueue.TPA_REQUESTS2.containsKey(player)) {
-            player.sendMessage("Vous avez déjà une demande de téléportation en attente...");
+        Player target = Bukkit.getPlayer(targetName);
+        if (target == null) {
+            player.sendMessage(Component.text("[TPA] ❌ Le joueur '" + targetName + "' n'est pas en ligne.")
+                    .color(TextColor.color(255, 0, 0)));
             return;
         }
 
+        sendTPARequest(player, target, plugin);
+    }
 
-        tpQueue.TPA_REQUESTS.put(target, player);
-        tpQueue.TPA_REQUESTS2.put(player, target);
-        tpQueue.TPA_REQUESTS_TIME.put(player, System.currentTimeMillis() / 1000);
+    public static void sendTPARequest(Player player, Player target, AywenCraftPlugin plugin) {
+        if (player.equals(target)) {
+            player.sendMessage(Component.text("[TPA] ❌ Vous ne pouvez pas vous téléporter à vous-même.")
+                    .color(TextColor.color(255, 0, 0)));
+            return;
+        }
 
-        player.sendMessage("Vous avez envoyé une demande de tpa à " + target.getName());
+        if (TPAQueue.INSTANCE.hasPendingRequest(player)) {
+            player.sendMessage(Component.text("[TPA] ❌ Vous avez déjà une demande de téléportation en attente...")
+                    .color(TextColor.color(255, 0, 0)));
+            return;
+        }
 
-        final TextComponent textComponent = Component.text(player.getName() + " vous a envoyé un demande de téléportation faites /tpaccept pour l'accepter")
-                .color(TextColor.color(255, 255, 255))
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"))
-                .hoverEvent(HoverEvent.showText(Component.text("§7[§aClique pour accepter§7]")));
+        TPAQueue.INSTANCE.addRequest(player, target);
+        player.sendMessage(Component.text("[TPA] ✅ Demande de téléportation envoyée à ")
+                .color(TextColor.color(0, 255, 0))
+                .append(Component.text(target.getName())
+                        .color(TextColor.color(0, 255, 255)))
+                .append(Component.text(" ✅"))
+                .color(TextColor.color(0, 255, 0)));
 
-        plugin.getAdventure().player(target).sendMessage(textComponent);
+        final Component message = Component.text(player.getName() + " vous a envoyé une demande de téléportation. Tapez /tpaccept pour accepter.")
+                .color(TextColor.color(0, 255, 255))
+                .clickEvent(ClickEvent.runCommand("/tpaccept"))
+                .hoverEvent(HoverEvent.showText(Component.text("[TPA] §7[§aCliquez pour accepter§7]")));
+
+        plugin.getAdventure().player(target).sendMessage(message);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                expire_tpa(player, target);
+                TPAQueue.INSTANCE.expireRequest(player, target);
             }
-        }.runTaskLater(AywenCraftPlugin.getInstance(), 2400);
+        }.runTaskLater(plugin, 2400);
     }
-
-    private void expire_tpa(Player player, Player target) {
-
-        if (tpQueue.TPA_REQUESTS2.containsKey(player)) {
-            if (tpQueue.TPA_REQUESTS_TIME.get(player) >= System.currentTimeMillis() / 1000 - (2400 / 20)) {
-                player.sendMessage("Votre demande de téléportation a expiré...");
-                tpQueue.TPA_REQUESTS.remove(target, player);
-                tpQueue.TPA_REQUESTS2.remove(player, target);
-            }
-        }
-    }
-
 }
-

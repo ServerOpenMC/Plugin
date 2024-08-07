@@ -10,7 +10,7 @@ import java.net.URL;
 public class GitHubAPI {
 
     public String getContributors() throws IOException {
-        URL url = new URL("https://api.github.com/repos/Margouta/PluginOpenMC/contributors");
+        URL url = new URL("https://api.github.com/repos/ServerOpenMC/Plugin/contributors");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", "application/json");

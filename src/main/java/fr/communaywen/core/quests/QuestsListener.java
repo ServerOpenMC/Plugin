@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -76,15 +77,23 @@ public class QuestsListener implements Listener {
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
         Player player = (Player) event.getWhoClicked();
-        CustomStack stackRTPWAND = CustomStack.getInstance(AywenCraftPlugin.getInstance().getConfig().getString("rtp.rtp_wand"));
-        ItemStack itemStackWAND = stackRTPWAND.getItemStack();
 
-        if (event.getRecipe().getResult().getItemMeta().equals(itemStackWAND.getItemMeta())) {
+        if (getItemsName(event.getRecipe().getResult()).equals("wand:rtpwand")) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_RTP_WAND, 1, "RTP WAND crafté");
-        } else if (event.getRecipe().getResult().getItemMeta().getDisplayName().equals("§fKebab")) {
+        } else if (getItemsName(event.getRecipe().getResult()).equals("aywen:kebab")) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
         }
 
+    }
+
+    // on player consume aywen:kebab
+    @EventHandler
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+        Player player = event.getPlayer();
+
+        if (getItemsName(event.getItem()).equals("aywen:kebab")) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.EAT_KEBAB, 1, "kebab mangé");
+        }
     }
 
     @EventHandler
@@ -95,6 +104,17 @@ public class QuestsListener implements Listener {
 
         if (extractedItem.equals(iron)) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.SMELT_IRON, event.getItemAmount(), "fer(s) cuit(s)");
+        }
+    }
+
+    private String getItemsName(ItemStack item) {
+        String name;
+        CustomStack customstack = CustomStack.byItemStack(item);
+
+        try {
+            return name = customstack.getNamespacedID();
+        } catch (Exception e) {
+            return name = item.getType().name().toLowerCase();
         }
     }
 

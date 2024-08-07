@@ -42,8 +42,8 @@ public class KebabListener implements Listener {
         }
 
         if (customstack.getNamespacedID().equals("aywen:kebab")) {
-            addFood(player, 4);
-            addSaturation(player, 4);
+            addFood(player, 10);
+            addSaturation(player, 6);
         } else if (customstack.getNamespacedID().equals("aywen:onion")) {
             addFood(player, 1);
             addSaturation(player, 1);

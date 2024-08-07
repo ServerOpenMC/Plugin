@@ -1,26 +1,27 @@
 package fr.communaywen.core;
 
-import fr.communaywen.core.commands.RewardCommand;
+import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import fr.communaywen.core.utils.database.TransactionsManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @Credit("Xernas")
@@ -38,6 +39,9 @@ public class Managers {
     private QuizManager quizManager;
     private FallingBlocksExplosionManager fbeManager;
     private LevelsManager levelsManager;
+    private TransactionsManager transactionsManager;
+    private CustomItemsManager customItemsManager;
+    private ReportManager reportManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -74,27 +78,35 @@ public class Managers {
                     Blacklist.class,
                     RewardCommand.class,
                     TeamManager.class,
-                    Team.class
+                    Team.class,
+                    TransactionsManager.class
             );
         }
         // Database
 
         this.teamManager = new TeamManager(plugin);
-        scoreboardManager = new ScoreboardManager();
+        scoreboardManager = new ScoreboardManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
         corpseManager = new CorpseManager();
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
+        transactionsManager = new TransactionsManager();
+        customItemsManager = new CustomItemsManager();
+        reportManager = new ReportManager();
+        reportManager.loadReports();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
     }
 
     public void cleanup() {
+        reportManager.saveReports();
         databaseManager.close();
         quizManager.close();
         corpseManager.removeAll();
+        teamManager.getTeamCache().saveAllTeamsToDatabase();
+
     }
 }

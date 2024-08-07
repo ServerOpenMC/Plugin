@@ -14,7 +14,7 @@ public enum MiscItems implements BaseItems {
     ENDER_PEARL(22, 8, ShopType.BUY, "§7Pearl de l'ender"),
     SLIME_BALL(23, 6, ShopType.BUY, "§7Boule de slime"),
     STICK(30, 1, ShopType.BUY, "§7Bâton"),
-    NETHER_STAR(31, 10200, ShopType.BUY, "§7Etoile du nether"),
+    NETHER_STAR(31, 20200, ShopType.BUY, "§7Etoile du nether"),
     PAPER(32, 3, ShopType.BUY, "§7Papier")
     ;
 

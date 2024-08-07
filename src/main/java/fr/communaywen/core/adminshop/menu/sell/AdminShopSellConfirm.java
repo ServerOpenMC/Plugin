@@ -61,7 +61,9 @@ public class AdminShopSellConfirm extends Menu {
             }
 
             EconomyManager economy = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
-            double totalAmount = items.getPrize() * quantity;
+            double totalAmount;
+            if(items.getType() == ShopType.SELL_BUY) totalAmount = (items.getPrize() / 2) * quantity;
+            else totalAmount = items.getPrize() * quantity;
 
             removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
             economy.addBalance(getOwner(), totalAmount);

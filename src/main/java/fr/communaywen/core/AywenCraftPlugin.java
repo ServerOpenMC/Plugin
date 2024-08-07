@@ -7,8 +7,31 @@ import fr.communaywen.core.claim.ClaimConfigDataBase;
 import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
-import fr.communaywen.core.commands.*;
-import fr.communaywen.core.compass_clock_infos.tasks.CompassClockTask;
+import fr.communaywen.core.commands.credits.CreditCommand;
+import fr.communaywen.core.commands.credits.FeatureCommand;
+import fr.communaywen.core.commands.economy.AdminShopCommand;
+import fr.communaywen.core.commands.economy.BaltopCommand;
+import fr.communaywen.core.commands.economy.MoneyCommand;
+import fr.communaywen.core.commands.economy.PayCommands;
+import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
+import fr.communaywen.core.commands.explosion.FBoomCommand;
+import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.staff.ReportCommands;
+import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.commands.teleport.RTPCommand;
+import fr.communaywen.core.commands.teleport.SpawnCommand;
+import fr.communaywen.core.commands.link.LinkCommand;
+import fr.communaywen.core.commands.link.ManualLinkCommand;
+import fr.communaywen.core.commands.socials.DiscordCommand;
+import fr.communaywen.core.commands.socials.GithubCommand;
+import fr.communaywen.core.commands.teams.TeamAdminCommand;
+import fr.communaywen.core.commands.teams.TeamCommand;
+import fr.communaywen.core.customitems.commands.ShowCraftCommand;
+import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
+import fr.communaywen.core.customitems.listeners.CIEnchantListener;
+import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
+import fr.communaywen.core.fallblood.BandageRecipe;
+import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
@@ -19,6 +42,7 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
+import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
 import fr.communaywen.core.tpa.TpcancelCommand;
@@ -57,6 +81,7 @@ import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+    public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
     @Getter
     private final Managers managers = new Managers();
@@ -75,6 +100,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Getter
     private BukkitCommandHandler handler;
 
+    @Getter
+    private TabList tabList;
+
     public List<RegionManager> regions;
     public MultiverseCore mvCore;
     @SneakyThrows
@@ -85,6 +113,17 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         // Gardez les au début sinon ça pète tout
         instance = this;
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            api = provider.getProvider();
+        }
+        else {
+            getLogger().severe("LuckPerms not found !");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
@@ -97,17 +136,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
-
-        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-        if (provider != null) {
-            api = provider.getProvider();
-            onPlayers.setLuckPerms(api);
-        }
-        else {
-            getLogger().severe("LuckPerms not found !");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        onPlayers.setLuckPerms(api);
 
         MOTDChanger motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
@@ -115,6 +144,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.adventure = BukkitAudiences.create(this);
 
         this.regions = new ArrayList<>();
+
+        this.tabList = new TabList();
 
         /* ----- */
 
@@ -134,15 +165,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.register(
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
-                new VersionCommand(this),
                 new RulesCommand(managers.getBookConfig()),
                 new TeamCommand(),
-                new MoneyCommand(managers.getEconomyManager()),
+                new MoneyCommand(this),
                 new ScoreboardCommand(),
                 new ProutCommand(),
-                new FeedCommand(this),
                 new TPACommand(this),
-                new TpacceptCommand(),
+                new TpacceptCommand(this),  // Pass the plugin instance
                 new TpcancelCommand(),
                 new TpdenyCommand(),
                 new CreditCommand(),
@@ -168,7 +197,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MineCommand(),
                 new AdminShopCommand(),
                 new PayCommands(),
-                new FallBloodCommand()
+                new FallBloodCommand(),
+                new DiscordCommand(this),
+                new ShowCraftCommand(managers.getCustomItemsManager()),
+                new ReportCommands()
         );
 
         /*  --------  */
@@ -177,9 +209,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!managers.getScoreboardManager().disableSBPlayerList.contains(player)) {
-                        managers.getScoreboardManager().setScoreboard(player);
-                    }
                     Menu openedMenu = hasMenuOpened(player);
                     if (openedMenu != null) {
                         openedMenu.open();
@@ -214,7 +243,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
-                new FallBloodListener()
+                new FallBloodListener(),
+                new CIBreakBlockListener(managers.getCustomItemsManager()),
+                new CIEnchantListener(managers.getCustomItemsManager()),
+                new CIPrepareAnvilListener(managers.getCustomItemsManager()),
+                new BabyFuzeListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
@@ -223,6 +256,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         saveDefaultConfig();
 
+        createSandRecipe();
         createFarineRecipe();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -232,6 +266,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.loadAllClaims();
+        new BandageRecipe();
     }
 
     @SneakyThrows
@@ -275,6 +310,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
         recipe.shape(" A ", " B ", "   ");
         recipe.setIngredient('A', Material.GUNPOWDER);
         recipe.setIngredient('B', Material.WHEAT);
+
+        Bukkit.addRecipe(recipe);
+    }
+
+    private void createSandRecipe() {
+        ItemStack sand = new ItemStack(Material.SAND, 4);
+
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "sand_craft"), sand);
+        recipe.shape("A");
+        recipe.setIngredient('A', Material.SANDSTONE);
 
         Bukkit.addRecipe(recipe);
     }
