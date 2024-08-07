@@ -5,12 +5,16 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
@@ -22,10 +26,17 @@ import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 
+
+@Credit("AxenoDev")
 public class QuestsListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
         QuestsManager.loadPlayerData(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onEnchantItem(EnchantItemEvent event){
+        QuestsManager.manageQuestsPlayer(event.getEnchanter(), QUESTS.ENCHANT_FIRST_ITEM, 1, "Objet enchanté");
     }
 
     @EventHandler
@@ -43,6 +54,17 @@ public class QuestsListener implements Listener {
             QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_STONE, 1, "stone(s) cassé(s)");
         }
     }
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event){
+        QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.PLACE_BLOCK, 1, "block placés.");
+    }
+
+//    @EventHandler
+//    public void onItemPickup(EntityPickupItemEvent event){
+//        if(event.getItem().getType().equals(Material.TOTEM_OF_UNDYING)){
+//            QuestsManager.manageQuestsPlayer(event., QUESTS.PLACE_BLOCK, 1, "block placés.");
+//        }
+//    }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -59,6 +81,13 @@ public class QuestsListener implements Listener {
         if (player == null) return;
         if (event.getEntity().getType().equals(EntityType.WARDEN)) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_WARDENS, 1, "warden tué");
+        } else if (event.getEntity() instanceof Creeper){
+            Creeper creeper = (Creeper) event.getEntity();
+            if(creeper.isPowered()){
+                QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_SUPER_CREEPER, 1, "Creeper super chargé tué");
+            }
+        }else if (event.getEntity().getType().equals(EntityType.ZOMBIE)){
+            QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_ZOMBIE, 1, "zombie tué.");
         }
     }
 
@@ -82,6 +111,8 @@ public class QuestsListener implements Listener {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_RTP_WAND, 1, "RTP WAND crafté");
         } else if (getItemsName(event.getRecipe().getResult()).equals("aywen:kebab")) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
+        } else if (getItemsName(event.getRecipe().getResult()).equals("minecraft:cake")) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_CAKE, 1, "gâteau crafté.");
         }
 
     }
