@@ -95,6 +95,6 @@ public class TeamListMenu extends PaginatedMenu {
         if (clickedItem == null || clickedItem.getType() == Material.AIR) {
             return;  // Meekiavelique : Ignore les clicks sur les slots vide
         }
-        super.onInventoryClick(event);
+        handleMenuClick(event);
     }
 }
