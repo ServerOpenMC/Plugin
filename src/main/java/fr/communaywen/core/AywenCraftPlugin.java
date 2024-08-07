@@ -246,7 +246,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FallBloodListener(),
                 new CIBreakBlockListener(managers.getCustomItemsManager()),
                 new CIEnchantListener(managers.getCustomItemsManager()),
-                new CIPrepareAnvilListener(managers.getCustomItemsManager())
+                new CIPrepareAnvilListener(managers.getCustomItemsManager()),
+                new BabyFuzeListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
