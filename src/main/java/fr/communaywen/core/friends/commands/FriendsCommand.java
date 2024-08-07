@@ -109,7 +109,7 @@ public class FriendsCommand {
 
     @Subcommand("accept")
     @Description("Accepte une demande d'ami.")
-    public void acceptRequest(Player player, Player target) {
+     public void acceptRequest(Player player, Player target) {
         try {
             if (!friendsManager.isRequestPending(player.getUniqueId().toString())) {
                 player.sendMessage("§e" + target.getName() + " §cne vous a pas envoyé de demande d'ami.");
@@ -118,6 +118,7 @@ public class FriendsCommand {
 
             friendsManager.addFriend(player.getUniqueId().toString(), target.getUniqueId().toString());
             player.sendMessage("§aVous êtes maintenant amis avec §e" + target.getName() + "§a.");
+            target.sendMessage("§aVous êtes maintenant amis avec §e" + player.getName() + "§a.");
         } catch (SQLException e) {
             player.sendMessage("§cUne erreur s'est produite lors de l'acceptation de la demande d'ami.");
             e.printStackTrace();
