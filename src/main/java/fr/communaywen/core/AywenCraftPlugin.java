@@ -16,6 +16,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.staff.ReportCommands;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
@@ -25,6 +26,10 @@ import fr.communaywen.core.commands.socials.DiscordCommand;
 import fr.communaywen.core.commands.socials.GithubCommand;
 import fr.communaywen.core.commands.teams.TeamAdminCommand;
 import fr.communaywen.core.commands.teams.TeamCommand;
+import fr.communaywen.core.customitems.commands.ShowCraftCommand;
+import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
+import fr.communaywen.core.customitems.listeners.CIEnchantListener;
+import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -73,10 +78,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
-import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+    public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
     @Getter
     private final Managers managers = new Managers();
@@ -193,7 +198,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new AdminShopCommand(),
                 new PayCommands(),
                 new FallBloodCommand(),
-                new DiscordCommand(this)
+                new DiscordCommand(this),
+                new ShowCraftCommand(managers.getCustomItemsManager()),
+                new ReportCommands()
         );
 
         /*  --------  */
@@ -238,6 +245,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FarineListener(),
                 new FallBloodListener(),
                 new RTPCommand(this)
+                new CIBreakBlockListener(managers.getCustomItemsManager()),
+                new CIEnchantListener(managers.getCustomItemsManager()),
+                new CIPrepareAnvilListener(managers.getCustomItemsManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor

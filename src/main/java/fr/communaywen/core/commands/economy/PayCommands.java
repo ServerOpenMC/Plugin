@@ -25,7 +25,7 @@ public class PayCommands {
 
 
                 new TransactionsManager().addTransaction(new Transaction(
-                        player.getUniqueId().toString(),
+                        target.getUniqueId().toString(),
                         player.getUniqueId().toString(),
                         amount,
                         "Transfert"
