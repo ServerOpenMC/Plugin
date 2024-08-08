@@ -65,9 +65,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
@@ -200,7 +203,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FallBloodCommand(),
                 new DiscordCommand(this),
                 new ShowCraftCommand(managers.getCustomItemsManager()),
-                new ReportCommands()
+                new ReportCommands(),
+                new ChatChannelCMD()
         );
 
         /*  --------  */
@@ -258,6 +262,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         createSandRecipe();
         createFarineRecipe();
+        createCrazyPotion();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
@@ -312,6 +317,31 @@ public final class AywenCraftPlugin extends JavaPlugin {
         recipe.setIngredient('B', Material.WHEAT);
 
         Bukkit.addRecipe(recipe);
+    }
+
+    private void createCrazyPotion(){
+        ItemStack crazyPotion = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
+
+        meta.setDisplayName("§k NEW §r §4 Crazy Potion §r §k NEW");
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 9), true);
+
+        crazyPotion.setItemMeta(meta);
+
+        NamespacedKey nmKey = new NamespacedKey(this, "crazypotion_craft");
+        ShapedRecipe recipe = new ShapedRecipe(nmKey, crazyPotion);
+
+        recipe.shape("BBB", "WGW", "IEI");
+
+        recipe.setIngredient('B', Material.DIAMOND_BLOCK);
+        recipe.setIngredient('G', Material.GLASS_BOTTLE);
+        recipe.setIngredient('W', Material.WATER_BUCKET);
+        recipe.setIngredient('E', Material.ENDER_PEARL);
+        recipe.setIngredient('I', Material.IRON_INGOT);
+
+        getServer().addRecipe(recipe);
+
     }
 
     private void createSandRecipe() {
