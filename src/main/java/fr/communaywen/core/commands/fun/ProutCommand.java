@@ -15,6 +15,7 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Cooldown;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+import org.bukkit.entity.Boat;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,13 @@ public final class ProutCommand {
     public void onCommand(Player player) {
         player.sendMessage("§2Beuuurk, ça pue !");
 
+        if(player.isInsideVehicle()){
+            if(player.getVehicle() instanceof Boat){
+                player.getVehicle().remove();
+                player.sendMessage("Votre bateau a coulé.");
+            }
+        }
+        
         // Make the player jump
         final Vector currentVelocity = player.getVelocity();
         currentVelocity.setY(0.55d);
