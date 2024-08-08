@@ -6,6 +6,7 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -23,6 +24,8 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
@@ -50,8 +53,12 @@ public class QuestsListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         if ((event.getBlock().getType().equals(Material.DIAMOND_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_DIAMOND_ORE))) {
             QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_DIAMOND, 1, "diamants(s) miné(s)");
-        } else if ((event.getBlock().getType().equals(Material.STONE) || event.getBlock().getType().equals(Material.DEEPSLATE))) {
+        } else if ((event.getBlock().getType().equals(Material.STONE))) {
             QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_STONE, 1, "stone(s) cassé(s)");
+        }else if ((event.getBlock().getType().equals(Material.OAK_WOOD))) {
+            QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_WOOD, 1, "buche(s) cassé(s)");
+        }else if(event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE)){
+            QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_EMERALD, 1, "minerai cassé.");
         }
     }
     @EventHandler
@@ -88,6 +95,12 @@ public class QuestsListener implements Listener {
             }
         }else if (event.getEntity().getType().equals(EntityType.ZOMBIE)){
             QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_ZOMBIE, 1, "zombie tué.");
+        }else if(event.getEntity().getType().equals(EntityType.PLAYER)){
+            QuestsManager.manageQuestsPlayer(player, QUESTS.PLAYER_DEATH, 1, "mort");
+        }else if(event.getEntity().getType().equals(EntityType.CHICKEN)){
+            QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_CHIKEN, 1, "poulets tué");
+        }else if(event.getEntity().getType().equals(EntityType.VILLAGER)){
+            QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_VILLAGER, 1, "villageois tué");
         }
     }
 
@@ -96,11 +109,18 @@ public class QuestsListener implements Listener {
          Player player = event.getPlayer();
          Location from = event.getFrom();
          Location to = event.getTo();
+
+         World world = to.getWorld();
          assert to != null;
 
          if (to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()) {
+             QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS2, 1, "Block(s) marché(s)");
              QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
          }
+
+        if(player.getLocation().equals(world.getMaxHeight())){
+            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_MAX_HIGH, 1, "Altitude Max atteinte");
+        }
      }
 
     @EventHandler
@@ -113,6 +133,8 @@ public class QuestsListener implements Listener {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
         } else if (getItemsName(event.getRecipe().getResult()).equals("minecraft:cake")) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_CAKE, 1, "gateau crafté.");
+        }else if (getItemsName(event.getRecipe().getResult()).equals("minecraft:firework_star")) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_FIREWORK, 1, "feu d'artifice crafté.");
         }
 
     }
