@@ -96,6 +96,15 @@ public class TeamCommand {
         menu.open();
     }
 
+    @Subcommand("chat")
+    @Description("Envoyer un message à toute la team")
+    public void chatTeam(Player player, @Named("message") String msg){
+        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+
+        if(team == null) return;
+
+        team.sendMessage(player, msg);
+    }
 
     @Subcommand("invite")
     @Description("Inviter un joueur dans la team")
