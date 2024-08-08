@@ -1,0 +1,31 @@
+block:
+    placed_model:
+      type: REAL_NOTE
+      break_particles: BLOCK
+      rotx: 0
+      roty: 0
+    cancel_drop: true #default is false. if true the custom block won't be dropped when
+                      #player mines it
+    light_level: 12 #make block emit light
+    #tools you can't use to break block(accepts partial name of material/customitem)
+    break_tools_blacklist:
+    - WOODEN_PICKAXE
+    - STONE_PICKAXE
+    - IRON_PICKAXE
+    #tools you can use to break block(accepts partial name of material/customitem)
+    break_tools_whitelist:
+    - DIAMOND_PICKAXE
+    - PICKAXE
+    - pickaxe
+    hardness: 2 #hardness of the block
+    blast_resistance: 1 #explosion resistance (by default is hardness*3)
+    no_explosion: false #totally immune from explosions, ignoring blast_resistance
+    sound: #customizable sounds of the block
+      break:
+        name: BLOCK_WOOD_BREAK
+        volume: 1
+        pitch: 0.9
+      place:
+        name: BLOCK_WOOD_PLACE
+        volume: 1
+        pitch: 0.9
