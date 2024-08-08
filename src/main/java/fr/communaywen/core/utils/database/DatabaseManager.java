@@ -1,7 +1,6 @@
 package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.stat.Stats;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
@@ -31,7 +30,6 @@ public class DatabaseManager {
         }
         this.connection = new DatabaseConnection(plugin.getConfig().getString("database.url"),
                 plugin.getConfig().getString("database.user"), plugin.getConfig().getString("database.password"));
-
     }
 
     public void init() throws SQLException {
@@ -53,6 +51,10 @@ public class DatabaseManager {
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS teams (teamName VARCHAR(16) NOT NULL PRIMARY KEY, owner VARCHAR(36) NOT NULL, balance BIGINT UNSIGNED, inventory LONGBLOB)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS transactions (recipient VARCHAR(36), sender VARCHAR(36), amount DOUBLE, reason VARCHAR(255), date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)").executeUpdate();
 
+        //Système de signalements
+
+        this.getConnection().prepareStatement("CREATE TABLE `reports` (`sender` text NOT NULL,`reported` text NOT NULL,`reason` text NOT NULL,`timestamp` timestamp NOT NULL)");
+
         // Système de claims
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS claim (" +
                 "  claimID varchar(36) NOT NULL PRIMARY KEY," +
@@ -69,7 +71,7 @@ public class DatabaseManager {
                 "  player varchar(36) NOT NULL PRIMARY KEY," +
                 "  balance double NOT NULL" +
                 ")").executeUpdate();
-
+        
         // Système de Stat
         StringBuilder statTable = new StringBuilder("CREATE TABLE IF NOT EXISTS stats (" +
                 "  player varchar(36) NOT NULL PRIMARY KEY");
@@ -95,7 +97,7 @@ public class DatabaseManager {
             rs.close();
         }
 
-        System.out.println("Les tables ont été créer si besoin");
+        System.out.println("Les tables ont été créées si besoin");
     }
 
     public void close() {
