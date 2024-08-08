@@ -1,17 +1,71 @@
 package fr.communaywen.core.stat;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.entity.Player;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class StatData extends DatabaseConnector {
+
+    private static final String TABLE_NAME = "stats";
+    private static final String PLAYER_COLUMN = "player";
+
+    public static void initializeStatsTable() throws SQLException {
+        if (!tableExists()) {
+            createStatsTable();
+        } else {
+            updateStatsTable();
+        }
+    }
+
+    private static void createStatsTable() throws SQLException {
+        StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + PLAYER_COLUMN + " VARCHAR(36) PRIMARY KEY");
+
+        for (Stats.StatList stat : Stats.StatList.values()) {
+            sql.append(", ").append(stat.getName()).append(" INT DEFAULT 0");
+        }
+
+        sql.append(")");
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql.toString());
+        }
+        System.out.println("Table '" + TABLE_NAME + "' created successfully.");
+    }
+
+    private static void updateStatsTable() throws SQLException {
+        for (Stats.StatList stat : Stats.StatList.values()) {
+            if (!columnExists(stat.getName())) {
+                addColumn(stat.getName());
+            }
+        }
+    }
+
+    private static boolean tableExists() throws SQLException {
+        DatabaseMetaData meta = connection.getMetaData();
+        try (ResultSet tables = meta.getTables(null, null, TABLE_NAME, null)) {
+            return tables.next();
+        }
+    }
+
+    private static boolean columnExists(String columnName) throws SQLException {
+        DatabaseMetaData meta = connection.getMetaData();
+        try (ResultSet rs = meta.getColumns(null, null, TABLE_NAME, columnName)) {
+            return rs.next();
+        }
+    }
+
+    private static void addColumn(String columnName) throws SQLException {
+        String sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + columnName + " INT DEFAULT 0";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+        }
+    }
 
     public static Map<UUID, Stats> loadStats() {
         try {

@@ -1,8 +1,11 @@
 package fr.communaywen.core.stat;
 
+import fr.communaywen.core.quests.qenum.QUESTS;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +22,7 @@ public class StatManager {
     public void add(Player player, Stats.StatList statList, Number value) {
         mapstat.put(player.getUniqueId(),getStats(player).add(statList,value));
     }
+
 
 
 

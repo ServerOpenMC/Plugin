@@ -3,10 +3,8 @@ package fr.communaywen.core.utils.database;
 import fr.communaywen.core.AywenCraftPlugin;
 import lombok.Getter;
 
-import fr.communaywen.core.stat.Stats;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
@@ -72,31 +70,6 @@ public class DatabaseManager {
                 "  player varchar(36) NOT NULL PRIMARY KEY," +
                 "  balance double NOT NULL" +
                 ")").executeUpdate();
-        
-        // Système de Stat
-        StringBuilder statTable = new StringBuilder("CREATE TABLE IF NOT EXISTS stats (" +
-                "  player varchar(36) NOT NULL PRIMARY KEY");
-        for (Stats.StatList stat : Stats.StatList.values()) {
-            statTable.append(", ").append(stat.getName()).append(" ").append(stat.getType().name()).append(" NOT NULL");
-        }
-        statTable.append(")");
-        this.getConnection().prepareStatement(statTable.toString()).executeUpdate();
-
-        String tableName = "stats";
-        // Vérification et ajout des colonnes manquantes
-        for (Stats.StatList stat : Stats.StatList.values()) {
-            String columnName = stat.getName();
-            String columnType = stat.getType().name();
-
-            // Vérifiez si la colonne existe
-            ResultSet rs = this.getConnection().getMetaData().getColumns(null, null, tableName, columnName);
-            if (!rs.next()) { // Si la colonne n'existe pas
-                // Ajoutez la colonne manquante
-                String addColumnQuery = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType + " NOT NULL";
-                this.getConnection().prepareStatement(addColumnQuery).executeUpdate();
-            }
-            rs.close();
-        }
 
         System.out.println("Les tables ont été créées si besoin");
     }
