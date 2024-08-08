@@ -262,6 +262,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         createSandRecipe();
         createFarineRecipe();
+        createCrazyPotion();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
