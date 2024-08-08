@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-@Feature("playersSleepingPercentage")
+@Feature("Passer la nuit")
 @Credit("Magneto_Craft")
 public class SleepListener implements Listener {
 
