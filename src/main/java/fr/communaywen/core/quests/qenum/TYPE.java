@@ -10,5 +10,6 @@ public enum TYPE {
     EAT,
     ENCHANT,
     SMELT,
-    MONEY
+    MONEY,
+    DEATH
 }
