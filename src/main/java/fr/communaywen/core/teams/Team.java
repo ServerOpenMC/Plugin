@@ -144,6 +144,12 @@ public class Team implements Listener {
         return true;
     }
 
+    public void sendMessage(Player sender, String message){
+        players.stream()
+                .filter(player -> Bukkit.getPlayer(player) != null)
+                .forEach(player -> Bukkit.getPlayer(player).sendMessage("§aᴛᴇᴀᴍ ᴄʜᴀᴛ §7» §b" + sender.getName() + " §7- §f" + message));
+    }
+
     public MethodState removePlayer(UUID player) {
         players.remove(player);
         cacheManager.removePlayer(this.name, player);
