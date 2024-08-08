@@ -35,6 +35,13 @@ public final class ProutCommand {
     public void onCommand(Player player) {
         player.sendMessage("§2Beuuurk, ça pue !");
 
+        if(player.isInsideVehicle()){
+            if(player.getVehicle() instanceof org.bukkit.entity.Boat){
+                player.getVehicle().remove();
+                player.sendMessage("Votre bateau a couler.");
+            }
+        }
+
         // Make the player jump
         final Vector currentVelocity = player.getVelocity();
         currentVelocity.setY(0.55d);
