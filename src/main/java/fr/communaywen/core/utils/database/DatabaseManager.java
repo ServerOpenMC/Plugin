@@ -3,6 +3,7 @@ package fr.communaywen.core.utils.database;
 import fr.communaywen.core.AywenCraftPlugin;
 import lombok.Getter;
 
+import fr.communaywen.core.stat.Stats;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
