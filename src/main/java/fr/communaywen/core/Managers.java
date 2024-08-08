@@ -4,6 +4,7 @@ import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
@@ -77,7 +78,8 @@ public class Managers {
                     RewardCommand.class,
                     TeamManager.class,
                     Team.class,
-                    TransactionsManager.class
+                    TransactionsManager.class,
+                    AdvancementRegister.class
             );
         }
         // Database
@@ -100,7 +102,12 @@ public class Managers {
     }
 
     public void cleanup() {
+        /* Besoin de la db */
+        dreamdimManager.close();
+
+        /* Plus besoin de la db */
         databaseManager.close();
+
         quizManager.close();
         corpseManager.removeAll();
     }

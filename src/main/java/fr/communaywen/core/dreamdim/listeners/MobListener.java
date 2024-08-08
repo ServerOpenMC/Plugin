@@ -28,12 +28,20 @@ public class MobListener implements Listener {
     public void onEntitySpawn(EntitySpawnEvent e) {
         Entity entity = e.getEntity();
         World world = entity.getWorld();
-        if (!entity.getWorld().getName().equals("dreamworld")) { return; }
-        if ((entity instanceof Player)) { return; }
+        if (!entity.getWorld().getName().equals("dreamworld")) {
+            return;
+        }
+        if ((entity instanceof Player)) {
+            return;
+        }
 
-        if (List.of(EntityType.CREEPER, EntityType.WITCH, EntityType.ENDERMAN, EntityType.ZOMBIE_VILLAGER).contains(entity.getType())) {
+        if (entity.getType() == EntityType.SPIDER) {
+            ((Spider) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(32);
+            ((Spider) entity).getAttribute(Attribute.GENERIC_SCALE).setBaseValue(2);
+            ((Spider) entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(4);
+        }else if (List.of(EntityType.CREEPER, EntityType.WITCH, EntityType.ZOMBIE_VILLAGER).contains(entity.getType())) {
             e.setCancelled(true);
-        } else if (List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER).contains(entity.getType())) {
+        } else if (List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.ENDERMAN).contains(entity.getType())) {
             if (hasReachCap(entity)) {
                 e.setCancelled(true);
                 return;
@@ -50,12 +58,6 @@ public class MobListener implements Listener {
                 world.spawnEntity(entity.getLocation(), EntityType.ZOMBIE_HORSE);
             } else if (choice <= (double) 2 /3) {
                 world.spawnEntity(entity.getLocation(), EntityType.SKELETON_HORSE);
-            } else {
-                Spider spider = (Spider) world.spawnEntity(entity.getLocation(), EntityType.SPIDER);
-
-                spider.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(32);
-                spider.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(2);
-                spider.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(4);
             }
             e.setCancelled(true);
         }
