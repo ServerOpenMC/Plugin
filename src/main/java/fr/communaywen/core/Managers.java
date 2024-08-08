@@ -4,12 +4,14 @@ import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.stat.StatManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
@@ -40,6 +42,8 @@ public class Managers {
     private LevelsManager levelsManager;
     private StatManager statsManager;
     private TransactionsManager transactionsManager;
+    private CustomItemsManager customItemsManager;
+    private ReportManager reportManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -92,15 +96,20 @@ public class Managers {
         levelsManager = new LevelsManager();
         statsManager = new StatManager();
         transactionsManager = new TransactionsManager();
+        customItemsManager = new CustomItemsManager();
+        reportManager = new ReportManager();
+        reportManager.loadReports();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
     }
 
     public void cleanup() {
+        reportManager.saveReports();
         databaseManager.close();
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
+
     }
 }

@@ -14,6 +14,12 @@ public enum QUESTS {
     CRAFT_KEBAB(Material.BREAD, 1, TYPE.CRAFT, "Kebabier un jour, Kebabier toujours", "Kebab", REWARD.MONEY, 62, TIER.TIER_1),
     WALK_BLOCKS(Material.LEATHER_BOOTS, 20000, TYPE.WALK, "Le randonneur", "block", REWARD.MONEY, 10000, TIER.TIER_1),
     SMELT_IRON(Material.IRON_ORE, 256, TYPE.SMELT, "Chaud devant !", "de fer", REWARD.MONEY, 2000, TIER.TIER_1),
+    ENCHANT_FIRST_ITEM(Material.ENCHANTED_BOOK, 1, TYPE.ENCHANT, "Abracadabra !", "item", REWARD.MONEY, 200, TIER.TIER_1),
+    KILL_SUPER_CREEPER(Material.CREEPER_HEAD, 1, TYPE.KILL, "Le Boss des Creeper !", " Creeper super chargé", REWARD.MONEY, 1000, TIER.TIER_1),
+    CRAFT_CAKE(Material.CAKE, 64, TYPE.CRAFT, "Le meilleur patissier !", " gateau", REWARD.MONEY, 100, TIER.TIER_1),
+    KILL_ZOMBIE(Material.ZOMBIE_HEAD, 1000, TYPE.KILL, "Apocalypse zombie ?", " Zombie", REWARD.MONEY, 8000, TIER.TIER_1),
+    PLACE_BLOCK(Material.GRASS_BLOCK, 2000, TYPE.PLACE, "Builder de l'extreme !", "Blocks", REWARD.MONEY, 250, TIER.TIER_1),
+//    GET_TOTEM(Material.TOTEM_OF_UNDYING, 10, TYPE.GET, "Invincible !", "Avoir 10 totem", REWARD.MONEY, 300, TIER.TIER_1),
     MONEY_500K(Material.DIAMOND_BLOCK, 500000, TYPE.MONEY, "Devient Elon", "$", REWARD.ITEMS, 1, new ItemStack(Material.NETHERITE_INGOT), TIER.TIER_1),
     ;
 
