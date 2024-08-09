@@ -57,3 +57,6 @@ permissions:
     description: 'Donne un bandage'
   ayw.command.report:
     description: 'Permet de signaler un joueur'
+  ayw.command.mailbox:
+    description: 'Utilise la boite aux lettres'
+    default: true
