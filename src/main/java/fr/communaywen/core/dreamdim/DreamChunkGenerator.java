@@ -58,7 +58,7 @@ public class DreamChunkGenerator extends ChunkGenerator {
                         double function = .1 * Math.pow(distanceToSurface, 2) - 1; // A second grade polynomial offset to the noise max and min (1, -1).
 
                         if(noise3 > Math.min(function, -.3)) {
-                            // Set grass if the block closest to the surface.
+                            // Set sculk if the block closest to the surface.
                             if(distanceToSurface < 3 && y > 63) {
                                 chunkData.setBlock(x, y, z, layers.get(0).getFirst());
                             }
@@ -75,7 +75,7 @@ public class DreamChunkGenerator extends ChunkGenerator {
 
                                 // Randomly place vein anchors.
                                 if(random.nextFloat() < 0.002) {
-                                    if (random.nextFloat() < 0.01) {
+                                    if (random.nextFloat() < 0.0075) {
                                         neighbour = Material.ANCIENT_DEBRIS;
                                     } else {
                                         neighbour = layers.get(2).get(Math.min(random.nextInt(layers.get(2).size()), random.nextInt(layers.get(2).size()))); // A basic way to shift probability to lower values.
