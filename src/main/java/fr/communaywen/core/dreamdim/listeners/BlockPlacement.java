@@ -10,10 +10,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class DebrisHandler implements Listener {
+import java.util.List;
+
+public class BlockPlacement implements Listener {
     AdvancementRegister register;
 
-    public DebrisHandler(AdvancementRegister register) {
+    public BlockPlacement(AdvancementRegister register) {
         this.register = register;
     }
 
@@ -22,9 +24,10 @@ public class DebrisHandler implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
         if (!player.getWorld().getName().equals("dreamworld")) { return; }
-        if (!block.getType().equals(Material.ANCIENT_DEBRIS)) { return; }
-        event.setBuild(false);
-        event.setCancelled(true);
+        if (List.of(Material.ANCIENT_DEBRIS, Material.ENDER_CHEST, Material.SHULKER_BOX).contains(block.getType())) {
+            event.setBuild(false);
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
