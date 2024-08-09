@@ -1,12 +1,24 @@
-block:
+info:
+  namespace: ayweniumore
+items:
+  ayweniumore:
+    display_name: Aywenium ore
+    permission: aywenium_ore
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - ayweniumore.png
+    specific_properties:
+      block:
     placed_model:
       type: REAL_NOTE
       break_particles: BLOCK
       rotx: 0
       roty: 0
-    cancel_drop: true #default is false. if true the custom block won't be dropped when
+    cancel_drop: false #default is false. if true the custom block won't be dropped when
                       #player mines it
-    light_level: 12 #make block emit light
+    light_level: 0 #make block emit light
     #tools you can't use to break block(accepts partial name of material/customitem)
     break_tools_blacklist:
     - WOODEN_PICKAXE
@@ -17,15 +29,15 @@ block:
     - DIAMOND_PICKAXE
     - PICKAXE
     - pickaxe
-    hardness: 2 #hardness of the block
-    blast_resistance: 1 #explosion resistance (by default is hardness*3)
+    hardness: 15 #hardness of the block
+    blast_resistance: 45 #explosion resistance (by default is hardness*3)
     no_explosion: false #totally immune from explosions, ignoring blast_resistance
     sound: #customizable sounds of the block
       break:
-        name: BLOCK_WOOD_BREAK
+        name: BLOCK_STONE_BREAK
         volume: 1
         pitch: 0.9
       place:
-        name: BLOCK_WOOD_PLACE
+        name: BLOCK_STONE_PLACE
         volume: 1
         pitch: 0.9
