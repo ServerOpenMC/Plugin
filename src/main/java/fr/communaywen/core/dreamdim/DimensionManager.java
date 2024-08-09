@@ -34,6 +34,7 @@ public class DimensionManager implements Listener {
         this.utils = new Utils(plugin);
         this.register = new AdvancementRegister(plugin);
         plugin.registerEvents(
+                new DebrisHandler(),
                 new EatListener(plugin),
                 new EnterWorldListener(plugin, register),
                 new DisableSculk(),
