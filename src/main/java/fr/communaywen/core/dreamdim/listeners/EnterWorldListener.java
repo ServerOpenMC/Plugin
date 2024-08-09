@@ -1,8 +1,10 @@
 package fr.communaywen.core.dreamdim.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
+import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
+import net.md_5.bungee.api.chat.hover.content.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
@@ -55,10 +57,34 @@ public class EnterWorldListener implements Listener {
         Inventory inv = p.getInventory();
         register.grantAdvancement(p, "aywen:nightmare");
 
+        for (ItemStack itemStack : List.of(p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand())) {
+            CustomStack customStack = CustomStack.byItemStack(itemStack);
+            if (customStack == null) { continue; }
+            if (customStack.getNamespacedID().equals("aywen:totem_of_undreaming")) {
+                int amount = itemStack.getAmount();
+
+                if (amount == 1) {
+                    inv.removeItemAnySlot(itemStack);
+                } else {
+                    itemStack.setAmount(amount - 1);
+                }
+
+                register.grantAdvancement(p, "aywen:cheatdeath");
+
+                ItemsAdder.playTotemAnimation(p, "aywen:totem_of_undreaming");
+                return;
+            }
+        }
+
         for (ItemStack itemStack : inv.getContents()) {
             CustomStack customStack = CustomStack.byItemStack(itemStack);
             if (customStack != null) {
-                if (List.of("aywen:stripped_dream_log", "aywen:dream_log", "aywen:cloud", "aywen:dream_planks").contains(customStack.getNamespacedID())) {
+                if (List.of( // Listes de items qui seront supprimé lors de la mort
+                        "aywen:stripped_dream_log",
+                        "aywen:dream_log",
+                        "aywen:cloud",
+                        "aywen:dream_planks",
+                        "aywen:dream_essence").contains(customStack.getNamespacedID())) {
                     inv.remove(itemStack);
                 }
             }
