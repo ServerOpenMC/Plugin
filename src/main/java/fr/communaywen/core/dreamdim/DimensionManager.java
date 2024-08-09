@@ -21,9 +21,6 @@ public class DimensionManager implements Listener {
     Server server;
     AdvancementRegister register;
 
-    @Getter
-    Utils utils;
-
     public DimensionManager(AywenCraftPlugin Plugin) {
         this.plugin = Plugin;
         this.server = plugin.getServer();
@@ -31,7 +28,6 @@ public class DimensionManager implements Listener {
 
     public void init() {
         createDimension();
-        this.utils = new Utils(plugin);
         this.register = new AdvancementRegister(plugin);
         plugin.registerEvents(
                 new BlockPlacement(register),
