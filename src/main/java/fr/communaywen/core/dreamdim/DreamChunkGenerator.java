@@ -59,7 +59,7 @@ public class DreamChunkGenerator extends ChunkGenerator {
 
                         if(noise3 > Math.min(function, -.3)) {
                             // Set grass if the block closest to the surface.
-                            if(distanceToSurface < 1 && y > 63) {
+                            if(distanceToSurface < 3 && y > 63) {
                                 chunkData.setBlock(x, y, z, layers.get(0).getFirst());
                             }
 
