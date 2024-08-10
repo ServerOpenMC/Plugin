@@ -22,15 +22,12 @@ import java.util.HashMap;
 public class DiamondHammer implements CustomItems {
 
     private String name;
-
     private ItemStack itemStack;
-
     private final ArrayList<String> recipe = new ArrayList<>() {{
         add("BBB");
         add("BSB");
         add("XSX");
     }};
-
     private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
         put('B', new ItemStack(Material.DIAMOND_BLOCK));
         put('S', new ItemStack(Material.STICK));
