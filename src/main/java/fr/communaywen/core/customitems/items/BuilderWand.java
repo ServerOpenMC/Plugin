@@ -1,6 +1,7 @@
 package fr.communaywen.core.customitems.items;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.customitems.enums.ConfigNames;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
@@ -13,14 +14,11 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -28,6 +26,7 @@ import java.util.HashMap;
 
 @Getter
 @Setter
+@Credit("Fnafgameur")
 public class BuilderWand implements CustomItems {
 
     private String name;

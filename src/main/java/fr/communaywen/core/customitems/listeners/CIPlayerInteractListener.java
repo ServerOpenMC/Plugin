@@ -6,7 +6,6 @@ import fr.communaywen.core.customitems.objects.CustomItems;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class CIPlayerInteractListener implements Listener {
