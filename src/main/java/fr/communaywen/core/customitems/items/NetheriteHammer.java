@@ -16,25 +16,18 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Getter
+@Setter
 @Credit("Fnafgameur")
 public class NetheriteHammer implements CustomItems {
 
-    @Getter
-    @Setter
     private String name;
-
-    @Getter
-    @Setter
     private ItemStack itemStack;
-
-    @Getter
     private final ArrayList<String> recipe = new ArrayList<>() {{
         add("BBB");
         add("BSB");
         add("XSX");
     }};
-
-    @Getter
     private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
         put('B', new ItemStack(Material.NETHERITE_BLOCK));
         put('S', new ItemStack(Material.STICK));
