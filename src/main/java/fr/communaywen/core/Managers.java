@@ -16,6 +16,7 @@ import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
+import fr.communaywen.core.utils.chatchannel.PlayerChatChannel;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.utils.database.TransactionsManager;
@@ -43,12 +44,14 @@ public class Managers {
     private TransactionsManager transactionsManager;
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
+    private PlayerChatChannel chatChannel;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
     private FileConfiguration welcomeMessageConfig;
     private FileConfiguration levelsConfig;
     private FileConfiguration quizzesConfig;
+    private FileConfiguration customItemsConfig;
 
     public void initConfig(AywenCraftPlugin plugin) {
         plugin.saveDefaultConfig();
@@ -57,6 +60,7 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
+        customItemsConfig = ConfigUtils.loadConfig(plugin, "customItems.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {
