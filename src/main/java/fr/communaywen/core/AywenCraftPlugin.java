@@ -42,6 +42,8 @@ import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
+import fr.communaywen.core.space.moon.*;
+import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.staff.freeze.FreezeCommand;
 import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
@@ -264,7 +266,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIEnchantListener(managers.getCustomItemsManager()),
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
-                new MailboxListener()
+                new MailboxListener(),
+                new RocketListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
