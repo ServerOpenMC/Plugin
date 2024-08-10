@@ -203,6 +203,19 @@ public class CustomItemsUtils {
         return navigationButtons;
     }
 
+    public static void damageItem(ItemStack itemToDamage, int damageNum) {
+        ItemMeta itemMeta = itemToDamage.getItemMeta();
+        Damageable damageable = (Damageable) itemMeta;
+        damageable.setDamage(damageable.getDamage() + damageNum);
+        itemToDamage.setItemMeta(itemMeta);
+    }
+
+    /**
+     * Set the name of an ItemBuilder
+     * @param itemBuilder The ItemBuilder
+     * @param name The name
+     * @return The ItemBuilder with the name set
+     */
     private static ItemBuilder itemBuilderSetName(ItemBuilder itemBuilder, String name) {
         ItemMeta itemMeta = itemBuilder.getItemMeta();
         itemMeta.setDisplayName(name);
