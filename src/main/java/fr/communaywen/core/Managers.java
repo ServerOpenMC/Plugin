@@ -43,12 +43,14 @@ public class Managers {
     private TransactionsManager transactionsManager;
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
+    private PlayerChatChannel chatChannel;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
     private FileConfiguration welcomeMessageConfig;
     private FileConfiguration levelsConfig;
     private FileConfiguration quizzesConfig;
+    private FileConfiguration customItemsConfig;
 
     public void initConfig(AywenCraftPlugin plugin) {
         plugin.saveDefaultConfig();
@@ -57,6 +59,7 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
+        customItemsConfig = ConfigUtils.loadConfig(plugin, "customItems.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {
@@ -94,7 +97,7 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
-        customItemsManager = new CustomItemsManager();
+        customItemsManager = new CustomItemsManager(customItemsConfig);
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
