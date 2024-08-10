@@ -36,6 +36,8 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.mailboxes.MailboxCommand;
+import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
@@ -73,9 +75,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
@@ -87,29 +89,36 @@ import java.util.List;
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
-
-    @Getter
-    private final Managers managers = new Managers();
-
-    public EventsManager eventsManager; // TODO: include to Managers.java
-
     @Getter
     private static AywenCraftPlugin instance;
+    @Getter
+    private final Managers managers = new Managers();
+    public EventsManager eventsManager; // TODO: include to Managers.java
     public LuckPerms api;
-
+    public List<RegionManager> regions;
+    public MultiverseCore mvCore;
     @Getter
     private BukkitAudiences adventure;
     @Getter
     private InteractiveHelpMenu interactiveHelpMenu;
-
     @Getter
     private BukkitCommandHandler handler;
-
     @Getter
     private TabList tabList;
 
-    public List<RegionManager> regions;
-    public MultiverseCore mvCore;
+    /**
+     * Format a permission with the permission prefix.
+     *
+     * @param category the permission category
+     * @param suffix   the permission suffix
+     * @return The formatted permission.
+     * @see PermissionCategory #PERMISSION_PREFIX
+     */
+    public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
+            final @NotNull String suffix) {
+        return category.formatPermission(suffix);
+    }
+
     @SneakyThrows
     @Override
     public void onEnable() {
@@ -122,8 +131,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
-        }
-        else {
+        } else {
             getLogger().severe("LuckPerms not found !");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -206,7 +214,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new DiscordCommand(this),
                 new ShowCraftCommand(managers.getCustomItemsManager()),
                 new ReportCommands(),
-                new ChatChannelCMD()
+                new ChatChannelCMD(),
+                new MailboxCommand()
         );
 
         /*  --------  */
@@ -254,11 +263,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIBreakBlockListener(managers.getCustomItemsManager()),
                 new CIEnchantListener(managers.getCustomItemsManager()),
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
-                new BabyFuzeListener()
+                new BabyFuzeListener(),
+                new MailboxListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
-        
+
         /* --------- */
 
         saveDefaultConfig();
@@ -280,8 +290,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onDisable() {
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            for(QUESTS quests : QUESTS.values()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
                 QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
                 player.closeInventory(); // Close inventory
@@ -300,12 +310,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return frozenPlayers;
     }
 
+
+    // Farine pour fabriquer du pain
+
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
     }
-
-
-    // Farine pour fabriquer du pain
 
     private void createFarineRecipe() {
         ItemStack farine = new ItemStack(Material.SUGAR);
@@ -322,7 +332,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         Bukkit.addRecipe(recipe);
     }
 
-    private void createCrazyPotion(){
+    private void createCrazyPotion() {
         ItemStack crazyPotion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
 
@@ -372,18 +382,5 @@ public final class AywenCraftPlugin extends JavaPlugin {
             saveResource("events.yml", false);
         }
         return YamlConfiguration.loadConfiguration(eventsFile);
-    }
-
-    /**
-     * Format a permission with the permission prefix.
-     *
-     * @param category the permission category
-     * @param suffix   the permission suffix
-     * @return The formatted permission.
-     * @see PermissionCategory #PERMISSION_PREFIX
-     */
-    public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
-                                                   final @NotNull String suffix) {
-        return category.formatPermission(suffix);
     }
 }
