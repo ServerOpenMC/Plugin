@@ -1,9 +1,9 @@
 package fr.communaywen.core.dreamdim;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
-import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @Feature("Dream Dimension")
 @Credit("Gyro3630")
+@Collaborators("ri1_")
 public class DimensionManager implements Listener {
 
     AywenCraftPlugin plugin;

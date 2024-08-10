@@ -4,13 +4,15 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
-import net.md_5.bungee.api.chat.hover.content.Item;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,6 +79,15 @@ public class EnterWorldListener implements Listener {
         }
 
         for (ItemStack itemStack : inv.getContents()) {
+            if (itemStack == null) { continue; } else {
+                Enchantment miragecurse = Registry.ENCHANTMENT.get(NamespacedKey.fromString("aywen:mirage_curse"));
+                if (itemStack.hasEnchant(miragecurse)) {
+                    inv.remove(itemStack);
+                    continue;
+                }
+            }
+
+
             CustomStack customStack = CustomStack.byItemStack(itemStack);
             if (customStack != null) {
                 if (List.of( // Listes de items qui seront supprimé lors de la mort
