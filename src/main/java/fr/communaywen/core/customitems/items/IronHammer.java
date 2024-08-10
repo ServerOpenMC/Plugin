@@ -22,7 +22,9 @@ import java.util.HashMap;
 public class IronHammer implements CustomItems {
 
     private String name;
+
     private ItemStack itemStack;
+
     private final ArrayList<String> recipe = new ArrayList<>() {{
         add("BBB");
         add("BSB");
