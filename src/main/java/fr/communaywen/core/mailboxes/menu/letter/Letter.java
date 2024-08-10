@@ -50,7 +50,7 @@ public class Letter extends MailboxInv {
     }
 
     public static LetterHead getById(Player player, int id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT items_count, sent_at, sender_id, items FROM openmc_db.mailbox_items WHERE id = ? AND refused = false AND receiver_id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT items_count, sent_at, sender_id, items FROM mailbox_items WHERE id = ? AND refused = false AND receiver_id = ?;")) {
             statement.setInt(1, id);
             statement.setString(2, player.getUniqueId().toString());
             try (ResultSet result = statement.executeQuery()) {
@@ -72,7 +72,7 @@ public class Letter extends MailboxInv {
     }
 
     public static void refuseLetter(Player player, int id) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE openmc_db.mailbox_items SET refused = true WHERE id = ? AND receiver_id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE mailbox_items SET refused = true WHERE id = ? AND receiver_id = ?;")) {
             statement.setInt(1, id);
             statement.setString(2, player.getUniqueId().toString());
             if (statement.executeUpdate() == 1) {
@@ -90,7 +90,7 @@ public class Letter extends MailboxInv {
     }
 
     private boolean getMailboxById() {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT items FROM openmc_db.mailbox_items WHERE id = ? AND refused = false;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT items FROM mailbox_items WHERE id = ? AND refused = false;")) {
             statement.setInt(1, id);
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
@@ -106,7 +106,7 @@ public class Letter extends MailboxInv {
     }
 
     public void accept() {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM openmc_db.mailbox_items WHERE id = ? AND refused = false;")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM mailbox_items WHERE id = ? AND refused = false;")) {
             statement.setInt(1, id);
             if (statement.executeUpdate() == 1) {
                 Component message = Component.text("Vous avez reçu ", NamedTextColor.DARK_GREEN)

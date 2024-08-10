@@ -96,7 +96,7 @@ public class MailboxListener extends DatabaseConnector implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS affected_rows, sender_id, items_count, id FROM openmc_db.mailbox_items WHERE receiver_id = ? AND refused = false;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS affected_rows, sender_id, items_count, id FROM mailbox_items WHERE receiver_id = ? AND refused = false;")) {
             statement.setString(1, player.getUniqueId().toString());
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
