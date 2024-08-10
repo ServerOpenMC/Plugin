@@ -43,6 +43,7 @@ public class Managers {
     private TransactionsManager transactionsManager;
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
+    private PlayerChatChannel chatChannel;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
