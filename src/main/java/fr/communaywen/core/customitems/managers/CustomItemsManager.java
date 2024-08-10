@@ -2,7 +2,6 @@ package fr.communaywen.core.customitems.managers;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
-import fr.communaywen.core.Managers;
 import fr.communaywen.core.customitems.items.BuilderWand;
 import fr.communaywen.core.customitems.items.DiamondHammer;
 import fr.communaywen.core.customitems.items.IronHammer;
