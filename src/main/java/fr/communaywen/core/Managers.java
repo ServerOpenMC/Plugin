@@ -15,7 +15,6 @@ import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
-import fr.communaywen.core.utils.chatchannel.PlayerChatChannel;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.utils.database.TransactionsManager;
@@ -43,7 +42,6 @@ public class Managers {
     private TransactionsManager transactionsManager;
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
-    private PlayerChatChannel chatChannel;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -95,7 +93,7 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
-        customItemsManager = new CustomItemsManager();
+        customItemsManager = new CustomItemsManager(customItemsConfig);
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
