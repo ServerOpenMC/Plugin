@@ -43,7 +43,7 @@ public final class ProutCommand {
                 Material boatMaterial = getBoatType(boat);
                 ItemStack itemBoat = new ItemStack(boatMaterial);
                 player.getVehicle().remove();
-                player.getWorld().dropItemNaturally(player.getLocation(), itemBoat);
+                player.getWorld().dropItemNaturally(boat.getLocation(), itemBoat);
 
                 player.sendMessage("Votre bateau a coulé.");
             }
