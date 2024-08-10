@@ -38,7 +38,8 @@ public class VpnListener implements Listener {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("http://ip-api.com/json/" + ip + "?fields=proxy");
+                    // J'ai pas testé, j'espère que ça marche x) - ri1_
+                    URL url = new URL("https://ip.notri1.fr/" + ip);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
 

@@ -16,6 +16,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.staff.ReportCommands;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
@@ -25,6 +26,10 @@ import fr.communaywen.core.commands.socials.DiscordCommand;
 import fr.communaywen.core.commands.socials.GithubCommand;
 import fr.communaywen.core.commands.teams.TeamAdminCommand;
 import fr.communaywen.core.commands.teams.TeamCommand;
+import fr.communaywen.core.customitems.commands.ShowCraftCommand;
+import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
+import fr.communaywen.core.customitems.listeners.CIEnchantListener;
+import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -60,9 +65,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
@@ -76,6 +84,7 @@ import java.io.File;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+    public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
     @Getter
     private final Managers managers = new Managers();
@@ -164,7 +173,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MoneyCommand(this),
                 new ScoreboardCommand(),
                 new ProutCommand(),
-                new FeedCommand(this),
                 new TPACommand(this),
                 new TpacceptCommand(this),  // Pass the plugin instance
                 new TpcancelCommand(),
@@ -193,7 +201,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new AdminShopCommand(),
                 new PayCommands(),
                 new FallBloodCommand(),
-                new DiscordCommand(this)
+                new DiscordCommand(this),
+                new ShowCraftCommand(managers.getCustomItemsManager()),
+                new ReportCommands(),
+                new ChatChannelCMD()
         );
 
         /*  --------  */
@@ -236,7 +247,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
-                new FallBloodListener()
+                new FallBloodListener(),
+                new CIBreakBlockListener(managers.getCustomItemsManager()),
+                new CIEnchantListener(managers.getCustomItemsManager()),
+                new CIPrepareAnvilListener(managers.getCustomItemsManager()),
+                new BabyFuzeListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
@@ -245,7 +260,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         saveDefaultConfig();
 
+        createSandRecipe();
         createFarineRecipe();
+        createCrazyPotion();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
@@ -298,6 +315,41 @@ public final class AywenCraftPlugin extends JavaPlugin {
         recipe.shape(" A ", " B ", "   ");
         recipe.setIngredient('A', Material.GUNPOWDER);
         recipe.setIngredient('B', Material.WHEAT);
+
+        Bukkit.addRecipe(recipe);
+    }
+
+    private void createCrazyPotion(){
+        ItemStack crazyPotion = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
+
+        meta.setDisplayName("§k NEW §r §4 Crazy Potion §r §k NEW");
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 9), true);
+
+        crazyPotion.setItemMeta(meta);
+
+        NamespacedKey nmKey = new NamespacedKey(this, "crazypotion_craft");
+        ShapedRecipe recipe = new ShapedRecipe(nmKey, crazyPotion);
+
+        recipe.shape("BBB", "WGW", "IEI");
+
+        recipe.setIngredient('B', Material.DIAMOND_BLOCK);
+        recipe.setIngredient('G', Material.GLASS_BOTTLE);
+        recipe.setIngredient('W', Material.WATER_BUCKET);
+        recipe.setIngredient('E', Material.ENDER_PEARL);
+        recipe.setIngredient('I', Material.IRON_INGOT);
+
+        getServer().addRecipe(recipe);
+
+    }
+
+    private void createSandRecipe() {
+        ItemStack sand = new ItemStack(Material.SAND, 4);
+
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "sand_craft"), sand);
+        recipe.shape("A");
+        recipe.setIngredient('A', Material.SANDSTONE);
 
         Bukkit.addRecipe(recipe);
     }

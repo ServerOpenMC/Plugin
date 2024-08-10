@@ -1,7 +1,9 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.utils.DiscordWebhook;
+import fr.communaywen.core.utils.chatchannel.Channel;
 import fr.communaywen.core.utils.database.Blacklist;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -31,6 +33,16 @@ public class ChatListener implements Listener {
         String message = event.getMessage();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> discordWebhook.sendMessage(username, avatarUrl, message));
+
+        if(plugin.getManagers().getChatChannel().getChannel(event.getPlayer()) == Channel.TEAM){
+            Player player = event.getPlayer();
+            event.setCancelled(true);
+
+            Team team = plugin.getManagers().getTeamManager().getTeamByPlayer(player.getUniqueId());
+            if(team == null) return;
+
+            team.sendMessage(player, event.getMessage());
+        }
 
         if (!(event.getPlayer() instanceof Player)) { return; }
         Bukkit.getOnlinePlayers().forEach(player -> {

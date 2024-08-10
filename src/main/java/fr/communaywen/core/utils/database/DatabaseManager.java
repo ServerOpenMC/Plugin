@@ -53,6 +53,10 @@ public class DatabaseManager {
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS advancements (player VARCHAR(36) , advancement VARCHAR(255), value INT, PRIMARY KEY (player, advancement))").executeUpdate();
 
 
+        //Système de signalements
+
+        this.getConnection().prepareStatement("CREATE TABLE `reports` (`sender` text NOT NULL,`reported` text NOT NULL,`reason` text NOT NULL,`timestamp` timestamp NOT NULL)");
+
         // Système de claims
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS claim (" +
                 "  claimID varchar(36) NOT NULL PRIMARY KEY," +
@@ -70,7 +74,7 @@ public class DatabaseManager {
                 "  balance double NOT NULL" +
                 ")").executeUpdate();
 
-        System.out.println("Les tables ont été créer si besoin");
+        System.out.println("Les tables ont été créées si besoin");
     }
 
     public void close() {

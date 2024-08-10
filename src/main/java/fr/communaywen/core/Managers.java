@@ -6,15 +6,18 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DimensionManager;
+import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
+import fr.communaywen.core.utils.chatchannel.PlayerChatChannel;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
 import fr.communaywen.core.utils.database.TransactionsManager;
@@ -41,6 +44,9 @@ public class Managers {
     private FallingBlocksExplosionManager fbeManager;
     private LevelsManager levelsManager;
     private TransactionsManager transactionsManager;
+    private CustomItemsManager customItemsManager;
+    private ReportManager reportManager;
+    private PlayerChatChannel chatChannel;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -94,6 +100,10 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
+        customItemsManager = new CustomItemsManager();
+        chatChannel = new PlayerChatChannel();
+        reportManager = new ReportManager();
+        reportManager.loadReports();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
@@ -104,11 +114,14 @@ public class Managers {
     public void cleanup() {
         /* Besoin de la db */
         dreamdimManager.close();
+        reportManager.saveReports();
 
         /* Plus besoin de la db */
         databaseManager.close();
 
         quizManager.close();
         corpseManager.removeAll();
+        teamManager.getTeamCache().saveAllTeamsToDatabase();
+
     }
 }

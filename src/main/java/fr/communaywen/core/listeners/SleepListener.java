@@ -1,5 +1,7 @@
 package fr.communaywen.core.listeners;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -8,6 +10,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+@Feature("Passer la nuit")
+@Credit("Magneto_Craft")
 public class SleepListener implements Listener {
 
     @EventHandler

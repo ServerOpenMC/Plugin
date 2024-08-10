@@ -70,7 +70,7 @@ public class MoneyCommand {
                 target.sendMessage("§aVous venez de recevoir §e" + amount + "$ §ade la part de §e" + player.getName());
 
                 transactionsManager.addTransaction(new Transaction(
-                        player.getUniqueId().toString(),
+                        target.getUniqueId().toString(),
                         player.getUniqueId().toString(),
                         amount,
                         "Transfert"
