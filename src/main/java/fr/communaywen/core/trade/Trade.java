@@ -71,9 +71,23 @@ public class Trade implements Listener {
 
     public void openOtherItems(boolean isPlayer1) {
         if (isPlayer1) {
-            player1.openInventory(inventory2);
+            for (ItemStack item : inventory2.getContents()) {
+                if (item != null) {
+                    player1.sendMessage("Contenu de l'echange:");
+                    player1.sendMessage(item.getType().toString() + " x" + item.getAmount());
+                }else{
+                    player1.sendMessage("Echange vide");
+                }
+            }
         } else {
-            player2.openInventory(inventory1);
+            for (ItemStack item : inventory1.getContents()) {
+                if (item != null) {
+                    player1.sendMessage("Contenu de l'échange:");
+                    player2.sendMessage(item.getType().toString() + " x" + item.getAmount());
+                }else{
+                    player2.sendMessage("Echange vide");
+                }
+            }
         }
     }
 
@@ -207,6 +221,11 @@ public class Trade implements Listener {
     }
 
     private void delete() {
+        inventory1.clear();
+        inventory2.clear();
+        player1.closeInventory();
+        player2.closeInventory();
+
         money1 = 0;
         money2 = 0;
         inventory1 = null;

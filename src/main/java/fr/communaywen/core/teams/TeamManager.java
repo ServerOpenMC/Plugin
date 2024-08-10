@@ -3,6 +3,7 @@ package fr.communaywen.core.teams;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.teams.cache.TeamCache;
 import fr.communaywen.core.utils.Queue;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
@@ -14,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
-@Credit({"Xernas", "Axeno", "Gyro3630"})
+@Credit({"Xernas", "Axeno", "Gyro3630", "Martinouxx"})
 @Feature("Teams")
 public class TeamManager extends DatabaseConnector {
 
@@ -24,8 +25,13 @@ public class TeamManager extends DatabaseConnector {
 
     AywenCraftPlugin plugin;
 
+    @Getter
+    private final TeamCache teamCache;
+
     public TeamManager(AywenCraftPlugin plugin) {
         this.plugin = plugin;
+        this.teamCache = new TeamCache(plugin);
+
         try {
             ResultSet rs = connection.prepareStatement("SELECT * FROM teams").executeQuery();
 
@@ -44,6 +50,12 @@ public class TeamManager extends DatabaseConnector {
                 ResultSet players = query.executeQuery();
                 while (players.next()) {
                     team.addPlayerWithoutSave(UUID.fromString(players.getString("player")));
+                    teamCache.addPlayer(team.getName(), UUID.fromString(players.getString("player")));
+                }
+
+                if(!teamCache.getTeamPlayers(team.getName()).contains(team.getOwner())){
+                    team.delete();
+                    teams.remove(team);
                 }
             }
 
@@ -61,7 +73,7 @@ public class TeamManager extends DatabaseConnector {
     private final Queue<UUID, Team> pendingInvites = new Queue<>(20);
 
     public Team createTeam(UUID owner, String name) {
-        Team team = new Team(owner, name, plugin);
+        Team team = new Team(owner, name, plugin, teamCache);
         if (!teamExists(name)) {
             teams.add(team);
         }
