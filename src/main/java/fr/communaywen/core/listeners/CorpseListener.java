@@ -39,6 +39,8 @@ public class CorpseListener implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
 
+        if (player.getWorld().getName().equals("dreamworld")) { return; }
+
         Location deathLocation = player.getLocation();
         Block blockBelow = deathLocation.getBlock();
 
