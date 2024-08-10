@@ -278,10 +278,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
-//            QuestsManager.loadPlayerData(player);
+            QuestsManager.loadPlayerData(player);
         }
 
-//        QuestsManager.initializeQuestsTable();
+        QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.loadAllClaims();
         new BandageRecipe();
     }
