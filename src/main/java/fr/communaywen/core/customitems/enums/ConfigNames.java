@@ -1,5 +1,8 @@
 package fr.communaywen.core.customitems.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ConfigNames {
 
     BUILDER_WAND_RADIUS("builder-wand-radius");
@@ -8,9 +11,5 @@ public enum ConfigNames {
 
     ConfigNames(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 }
