@@ -1,7 +1,7 @@
 name: AywenCraftPlugin
 version: '${version}'
 main: fr.communaywen.core.AywenCraftPlugin
-api-version: '1.20'
+api-version: '1.21'
 depend:
   - ProtocolLib
   - ItemsAdder
@@ -57,3 +57,6 @@ permissions:
     description: 'Donne un bandage'
   ayw.command.report:
     description: 'Permet de signaler un joueur'
+  ayw.command.mailbox:
+    description: 'Utilise la boite aux lettres'
+    default: true

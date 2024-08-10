@@ -42,7 +42,15 @@ public class DatabaseManager {
                 "secondPlayer_uuid VARCHAR(36) NOT NULL," +
                 "friendDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
                 ")").executeUpdate();
-
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS mailbox_items (" +
+                                                      "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                                                      "sender_id UUID NOT NULL," +
+                                                      "receiver_id UUID NOT NULL," +
+                                                      "items BLOB NOT NULL," +
+                                                      "items_count INT NOT NULL," +
+                                                      "sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                                                      "refused BOOLEAN NOT NULL DEFAULT FALSE" +
+                                                      ")").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS blacklists (Owner VARCHAR(36), Blocked VARCHAR(36))").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(36))").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link_verif (minecraft_uuid VARCHAR(36) NOT NULL, code int(11) NOT NULL)").executeUpdate();
