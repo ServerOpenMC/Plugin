@@ -1,6 +1,7 @@
 package fr.communaywen.core.customitems.items;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.customitems.enums.ConfigNames;
 import fr.communaywen.core.customitems.objects.CustomItems;
@@ -34,23 +35,19 @@ public class BuilderWand implements CustomItems {
     private FileConfiguration customItemsConfig;
     private final int radius;
     private final ArrayList<String> recipe = new ArrayList<>() {{
-        add("BDB");
-        add("DSD");
-        add("DSD");
+        add("EDE");
+        add("EBE");
+        add("XBX");
+    }};
+    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
+        put('D', new ItemStack(Material.DIAMOND_BLOCK));
+        put('B', new ItemStack(Material.BLAZE_ROD));
+        put('E', new ItemStack(Material.EMERALD_BLOCK));
     }};
 
     public BuilderWand(FileConfiguration customItemsConfig) {
         this.customItemsConfig = customItemsConfig;
         this.radius = customItemsConfig.getInt(ConfigNames.BUILDER_WAND_RADIUS.getName());
-    }
-
-    @Override
-    public HashMap<Character, ItemStack> getIngredients() {
-        return new HashMap<>() {{
-            put('B', new ItemStack(Material.BLAZE_ROD));
-            put('D', new ItemStack(Material.DIAMOND));
-            put('S', new ItemStack(Material.STICK));
-        }};
     }
 
     @Override
@@ -202,6 +199,12 @@ public class BuilderWand implements CustomItems {
 
         if (adjacentBlock.getType().isAir() || adjacentBlockType != blockType) {
             return false;
+        }
+
+        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+            if (region.isInArea(newLoc) && !region.getTeam().getPlayers().contains(player.getUniqueId())) {
+                return false;
+            }
         }
 
         Block blockToPlace = adjacentBlock.getRelative(blockFace);
