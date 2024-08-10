@@ -247,6 +247,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIBreakBlockListener(managers.getCustomItemsManager()),
                 new CIEnchantListener(managers.getCustomItemsManager()),
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
+                new CIPlayerInteractListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
                 new MailboxListener()
         );

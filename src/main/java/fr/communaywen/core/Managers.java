@@ -1,7 +1,6 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
-import fr.communaywen.core.commands.randomEvents.RandomEventsData;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -44,7 +43,6 @@ public class Managers {
     private TransactionsManager transactionsManager;
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
-    private PlayerChatChannel chatChannel;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -60,7 +58,7 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
-        customItemsConfig = ConfigUtils.loadConfig(plugin, "customItems.yml");
+        customItemsConfig = ConfigUtils.loadConfig(plugin, "customitems.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {
@@ -84,8 +82,7 @@ public class Managers {
                     RewardCommand.class,
                     TeamManager.class,
                     Team.class,
-                    TransactionsManager.class,
-                    RandomEventsData.class
+                    TransactionsManager.class
             );
         }
         // Database

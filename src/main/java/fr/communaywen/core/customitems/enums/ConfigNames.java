@@ -1,8 +1,5 @@
 package fr.communaywen.core.customitems.enums;
 
-import lombok.Getter;
-
-@Getter
 public enum ConfigNames {
 
     BUILDER_WAND_RADIUS("builder-wand-radius");
