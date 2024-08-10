@@ -29,7 +29,7 @@ public class PendingMailbox extends PaginatedMailbox<SenderLetter> {
     }
 
     public static void cancelLetter(Player player, int id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT receiver_id, items, items_count FROM openmc_db.mailbox_items WHERE id = ? AND sender_id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT receiver_id, items, items_count FROM mailbox_items WHERE id = ? AND sender_id = ?;")) {
             statement.setInt(1, id);
             statement.setString(2, player.getUniqueId().toString());
             try (ResultSet result = statement.executeQuery()) {
@@ -59,14 +59,14 @@ public class PendingMailbox extends PaginatedMailbox<SenderLetter> {
     }
 
     public static boolean deleteLetter(int id) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM openmc_db.mailbox_items WHERE id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM mailbox_items WHERE id = ?;")) {
             statement.setInt(1, id);
             return statement.executeUpdate() == 1;
         }
     }
 
     public boolean fetchMailbox() {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT id, receiver_id, sent_at, items_count, refused FROM openmc_db.mailbox_items WHERE sender_id = ? ORDER BY sent_at DESC;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT id, receiver_id, sent_at, items_count, refused FROM mailbox_items WHERE sender_id = ? ORDER BY sent_at DESC;")) {
             statement.setString(1, player.getUniqueId().toString());
             try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {

@@ -45,7 +45,7 @@ public class PlayerMailbox extends PaginatedMailbox<LetterHead> {
     }
 
     public boolean fetchMailbox() {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT id, sender_id, sent_at, items_count FROM openmc_db.mailbox_items WHERE receiver_id = ? AND refused = false ORDER BY sent_at DESC;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT id, sender_id, sent_at, items_count FROM mailbox_items WHERE receiver_id = ? AND refused = false ORDER BY sent_at DESC;")) {
             statement.setString(1, player.getUniqueId().toString());
             try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {
