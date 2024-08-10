@@ -1,5 +1,6 @@
 package fr.communaywen.core.customitems.objects;
 
+import fr.communaywen.core.credit.Credit;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Credit("Fnafgameur")
 public interface CustomItems {
 
     void setName(String name);

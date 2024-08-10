@@ -1,5 +1,6 @@
 package fr.communaywen.core.customitems.items;
 
+import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Credit("Fnafgameur")
 public class NetheriteHammer implements CustomItems {
 
     @Getter
