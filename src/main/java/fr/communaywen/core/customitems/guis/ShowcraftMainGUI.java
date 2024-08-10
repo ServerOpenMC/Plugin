@@ -3,6 +3,7 @@ package fr.communaywen.core.customitems.guis;
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
+import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Credit("Fnafgameur")
 public class ShowcraftMainGUI extends PaginatedMenu {
 
     private final CustomItemsManager customItemsManager;
