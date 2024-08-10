@@ -1,6 +1,7 @@
 package fr.communaywen.core.customitems.items;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.customitems.enums.ConfigNames;
 import fr.communaywen.core.customitems.objects.CustomItems;
@@ -198,6 +199,12 @@ public class BuilderWand implements CustomItems {
 
         if (adjacentBlock.getType().isAir() || adjacentBlockType != blockType) {
             return false;
+        }
+
+        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+            if (region.isInArea(newLoc) && !region.getTeam().getPlayers().contains(player.getUniqueId())) {
+                return false;
+            }
         }
 
         Block blockToPlace = adjacentBlock.getRelative(blockFace);
