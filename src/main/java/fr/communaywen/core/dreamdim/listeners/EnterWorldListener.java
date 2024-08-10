@@ -57,7 +57,6 @@ public class EnterWorldListener implements Listener {
 
     public void death(Player p) {
         Inventory inv = p.getInventory();
-        register.grantAdvancement(p, "aywen:nightmare");
 
         for (ItemStack itemStack : List.of(p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand())) {
             CustomStack customStack = CustomStack.byItemStack(itemStack);
