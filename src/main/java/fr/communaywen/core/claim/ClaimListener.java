@@ -1,8 +1,11 @@
 package fr.communaywen.core.claim;
 
-import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.teams.EconomieTeam;
-import fr.communaywen.core.teams.Team;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,11 +29,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.teams.EconomieTeam;
+import fr.communaywen.core.teams.Team;
 
 public class ClaimListener implements Listener {
 
@@ -50,6 +51,30 @@ public class ClaimListener implements Listener {
         if (event.getEntityType() == EntityType.ARMOR_STAND) {
             Player player = (Player) event.getDamager();
             checkRegion(player, event.getEntity().getLocation().getBlock(), event);
+        }
+    }
+
+    @EventHandler
+    public void onPistonFlip(BlockPistonRetractEvent event) {
+        for (Block block : event.getBlocks()) {
+            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+                if (region.isInArea(block.getLocation()) || region.isInArea(block.getRelative(event.getDirection()).getLocation())) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPistonExtend(BlockPistonExtendEvent event) {
+        for (Block block : event.getBlocks()) {
+            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+                if (region.isInArea(block.getLocation()) || region.isInArea(block.getRelative(event.getDirection()).getLocation())) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
         }
     }
 
@@ -82,7 +107,7 @@ public class ClaimListener implements Listener {
                         break;
                 }
             }
-        } 
+        }
 
         if (event.getAction() == InventoryAction.HOTBAR_SWAP || event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD) {
             ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
@@ -113,6 +138,7 @@ public class ClaimListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
+        if(event.getBlock() == null) return;
         checkRegion(player, event.getBlock(), event);
     }
 
@@ -204,7 +230,7 @@ public class ClaimListener implements Listener {
             checkRegion(player, block, event);
         }
 
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK && event.getClickedBlock() != null) {
             ItemStack item = player.getItemInHand();
             if (player.getItemInHand().getType() == Material.STICK && item != null && item.getType() == Material.STICK && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals("§cBATON DE CLAIM")) {
                 event.setCancelled(true);
@@ -327,11 +353,12 @@ public class ClaimListener implements Listener {
             if (region.isInArea(block.getLocation())) {
                 boolean isBypassing = AywenCraftPlugin.playerClaimsByPass.contains(player);
                 boolean isTeamMember = region.isTeamMember(player.getUniqueId());
-    
+
                 if (!isBypassing && !isTeamMember) {
-                    player.sendMessage("§cCe n'est pas chez vous");
-                    if (eventHandler instanceof Cancellable) {
-                        ((Cancellable) eventHandler).setCancelled(true);
+                    if(player != null) player.sendMessage("§cCe n'est pas chez vous");
+                    if (eventHandler instanceof Cancellable cancellable) {
+                        cancellable.setCancelled(true);
+                        AywenCraftPlugin.getInstance().getLogger().info("Cancelled event: " + eventHandler.getClass().getSimpleName());
                     }
                     return;
                 }
