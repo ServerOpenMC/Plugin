@@ -457,14 +457,9 @@ public class EventsManager implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event){
         clearTerrifyingNight(event.getPlayer());
     }
-    private void clearTerrifyingNight(Player player) {        
+    private void clearTerrifyingNight(Player player) {
         AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-
-        for (AttributeModifier modifier : attribute.getModifiers()) {
-            if (modifier.getName().equals("terrifyingNight")) {
-                attribute.removeModifier(modifier);
-            }
-        }
+        attribute.getModifiers().removeIf(modifier -> modifier.getName().equals("terrifyingNight"));
     }
 
     @EventHandler
