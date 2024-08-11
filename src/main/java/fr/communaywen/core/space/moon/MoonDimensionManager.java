@@ -5,6 +5,7 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import lombok.Getter;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -18,9 +19,6 @@ public class MoonDimensionManager implements Listener {
     AywenCraftPlugin plugin;
     Server server;
 
-    @Getter
-    Utils utils;
-
     public MoonDimensionManager(AywenCraftPlugin Plugin) {
         this.plugin = Plugin;
         this.server = plugin.getServer();
@@ -28,7 +26,6 @@ public class MoonDimensionManager implements Listener {
 
     public void init() {
         createDimension();
-        this.utils = new Utils(plugin);
     }
 
     public void createDimension() {
@@ -53,6 +50,8 @@ public class MoonDimensionManager implements Listener {
     public void close() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             if (player.getWorld().getName().equals("moon")) {
+                player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.08);
+                player.getPlayer().getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(3);
                 player.teleport(Objects.requireNonNullElse(
                         player.getRespawnLocation(),
                         Bukkit.getWorld("world").getSpawnLocation()

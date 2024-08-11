@@ -77,56 +77,5 @@ public class RocketListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-
-        if (!player.getWorld().getName().equals("moon")){ return; }
-
-        //TODO : Créer l'acier
-        /*if (block.getType().equals(Material.IRON_BLOCK)) {
-            event.setDropItems(false);
-            player.getWorld().dropItemNaturally(block.getLocation(),
-                    CustomStack.getInstance("space:steel").getItemStack());
-        }*/
-        if(block.getType().equals(Material.END_STONE)) {
-            event.setDropItems(false);
-            player.getWorld().dropItemNaturally(block.getLocation(),
-                    CustomStack.getInstance("space:moon_shard").getItemStack());
-            if(Math.random() < 0.1) {
-                player.getWorld().dropItemNaturally(block.getLocation(),
-                        CustomStack.getInstance("space:moon_shard").getItemStack());
-            }
-        }
-    }
-
-
-    @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent e) {
-        if(!e.getLocation().getWorld().getName().equals("moon")) return;
-        if(List.of(EntityType.ARMOR_STAND, EntityType.BLOCK_DISPLAY, EntityType.ITEM_DISPLAY, EntityType.TEXT_DISPLAY, EntityType.ITEM, EntityType.WOLF, EntityType.PARROT, EntityType.OCELOT, EntityType.CAT, EntityType.TROPICAL_FISH, EntityType.ARROW, EntityType.ENDER_PEARL).contains(e.getEntity().getType())) return;
-        if(!List.of(EntityType.ZOMBIE, EntityType.SKELETON).contains(e.getEntity().getType())) {
-            e.setCancelled(true);
-        }
-        EntityEquipment ee = ((LivingEntity) e.getEntity()).getEquipment();
-        assert ee != null;
-        ee.setHelmet(new ItemStack(Material.GLASS));
-        ((LivingEntity) e.getEntity()).getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.013211);
-        ((LivingEntity) e.getEntity()).getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(10);
-    }
-
-    @EventHandler
-    public void onDimChange(PlayerChangedWorldEvent e) {
-        if(e.getPlayer().getWorld() == Bukkit.getWorld("moon")) {
-            // Alors le produit en croix : La gravité sur la terre d'mc c'est 0.08, la gravité sur terre irl c'est 9.81. La gravité sur la lune irl c'est 1.62. (1.62*0.08)/9.81 = environ 0.013211
-            e.getPlayer().getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.013211);
-            e.getPlayer().getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(10);
-        }
-        if(e.getFrom() == Bukkit.getWorld("moon")) {
-            e.getPlayer().getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.08);
-            e.getPlayer().getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(3);
-        }
-    }
 
 }

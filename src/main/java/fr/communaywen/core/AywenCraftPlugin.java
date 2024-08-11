@@ -267,7 +267,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
                 new MailboxListener(),
-                new RocketListener()
+                new RocketListener(),
+                new MoonListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
