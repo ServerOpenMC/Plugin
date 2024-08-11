@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Feature("Dream Dimension")
 @Credit("Gyro3630")
-@Collaborators("ri1_")
+@Collaborators({"ri1_", "Nocolm"})
 public class DimensionManager implements Listener {
 
     AywenCraftPlugin plugin;
@@ -31,6 +31,7 @@ public class DimensionManager implements Listener {
         createDimension();
         this.register = new AdvancementRegister(plugin);
         plugin.registerEvents(
+                new CloudSoup(plugin),
                 new BlockPlacement(register),
                 new EatListener(plugin),
                 new EnterWorldListener(plugin, register),
