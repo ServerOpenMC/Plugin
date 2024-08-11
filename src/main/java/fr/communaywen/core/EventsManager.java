@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
@@ -452,7 +453,10 @@ public class EventsManager implements Listener {
     public boolean isInTerrifyingNight() {
         return System.currentTimeMillis() - lastTerrifyingNight < terrifyingNightDurationMillis;
     }
-
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event){
+        clearTerrifyingNight(event.getPlayer());
+    }
     private void clearTerrifyingNight(Player player) {        
         AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
 
