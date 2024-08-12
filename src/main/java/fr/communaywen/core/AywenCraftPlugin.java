@@ -22,6 +22,7 @@ import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
+import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
 import fr.communaywen.core.commands.socials.DiscordCommand;
 import fr.communaywen.core.commands.socials.GithubCommand;
 import fr.communaywen.core.commands.teams.TeamAdminCommand;
@@ -37,6 +38,7 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
@@ -201,7 +203,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FallBloodCommand(),
                 new DiscordCommand(this),
                 new ShowCraftCommand(managers.getCustomItemsManager()),
-                new ReportCommands()
+                new ReportCommands(),
+                new ReportCommands(),
+                new ChatChannelCMD(),
+                new RandomEventsCommand(this)
         );
 
         /*  --------  */
