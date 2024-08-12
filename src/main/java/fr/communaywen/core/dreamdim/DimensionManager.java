@@ -50,6 +50,8 @@ public class DimensionManager implements Listener {
 
         assert dreamworld != null;
         dreamworld.getPopulators().add(new LightPopulator());
+        dreamworld.getPopulators().add(new TreePopulator());
+
         dreamworld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         dreamworld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         dreamworld.setGameRule(GameRule.DISABLE_RAIDS, true);
