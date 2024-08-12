@@ -29,6 +29,7 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
+import fr.communaywen.core.customitems.listeners.CIPlayerInteractListener;
 import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
@@ -248,6 +249,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIBreakBlockListener(managers.getCustomItemsManager()),
                 new CIEnchantListener(managers.getCustomItemsManager()),
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
+                new CIPlayerInteractListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
                 new MailboxListener()
         );

@@ -59,7 +59,7 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
-        customItemsConfig = ConfigUtils.loadConfig(plugin, "customItems.yml");
+        customItemsConfig = ConfigUtils.loadConfig(plugin, "customitems.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {

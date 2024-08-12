@@ -15,19 +15,23 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Setter
-@Credit("Fnafgameur")
+@Credit("Fnafgameur") // Credit to LVXN456 for the idea
 public class BuilderWand implements CustomItems {
 
     private String name;
@@ -210,6 +214,12 @@ public class BuilderWand implements CustomItems {
         Block blockToPlace = adjacentBlock.getRelative(blockFace);
 
         if (!blockToPlace.getType().isAir()) {
+            return false;
+        }
+
+        Collection<Entity> entities = blockToPlace.getWorld().getNearbyEntities(blockToPlace.getLocation(), 1, 1, 1);
+
+        if (!entities.isEmpty()) {
             return false;
         }
 
