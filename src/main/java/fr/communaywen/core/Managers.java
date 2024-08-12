@@ -1,6 +1,7 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
+import fr.communaywen.core.commands.randomEvents.RandomEventsData;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -85,7 +86,8 @@ public class Managers {
                     TeamManager.class,
                     Team.class,
                     TransactionsManager.class,
-                    AdvancementRegister.class
+                    AdvancementRegister.class,
+                    RandomEventsData.class
             );
         }
         // Database

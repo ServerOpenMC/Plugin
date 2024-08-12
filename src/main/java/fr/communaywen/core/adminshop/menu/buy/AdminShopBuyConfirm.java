@@ -1,5 +1,17 @@
 package fr.communaywen.core.adminshop.menu.buy;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
@@ -8,17 +20,6 @@ import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.database.TransactionsManager;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class AdminShopBuyConfirm extends Menu {
     private final BaseItems items;
@@ -62,6 +63,7 @@ public class AdminShopBuyConfirm extends Menu {
         }).setOnClick(event -> {
             if (!hasEnoughSpace(getOwner(), Material.getMaterial(material == null ? items.named() : items.named() + "_" + material), quantity)) {
                 getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'espace dans votre inventaire !");
+                getOwner().closeInventory();
                 return;
             } else {
                 EconomyManager economy = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
@@ -113,19 +115,19 @@ public class AdminShopBuyConfirm extends Menu {
     }
 
     private boolean hasEnoughSpace(Player player, Material item, int amount) {
-        int freeSlots = 0;
-        int partialSlots = 0;
         ItemStack[] contents = player.getInventory().getContents();
 
-        for (ItemStack is : contents) {
-            if (is == null || is.getType() == Material.AIR) {
-                freeSlots++;
-            } else if (is.getType() == item && (is.getAmount() < is.getMaxStackSize())) {
-                partialSlots += is.getMaxStackSize() - is.getAmount();
+        for(ItemStack is : contents) {
+            if(is == null || is.getType() == Material.AIR) {
+                continue;
+            }
+
+            if(is.getType() == item && is.getAmount() < is.getMaxStackSize()) {
+                return true;
             }
         }
 
-        int totalSpace = freeSlots * item.getMaxStackSize() + partialSlots;
-        return totalSpace >= amount;
+
+        return player.getInventory().firstEmpty() != -1;
     }
 }

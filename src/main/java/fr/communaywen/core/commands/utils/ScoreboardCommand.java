@@ -16,6 +16,7 @@ public class ScoreboardCommand {
     public void onDelete(Player player) {
         if (scoreboardManager.disabledPlayers.contains(player.getUniqueId())) {
             scoreboardManager.disabledPlayers.remove(player.getUniqueId());
+            scoreboardManager.setScoreboard(player);
             player.sendMessage("§aScoreboard activé !");
         } else {
             scoreboardManager.disabledPlayers.add(player.getUniqueId());

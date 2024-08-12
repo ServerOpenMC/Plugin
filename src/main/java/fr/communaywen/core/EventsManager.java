@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
@@ -48,6 +49,10 @@ import org.joml.Matrix4f;
 import org.joml.Random;
 
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.commands.randomEvents.EventsDifficulties;
+import fr.communaywen.core.commands.randomEvents.RandomEventsData;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -56,30 +61,34 @@ import java.util.*;
 
 // Events développés par Armibule: Nuit terrifiante, Pêche miraculeuse
 
+@Credit("Armibule")
+@Feature("RandomEvents")
 public class EventsManager implements Listener {
     private AywenCraftPlugin plugin;
 
     // Event Types
-    private static final int TERRIFYING_NIGHT = 0;
-    private static final int MIRACULOUS_FISHING = 1;
+    public static final int TERRIFYING_NIGHT = 0;
+    public static final int MIRACULOUS_FISHING = 1;
 
     private static final Map<String, Integer> events = Map.of(
         "terriftingNight", TERRIFYING_NIGHT,
         "miraculousFishing", MIRACULOUS_FISHING
     );
-    private List<Integer> enabledEvents;
+    public List<Integer> enabledEvents;
 
     private BukkitRunnable eventRunnable;
+
+    private boolean isRunning = false;
 
     private long lastTerrifyingNight = 0;
     private final int terrifyingNightDuration = 3 * 60 * 20;    // in ticks (3 minutes)
     private final double terrifyingNightDurationMillis = terrifyingNightDuration / 20.0 * 1000.0;
-    private final double terrifyingNightProbability = 0.2;
+    private double terrifyingNightProbability;
 
     private long lastMiraculousFishing = 0;
     private final int miraculousFishingDuration = 3 * 60 * 20;    // in ticks (3 minutes)
     private final double miraculousFishingDurationMillis = miraculousFishingDuration / 20.0 * 1000.0;
-    private final double miraculousFishingProbability = 0.2;
+    private double miraculousFishingProbability;
 
     public EventsManager(AywenCraftPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
@@ -93,11 +102,8 @@ public class EventsManager implements Listener {
         enabledEvents = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : events.entrySet() ) {
-        
             if ( !disabledEvents.contains(entry.getKey()) ) {
-
                 enabledEvents.add(entry.getValue());
-                
             }
         };
 
@@ -105,181 +111,228 @@ public class EventsManager implements Listener {
             return;
         }
 
-        eventRunnable = new BukkitRunnable() {
-            
-            @Override
-            public void run() {
-                if (Bukkit.getOnlinePlayers().isEmpty()) return;
+        terrifyingNightProbability = config.getDouble("terrifyingNightProbability");
+        miraculousFishingProbability = config.getDouble("miraculousFishingProbability");
+
+        RandomEventsData.loadData();
+
+        start();
+    }
+
+    // returns true if succeeded
+    public boolean startTerrifyingNight() {
+        if (isInTerrifyingNight()) {
+            return false;
+        }
+
+        lastTerrifyingNight = System.currentTimeMillis();
+                            
+        System.out.println("\n\nEvent started\n\n");
+        
+        Bukkit.broadcastMessage(ChatColor.RED + "\nNouvel évènement en approche: " + ChatColor.BOLD + "Nuit Terrifiante\n" + 
+                                ChatColor.RESET + ChatColor.GOLD + "Les monstres sont plus puissants, faites attention !\n");
+        
+        Integer difficulty;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            difficulty = RandomEventsData.getPlayerDifficulty(player);
+
+            if (difficulty == EventsDifficulties.DISABLED) {
+                continue;
+            }
+
+            player.sendTitle("Évènement", "Nuit Terrifiante", 10, 40, 20);
+            player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
+            player.playSound(player.getEyeLocation(), Sound.AMBIENT_CAVE, 1, 1);
+        
+            if (difficulty != EventsDifficulties.EASY) {
+                player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.WEAKNESS,
+                    terrifyingNightDuration,
+                    0,
+                    false,
+                    false
+                ));
+            }
+
+            if (difficulty == EventsDifficulties.EASY) {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
+                    new AttributeModifier("terrifyingNight", -0.1, Operation.MULTIPLY_SCALAR_1)
+                );
+            } else if (difficulty == EventsDifficulties.NORMAL) {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
+                    new AttributeModifier("terrifyingNight", -0.2, Operation.MULTIPLY_SCALAR_1)
+                );
+            } else if (difficulty == EventsDifficulties.HARD) {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
+                    new AttributeModifier("terrifyingNight", -0.3, Operation.MULTIPLY_SCALAR_1)
+                );
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.playSound(player.getEyeLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
+                        player.sendTitle(ChatColor.RED + "Version", ChatColor.LIGHT_PURPLE + "Difficile", 10, 40, 20);
+                    }
+                }.runTaskLater(plugin, 60);
+            }
+        
+            Location location = player.getLocation();
+            World world = location.getWorld();
+        
+            Chunk playerChunk = world.getChunkAt(location);
+        
+        
+            Entity[] entities = playerChunk.getEntities();
+        
+            int monsterCounter = 0;
+        
+            for (Entity entity : entities) {
+                if (entity instanceof LivingEntity) {
                 
-                World overworld = Bukkit.getWorlds().get(0);
-
-                long worldTime = overworld.getTime();
-
-                // handle enabled events
-                for (int event : enabledEvents) {
-                    switch (event) {
-                        case TERRIFYING_NIGHT:
-                            // every midnight: 1/4 chance but not twice in a row
-                            if (18000 <= worldTime && worldTime < 18100 && System.currentTimeMillis() - lastTerrifyingNight > 20*61000 && new Random().nextFloat() <= terrifyingNightProbability) {
-                            
-                                lastTerrifyingNight = System.currentTimeMillis();
-                            
-                                System.out.println("\n\nEvent started\n\n");
-                            
-                                Bukkit.broadcastMessage(ChatColor.RED + "\nNouvel évènement en approche: " + ChatColor.BOLD + "Nuit Terrifiante\n" + 
-                                                        ChatColor.RESET + ChatColor.GOLD + "Les monstres sont plus puissants, faites attention !\n");
-
-                                for (Player player : Bukkit.getOnlinePlayers()) {
-                                    player.sendTitle("Évènement", "Nuit Terrifiante", 10, 40, 20);
-                                    player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
-                                    player.playSound(player.getEyeLocation(), Sound.AMBIENT_CAVE, 1, 1);
-                                
-                                    player.addPotionEffect(new PotionEffect(
-                                        PotionEffectType.WEAKNESS,
-                                        terrifyingNightDuration,
-                                        0,
-                                        false,
-                                        false
-                                    ));
-                                
-                                    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
-                                        new AttributeModifier("terrifyingNight", -0.2, Operation.MULTIPLY_SCALAR_1)
-                                    );
-                                
-                                    Location location = player.getLocation();
-                                    World world = location.getWorld();
-                                
-                                    Chunk playerChunk = world.getChunkAt(location);
-                                
-                                
-                                    Entity[] entities = playerChunk.getEntities();
-                                
-                                    int monsterCounter = 0;
-                                
-                                    for (Entity entity : entities) {
-                                        if (entity instanceof LivingEntity) {
-                                        
-                                            LivingEntity livingEntity = (LivingEntity) entity;
-                                        
-                                            if (livingEntity instanceof Monster) {
-                                            
-                                                // full heal
-                                                livingEntity.setHealth(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-                                            
-                                                boostMonster(livingEntity, world);
-                                                monsterCounter += 1;
-                                            }
-                                        }
-                                    }
-                                
-                                    int monsteInt;
-                                    EntityType monsterType;
-                                    Location monsterLocation;
-                                    LivingEntity monster;
-                                
-                                    // ensure there is at least 8 boosted monsters in chunk (can fail)
-                                    for (int i = monsterCounter ; i < 9 ; i++) {
-                                        Random rand = new Random();
-                                        monsteInt = rand.nextInt(3);
-                                        if (monsteInt == 0) {
-                                            monsterType = EntityType.ZOMBIE;
-                                        } else if (monsteInt == 1) {
-                                            monsterType = EntityType.SKELETON;
-                                        } else {
-                                            monsterType = EntityType.CREEPER;
-                                        }
-                                    
-                                    
-                                        monsterLocation = location.clone();
-                                        monsterLocation.add((rand.nextFloat()-0.5)*20.0, 0.0, (rand.nextFloat()-0.5)*20.0);
-                                    
-                                        for (int j = 0 ; j < 20 ; j++) {
-                                            monsterLocation.add(0, 0, 1);
-                                            if (monsterLocation.getBlock().isPassable()) {
-                                                monsterLocation.add(0, 0, -1);
-                                            
-                                                monster = (LivingEntity) world.spawnEntity(monsterLocation, monsterType);
-                                                boostMonster(monster, world);
-                                            
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            
-                                // timer to the end of event
-                                new BukkitRunnable() {
-                                    @Override
-                                    public void run() {
-                                        for (Player player : Bukkit.getOnlinePlayers()) {
-                                            clearTerrifyingNight(player);
-                                            player.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
-                                        }
-                                        Bukkit.broadcastMessage(ChatColor.GREEN + "\nFin de l'évènement Nuit Terrifiante !\n");
-                                    }
-                                }.runTaskLater(plugin, terrifyingNightDuration);
-                            }
-                            break;
-
-                        case MIRACULOUS_FISHING:
-                            // every midday: 1/4 chance
-                            if (6000 <= worldTime && worldTime < 6100 && System.currentTimeMillis() - lastMiraculousFishing > miraculousFishingDuration && new Random().nextFloat() <= miraculousFishingProbability) {
-                            
-                                System.out.println("\n\nEvent started\n\n");
-                            
-                                Bukkit.broadcastMessage(ChatColor.GREEN + "Nouvel évènement en approche: " + ChatColor.BOLD + "Pêche Miraculeuse\n" + 
-                                                        ChatColor.RESET + ChatColor.GOLD + "Vous obtenez plus d'xp et de récompense en pêchat et en découvrant des coffres de structures");
-                            
-                                lastMiraculousFishing = System.currentTimeMillis();
-
-                                for (Player player : Bukkit.getOnlinePlayers()) {
-                                    player.sendTitle("Évènement", "Pêche Miraculeuse", 10, 40, 20);
-                                    player.playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-                                    player.playSound(player.getEyeLocation(), Sound.ENTITY_FISH_SWIM, 1, 1);
-                                }
-
-                                // timer to the end of event
-                                new BukkitRunnable() {
-                                    @Override
-                                    public void run() {
-                                        for (Player player : Bukkit.getOnlinePlayers()) {
-                                            player.playSound(player.getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
-                                        }
-                                        Bukkit.broadcastMessage(ChatColor.GREEN + "\nFin de l'évènement Pêche Miraculeuse !\n");
-                                    }
-                                }.runTaskLater(plugin, miraculousFishingDuration);
-                            }
-                            break;
+                    LivingEntity livingEntity = (LivingEntity) entity;
+                
+                    if (livingEntity instanceof Monster) {
                     
-                        default:
-                            break;
+                        // full heal
+                        livingEntity.setHealth(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                    
+                        boostMonster(livingEntity, world, difficulty);
+                        monsterCounter += 1;
                     }
                 }
-
-                
             }
-        };
+        
+            int monsteInt;
+            EntityType monsterType;
+            Location monsterLocation;
+            LivingEntity monster;
+        
+            // ensure there is at least 8 boosted monsters in chunk (can fail)
+            for (int i = monsterCounter ; i < 9 ; i++) {
+                Random rand = new Random();
+                monsteInt = rand.nextInt(3);
+                if (monsteInt == 0) {
+                    monsterType = EntityType.ZOMBIE;
+                } else if (monsteInt == 1) {
+                    monsterType = EntityType.SKELETON;
+                } else {
+                    monsterType = EntityType.CREEPER;
+                }
+            
+            
+                monsterLocation = location.clone();
+                monsterLocation.add((rand.nextFloat()-0.5)*20.0, 0.0, (rand.nextFloat()-0.5)*20.0);
+            
+                for (int j = 0 ; j < 20 ; j++) {
+                    monsterLocation.add(0, 0, 1);
+                    if (monsterLocation.getBlock().isPassable()) {
+                        monsterLocation.add(0, 0, -1);
+                    
+                        monster = (LivingEntity) world.spawnEntity(monsterLocation, monsterType);
+                        boostMonster(monster, world, difficulty);
+                    
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // timer to the end of event
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    clearTerrifyingNight(player);
+                    player.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
+                }
+                Bukkit.broadcastMessage(ChatColor.GREEN + "\nFin de l'évènement Nuit Terrifiante !\n");
+            }
+        }.runTaskLater(plugin, terrifyingNightDuration);
 
-        // runs every 100 ticks
-        eventRunnable.runTaskTimer(plugin, 0, 100);
+        return true;
+    }
+
+    // returns true if succeeded
+    public boolean startMiraculousFishing() {
+        if (isInMiraculousFishing()) {
+            return false;
+        }
+
+        System.out.println("\n\nEvent started\n\n");
+                            
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Nouvel évènement en approche: " + ChatColor.BOLD + "Pêche Miraculeuse\n" + 
+                                ChatColor.RESET + ChatColor.GOLD + "Vous obtenez plus d'xp et de récompense en pêchat et en découvrant des coffres de structures");
+        
+        lastMiraculousFishing = System.currentTimeMillis();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendTitle("Évènement", "Pêche Miraculeuse", 10, 40, 20);
+            player.playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+            player.playSound(player.getEyeLocation(), Sound.ENTITY_FISH_SWIM, 1, 1);
+        }
+
+        // timer to the end of event
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.playSound(player.getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
+                }
+                Bukkit.broadcastMessage(ChatColor.GREEN + "\nFin de l'évènement Pêche Miraculeuse !\n");
+            }
+        }.runTaskLater(plugin, miraculousFishingDuration);
+
+        return true;
     }
 
     // Les monstres pourront être rendus plus puissants avec la progression des joueurs
-    private void boostMonster(LivingEntity livingEntity, World world) {
-        livingEntity.addPotionEffect(new PotionEffect(
+    private void boostMonster(LivingEntity livingEntity, World world, Integer difficulty) {
+        if (difficulty == EventsDifficulties.EASY) {
+            livingEntity.addPotionEffect(new PotionEffect(
                 PotionEffectType.SPEED,
                 terrifyingNightDuration,
                 0,
                 false,
                 false
             ));
-        livingEntity.addPotionEffect(new PotionEffect(
-            PotionEffectType.RESISTANCE,
-            terrifyingNightDuration,
-            0,
-            false,
-            true
-        ));
+            livingEntity.addPotionEffect(new PotionEffect(
+                PotionEffectType.RESISTANCE,
+                terrifyingNightDuration,
+                0,
+                false,
+                true
+            ));
+        } else if (difficulty == EventsDifficulties.NORMAL) {
+            livingEntity.addPotionEffect(new PotionEffect(
+                PotionEffectType.SPEED,
+                terrifyingNightDuration,
+                1,
+                false,
+                false
+            ));
+            livingEntity.addPotionEffect(new PotionEffect(
+                PotionEffectType.RESISTANCE,
+                terrifyingNightDuration,
+                0,
+                false,
+                true
+            ));
+        } else if (difficulty == EventsDifficulties.NORMAL) {
+            livingEntity.addPotionEffect(new PotionEffect(
+                PotionEffectType.SPEED,
+                terrifyingNightDuration,
+                1,
+                false,
+                false
+            ));
+            livingEntity.addPotionEffect(new PotionEffect(
+                PotionEffectType.RESISTANCE,
+                terrifyingNightDuration,
+                1,
+                false,
+                true
+            ));
+        }
         livingEntity.addPotionEffect(new PotionEffect(
             PotionEffectType.GLOWING,
             terrifyingNightDuration,
@@ -292,19 +345,42 @@ public class EventsManager implements Listener {
             case EntityType.ZOMBIE:
                 livingEntity.setMetadata("terrifyingNightTime", new FixedMetadataValue(plugin, System.currentTimeMillis()));
             
-                ItemStack sword = new ItemStack(Material.IRON_SWORD);
-                sword.addEnchantment(Enchantment.KNOCKBACK, 1);
-                sword.addEnchantment(Enchantment.SHARPNESS, 1);
+                ItemStack sword;
+                if (difficulty == EventsDifficulties.HARD) {
+                    sword = new ItemStack(Material.DIAMOND_SWORD);
+                } else {
+                    sword = new ItemStack(Material.IRON_SWORD);
+                }
+                if (difficulty != EventsDifficulties.EASY) {
+                    sword.addEnchantment(Enchantment.KNOCKBACK, 1);
+                    sword.addEnchantment(Enchantment.SHARPNESS, 1);
+                }
 
                 livingEntity.getEquipment().setItemInMainHand(sword);
 
-                ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+                ItemStack chestplate;
+                if (difficulty == EventsDifficulties.EASY) {
+                    chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+                } else if (difficulty == EventsDifficulties.NORMAL) {
+                    chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+                } else {
+                    chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+                }
+                
                 chestplate.addEnchantment(Enchantment.PROTECTION, 4);
                 chestplate.addEnchantment(Enchantment.BLAST_PROTECTION, 4);
 
                 livingEntity.getEquipment().setChestplate(chestplate, false);
 
-                ItemStack helmet = new ItemStack(Material.IRON_HELMET);
+                ItemStack helmet;
+                if (difficulty == EventsDifficulties.EASY) {
+                    helmet = new ItemStack(Material.CHAINMAIL_HELMET);
+                } else if (difficulty == EventsDifficulties.NORMAL) {
+                    helmet = new ItemStack(Material.IRON_HELMET);
+                } else {
+                    helmet = new ItemStack(Material.DIAMOND_HELMET);
+                }
+
                 helmet.addEnchantment(Enchantment.PROTECTION, 4);
                 helmet.addEnchantment(Enchantment.BLAST_PROTECTION, 4);
 
@@ -321,13 +397,25 @@ public class EventsManager implements Listener {
 
                 livingEntity.getEquipment().setItemInMainHand(bow);
 
-                chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+                if (difficulty == EventsDifficulties.EASY) {
+                    chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+                } else if (difficulty == EventsDifficulties.NORMAL) {
+                    chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+                } else {
+                    chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+                }
                 chestplate.addEnchantment(Enchantment.PROTECTION, 4);
                 chestplate.addEnchantment(Enchantment.BLAST_PROTECTION, 4);
 
                 livingEntity.getEquipment().setChestplate(chestplate, false);
 
-                helmet = new ItemStack(Material.IRON_HELMET);
+                if (difficulty == EventsDifficulties.EASY) {
+                    helmet = new ItemStack(Material.CHAINMAIL_HELMET);
+                } else if (difficulty == EventsDifficulties.NORMAL) {
+                    helmet = new ItemStack(Material.IRON_HELMET);
+                } else {
+                    helmet = new ItemStack(Material.DIAMOND_HELMET);
+                }
                 helmet.addEnchantment(Enchantment.PROTECTION, 4);
                 helmet.addEnchantment(Enchantment.BLAST_PROTECTION, 4);
 
@@ -340,8 +428,15 @@ public class EventsManager implements Listener {
 
                 Creeper creeper = (Creeper) livingEntity;
 
-                // creeper.setExplosionRadius(6); can be uncommented later
-                creeper.setVisualFire(true);
+                if (difficulty == EventsDifficulties.EASY) {
+                    creeper.setExplosionRadius(3);
+                } else if (difficulty == EventsDifficulties.NORMAL) {
+                    creeper.setExplosionRadius(4);
+                    creeper.setVisualFire(true);
+                } else {
+                    creeper.setExplosionRadius(5);
+                    creeper.setVisualFire(true);
+                }
 
                 world.spawnEntity(livingEntity.getLocation(), EntityType.CREEPER);
 
@@ -350,20 +445,21 @@ public class EventsManager implements Listener {
             default:
                 break;
         }
+        livingEntity.getEquipment().setHelmetDropChance(0);
+        livingEntity.getEquipment().setChestplateDropChance(0);
+        livingEntity.getEquipment().setItemInMainHandDropChance(0);
     }
 
     public boolean isInTerrifyingNight() {
         return System.currentTimeMillis() - lastTerrifyingNight < terrifyingNightDurationMillis;
     }
-
-    private void clearTerrifyingNight(Player player) {        
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event){
+        clearTerrifyingNight(event.getPlayer());
+    }
+    private void clearTerrifyingNight(Player player) {
         AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-
-        for (AttributeModifier modifier : attribute.getModifiers()) {
-            if (modifier.getName().equals("terrifyingNight")) {
-                attribute.removeModifier(modifier);
-            }
-        }
+        attribute.getModifiers().removeIf(modifier -> modifier.getName().equals("terrifyingNight"));
     }
 
     @EventHandler
@@ -1019,7 +1115,60 @@ public class EventsManager implements Listener {
         }
     }
 
-    public void close() {
-        eventRunnable.cancel();
+    public void start() {
+        if (!isRunning) {
+            eventRunnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (Bukkit.getOnlinePlayers().isEmpty()) return;
+                    
+                    World overworld = Bukkit.getWorlds().get(0);
+    
+                    long worldTime = overworld.getTime();
+    
+                    // handle enabled events
+                    for (int event : enabledEvents) {
+                        switch (event) {
+                            case TERRIFYING_NIGHT:
+                                // every midnight: 1/4 chance but not twice in a row
+                                if (18000 <= worldTime && worldTime < 18100 && System.currentTimeMillis() - lastTerrifyingNight > 20*61000 && new Random().nextFloat() <= terrifyingNightProbability) {
+                                    startTerrifyingNight();
+                                }
+                                break;
+    
+                            case MIRACULOUS_FISHING:
+                                // every midday: 1/4 chance
+                                if (6000 <= worldTime && worldTime < 6100 && System.currentTimeMillis() - lastMiraculousFishing > miraculousFishingDuration && new Random().nextFloat() <= miraculousFishingProbability) {
+                                    startMiraculousFishing();
+                                }
+                                break;
+                        
+                            default:
+                                break;
+                        }
+                    }
+                }
+            };
+            // runs every 100 ticks
+            eventRunnable.runTaskTimer(plugin, 0, 100);
+            
+            isRunning = true;
+        }
+    }
+    public void stop() {
+        if (isRunning) {
+            eventRunnable.cancel();
+            isRunning = false;
+        }
+    }
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public boolean isTerrifyingNightEnabled() {
+        return enabledEvents.contains(TERRIFYING_NIGHT);
+    }
+    public boolean isMiraculousFishingEnabled() {
+        return enabledEvents.contains(MIRACULOUS_FISHING);
     }
 }
