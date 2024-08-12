@@ -22,6 +22,7 @@ import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
+import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
 import fr.communaywen.core.commands.socials.DiscordCommand;
 import fr.communaywen.core.commands.socials.GithubCommand;
 import fr.communaywen.core.commands.teams.TeamAdminCommand;
@@ -203,6 +204,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new DiscordCommand(this),
                 new ShowCraftCommand(managers.getCustomItemsManager()),
                 new ReportCommands()
+                new ReportCommands(),
+                new ChatChannelCMD(),
+                new MailboxCommand(),
+                new RandomEventsCommand(this)
         );
 
         /*  --------  */
