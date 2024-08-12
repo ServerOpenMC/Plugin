@@ -62,54 +62,41 @@ public class TPACommandGUI extends PaginatedMenu {
     }
 
     private ItemStack createButton(Material material, String name, String itemId) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(name);
-            meta.getPersistentDataContainer().set(MenuLib.getItemIdKey(), PersistentDataType.STRING, itemId);
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-
-    @Override
-    public String getName() {
-        return "Sélectionnez un joueur pour TPA";
+        return new ItemBuilder(this, material, itemMeta -> {
+            itemMeta.setDisplayName(name);
+            itemMeta.getPersistentDataContainer().set(MenuLib.getItemIdKey(), PersistentDataType.STRING, itemId);
+        }).build();
     }
 
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getCurrentItem() == null) return;
+        super.onInventoryClick(event);
 
-        ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem.getType() == Material.PLAYER_HEAD) {
-            ItemMeta meta = clickedItem.getItemMeta();
-            if (meta != null) {
-                String playerName = meta.getDisplayName().replace("§a", "");
-                Player target = Bukkit.getPlayer(playerName);
-                if (target != null) {
-                    TPACommand.sendTPARequest(getOwner(), target, plugin);
-                    getOwner().closeInventory();
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+            return;
+        }
+
+        String itemId = MenuLib.getItemId(event.getCurrentItem());
+        if (itemId == null) return;
+
+        switch (itemId) {
+            case "previous_page":
+                if (!isFirstPage()) {
+                    setPage(getPage() - 1);
+                    open();
                 }
-            }
-        } else if (MenuLib.getItemIdKey().equals(meta.getPersistentDataContainer().get(MenuLib.getItemIdKey(), PersistentDataType.STRING))) {
-            switch (meta.getPersistentDataContainer().get(MenuLib.getItemIdKey(), PersistentDataType.STRING)) {
-                case "previous_page":
-                    if (getPage() > 0) {
-                        setPage(getPage() - 1);
-                        open();
-                    }
-                    break;
-                case "next_page":
-                    if (!isLastPage()) {
-                        setPage(getPage() + 1);
-                        open();
-                    }
-                    break;
-                case "close":
-                    getOwner().closeInventory();
-                    break;
-            }
+                break;
+            case "next_page":
+                if (!isLastPage()) {
+                    setPage(getPage() + 1);
+                    open();
+                }
+                break;
+            case "close":
+                getOwner().closeInventory();
+                break;
+            default:
+                break;
         }
     }
 }
