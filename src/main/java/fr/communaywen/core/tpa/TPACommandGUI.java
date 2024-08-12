@@ -55,17 +55,18 @@ public class TPACommandGUI extends PaginatedMenu {
     @Override
     public Map<Integer, ItemStack> getButtons() {
         Map<Integer, ItemStack> buttons = new HashMap<>();
-        buttons.put(48, createButton(Material.RED_CONCRETE, "§cPrevious"));
-        buttons.put(49, createButton(Material.BARRIER, "§7Close"));
-        buttons.put(50, createButton(Material.GREEN_CONCRETE, "§aNext"));
+        buttons.put(48, createButton(Material.RED_CONCRETE, "§cPrevious", "previous_page"));
+        buttons.put(49, createButton(Material.BARRIER, "§7Close", "close"));
+        buttons.put(50, createButton(Material.GREEN_CONCRETE, "§aNext", "next_page"));
         return buttons;
     }
 
-    private ItemStack createButton(Material material, String name) {
+    private ItemStack createButton(Material material, String name, String itemId) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
+            meta.getPersistentDataContainer().set(MenuLib.getItemIdKey(), PersistentDataType.STRING, itemId);
             item.setItemMeta(meta);
         }
         return item;
@@ -78,16 +79,36 @@ public class TPACommandGUI extends PaginatedMenu {
 
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getCurrentItem() != null) {
-            ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem.getType() == Material.PLAYER_HEAD) {
-                ItemMeta meta = clickedItem.getItemMeta();
-                String playerName = meta != null ? meta.getDisplayName().replace("§a", "") : "Unknown";
+        if (event.getCurrentItem() == null) return;
+
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem.getType() == Material.PLAYER_HEAD) {
+            ItemMeta meta = clickedItem.getItemMeta();
+            if (meta != null) {
+                String playerName = meta.getDisplayName().replace("§a", "");
                 Player target = Bukkit.getPlayer(playerName);
                 if (target != null) {
                     TPACommand.sendTPARequest(getOwner(), target, plugin);
                     getOwner().closeInventory();
                 }
+            }
+        } else if (MenuLib.getItemIdKey().equals(meta.getPersistentDataContainer().get(MenuLib.getItemIdKey(), PersistentDataType.STRING))) {
+            switch (meta.getPersistentDataContainer().get(MenuLib.getItemIdKey(), PersistentDataType.STRING)) {
+                case "previous_page":
+                    if (getPage() > 0) {
+                        setPage(getPage() - 1);
+                        open();
+                    }
+                    break;
+                case "next_page":
+                    if (!isLastPage()) {
+                        setPage(getPage() + 1);
+                        open();
+                    }
+                    break;
+                case "close":
+                    getOwner().closeInventory();
+                    break;
             }
         }
     }
