@@ -1,1 +1,6 @@
+# Probability of triggering the event each day
+terrifyingNightProbability: 0.2
+miraculousFishingProbability: 0.2
+
+# Disabled events (can be overriten with /events command)
 disabledEvents:
