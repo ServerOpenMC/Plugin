@@ -203,7 +203,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FallBloodCommand(),
                 new DiscordCommand(this),
                 new ShowCraftCommand(managers.getCustomItemsManager()),
-                new ReportCommands()
+                new ReportCommands(),
                 new ReportCommands(),
                 new ChatChannelCMD(),
                 new MailboxCommand(),
