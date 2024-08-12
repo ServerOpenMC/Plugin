@@ -338,9 +338,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ItemStack crazyPotion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
 
-        meta.setDisplayName("§k NEW §r §4 Crazy Potion §r §k NEW");
+        meta.setDisplayName("§k NEW §r §4 Mining Potion §r §k NEW");
         meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
-        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 55), true);
 
         crazyPotion.setItemMeta(meta);
 
