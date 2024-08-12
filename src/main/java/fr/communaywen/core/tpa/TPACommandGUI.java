@@ -55,48 +55,40 @@ public class TPACommandGUI extends PaginatedMenu {
     @Override
     public Map<Integer, ItemStack> getButtons() {
         Map<Integer, ItemStack> buttons = new HashMap<>();
-        buttons.put(48, createButton(Material.RED_CONCRETE, "§cPrevious", "previous_page"));
-        buttons.put(49, createButton(Material.BARRIER, "§7Close", "close"));
-        buttons.put(50, createButton(Material.GREEN_CONCRETE, "§aNext", "next_page"));
+        buttons.put(48, createButton(Material.RED_CONCRETE, "§cPrevious"));
+        buttons.put(49, createButton(Material.BARRIER, "§7Close"));
+        buttons.put(50, createButton(Material.GREEN_CONCRETE, "§aNext"));
         return buttons;
     }
 
-    private ItemStack createButton(Material material, String name, String itemId) {
-        return new ItemBuilder(this, material, itemMeta -> {
-            itemMeta.setDisplayName(name);
-            itemMeta.getPersistentDataContainer().set(MenuLib.getItemIdKey(), PersistentDataType.STRING, itemId);
-        }).build();
+    private ItemStack createButton(Material material, String name) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    @Override
+    public String getName() {
+        return "Sélectionnez un joueur pour TPA";
     }
 
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
-        super.onInventoryClick(event);
-
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
-            return;
-        }
-
-        String itemId = MenuLib.getItemId(event.getCurrentItem());
-        if (itemId == null) return;
-
-        switch (itemId) {
-            case "previous_page":
-                if (!isFirstPage()) {
-                    setPage(getPage() - 1);
-                    open();
+        if (event.getCurrentItem() != null) {
+            ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem.getType() == Material.PLAYER_HEAD) {
+                ItemMeta meta = clickedItem.getItemMeta();
+                String playerName = meta != null ? meta.getDisplayName().replace("§a", "") : "Unknown";
+                Player target = Bukkit.getPlayer(playerName);
+                if (target != null) {
+                    TPACommand.sendTPARequest(getOwner(), target, plugin);
+                    getOwner().closeInventory();
                 }
-                break;
-            case "next_page":
-                if (!isLastPage()) {
-                    setPage(getPage() + 1);
-                    open();
-                }
-                break;
-            case "close":
-                getOwner().closeInventory();
-                break;
-            default:
-                break;
+            }
         }
     }
 }
