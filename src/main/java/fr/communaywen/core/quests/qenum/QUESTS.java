@@ -15,7 +15,7 @@ public enum QUESTS {
     EAT_KEBAB(Material.COOKED_BEEF, 10, TYPE.EAT, "Miam Miam", "Kebabs", REWARD.MONEY, 100, TIER.TIER_1),
     CRAFT_KEBAB(Material.BREAD, 1, TYPE.CRAFT, "Kebabier un jour, Kebabier toujours", "Kebab", REWARD.MONEY, 62, TIER.TIER_1),
     WALK_BLOCKS(Material.LEATHER_BOOTS, 20000, TYPE.WALK, "Le randonneur", "block", REWARD.MONEY, 10000, TIER.TIER_1),
-    WALK_BLOCKS2(Material.LEATHER_BOOTS, 100000, TYPE.WALK, "Le randonneur de l'extrême", "block", REWARD.MONEY, 20000,TIER.TIER_1),
+    //WALK_BLOCKS2(Material.LEATHER_BOOTS, 100000, TYPE.WALK, "Le randonneur de l'extrême", "block", REWARD.MONEY, 20000,TIER.TIER_1),
     WALK_MAX_HIGH(Material.SNOW_BLOCK, 1, TYPE.WALK, "En altitude", "fois en couche maximal.", REWARD.MONEY, 500,TIER.TIER_1),
     SMELT_IRON(Material.IRON_ORE, 256, TYPE.SMELT, "Chaud devant !", "de fer", REWARD.MONEY, 2000, TIER.TIER_1),
     ENCHANT_FIRST_ITEM(Material.ENCHANTED_BOOK, 1, TYPE.ENCHANT, "Abracadabra !", "item", REWARD.MONEY, 200, TIER.TIER_1),
