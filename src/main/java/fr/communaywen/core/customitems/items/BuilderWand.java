@@ -3,6 +3,7 @@ package fr.communaywen.core.customitems.items;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.customitems.enums.ConfigNames;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
@@ -22,16 +23,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
+@Feature("Builder Wand")
 @Getter
 @Setter
-@Credit("Fnafgameur") // Credit to LVXN456 for the idea
+@Credit("Fnafgameur")
+/* Credit to
+ * LVXN456 for the idea
+ * _BGIO_ for the 3D model
+ */
 public class BuilderWand implements CustomItems {
 
     private String name;
