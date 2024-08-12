@@ -185,7 +185,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new TpacceptCommand(this),
                 new TpcancelCommand(),
                 new TPAGUICommand(this),
-                new TPACommandGUI(this),
                 new TpcancelCommand(),
                 new TpdenyCommand(),
                 new CreditCommand(),
