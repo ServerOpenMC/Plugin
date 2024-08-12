@@ -185,7 +185,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ScoreboardCommand(),
                 new ProutCommand(),
                 new TPACommand(this),
-                new TpacceptCommand(this),  // Pass the plugin instance
+                new TpacceptCommand(this),
+                new TpcancelCommand(),
+                new TPAGUICommand(this),
+                new TPACommandGUI(this),
                 new TpcancelCommand(),
                 new TpdenyCommand(),
                 new CreditCommand(),
