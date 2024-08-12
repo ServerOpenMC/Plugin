@@ -54,29 +54,6 @@ public class ClaimListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onPistonFlip(BlockPistonRetractEvent event) {
-        for (Block block : event.getBlocks()) {
-            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
-                if (region.isInArea(block.getLocation()) || region.isInArea(block.getRelative(event.getDirection()).getLocation())) {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPistonExtend(BlockPistonExtendEvent event) {
-        for (Block block : event.getBlocks()) {
-            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
-                if (region.isInArea(block.getLocation()) || region.isInArea(block.getRelative(event.getDirection()).getLocation())) {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-        }
-    }
 
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
