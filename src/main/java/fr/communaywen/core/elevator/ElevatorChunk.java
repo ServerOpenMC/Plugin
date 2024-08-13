@@ -62,9 +62,8 @@ public class ElevatorChunk {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if (teleportingPlayers.get(player) == this) {
-                    elevatorTeleport(player, location, size, isJump);
-                }
+                teleportingPlayers.remove(player);
+                elevatorTeleport(player, location, size, isJump);
             }
         };
         runnable.runTaskLater(plugin, TELEPORT_DELAY);
@@ -72,7 +71,11 @@ public class ElevatorChunk {
     }
 
     public static boolean removePlayer(Player player) {
-        return teleportingPlayers.remove(player) != null;
+        BukkitRunnable runnable = teleportingPlayers.remove(player);
+        if (runnable != null) {
+            runnable.cancel();
+            return true;
+        } else return false;
     }
 
     public void unload(Chunk chunk) {
