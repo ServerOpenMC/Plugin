@@ -43,6 +43,12 @@ public class CloudSoup implements Listener {
         }
     }
 
+    public void close() {
+        for (UUID playeruuid : cooldown.keySet()) {
+            plugin.getServer().getOfflinePlayer(playeruuid).setAllowFlight(false);
+        }
+    }
+
     public void startTimer(Player player) {
         UUID playeruuid = player.getUniqueId();
         cooldown.put(playeruuid, 300); //300s = 5 minutes

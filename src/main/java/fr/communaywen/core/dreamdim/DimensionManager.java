@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 
 import fr.communaywen.core.dreamdim.populators.*;
 import fr.communaywen.core.dreamdim.listeners.*;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class DimensionManager implements Listener {
     AywenCraftPlugin plugin;
     Server server;
     AdvancementRegister register;
+    CloudSoup cloudSoup;
 
     public DimensionManager(AywenCraftPlugin Plugin) {
         this.plugin = Plugin;
@@ -30,9 +32,12 @@ public class DimensionManager implements Listener {
     public void init() {
         createDimension();
         this.register = new AdvancementRegister(plugin);
+
+        this.cloudSoup = new CloudSoup(plugin);
+
         plugin.registerEvents(
                 new CodexSomnii(),
-                new CloudSoup(plugin),
+                cloudSoup,
                 new BlockPlacement(register),
                 new EatListener(plugin),
                 new EnterWorldListener(plugin, register),
@@ -74,5 +79,6 @@ public class DimensionManager implements Listener {
             }
         }
         register.saveAll();
+        this.cloudSoup.close();
     }
 }
