@@ -103,6 +103,15 @@ public class AdvancementRegister extends DatabaseConnector implements Listener {
             case "aywen:bed_sweet_bed":
                 giveMoney(player, 100, "Advancements Bed Sweet Bed");
                 break;
+            case "aywen:pit_of_dreams":
+                giveMoney(player, 500, "Advancements Pit Of Dreams");
+                break;
+            case "aywen:leave_earth":
+                giveMoney(player, 500, "Advancements Leave Earth");
+                break;
+            case "aywen:dreamrush":
+                giveMoney(player, 500, "Advancements Leave Earth");
+                break;
         }
     }
 
