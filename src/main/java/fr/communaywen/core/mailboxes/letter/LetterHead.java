@@ -1,6 +1,7 @@
 package fr.communaywen.core.mailboxes.letter;
 
 import fr.communaywen.core.mailboxes.menu.letter.Letter;
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -15,8 +16,10 @@ import java.util.ArrayList;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getPlayerName;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.nonItalic;
+import static fr.communaywen.core.mailboxes.utils.SkullOwner.setSkullOwner;
 import static fr.communaywen.core.utils.StringDateFormatter.formatRelativeDate;
 
+@Getter
 public class LetterHead extends ItemStack {
     private final int id;
     private final int itemsCount;
@@ -28,7 +31,6 @@ public class LetterHead extends ItemStack {
         this.itemsCount = itemsCount;
         this.items = items;
         SkullMeta skullMeta = (SkullMeta) this.getItemMeta();
-        skullMeta.setOwningPlayer(player);
         skullMeta.displayName(getPlayerName(player));
         ArrayList<Component> lore = new ArrayList<>();
         Component firstLine = Component.text(formatRelativeDate(sentAt), NamedTextColor.DARK_GRAY);
@@ -39,14 +41,11 @@ public class LetterHead extends ItemStack {
         lore.add(nonItalic(secondLine));
         skullMeta.lore(lore);
         this.setItemMeta(skullMeta);
+        setSkullOwner(this, player);
     }
 
     public LetterHead(OfflinePlayer player, int id, int itemsCount, LocalDateTime sentAt) {
         this(player, id, itemsCount, sentAt, null);
-    }
-
-    public ItemStack[] getItems() {
-        return items;
     }
 
     public void openLetter(Player player) {
@@ -54,11 +53,4 @@ public class LetterHead extends ItemStack {
         letter.openInventory();
     }
 
-    public int getItemsCount() {
-        return itemsCount;
-    }
-
-    public int getId() {
-        return id;
-    }
 }
