@@ -94,7 +94,8 @@ public class EnterWorldListener implements Listener {
                         "aywen:dream_log",
                         "aywen:cloud",
                         "aywen:dream_planks",
-                        "aywen:dream_essence").contains(customStack.getNamespacedID())) {
+                        "aywen:dream_essence",
+                        "aywen:cloud_soup").contains(customStack.getNamespacedID())) {
                     inv.remove(itemStack);
                 }
             }

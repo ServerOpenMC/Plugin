@@ -2,6 +2,7 @@ package fr.communaywen.core.dreamdim.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.dreamdim.AdvancementRegister;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,9 +17,11 @@ import java.util.UUID;
 public class CloudSoup implements Listener {
     HashMap<UUID, Integer> cooldown = new HashMap<>();
     AywenCraftPlugin plugin;
+    AdvancementRegister register;
 
-    public CloudSoup(AywenCraftPlugin plugin) {
+    public CloudSoup(AywenCraftPlugin plugin, AdvancementRegister register) {
         this.plugin = plugin;
+        this.register = register;
     }
 
     @EventHandler
@@ -27,18 +30,19 @@ public class CloudSoup implements Listener {
         Player player = event.getPlayer();
         UUID playeruuid = player.getUniqueId();
 
-        if (customStack != null) {
-            if (customStack.getNamespacedID().equals("aywen:cloud_soup")) {
-                if (cooldown.containsKey(player.getUniqueId())) {
-                    cooldown.put(playeruuid, cooldown.get(playeruuid) + 300);
-                    int minutes_timeleft = cooldown.get(playeruuid) / 60;
-                    int seconds_timeleft = cooldown.get(playeruuid) % 60;
-                    player.sendMessage("§aVous pouvez voler pendant 5 minutes de plus ("+minutes_timeleft+"min "+seconds_timeleft+"sec)");
-                } else {
-                    player.sendMessage("§aVous pouvez voler pendant 5 minutes.");
-                    startTimer(player);
-                    event.setReplacement(new ItemStack(Material.BOWL, 1));
-                }
+        if (customStack == null) { return; }
+        if (customStack.getNamespacedID().equals("aywen:cloud_soup")) {
+            register.grantAdvancement(player, "aywen:leave_earth");
+
+            if (cooldown.containsKey(player.getUniqueId())) {
+                cooldown.put(playeruuid, cooldown.get(playeruuid) + 300);
+                int minutes_timeleft = cooldown.get(playeruuid) / 60;
+                int seconds_timeleft = cooldown.get(playeruuid) % 60;
+                player.sendMessage("§aVous pouvez voler pendant 5 minutes de plus ("+minutes_timeleft+"min "+seconds_timeleft+"sec)");
+            } else {
+                player.sendMessage("§aVous pouvez voler pendant 5 minutes.");
+                startTimer(player);
+                event.setReplacement(new ItemStack(Material.BOWL, 1));
             }
         }
     }

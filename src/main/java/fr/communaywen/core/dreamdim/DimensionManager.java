@@ -33,10 +33,10 @@ public class DimensionManager implements Listener {
         createDimension();
         this.register = new AdvancementRegister(plugin);
 
-        this.cloudSoup = new CloudSoup(plugin);
+        this.cloudSoup = new CloudSoup(plugin, register);
 
         plugin.registerEvents(
-                new CodexSomnii(),
+                new CodexSomnii(register),
                 cloudSoup,
                 new BlockPlacement(register),
                 new EatListener(plugin),
