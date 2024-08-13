@@ -99,7 +99,7 @@ public class ElevatorChunk {
         int y = block.getY(), x = block.getX(), z = block.getZ();
         int target = coordinateManager.getTarget(x, y, z, isJump);
         if (target == y) return;
-        Location location = new Location(player.getWorld(), x + 0.5, target + 1, z + 0.5);
+        Location location = player.getLocation().clone().set(x + 0.5, target + 1, z + 0.5);
         int size = coordinateManager.getCount(x, z);
         if (isGoodLocation(player.getWorld(), location)) {
             elevatorTeleport(player, location, size, isJump);
