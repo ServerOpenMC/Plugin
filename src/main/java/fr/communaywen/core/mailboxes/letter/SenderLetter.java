@@ -1,6 +1,5 @@
 package fr.communaywen.core.mailboxes.letter;
 
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -11,18 +10,17 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static fr.communaywen.core.mailboxes.utils.SkullOwner.setSkullOwner;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 import static fr.communaywen.core.utils.StringDateFormatter.formatRelativeDate;
 
-@Getter
-public class PendingLetter extends ItemStack {
+public class SenderLetter extends ItemStack {
     private final int id;
 
-    public PendingLetter(OfflinePlayer player, int id, int itemsCount, LocalDateTime sentAt, boolean refused) {
+    public SenderLetter(OfflinePlayer player, int id, int itemsCount, LocalDateTime sentAt, boolean refused) {
         super(Material.PLAYER_HEAD, 1);
         this.id = id;
         SkullMeta skullMeta = (SkullMeta) this.getItemMeta();
+        skullMeta.setOwningPlayer(player);
         skullMeta.displayName(getStatus(refused));
         ArrayList<Component> lore = new ArrayList<>();
         lore.add(colorText("➡ Cliquez pour annuler", NamedTextColor.YELLOW, true));
@@ -30,7 +28,6 @@ public class PendingLetter extends ItemStack {
         lore.add(colorText(formatRelativeDate(sentAt) + ", " + itemsCount + " " + getItemCount(itemsCount), NamedTextColor.DARK_GRAY, true));
         skullMeta.lore(lore);
         this.setItemMeta(skullMeta);
-        setSkullOwner(this, player);
     }
 
     public static Component getStatus(boolean refused) {
@@ -42,4 +39,7 @@ public class PendingLetter extends ItemStack {
         return nonItalic(status);
     }
 
+    public int getId() {
+        return id;
+    }
 }

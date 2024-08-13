@@ -13,8 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
-import static fr.communaywen.core.mailboxes.utils.SkullOwner.setSkullOwner;
-
 public class MailboxUtils {
     public static Component getPlayerName(OfflinePlayer player) {
         String pName = player.getName();
@@ -30,7 +28,7 @@ public class MailboxUtils {
     public static ItemStack getHead(OfflinePlayer player, Component name) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
-        setSkullOwner(head, player);
+        meta.setOwningPlayer(player);
         meta.displayName(nonItalic(name));
         head.setItemMeta(meta);
         return head;
