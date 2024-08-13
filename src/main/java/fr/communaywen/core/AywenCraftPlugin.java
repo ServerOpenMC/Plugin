@@ -31,6 +31,7 @@ import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
 import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
+import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
@@ -38,6 +39,7 @@ import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
+import fr.communaywen.core.managers.ChunkListManager;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
@@ -264,7 +266,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIEnchantListener(managers.getCustomItemsManager()),
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
-                new MailboxListener()
+                new MailboxListener(),
+                new ElevatorListener(),
+                new ChunkListManager()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
