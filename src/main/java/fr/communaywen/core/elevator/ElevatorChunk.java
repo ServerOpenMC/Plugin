@@ -30,20 +30,16 @@ public class ElevatorChunk {
         this.coordinateManager = new CoordinateManager(data);
     }
 
-    private static boolean isGoodLocation(World world, Location location) {
+    private static boolean isGoodLocation(Location location) {
         Block block = location.getBlock();
         return checkBlock(block) && checkBlock(block.getRelative(BlockFace.UP));
     }
 
     private static boolean checkBlock(Block block) {
         Material material = block.getType();
-        return material.isAir() ||
-                (block.isLiquid() && safeFluid(material)) ||
-                block.isPassable() || !material.isCollidable();
-    }
-
-    private static boolean safeFluid(Material material) {
-        return material != Material.LAVA;
+        return material != Material.LAVA && (material.isAir() ||
+                block.isLiquid() ||
+                block.isPassable() || !material.isCollidable());
     }
 
     private static void elevatorTeleport(Player player, Location location, int size, boolean isJump) {
@@ -101,7 +97,7 @@ public class ElevatorChunk {
         if (target == y) return;
         Location location = player.getLocation().clone().set(x + 0.5, target + 1, z + 0.5);
         int size = coordinateManager.getCount(x, z);
-        if (isGoodLocation(player.getWorld(), location)) {
+        if (isGoodLocation(location)) {
             elevatorTeleport(player, location, size, isJump);
         } else {
             elevatorDelayTeleport(player, location, size, isJump, block);
