@@ -25,9 +25,6 @@ permissions:
   ayw.command.rules:
     description: 'Rules'
     default: true
-  ayw.command.tpagui:
-    description: 'tpagui'
-    default: true
   ayw.command.rtp:
     description: 'rtp'
     default: true
