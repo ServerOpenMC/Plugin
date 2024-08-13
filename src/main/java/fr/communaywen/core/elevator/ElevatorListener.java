@@ -11,10 +11,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import static fr.communaywen.core.elevator.ElevatorManager.ELEVATOR_NAMESPACE;
 import static fr.communaywen.core.elevator.ElevatorManager.isElevator;
+import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendFailureMessage;
 
 public class ElevatorListener implements Listener {
     private static final AywenCraftPlugin plugin = AywenCraftPlugin.getInstance();
@@ -34,6 +36,15 @@ public class ElevatorListener implements Listener {
         ChunkManager chunkManager = ChunkListManager.getChunk(block.getChunk());
         if (event.getNamespacedID().equals(ELEVATOR_NAMESPACE)) {
             chunkManager.removeElevator(block);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.hasChangedPosition()) {
+            if (ElevatorChunk.removePlayer(event.getPlayer())) {
+                sendFailureMessage(event.getPlayer(), "Vous avez bougé, téléportation annulée !");
+            }
         }
     }
 

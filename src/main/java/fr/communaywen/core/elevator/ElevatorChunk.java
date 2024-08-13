@@ -13,12 +13,17 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendWarningMessage;
 
 public class ElevatorChunk {
     private static final AywenCraftPlugin plugin = AywenCraftPlugin.getInstance();
     private static final long TELEPORT_DELAY = 60L;
+    private static final Map<Player, BukkitRunnable> teleportingPlayers = new HashMap<>();
     private final CoordinateManager coordinateManager;
 
     public ElevatorChunk(byte[] data) {
@@ -54,11 +59,20 @@ public class ElevatorChunk {
         Component message = Component.text("Vous ne pouvez pas vous téléporter ici !", NamedTextColor.GOLD)
                                      .append(Component.text("\nVous serez téléporté dans " + TELEPORT_DELAY / 20 + " secondes si vous ne bougez pas !", NamedTextColor.YELLOW));
         sendWarningMessage(player, message);
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            if (player.getLocation().getBlock().getRelative(BlockFace.DOWN) == block) {
-                elevatorTeleport(player, location, size, isJump);
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (teleportingPlayers.get(player) == this) {
+                    elevatorTeleport(player, location, size, isJump);
+                }
             }
-        }, TELEPORT_DELAY);
+        };
+        runnable.runTaskLater(plugin, TELEPORT_DELAY);
+        teleportingPlayers.put(player, runnable);
+    }
+
+    public static boolean removePlayer(Player player) {
+        return teleportingPlayers.remove(player) != null;
     }
 
     public void unload(Chunk chunk) {
@@ -78,6 +92,7 @@ public class ElevatorChunk {
     }
 
     public void processElevator(Block block, Player player, boolean isJump) {
+        if (teleportingPlayers.containsKey(player)) return;
         int y = block.getY(), x = block.getX(), z = block.getZ();
         int target = coordinateManager.getTarget(x, y, z, isJump);
         if (target == y) return;

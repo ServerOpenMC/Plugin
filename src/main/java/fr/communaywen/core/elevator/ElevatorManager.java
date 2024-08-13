@@ -8,15 +8,12 @@ import org.bukkit.block.Block;
 public class ElevatorManager {
     private static final AywenCraftPlugin plugin = AywenCraftPlugin.getInstance();
     public static final NamespacedKey DATA_KEY = new NamespacedKey(plugin, "elevator_list");
-    public static final String ELEVATOR_NAMESPACE = "aywen:elevator";
+    public static final String ELEVATOR_NAMESPACE = "gexary:elevator";
 
     public static boolean isElevator(Block block) {
         CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
         return customBlock != null && customBlock.getNamespacedID().equals(ELEVATOR_NAMESPACE);
     }
 
-    /*
-    todo: teleportation claims
-    todo: crouching
-    */
+    // todo: teleportation claims
 }
