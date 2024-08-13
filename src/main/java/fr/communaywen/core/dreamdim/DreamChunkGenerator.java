@@ -75,7 +75,7 @@ public class DreamChunkGenerator extends ChunkGenerator {
 
                                 // Randomly place vein anchors.
                                 if(random.nextFloat() < 0.002) {
-                                    if (random.nextFloat() < 0.0075) {
+                                    if (random.nextFloat() < 0.025) {
                                         neighbour = Material.ANCIENT_DEBRIS;
                                     } else {
                                         neighbour = layers.get(2).get(Math.min(random.nextInt(layers.get(2).size()), random.nextInt(layers.get(2).size()))); // A basic way to shift probability to lower values.

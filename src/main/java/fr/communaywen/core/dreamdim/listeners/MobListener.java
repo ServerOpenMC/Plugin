@@ -17,7 +17,7 @@ import java.util.Random;
 public class MobListener implements Listener {
 
     public boolean cantLive() {
-        return !(new Random().nextDouble() <= 0.15);
+        return !(new Random().nextDouble() <= 0.5);
     }
 
     public boolean hasReachCap(Entity entity) {
