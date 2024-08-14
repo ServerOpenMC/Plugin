@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class TreePopulator extends BlockPopulator {
-    private static final double TREE_PROBABILITY = 0.40;
+    private static final double TREE_PROBABILITY = 0.50;
 
     @Override
     public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull LimitedRegion limitedRegion) {

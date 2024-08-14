@@ -42,7 +42,8 @@ public class DimensionManager implements Listener {
                 new EatListener(plugin),
                 new EnterWorldListener(plugin, register),
                 new DisableSculk(),
-                new MobListener()
+                new MobListener(),
+                new TreePlacer()
         );
     }
 
@@ -53,7 +54,6 @@ public class DimensionManager implements Listener {
         creator.environment(World.Environment.NORMAL);
         World dreamworld = creator.createWorld();
 
-        assert dreamworld != null;
         dreamworld.getPopulators().add(new LightPopulator());
         dreamworld.getPopulators().add(new TreePopulator());
 
