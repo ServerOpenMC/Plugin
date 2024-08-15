@@ -21,7 +21,7 @@ public enum QUESTS {
     PLACE_BLOCK(Material.GRASS_BLOCK, 2000, TYPE.PLACE, "Builder de l'extreme !", "Blocks", REWARD.MONEY, 250, TIER.TIER_1),
 //    GET_TOTEM(Material.TOTEM_OF_UNDYING, 10, TYPE.GET, "Invincible !", "Avoir 10 totem", REWARD.MONEY, 300, TIER.TIER_1),
     MONEY_500K(Material.DIAMOND_BLOCK, 500000, TYPE.MONEY, "Devient Elon", "$", REWARD.ITEMS, 1, new ItemStack(Material.NETHERITE_INGOT), TIER.TIER_1),
-    ;
+    CRAFT_ELEVATOR(Material.PAPER, 1, TYPE.CRAFT, "Dépasse tous les niveaux !", "elevator", REWARD.MONEY, 600, TIER.TIER_2);
 
     @Getter
     private final Material material;
