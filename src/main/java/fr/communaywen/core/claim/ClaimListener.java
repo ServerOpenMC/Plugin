@@ -51,16 +51,6 @@ public class ClaimListener implements Listener {
     public void onEntityDamage(EntityDamageByEntityEvent event) { checkRegion((Player) event.getDamager(), event.getEntity().getLocation().getBlock(), event); }
 
     @EventHandler
-    public void onPistonFlip(BlockPistonRetractEvent event) {
-        handlePistonEvent(event, event.getBlock());
-    }
-
-    @EventHandler
-    public void onPistonExtend(BlockPistonExtendEvent event) {
-        handlePistonEvent(event, event.getBlock());
-    }
-
-    @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         checkRegion(player, event.getRightClicked().getLocation().getBlock(), event);
@@ -167,16 +157,6 @@ public class ClaimListener implements Listener {
         Block clickedBlock = event.getClickedBlock();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (clickedBlock != null && (clickedBlock.getType() == Material.PISTON || clickedBlock.getType() == Material.STICKY_PISTON
-                    || clickedBlock.getType() == Material.LEVER || clickedBlock.getType() == Material.STONE_BUTTON
-                    || clickedBlock.getType() == Material.BAMBOO_BUTTON || clickedBlock.getType() == Material.OAK_BUTTON
-                    || clickedBlock.getType() == Material.SPRUCE_BUTTON || clickedBlock.getType() == Material.BIRCH_BUTTON
-                    || clickedBlock.getType() == Material.JUNGLE_BUTTON || clickedBlock.getType() == Material.ACACIA_BUTTON
-                    || clickedBlock.getType() == Material.DARK_OAK_BUTTON || clickedBlock.getType() == Material.CRIMSON_BUTTON
-                    || clickedBlock.getType() == Material.WARPED_BUTTON || clickedBlock.getType() == Material.POLISHED_BLACKSTONE_BUTTON
-                    || clickedBlock.getType() == Material.REDSTONE_TORCH || clickedBlock.getType() == Material.REDSTONE_WALL_TORCH )){
-                trackRedstoneActivation(clickedBlock, event.getPlayer().getUniqueId());
-            }
 
             Block block = event.getClickedBlock().getRelative(event.getBlockFace());
             if (event.getItem() != null && event.getItem().getType() == Material.BONE_MEAL) {
@@ -368,38 +348,5 @@ public class ClaimListener implements Listener {
                 }
             }
         }
-    }
-
-    private void handlePistonEvent(BlockPistonEvent event, Block pistonBlock) {
-        UUID playerId = recentPistonActivations.get(pistonBlock);
-        if (playerId != null) {
-            Player player = Bukkit.getPlayer(playerId);
-            if (player != null) {
-                checkRegion(player, event.getBlock(), event);
-            }
-        } else {
-            checkRegion(event.getBlock(), event);
-        }
-    }
-
-    private UUID findNearbyActivator(Block pistonBlock) {
-        UUID playerId = recentPistonActivations.get(pistonBlock);
-        if (playerId != null) return playerId;
-
-        for (BlockFace face : BlockFace.values()) {
-            Block adjacentBlock = pistonBlock.getRelative(face);
-            playerId = recentPistonActivations.get(adjacentBlock);
-            if (playerId != null) return playerId;
-        }
-
-        return null;
-    }
-
-    private void trackRedstoneActivation(Block block, UUID playerId) {
-        recentPistonActivations.put(block, playerId);
-        // Nettoyer la map après un certain temps
-        Bukkit.getScheduler().runTaskLater(AywenCraftPlugin.getInstance(), () -> {
-            recentPistonActivations.remove(block);
-        }, 100L); // 5 secondes de délai
     }
 }
