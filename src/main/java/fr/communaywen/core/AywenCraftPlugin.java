@@ -19,6 +19,7 @@ import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
+import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
 import fr.communaywen.core.commands.socials.DiscordCommand;
 import fr.communaywen.core.commands.socials.GithubCommand;
 import fr.communaywen.core.commands.staff.ReportCommands;
@@ -44,8 +45,8 @@ import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
-import fr.communaywen.core.staff.freeze.FreezeCommand;
-import fr.communaywen.core.staff.players.PlayersCommand;
+import fr.communaywen.core.commands.staff.FreezeCommand;
+import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
@@ -217,7 +218,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ShowCraftCommand(managers.getCustomItemsManager()),
                 new ReportCommands(),
                 new ChatChannelCMD(),
-                new MailboxCommand()
+                new MailboxCommand(),
+                new RandomEventsCommand(this)
         );
 
         /*  --------  */

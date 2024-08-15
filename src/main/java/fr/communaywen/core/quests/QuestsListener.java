@@ -1,41 +1,47 @@
 package fr.communaywen.core.quests;
 
 import dev.lone.itemsadder.api.CustomStack;
-import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.quests.qenum.QUESTS;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 
 
 public class QuestsListener implements Listener {
+    // TODO : set jump location
+    private final Location NINJA_JUMP_END = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
         QuestsManager.loadPlayerData(event.getPlayer());
     }
 
     @EventHandler
-    public void onEnchantItem(EnchantItemEvent event){
+    public void onEnchantItem(EnchantItemEvent event) {
         QuestsManager.manageQuestsPlayer(event.getEnchanter(), QUESTS.ENCHANT_FIRST_ITEM, 1, "Objet enchanté");
     }
 
@@ -55,8 +61,19 @@ public class QuestsListener implements Listener {
         }
     }
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
+    public void onBlockPlace(BlockPlaceEvent event) {
         QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.PLACE_BLOCK, 1, "block placés.");
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onStructureGrow(StructureGrowEvent event) {
+
+        Player player = event.getPlayer();
+
+        // tree grown with bonemeal
+        if (player != null) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.SAVE_THE_EARTH, 1, "arbre.s planté.s");
+        }
     }
 
 //    @EventHandler
@@ -91,17 +108,25 @@ public class QuestsListener implements Listener {
         }
     }
 
-     @EventHandler
-     public void onPlayerMove(PlayerMoveEvent event) {
-         Player player = event.getPlayer();
-         Location from = event.getFrom();
-         Location to = event.getTo();
-         assert to != null;
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        assert to != null;
 
-         if (to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()) {
-             QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
-         }
-     }
+        int blockX = to.getBlockX();
+        int blockY = to.getBlockY();
+        int blockZ = to.getBlockZ();
+
+        if (blockX != from.getBlockX() || blockZ != from.getBlockZ()) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+        }
+
+        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ()) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
+        }
+    }
 
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
@@ -137,6 +162,16 @@ public class QuestsListener implements Listener {
 
         if (extractedItem.equals(iron)) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.SMELT_IRON, event.getItemAmount(), "fer(s) cuit(s)");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerFish(PlayerFishEvent event) {
+        Player player = event.getPlayer();
+        ItemStack fishedItem = ((Item) event.getCaught()).getItemStack();
+
+        if (fishedItem.getType() == Material.BREAD && fishedItem.getCustomModelData() == 42) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.HOLY_BREAD, 1, "relique du pain sacré pêchée");
         }
     }
 
