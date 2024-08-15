@@ -11,5 +11,7 @@ public enum TYPE {
     ENCHANT,
     SMELT,
     MONEY,
-    DEATH
+    DEATH,
+    FISH,
+    OTHER
 }
