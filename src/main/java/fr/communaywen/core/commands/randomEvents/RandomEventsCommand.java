@@ -22,8 +22,8 @@ public class RandomEventsCommand {
     @Command("events")
     @Description("Ouvre le menu des évènements aléatoires")
     public void adminShop(Player player) {
-        RandomEventsMenu menu = new RandomEventsMenu(player, plugin);
-        menu.open();
+//        RandomEventsMenu menu = new RandomEventsMenu(player, plugin);
+//        menu.open();
     }
 
 }

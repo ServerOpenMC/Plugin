@@ -60,7 +60,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import java.util.*;
 
 // Events développés par Armibule: Nuit terrifiante, Pêche miraculeuse
-
+/*
 @Credit("Armibule")
 @Feature("RandomEvents")
 public class EventsManager implements Listener {
@@ -488,7 +488,6 @@ public class EventsManager implements Listener {
                  - rare:  6% coeur de la mer, 7% livre enchanté lvl 1, 6% potion commune, 6% golden apple
                  - épique: 2.3% bon livre enchanté, 2.3% bonne potion, 2.4% kebab fermenté/délicieux
                  - légendaire: 1% armure ancienne, 1% potion légendaire, 1% Relique du pain sacré
-                 */
                 float randomFloat = new Random().nextFloat();
                 ItemStack item;
                 int rarity;
@@ -1174,3 +1173,4 @@ public class EventsManager implements Listener {
         return enabledEvents.contains(MIRACULOUS_FISHING);
     }
 }
+*/

@@ -60,6 +60,12 @@ public abstract class PaginatedMailbox<T extends ItemStack> extends MailboxInv {
         updateInventory(true);
     }
 
+    public void addItem(T item) {
+        pageItems.add(item);
+        int size = pageItems.size() - 1;
+        if (size / maxIndex == page) updateInventory(false, size % maxIndex);
+    }
+
     protected void updateInventory(boolean clear, int index) {
         for (int i = index; i < maxIndex; i++) {
             ItemStack item = getByIndex(i);

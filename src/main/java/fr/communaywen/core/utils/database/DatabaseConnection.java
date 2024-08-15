@@ -22,7 +22,7 @@ public class DatabaseConnection {
 
     private void connect() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("org.mariadb.jdbc.Driver");
             this.connection = DriverManager.getConnection(this.url, this.user, this.password);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);

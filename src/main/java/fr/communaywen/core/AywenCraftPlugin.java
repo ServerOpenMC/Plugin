@@ -96,7 +96,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private static AywenCraftPlugin instance;
     @Getter
     private final Managers managers = new Managers();
-    public EventsManager eventsManager; // TODO: include to Managers.java
+    // public EventsManager eventsManager; // TODO: include to Managers.java
     public LuckPerms api;
     public List<RegionManager> regions;
     public MultiverseCore mvCore;
@@ -144,7 +144,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         managers.initConfig(this);
         managers.init(this);
 
-        eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
+        // eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
 
         mvCore = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
 
@@ -273,7 +273,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChunkListManager()
         );
 
-        getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
+//        getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
 
         /* --------- */
 
