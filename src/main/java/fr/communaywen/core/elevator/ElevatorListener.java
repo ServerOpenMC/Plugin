@@ -41,7 +41,10 @@ public class ElevatorListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.hasChangedBlock()) {
+        Block toBlock = event.getTo().getBlock();
+        Block fromBlock = event.getFrom().getBlock();
+        boolean posChanged = toBlock.getX() != fromBlock.getX() || toBlock.getZ() != fromBlock.getZ();
+        if (event.hasChangedBlock() && posChanged) {
             if (ElevatorChunk.removePlayer(event.getPlayer())) {
                 sendFailureMessage(event.getPlayer(), "Vous avez bougé, téléportation annulée !");
             }

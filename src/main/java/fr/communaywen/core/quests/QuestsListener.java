@@ -138,6 +138,8 @@ public class QuestsListener implements Listener {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
         } else if (getItemsName(event.getRecipe().getResult()).equals("minecraft:cake")) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_CAKE, 1, "gateau crafté.");
+        } else if (getItemsName(event.getRecipe().getResult()).equals("gexary:elevator")) {
+            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_ELEVATOR, 1, "Elevator crafté");
         }
 
     }
