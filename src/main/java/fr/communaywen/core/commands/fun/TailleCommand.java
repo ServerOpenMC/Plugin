@@ -23,7 +23,7 @@ public class TailleCommand {
                                      .append(Component.text(size, NamedTextColor.GREEN, TextDecoration.BOLD))
                                      .append(Component.text("cm.", NamedTextColor.DARK_GREEN));
         player.sendMessage(message);
-        double sizeRation = (double) size / 187;
+        double sizeRation = (double) size / 180;
         AttributeInstance playerAttribute = player.getAttribute(Attribute.GENERIC_SCALE);
         if (playerAttribute != null) playerAttribute.setBaseValue(sizeRation);
     }
