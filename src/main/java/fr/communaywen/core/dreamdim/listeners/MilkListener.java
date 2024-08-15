@@ -22,6 +22,7 @@ public class MilkListener implements Listener {
         Entity entity = e.getRightClicked();
         if (!(entity instanceof Player cow)) { return; }
 
+        if (!milker.getWorld().getName().equals("dreamworld")) { return; }
         PlayerInventory inv = milker.getInventory();
         if (inv.getItemInMainHand().getType().equals(Material.BUCKET)) {
             if (lastMilk.containsKey(cow)){
