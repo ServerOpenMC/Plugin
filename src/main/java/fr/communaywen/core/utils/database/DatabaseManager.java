@@ -80,6 +80,12 @@ public class DatabaseManager {
                 "  balance double NOT NULL" +
                 ")").executeUpdate();
 
+        // Ėvènements aléatoires
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS random_events (" +
+                "  player varchar(36) NOT NULL PRIMARY KEY," +
+                "  difficulty TINYINT NOT NULL" +
+                ")").executeUpdate();
+
         System.out.println("Les tables ont été créées si besoin");
     }
 
