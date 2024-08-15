@@ -38,6 +38,7 @@ public class DimensionManager implements Listener {
         plugin.registerEvents(
                 new CodexSomnii(register),
                 cloudSoup,
+                new MilkListener(),
                 new BlockPlacement(register),
                 new EatListener(plugin),
                 new EnterWorldListener(plugin, register),
