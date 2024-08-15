@@ -84,6 +84,7 @@ public class EventsManager implements Listener {
     private final int terrifyingNightDuration = 3 * 60 * 20;    // in ticks (3 minutes)
     private final double terrifyingNightDurationMillis = terrifyingNightDuration / 20.0 * 1000.0;
     private double terrifyingNightProbability;
+    private final NamespacedKey terrifyingNightKey;
 
     private long lastMiraculousFishing = 0;
     private final int miraculousFishingDuration = 3 * 60 * 20;    // in ticks (3 minutes)
@@ -92,6 +93,8 @@ public class EventsManager implements Listener {
 
     public EventsManager(AywenCraftPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
+
+        terrifyingNightKey = new NamespacedKey(plugin, "terrifying_night");
 
         List<String> disabledEvents = (List<String>) config.getList("disabledEvents");
 
@@ -156,15 +159,15 @@ public class EventsManager implements Listener {
 
             if (difficulty == EventsDifficulties.EASY) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
-                    new AttributeModifier("terrifyingNight", -0.1, Operation.MULTIPLY_SCALAR_1)
+                    new AttributeModifier(terrifyingNightKey, -0.1, Operation.MULTIPLY_SCALAR_1)
                 );
             } else if (difficulty == EventsDifficulties.NORMAL) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
-                    new AttributeModifier("terrifyingNight", -0.2, Operation.MULTIPLY_SCALAR_1)
+                    new AttributeModifier(terrifyingNightKey, -0.2, Operation.MULTIPLY_SCALAR_1)
                 );
             } else if (difficulty == EventsDifficulties.HARD) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(
-                    new AttributeModifier("terrifyingNight", -0.3, Operation.MULTIPLY_SCALAR_1)
+                    new AttributeModifier(terrifyingNightKey, -0.3, Operation.MULTIPLY_SCALAR_1)
                 );
 
                 new BukkitRunnable() {
@@ -458,8 +461,7 @@ public class EventsManager implements Listener {
         clearTerrifyingNight(event.getPlayer());
     }
     private void clearTerrifyingNight(Player player) {
-        AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        attribute.getModifiers().removeIf(modifier -> modifier.getName().equals("terrifyingNight"));
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(terrifyingNightKey);
     }
 
     @EventHandler
@@ -467,7 +469,7 @@ public class EventsManager implements Listener {
         clearTerrifyingNight(event.getPlayer());
         
         if (isInTerrifyingNight()) {
-            event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(new AttributeModifier("terrifyingNight", -0.2, Operation.MULTIPLY_SCALAR_1));
+            event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).addModifier(new AttributeModifier(terrifyingNightKey, -0.2, Operation.MULTIPLY_SCALAR_1));
         }
     }
 
