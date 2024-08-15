@@ -40,7 +40,6 @@ public class ChunkManager {
 
     public void loadElevator() {
         if (elevatorManager == null) {
-            plugin.getLogger().info("Loading elevator data for chunk " + chunk.getX() + ", " + chunk.getZ());
             PersistentDataContainer container = chunk.getPersistentDataContainer();
             byte[] data = container.get(ElevatorManager.DATA_KEY, PersistentDataType.BYTE_ARRAY);
             elevatorManager = new ElevatorChunk(data);
