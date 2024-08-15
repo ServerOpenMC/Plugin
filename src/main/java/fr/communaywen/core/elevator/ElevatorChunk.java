@@ -8,6 +8,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -30,9 +32,12 @@ public class ElevatorChunk {
         this.coordinateManager = new CoordinateManager(data);
     }
 
-    private static boolean isGoodLocation(Location location) {
+    private static boolean isGoodLocation(Location location, Player player) {
         Block block = location.getBlock();
-        return checkBlock(block) && checkBlock(block.getRelative(BlockFace.UP));
+        boolean ground = checkBlock(block);
+        AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_SCALE);
+        if (ground && attribute != null && attribute.getBaseValue() * 1.8 <= 1) return true;
+        return ground && checkBlock(block.getRelative(BlockFace.UP));
     }
 
     private static boolean checkBlock(Block block) {
@@ -97,7 +102,7 @@ public class ElevatorChunk {
         if (target == y) return;
         Location location = player.getLocation().clone().set(x + 0.5, target + 1, z + 0.5);
         int size = coordinateManager.getCount(x, z);
-        if (isGoodLocation(location)) {
+        if (isGoodLocation(location, player)) {
             elevatorTeleport(player, location, size, isJump);
         } else {
             elevatorDelayTeleport(player, location, size, isJump, block);
