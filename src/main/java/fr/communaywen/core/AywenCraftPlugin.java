@@ -16,6 +16,8 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.staff.FreezeCommand;
+import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.commands.staff.ReportCommands;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.commands.teleport.RTPCommand;
