@@ -55,7 +55,7 @@ public class MailboxManager extends DatabaseConnector {
                     if (receiverPlayer != null) {
                         if (MailboxMenuManager.playerInventories.get(receiverPlayer) instanceof PlayerMailbox receiverMailbox) {
                             LetterHead letterHead = new LetterHead(sender, id, itemsCount, result.getTimestamp(1).toLocalDateTime());
-                            receiverMailbox.addItem(letterHead);
+                            receiverMailbox.addLetter(letterHead);
                         } else sendNotification(receiverPlayer, itemsCount, id, sender.getName());
                     }
                     sendSuccessSendingMessage(sender, receiverName, itemsCount);

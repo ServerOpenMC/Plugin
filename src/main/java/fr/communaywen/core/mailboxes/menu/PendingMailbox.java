@@ -1,7 +1,7 @@
 package fr.communaywen.core.mailboxes.menu;
 
 import fr.communaywen.core.mailboxes.MailboxManager;
-import fr.communaywen.core.mailboxes.letter.PendingLetter;
+import fr.communaywen.core.mailboxes.letter.SenderLetter;
 import fr.communaywen.core.mailboxes.utils.PaginatedMailbox;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import net.kyori.adventure.text.Component;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 
-public class PendingMailbox extends PaginatedMailbox<PendingLetter> {
+public class PendingMailbox extends PaginatedMailbox<SenderLetter> {
     static {
         invErrorMessage = "Erreur lors de la récupération de vos lettres.";
     }
@@ -75,7 +75,7 @@ public class PendingMailbox extends PaginatedMailbox<PendingLetter> {
                     int itemsCount = result.getInt("items_count");
                     LocalDateTime sentAt = result.getTimestamp("sent_at").toLocalDateTime();
                     boolean refused = result.getBoolean("refused");
-                    pageItems.add(new PendingLetter(Bukkit.getOfflinePlayer(senderUUID), id, itemsCount, sentAt, refused));
+                    pageItems.add(new SenderLetter(Bukkit.getOfflinePlayer(senderUUID), id, itemsCount, sentAt, refused));
                 }
                 return true;
             }
@@ -86,7 +86,7 @@ public class PendingMailbox extends PaginatedMailbox<PendingLetter> {
     }
 
     public void clickLetter(int slot) {
-        PendingLetter senderLetter = getByIndex(slot);
+        SenderLetter senderLetter = getByIndex(slot);
         if (senderLetter == null) return;
         int id = senderLetter.getId();
         Component message = Component.text("Cliquez-ici", NamedTextColor.YELLOW)

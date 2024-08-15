@@ -4,7 +4,7 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
-//import fr.communaywen.core.EventsManager;
+import fr.communaywen.core.EventsManager;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 
@@ -18,16 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.List;
 
-/*
+
 public class RandomEventsMenu extends Menu {
 
-//    private EventsManager eventsManager;
+    private EventsManager eventsManager;
     private boolean isAdmin;
 
     public RandomEventsMenu(Player player, AywenCraftPlugin plugin) {
         super(player);
 
-//        eventsManager = plugin.eventsManager;
+        eventsManager = plugin.eventsManager;
         isAdmin = player.isOp();
     }
 
@@ -239,4 +239,4 @@ public class RandomEventsMenu extends Menu {
         }
         return content;
     }
-}*/
+}

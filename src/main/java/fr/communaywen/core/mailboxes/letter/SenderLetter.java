@@ -1,7 +1,5 @@
 package fr.communaywen.core.mailboxes.letter;
 
-import fr.communaywen.core.mailboxes.OfflineHead;
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -15,13 +13,14 @@ import java.util.ArrayList;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 import static fr.communaywen.core.utils.StringDateFormatter.formatRelativeDate;
 
-@Getter
-public class PendingLetter extends OfflineHead {
+public class SenderLetter extends ItemStack {
     private final int id;
 
-    public PendingLetter(OfflinePlayer player, int id, int itemsCount, LocalDateTime sentAt, boolean refused) {
+    public SenderLetter(OfflinePlayer player, int id, int itemsCount, LocalDateTime sentAt, boolean refused) {
+        super(Material.PLAYER_HEAD, 1);
         this.id = id;
         SkullMeta skullMeta = (SkullMeta) this.getItemMeta();
+        skullMeta.setOwningPlayer(player);
         skullMeta.displayName(getStatus(refused));
         ArrayList<Component> lore = new ArrayList<>();
         lore.add(colorText("➡ Cliquez pour annuler", NamedTextColor.YELLOW, true));
@@ -40,4 +39,7 @@ public class PendingLetter extends OfflineHead {
         return nonItalic(status);
     }
 
+    public int getId() {
+        return id;
+    }
 }

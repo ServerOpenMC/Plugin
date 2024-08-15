@@ -22,6 +22,12 @@ public class PlayerMailbox extends PaginatedMailbox<LetterHead> {
         if (fetchMailbox()) initInventory();
     }
 
+    public void addLetter(LetterHead letterHead) {
+        pageItems.add(letterHead);
+        int size = pageItems.size();
+        if (size - 1 / maxIndex == page) updateInventory(false, size - 1 % maxIndex);
+    }
+
     public void removeLetter(int id) {
         for (int i = 0; i < pageItems.size(); i++) {
             if (pageItems.get(i).getId() == id) {
@@ -29,7 +35,7 @@ public class PlayerMailbox extends PaginatedMailbox<LetterHead> {
                 int currentPage = i / maxIndex;
 
                 if (currentPage == page) {
-                    updateInventory(true, i % maxIndex);
+                    updateInventory(false, i % maxIndex);
                 } else if (currentPage < page) {
                     updateInventory(true);
                 }
@@ -47,7 +53,7 @@ public class PlayerMailbox extends PaginatedMailbox<LetterHead> {
                     UUID senderUUID = UUID.fromString(result.getString("sender_id"));
                     int itemsCount = result.getInt("items_count");
                     LocalDateTime sentAt = result.getTimestamp("sent_at").toLocalDateTime();
-                    addItem(new LetterHead(Bukkit.getOfflinePlayer(senderUUID), id, itemsCount, sentAt));
+                    pageItems.add(new LetterHead(Bukkit.getOfflinePlayer(senderUUID), id, itemsCount, sentAt));
                 }
                 return true;
             }

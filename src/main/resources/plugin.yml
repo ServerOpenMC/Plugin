@@ -1,7 +1,7 @@
 name: AywenCraftPlugin
 version: '${version}'
 main: fr.communaywen.core.AywenCraftPlugin
-api-version: '1.20.6'
+api-version: '1.21'
 depend:
   - ProtocolLib
   - ItemsAdder

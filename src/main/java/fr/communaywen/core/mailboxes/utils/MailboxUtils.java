@@ -8,7 +8,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -26,14 +25,11 @@ public class MailboxUtils {
         return "item" + (itemsCount > 1 ? "s" : "");
     }
 
-    /**
-     * The player must be online
-     */
     public static ItemStack getHead(OfflinePlayer player, Component name) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.displayName(nonItalic(name));
         meta.setOwningPlayer(player);
+        meta.displayName(nonItalic(name));
         head.setItemMeta(meta);
         return head;
     }
