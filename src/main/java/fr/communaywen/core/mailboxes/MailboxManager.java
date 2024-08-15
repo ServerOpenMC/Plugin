@@ -1,6 +1,9 @@
 package fr.communaywen.core.mailboxes;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.mailboxes.letter.LetterHead;
 import fr.communaywen.core.mailboxes.menu.PlayerMailbox;
 import fr.communaywen.core.mailboxes.menu.letter.Letter;
@@ -25,6 +28,9 @@ import java.util.HashMap;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 
+@Feature("Mailbox")
+@Credit("Gexary")
+@Collaborators("BricoGeek")
 public class MailboxManager extends DatabaseConnector {
     private static final AywenCraftPlugin plugin = AywenCraftPlugin.getInstance();
 
