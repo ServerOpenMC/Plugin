@@ -217,7 +217,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ReportCommands(),
                 new ChatChannelCMD(),
                 new MailboxCommand(),
-                new RandomEventsCommand(this)
+                new RandomEventsCommand(this),
                 new TeamClaim()
         );
 
