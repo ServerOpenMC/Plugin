@@ -46,8 +46,6 @@ import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
-import fr.communaywen.core.staff.freeze.FreezeCommand;
-import fr.communaywen.core.staff.players.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.TPACommand;
 import fr.communaywen.core.tpa.TpacceptCommand;
