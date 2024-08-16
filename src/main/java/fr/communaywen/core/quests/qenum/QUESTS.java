@@ -24,7 +24,7 @@ public enum QUESTS {
     HOLY_BREAD(Material.BREAD, 1, TYPE.FISH, "Le pain sacré", "relique du pain sacré pendant l'event \"Pêche miraculeuse\"", REWARD.ITEMS, 16, new ItemStack(Material.DIAMOND_ORE), TIER.TIER_1),
     SAVE_THE_EARTH(Material.OAK_SAPLING, 10, TYPE.PLACE, "Sauvons la planète !", "arbres et les faire grandir à la bonemeal", REWARD.ITEMS, 64, new ItemStack(Material.OAK_LOG), TIER.TIER_1),
     NINJA(Material.RABBIT_FOOT, 1, TYPE.OTHER, "Saute comme un ninja", "Complète le jump au spawn", REWARD.MONEY, 2000, TIER.TIER_1),
-    ;
+    CRAFT_ELEVATOR(Material.PAPER, 1, TYPE.CRAFT, "Dépasse tous les niveaux !", "elevator", REWARD.MONEY, 600, TIER.TIER_2);
 
     @Getter
     private final Material material;
