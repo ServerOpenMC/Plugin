@@ -1,6 +1,7 @@
 package fr.communaywen.core.dreamdim.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
+import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -36,6 +37,8 @@ public class CodexSomnii implements Listener {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) new ItemStack(Material.WRITTEN_BOOK).getItemMeta();
 
+        String dandangicien = new FontImageWrapper("aywen:dandanmagicien").getString();
+
         /* INFO */
         meta.setTitle("Codex Somnii");
         meta.setAuthor("Le Dark Magicien Dandan");
@@ -43,7 +46,7 @@ public class CodexSomnii implements Listener {
         /* A copier: meta.addPages(Component.text("")); */
 
         /* SOMMAIRE */
-        meta.addPages(Component.text("  §l§kA§r §lCodex Somnii §kA§r\n\nLivre qui sert à rien\npour l'instant\n\n\n\n\n\n\n\n\n\n     Ecris par §l§kDandan§r"));
+        meta.addPages(Component.text("  §l§kA§r §lCodex Somnii §kA§r\n\n\n    "+dandangicien+"\n\n\n\n\n\n\n\n\n\n     Ecris par §l§kDandan§r"));
         meta.addPages(Component.text("§5§l1.§r Dimension").clickEvent(ClickEvent.changePage(3)));
 
         /* DIMENSION */
