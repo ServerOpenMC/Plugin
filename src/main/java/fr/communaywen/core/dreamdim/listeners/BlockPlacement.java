@@ -1,7 +1,7 @@
 package fr.communaywen.core.dreamdim.listeners;
 
-import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -39,8 +39,9 @@ public class BlockPlacement implements Listener {
         if (!block.getType().equals(Material.ANCIENT_DEBRIS)) { return; }
 
         event.setDropItems(false);
-        player.getWorld().dropItemNaturally(block.getLocation(),
-                CustomStack.getInstance("aywen:dream_essence").getItemStack());
+
+        // TODO: FAUT CHANGER!!!
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "iagive " + player.getName() + " aywen:dream_essence 1");
 
         register.grantAdvancement(player, "aywen:dreamrush");
     }
