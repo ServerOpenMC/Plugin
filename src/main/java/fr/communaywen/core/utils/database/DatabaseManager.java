@@ -44,8 +44,8 @@ public class DatabaseManager {
                 ")").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS mailbox_items (" +
                                                       "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                                                      "sender_id UUID NOT NULL," +
-                                                      "receiver_id UUID NOT NULL," +
+                                                      "sender_id VARCHAR(36) NOT NULL," +
+                                                      "receiver_id VARCHAR(36) NOT NULL," +
                                                       "items BLOB NOT NULL," +
                                                       "items_count INT NOT NULL," +
                                                       "sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +

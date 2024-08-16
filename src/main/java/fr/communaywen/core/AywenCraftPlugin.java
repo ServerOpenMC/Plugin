@@ -28,10 +28,6 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.customitems.commands.ShowCraftCommand;
-import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
-import fr.communaywen.core.customitems.listeners.CIEnchantListener;
-import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -213,7 +209,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new PayCommands(),
                 new FallBloodCommand(),
                 new DiscordCommand(this),
-                new ShowCraftCommand(managers.getCustomItemsManager()),
                 new ReportCommands(),
                 new ChatChannelCMD(),
                 new MailboxCommand(),
@@ -247,14 +242,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new SleepListener(),
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
-                new WelcomeMessage(managers.getWelcomeMessageConfig()),
                 new Insomnia(),
                 new VpnListener(this),
                 new ThorHammer(),
-                new FriendsListener(managers.getFriendsManager()),
                 new TablistListener(this),
-                new LevelsListeners(managers.getLevelsManager()),
-                new CorpseListener(managers.getCorpseManager()),
                 new TradeListener(),
                 new QuestsListener(),
                 new PasFraisListener(this),
@@ -262,9 +253,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FarineListener(),
                 new FallBloodListener(),
                 new RTPCommand(this),
-                new CIBreakBlockListener(managers.getCustomItemsManager()),
-                new CIEnchantListener(managers.getCustomItemsManager()),
-                new CIPrepareAnvilListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
                 new MailboxListener(),
                 new ElevatorListener(),
@@ -340,9 +328,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ItemStack crazyPotion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
 
-        meta.setDisplayName("§k NEW §r §4 Crazy Potion §r §k NEW");
+        meta.setDisplayName("§k NEW §r §4 Mining Potion §r §k NEW");
         meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
-        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 55), true);
 
         crazyPotion.setItemMeta(meta);
 
