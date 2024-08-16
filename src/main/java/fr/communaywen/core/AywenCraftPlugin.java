@@ -34,6 +34,7 @@ import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
 import fr.communaywen.core.customitems.listeners.CIPlayerInteractListener;
 import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
+import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -42,15 +43,13 @@ import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
+import fr.communaywen.core.managers.ChunkListManager;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.tab.TabList;
-import fr.communaywen.core.tpa.TPACommand;
-import fr.communaywen.core.tpa.TpacceptCommand;
-import fr.communaywen.core.tpa.TpcancelCommand;
-import fr.communaywen.core.tpa.TpdenyCommand;
+import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
@@ -175,7 +174,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ScoreboardCommand(),
                 new ProutCommand(),
                 new TPACommand(this),
-                new TpacceptCommand(this),  // Pass the plugin instance
+                new TpacceptCommand(this),
+                new TPAGUICommand(this),
                 new TpcancelCommand(),
                 new TpdenyCommand(),
                 new CreditCommand(),
@@ -255,7 +255,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
                 new CIPlayerInteractListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
-                new MailboxListener()
+                new MailboxListener(),
+                new ElevatorListener(),
+                new ChunkListManager()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
@@ -317,6 +319,41 @@ public final class AywenCraftPlugin extends JavaPlugin {
         recipe.shape(" A ", " B ", "   ");
         recipe.setIngredient('A', Material.GUNPOWDER);
         recipe.setIngredient('B', Material.WHEAT);
+
+        Bukkit.addRecipe(recipe);
+    }
+
+    private void createCrazyPotion() {
+        ItemStack crazyPotion = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
+
+        meta.setDisplayName("§k NEW §r §4 Mining Potion §r §k NEW");
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 55), true);
+
+        crazyPotion.setItemMeta(meta);
+
+        NamespacedKey nmKey = new NamespacedKey(this, "crazypotion_craft");
+        ShapedRecipe recipe = new ShapedRecipe(nmKey, crazyPotion);
+
+        recipe.shape("BBB", "WGW", "IEI");
+
+        recipe.setIngredient('B', Material.DIAMOND_BLOCK);
+        recipe.setIngredient('G', Material.GLASS_BOTTLE);
+        recipe.setIngredient('W', Material.WATER_BUCKET);
+        recipe.setIngredient('E', Material.ENDER_PEARL);
+        recipe.setIngredient('I', Material.IRON_INGOT);
+
+        getServer().addRecipe(recipe);
+
+    }
+
+    private void createSandRecipe() {
+        ItemStack sand = new ItemStack(Material.SAND, 4);
+
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "sand_craft"), sand);
+        recipe.shape("A");
+        recipe.setIngredient('A', Material.SANDSTONE);
 
         Bukkit.addRecipe(recipe);
     }

@@ -16,7 +16,7 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Feature("TPA")
-@Credit({"ddemile", "Axillity", "misieur", "process"})
+@Credit({"Axillity", "ddemile", "misieur", "process"})
 public class TPACommand implements Listener {
 
     private final AywenCraftPlugin plugin;
