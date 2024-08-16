@@ -32,6 +32,7 @@ import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
 import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
+import fr.communaywen.core.customitems.listeners.CIPlayerInteractListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
