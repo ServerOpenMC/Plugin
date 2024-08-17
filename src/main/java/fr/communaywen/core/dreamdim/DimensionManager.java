@@ -36,6 +36,7 @@ public class DimensionManager implements Listener {
         this.cloudSoup = new CloudSoup(plugin, register);
 
         plugin.registerEvents(
+                new DreamSlayer(),
                 new CodexSomnii(register),
                 cloudSoup,
                 new MilkListener(),
