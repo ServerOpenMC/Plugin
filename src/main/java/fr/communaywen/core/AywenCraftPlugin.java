@@ -48,10 +48,7 @@ import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
-import fr.communaywen.core.tpa.TPACommand;
-import fr.communaywen.core.tpa.TpacceptCommand;
-import fr.communaywen.core.tpa.TpcancelCommand;
-import fr.communaywen.core.tpa.TpdenyCommand;
+import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
@@ -187,7 +184,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ScoreboardCommand(),
                 new ProutCommand(),
                 new TPACommand(this),
-                new TpacceptCommand(this),  // Pass the plugin instance
+                new TpacceptCommand(this),
+                new TPAGUICommand(this),
                 new TpcancelCommand(),
                 new TpdenyCommand(),
                 new CreditCommand(),
@@ -342,9 +340,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ItemStack crazyPotion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
 
-        meta.setDisplayName("§k NEW §r §4 Crazy Potion §r §k NEW");
+        meta.setDisplayName("§k NEW §r §4 Mining Potion §r §k NEW");
         meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
-        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 55), true);
 
         crazyPotion.setItemMeta(meta);
 
