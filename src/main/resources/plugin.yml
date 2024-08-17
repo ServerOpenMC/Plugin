@@ -13,6 +13,9 @@ permissions:
   ayw.command.trade:
     description: 'trade'
     default: true
+  ayw.command.tradeaccept:
+    description: 'tradeaccept'
+    default: true
   ayw.admin.version:
     description: Permission pour utiliser la commande /version
     default: op
