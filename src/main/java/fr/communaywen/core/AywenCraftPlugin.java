@@ -174,6 +174,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler = BukkitCommandHandler.create(this);
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
+        this.handler.getTranslator().setLocale(Locale.FRENCH);
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
