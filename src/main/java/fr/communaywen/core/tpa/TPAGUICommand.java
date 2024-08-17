@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-@Feature("TPA")
-@Credit({"ddemile", "Axillity", "misieur", "process"})
+@Feature("TPAGUI")
+@Credit({"Axillity"})
 public class TPAGUICommand implements Listener {
 
     private final AywenCraftPlugin plugin;
