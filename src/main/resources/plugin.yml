@@ -13,7 +13,7 @@ permissions:
     default: op
   ayw.command.luckyblock:
     description: Donne un lucky block
-    permission: lucky
+    permission: lucky.use
   ayw.command.manuallink:
     description: Permission de lier un deux comptes manuellement
     default: op
