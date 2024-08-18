@@ -9,6 +9,8 @@ public class LuckyBlockCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
 
+        sender.sendMessage("test");
+
         return false;
     }
 }
