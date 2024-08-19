@@ -6,10 +6,7 @@ import fr.communaywen.core.quests.qenum.QUESTS;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -168,7 +165,11 @@ public class QuestsListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
-        ItemStack fishedItem = ((Item) event.getCaught()).getItemStack();
+        Entity caught = event.getCaught();
+
+        if (!(caught instanceof Item fishedItemEntity)) { return; }
+
+        ItemStack fishedItem = fishedItemEntity.getItemStack();
 
         if (fishedItem.getType() == Material.BREAD && fishedItem.getCustomModelData() == 42) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.HOLY_BREAD, 1, "relique du pain sacré pêchée");

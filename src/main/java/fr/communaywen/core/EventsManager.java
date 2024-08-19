@@ -479,6 +479,8 @@ public class EventsManager implements Listener {
 
     @EventHandler
     public void onPlayerFish(PlayerFishEvent event) {
+        if (event.getPlayer().getWorld().getName().equals("dreamworld")) { return;}
+
         if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             if (isInMiraculousFishing()) {
                 /*
