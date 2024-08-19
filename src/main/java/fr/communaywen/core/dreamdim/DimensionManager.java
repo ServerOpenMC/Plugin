@@ -4,7 +4,9 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Collaborators;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.dreamdim.fishing.FishingListener;
 import org.bukkit.*;
+import org.bukkit.entity.Fish;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -36,6 +38,7 @@ public class DimensionManager implements Listener {
         this.cloudSoup = new CloudSoup(plugin, register);
 
         plugin.registerEvents(
+                new FishingListener(),
                 new DreamSlayer(),
                 new CodexSomnii(register),
                 cloudSoup,
