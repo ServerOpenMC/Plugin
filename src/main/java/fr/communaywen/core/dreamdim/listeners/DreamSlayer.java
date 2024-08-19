@@ -13,9 +13,7 @@ public class DreamSlayer implements Listener {
     Enchantment dreamSlayer;
 
     public DreamSlayer() {
-        System.out.println("dreamslayer: "+NamespacedKey.fromString("aywen:dream_slayer"));
         this.dreamSlayer = Registry.ENCHANTMENT.get(NamespacedKey.fromString("aywen:dream_slayer"));
-        System.out.println("enchant: "+dreamSlayer);
     }
 
     @EventHandler

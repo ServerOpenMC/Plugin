@@ -1,7 +1,6 @@
 package fr.communaywen.core.dreamdim.fishing;
 
 import fr.communaywen.core.dreamdim.fishing.loot_table.Junk;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,13 +17,11 @@ public class FishingListener implements Listener {
         if (!(player.getWorld().getName().equals("dreamworld"))) { return; }
 
         if (!(event.getState().equals(PlayerFishEvent.State.CAUGHT_FISH))) { return; }
-        System.out.println(event.getState());
 
         double categoryChance = new Random().nextDouble();
         LootCategory category = null;
         
         if (categoryChance <= 1/1) {
-            player.sendMessage("Junk");
             category = new Junk();
         }
 
@@ -35,6 +32,5 @@ public class FishingListener implements Listener {
         if (event.getCaught() instanceof Item item) {
             item.setItemStack(reward);
         }
-        event.setCancelled(true);
     }
 }

@@ -26,7 +26,6 @@ public class MilkListener implements Listener {
         PlayerInventory inv = milker.getInventory();
         if (inv.getItemInMainHand().getType().equals(Material.BUCKET)) {
             if (lastMilk.containsKey(cow)){
-                System.out.println((Date.from(Instant.now()).getTime()-lastMilk.get(cow).getTime()));
                 if ((Date.from(Instant.now()).getTime()-lastMilk.get(cow).getTime()) <= 1000*60*5){
                     return;
                 }
