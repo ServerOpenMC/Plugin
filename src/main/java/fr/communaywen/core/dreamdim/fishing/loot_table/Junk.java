@@ -24,6 +24,6 @@ public class Junk extends LootCategory {
 
     @Override
     public @NotNull Double getChance() {
-        return 1.0;
+        return 0.4;
     }
 }
