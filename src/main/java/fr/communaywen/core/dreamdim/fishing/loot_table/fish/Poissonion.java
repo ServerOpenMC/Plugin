@@ -6,22 +6,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class MoonFish extends LootStack {
-    CustomStack moon_fish =CustomStack.getInstance("aywen:moon_fish");
+public class Poissonion extends LootStack {
+    CustomStack fish = CustomStack.getInstance("aywen:poissonion");
 
     @Override
     public @NotNull Double getChance(int LureLevel) {
-        return 0.50;
+        return 0.5;
     }
 
     @Override
     public @NotNull String getName() {
-        return "Poisson-lune";
+        return "Poissonion";
     }
 
     @Override
     public @NotNull ItemStack toItemStack(@NotNull Player player) {
-        return moon_fish.getItemStack();
+        return null;
     }
 
     @Override
