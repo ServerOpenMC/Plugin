@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
+import fr.communaywen.core.dreamdim.DreamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -97,7 +98,12 @@ public class EnterWorldListener implements Listener {
                         "aywen:dream_essence",
                         "aywen:cloud_soup").contains(customStack.getNamespacedID())) {
                     inv.remove(itemStack);
+                    continue;
                 }
+            }
+
+            if (DreamUtils.isFromDream(itemStack)) {
+                inv.remove(itemStack);
             }
         }
     }

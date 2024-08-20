@@ -1,6 +1,7 @@
 package fr.communaywen.core.dreamdim.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.dreamdim.DreamUtils;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -73,7 +74,8 @@ public class MobListener implements Listener {
         if (entity.getType().equals(EntityType.SPIDER)) {
             e.setDroppedExp(e.getDroppedExp() * 2);
             for (ItemStack item : e.getDrops()) {
-                world.dropItem(entity.getLocation(), item);
+                DreamUtils.setFromDream(item);
+                world.dropItemNaturally(entity.getLocation(), item);
             }
         }
     }
