@@ -23,11 +23,11 @@ public abstract class LootCategory {
         return getLoots().remove(lootStack);
     }
 
-    public LootStack pickOne(int LureLevel) {
+    public LootStack pickOne(int LuckLevel) {
         //ChatGPT :alien:
         double totalChance = 0.0;
         for (LootStack stack : getLoots()) {
-            totalChance += stack.getChance(LureLevel);
+            totalChance += stack.getChance(LuckLevel);
         }
 
         if (totalChance != 1) {
@@ -39,7 +39,7 @@ public abstract class LootCategory {
 
         double cumulativeChance = 0.0;
         for (LootStack entry : getLoots()) {
-            cumulativeChance += entry.getChance(LureLevel);
+            cumulativeChance += entry.getChance(LuckLevel);
             if (randomValue <= cumulativeChance) {
                 return entry;
             }
@@ -50,11 +50,11 @@ public abstract class LootCategory {
     }
 
     // Method to pick 'x' loots
-    public List<LootStack> pick(int x, Integer LureLevel) {
+    public List<LootStack> pick(int x, Integer LuckLevel) {
         List<LootStack> pickedLoots = new ArrayList<>();
 
         for (int i = 0; i < x; i++) {
-            pickedLoots.add(pickOne(LureLevel));
+            pickedLoots.add(pickOne(LuckLevel));
         }
 
         return pickedLoots;

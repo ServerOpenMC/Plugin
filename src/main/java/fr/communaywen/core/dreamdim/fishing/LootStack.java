@@ -6,10 +6,10 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class LootStack {
     /**
-     * @param LureLevel Lure Level of the fishing tool (0 if the tool doesn't have lure)
+     * @param LuckLevel Luck Level of the fishing tool (0 if the tool doesn't have luck of the sea)
      */
     @NotNull
-    public abstract Double getChance(int LureLevel);
+    public abstract Double getChance(int LuckLevel);
 
     @NotNull
     public abstract String getName();
