@@ -12,6 +12,7 @@ public class Fish extends LootCategory {
     @Override
     public @NotNull Set<LootStack> getLoots() {
         return Set.of( //Ajoutez en haut pour éviter les conflits, merci
+            new DockerFish(),
             new Poissonion(),
             new MoonFish()
         );

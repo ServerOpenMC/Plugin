@@ -16,7 +16,7 @@ public class MoonFish extends LootStack {
 
     @Override
     public @NotNull Double getChance() {
-        return 0.5;
+        return 0.33;
     }
 
     @Override
