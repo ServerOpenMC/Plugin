@@ -26,8 +26,6 @@ public class FishingListener implements Listener {
         /* Picking a random category */
         List<LootCategory> categories = new ArrayList<>(List.of(new Fish(), new Junk()));
 
-        categories.sort(Comparator.comparingDouble(LootCategory::getChance));
-
         double totalChance = 0.0;
         for (LootCategory cat : categories) {
             totalChance += cat.getChance();
