@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class Bowl extends LootStack {
 
     @Override
-    public @NotNull Double getChance(int LuckLevel) {
+    public @NotNull Double getChance() {
         return 1.0;
     }
 

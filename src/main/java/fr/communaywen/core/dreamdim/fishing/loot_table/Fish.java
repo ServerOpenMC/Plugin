@@ -23,7 +23,7 @@ public class Fish extends LootCategory {
     }
 
     @Override
-    public @NotNull Double getChance() {
+    public @NotNull Double getChance(int luckLevel) {
         return 0.6;
     }
 }

@@ -10,7 +10,7 @@ public class MoonFish extends LootStack {
     CustomStack moon_fish =CustomStack.getInstance("aywen:moon_fish");
 
     @Override
-    public @NotNull Double getChance(int LuckLevel) {
+    public @NotNull Double getChance() {
         return 0.50;
     }
 

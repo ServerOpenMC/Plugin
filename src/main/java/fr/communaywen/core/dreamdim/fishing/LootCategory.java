@@ -13,7 +13,7 @@ public abstract class LootCategory {
     public abstract String getName();
 
     @NotNull
-    public abstract Double getChance();
+    public abstract Double getChance(int luckLevel);
 
     public final boolean addToLoot(LootStack lootStack) {
         return getLoots().add(lootStack);
@@ -23,11 +23,11 @@ public abstract class LootCategory {
         return getLoots().remove(lootStack);
     }
 
-    public LootStack pickOne(int LuckLevel) {
+    public LootStack pickOne() {
         //ChatGPT :alien:
         double totalChance = 0.0;
         for (LootStack stack : getLoots()) {
-            totalChance += stack.getChance(LuckLevel);
+            totalChance += stack.getChance();
         }
 
         if (totalChance != 1) {
@@ -39,7 +39,7 @@ public abstract class LootCategory {
 
         double cumulativeChance = 0.0;
         for (LootStack entry : getLoots()) {
-            cumulativeChance += entry.getChance(LuckLevel);
+            cumulativeChance += entry.getChance();
             if (randomValue <= cumulativeChance) {
                 return entry;
             }
@@ -54,7 +54,7 @@ public abstract class LootCategory {
         List<LootStack> pickedLoots = new ArrayList<>();
 
         for (int i = 0; i < x; i++) {
-            pickedLoots.add(pickOne(LuckLevel));
+            pickedLoots.add(pickOne());
         }
 
         return pickedLoots;

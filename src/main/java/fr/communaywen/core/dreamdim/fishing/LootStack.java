@@ -5,11 +5,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class LootStack {
-    /**
-     * @param LuckLevel Luck Level of the fishing tool (0 if the tool doesn't have luck of the sea)
-     */
     @NotNull
-    public abstract Double getChance(int LuckLevel);
+    public abstract Double getChance();
 
     @NotNull
     public abstract String getName();

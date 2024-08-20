@@ -10,7 +10,7 @@ public class Poissonion extends LootStack {
     CustomStack fish = CustomStack.getInstance("aywen:poissonion");
 
     @Override
-    public @NotNull Double getChance(int LuckLevel) {
+    public @NotNull Double getChance() {
         return 0.5;
     }
 
