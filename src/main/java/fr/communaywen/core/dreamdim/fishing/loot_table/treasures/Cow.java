@@ -22,7 +22,7 @@ public class Cow extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         return new ItemStack(Material.AIR);
     }
 

@@ -26,7 +26,7 @@ public class DockerFish extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         ItemStack item = fish.getItemStack();
         ItemMeta meta = item.getItemMeta();
 

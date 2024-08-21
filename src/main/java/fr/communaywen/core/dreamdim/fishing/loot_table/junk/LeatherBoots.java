@@ -23,7 +23,7 @@ public class LeatherBoots extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         ItemStack item = new ItemStack(Material.LEATHER_BOOTS);
         ItemMeta meta = item.getItemMeta();
         Damageable damageable = (Damageable) meta;

@@ -23,7 +23,7 @@ public class EauTrouble extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         ItemStack potion = new ItemStack(Material.GLASS_BOTTLE);
         ItemMeta meta = potion.getItemMeta();
         PotionMeta potmeta = (PotionMeta) meta;

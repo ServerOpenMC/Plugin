@@ -6,6 +6,7 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Bowl extends LootStack {
 
@@ -20,7 +21,7 @@ public class Bowl extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         return new ItemStack(Material.BOWL);
     }
 

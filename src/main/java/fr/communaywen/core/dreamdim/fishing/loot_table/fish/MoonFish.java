@@ -26,7 +26,7 @@ public class MoonFish extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         return moon_fish;
     }
 

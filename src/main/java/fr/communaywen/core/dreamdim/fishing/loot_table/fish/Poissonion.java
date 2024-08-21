@@ -7,6 +7,7 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
 
 public class Poissonion extends LootStack {
     ItemStack fish = CustomStack.getInstance("aywen:poissonion").getItemStack();
@@ -26,7 +27,7 @@ public class Poissonion extends LootStack {
     }
 
     @Override
-    public @NotNull ItemStack toItemStack(@NotNull Player player) {
+    public @NotNull ItemStack toItemStack(@Nullable Player player) {
         return fish;
     }
 
