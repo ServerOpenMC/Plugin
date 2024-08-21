@@ -11,6 +11,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+
 public class EauTrouble extends LootStack {
     @Override
     public @NotNull Double getChance() {

@@ -7,6 +7,7 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MoonFish extends LootStack {
     ItemStack moon_fish =CustomStack.getInstance("aywen:moon_fish").getItemStack();
