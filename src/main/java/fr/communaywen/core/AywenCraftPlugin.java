@@ -32,8 +32,9 @@ import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
-import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.luckyblocks.LuckyBlockOtherEvents;
+import fr.communaywen.core.luckyblocks.LuckyBlockSpawnEvents;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
@@ -239,6 +240,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new RTPWand(this),
                 onPlayers,
                 new ExplosionListener(),
+                new LuckyBlockSpawnEvents(),
+                new LuckyBlockOtherEvents(),
                 new SleepListener(),
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),

@@ -1,7 +1,5 @@
 package fr.communaywen.core.luckyblocks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LuckyBlock extends JavaPlugin {
@@ -10,7 +8,8 @@ public class LuckyBlock extends JavaPlugin {
     public void onEnable() {
         System.out.println("plugin on");
         getCommand("lucky").setExecutor(new LuckyBlockCommands());
-        getServer().getPluginManager().registerEvents(new LuckyBlockListeners(), this);
+        getServer().getPluginManager().registerEvents(new LuckyBlockSpawnEvents(), this);
+        getServer().getPluginManager().registerEvents(new LuckyBlockOtherEvents(), this);
     }
 
     private void createConfig() {
