@@ -6,25 +6,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class Bowl extends LootStack {
-
+public class LeatherBoots extends LootStack {
     @Override
     public @NotNull Double getChance() {
-        return 0.5;
+        return 0.25;
     }
 
     @Override
     public @NotNull String getName() {
-        return "Bowl";
+        return "Botte en cuir";
     }
 
     @Override
     public @NotNull ItemStack toItemStack(@NotNull Player player) {
-        return new ItemStack(Material.BOWL);
+        return new ItemStack(Material.LEATHER_BOOTS);
     }
 
     @Override
     public void onCatched(@NotNull Player player) {
-        return;
+
     }
 }

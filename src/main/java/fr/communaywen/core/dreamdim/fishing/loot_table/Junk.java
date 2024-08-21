@@ -13,7 +13,9 @@ public class Junk extends LootCategory {
     @Override
     public @NotNull Set<LootStack> getLoots() {
         return Set.of( //Ajoutez en haut pour éviter les conflits, merci
-            new Bowl()
+            new Bowl(),
+            new EauTrouble(),
+            new LeatherBoots()
         );
     }
 
