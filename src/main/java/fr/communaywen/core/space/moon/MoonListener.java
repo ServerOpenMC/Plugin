@@ -7,6 +7,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.menu.TeamMenu;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,22 +17,16 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -73,6 +68,31 @@ public class MoonListener implements Listener {
     }
 
     @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        if (!player.getWorld().getName().equals("moon")){ return; }
+
+        if (block.getType().equals(Material.END_STONE)) {
+            event.setCancelled(true);
+        }
+
+        if(block.getType().equals(Material.IRON_BLOCK)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockPhysics(BlockPhysicsEvent event){
+        Block block = event.getBlock();
+        if(!block.getLocation().getWorld().getName().equals("moon")) return;
+        if(block.getType()==Material.WATER){
+            block.setType(Material.AIR);
+        }
+    }
+
+    @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if(!e.getWhoClicked().hasPermission("ayw.space.head.glass")) return;
         if(e.getSlot() == 39 && e.getClickedInventory().getType().equals(InventoryType.PLAYER) && Objects.equals(e.getCurrentItem(), new ItemStack(Material.AIR))) {
@@ -89,15 +109,67 @@ public class MoonListener implements Listener {
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent e) {
         if(!e.getLocation().getWorld().getName().equals("moon")) return;
-        if(List.of(EntityType.ARMOR_STAND, EntityType.BLOCK_DISPLAY, EntityType.ITEM_DISPLAY, EntityType.TEXT_DISPLAY, EntityType.ITEM, EntityType.WOLF, EntityType.PARROT, EntityType.OCELOT, EntityType.CAT, EntityType.TROPICAL_FISH, EntityType.ARROW, EntityType.ENDER_PEARL, EntityType.EXPERIENCE_ORB, EntityType.EXPERIENCE_BOTTLE, EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME, EntityType.TRIDENT, EntityType.POTION, EntityType.AREA_EFFECT_CLOUD, EntityType.SNOWBALL, EntityType.IRON_GOLEM, EntityType.SNOW_GOLEM, EntityType.BREEZE_WIND_CHARGE).contains(e.getEntity().getType())) return;
-        if(!List.of(EntityType.ZOMBIE, EntityType.SKELETON).contains(e.getEntity().getType())) {
+        if(List.of(EntityType.ARMOR_STAND, EntityType.BLOCK_DISPLAY, EntityType.ITEM_DISPLAY, EntityType.TEXT_DISPLAY, EntityType.ITEM, EntityType.WOLF, EntityType.PARROT, EntityType.OCELOT, EntityType.CAT, EntityType.TROPICAL_FISH, EntityType.ARROW, EntityType.ENDER_PEARL, EntityType.EXPERIENCE_ORB, EntityType.EXPERIENCE_BOTTLE, EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME, EntityType.TRIDENT, EntityType.POTION, EntityType.AREA_EFFECT_CLOUD, EntityType.SNOWBALL, EntityType.IRON_GOLEM, EntityType.SNOW_GOLEM, EntityType.BREEZE_WIND_CHARGE, EntityType.TNT).contains(e.getEntity().getType())) return;
+        if(!List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.COW, EntityType.SPIDER).contains(e.getEntity().getType())) {
             e.setCancelled(true);
         }
+        if(e.getEntity().getType().equals(EntityType.SPIDER)) {
+            e.setCancelled(true);
+            e.getLocation().getWorld().spawnEntity(e.getLocation(), EntityType.COW);
+        }
+
         EntityEquipment ee = ((LivingEntity) e.getEntity()).getEquipment();
         assert ee != null;
         ee.setHelmet(new ItemStack(Material.GLASS));
         ((LivingEntity) e.getEntity()).getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.013211);
         ((LivingEntity) e.getEntity()).getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(10);
+        if(e.getEntity().getType().equals(EntityType.COW)) {
+            ((LivingEntity) e.getEntity()).customName(Component.text("§eVache lunaire"));
+            e.getEntity().setCustomNameVisible(true);
+        }
+    }
+
+    @EventHandler
+    public void onMilk(PlayerInteractEntityEvent e) {
+        if(!e.getPlayer().getWorld().getName().equals("moon")) return;
+        if(e.getRightClicked().getType().equals(EntityType.COW) && e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.BUCKET)) {
+            e.setCancelled(true);
+            if(!((Ageable) e.getRightClicked()).isAdult()) return;
+            e.getPlayer().getInventory().getItemInMainHand().setAmount(e.getPlayer().getInventory().getItemInMainHand().getAmount() - 1);
+            e.getPlayer().getInventory().addItem(CustomStack.getInstance("space:moon_milk_bucket").getItemStack());
+            ((Ageable) e.getRightClicked()).setBaby();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDrink(PlayerItemConsumeEvent e) {
+        ItemStack item = e.getItem();
+        CustomStack customStack = CustomStack.byItemStack(item);
+        if(customStack != null && customStack.getNamespacedID().equals("space:moon_milk_bucket")) {
+            // Le lait enlève les effets donc il faut delay des effets pour pas qu'ils soient cancel par le lait (j'ai pris 1h à m'en rendre compte)
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 20*60, 3));
+                    e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*60, 5));
+                    e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 40, 59));
+                }
+            }.runTaskLater(AywenCraftPlugin.getInstance(), 5);
+        };
+    }
+
+    public void onBoom(BlockExplodeEvent e) {
+        if(!e.getBlock().getWorld().getName().equals("moon")) return;
+
+        for(Block b : e.blockList()) {
+            if(b.getType().equals(Material.END_STONE)) {
+                b.getDrops().clear();
+                b.getWorld().dropItemNaturally(b.getLocation(), CustomStack.getInstance("space:moon_shard").getItemStack());
+            }
+            if(b.getType().equals(Material.IRON_BLOCK)) {
+                b.getDrops().clear();
+            }
+        }
     }
 
     @EventHandler

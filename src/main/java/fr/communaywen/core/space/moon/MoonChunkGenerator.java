@@ -92,7 +92,11 @@ public class MoonChunkGenerator extends ChunkGenerator {
                         }
                     }
                     else if(y < 65) {
-                        chunkData.setBlock(x, y, z, Material.END_STONE);
+                        if(random.nextFloat() < 0.75) {
+                            chunkData.setBlock(x, y, z, Material.ICE);
+                        } else {
+                            chunkData.setBlock(x, y, z, Material.PACKED_ICE);
+                        }
                     }
                 }
             }
