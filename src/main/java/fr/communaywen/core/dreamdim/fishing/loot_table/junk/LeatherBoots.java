@@ -2,14 +2,19 @@ package fr.communaywen.core.dreamdim.fishing.loot_table.junk;
 
 import fr.communaywen.core.dreamdim.fishing.LootStack;
 import org.bukkit.Material;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class LeatherBoots extends LootStack {
     @Override
     public @NotNull Double getChance() {
-        return 0.25;
+        return 50.0;
     }
 
     @Override
@@ -19,11 +24,18 @@ public class LeatherBoots extends LootStack {
 
     @Override
     public @NotNull ItemStack toItemStack(@NotNull Player player) {
-        return new ItemStack(Material.LEATHER_BOOTS);
+        ItemStack item = new ItemStack(Material.LEATHER_BOOTS);
+        ItemMeta meta = item.getItemMeta();
+        Damageable damageable = (Damageable) meta;
+        damageable.setDamage(65-(new Random().nextInt(24-10)+10));
+
+        item.setItemMeta(damageable);
+
+        return item;
     }
 
     @Override
-    public void onCatched(@NotNull Player player) {
+    public void onCatched(@NotNull Player player, @NotNull FishHook fishHook) {
 
     }
 }

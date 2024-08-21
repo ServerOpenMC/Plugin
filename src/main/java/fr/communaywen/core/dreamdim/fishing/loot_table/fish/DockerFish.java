@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.dreamdim.fishing.LootStack;
 import fr.communaywen.core.utils.ContainerNameGenerator;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,7 +17,7 @@ public class DockerFish extends LootStack {
 
     @Override
     public @NotNull Double getChance() {
-        return 0.34;
+        return 34.0;
     }
 
     @Override
@@ -36,5 +37,5 @@ public class DockerFish extends LootStack {
     }
 
     @Override
-    public void onCatched(@NotNull Player player) {}
+    public void onCatched(@NotNull Player player, @NotNull FishHook fishHook) {}
 }

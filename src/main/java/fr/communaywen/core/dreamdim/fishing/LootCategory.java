@@ -30,12 +30,12 @@ public abstract class LootCategory {
             totalChance += stack.getChance();
         }
 
-        if (totalChance != 1) {
+        if (totalChance != 100) {
             throw new IllegalArgumentException("LootCategory " + getName() + " has chance " + totalChance);
         }
 
         Random random = new Random();
-        double randomValue = random.nextDouble();
+        double randomValue = random.nextDouble()*100;
 
         double cumulativeChance = 0.0;
         for (LootStack entry : getLoots()) {

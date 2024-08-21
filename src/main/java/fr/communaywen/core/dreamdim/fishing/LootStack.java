@@ -1,5 +1,6 @@
 package fr.communaywen.core.dreamdim.fishing;
 
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,5 +17,5 @@ public abstract class LootStack {
     /**
      * @param player Player who catch
      */
-    public abstract void onCatched(@NotNull Player player);
+    public abstract void onCatched(@NotNull Player player, @NotNull FishHook fishHook);
 }

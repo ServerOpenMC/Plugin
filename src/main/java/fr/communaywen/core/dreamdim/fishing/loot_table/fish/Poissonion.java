@@ -3,6 +3,7 @@ package fr.communaywen.core.dreamdim.fishing.loot_table.fish;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.dreamdim.DreamUtils;
 import fr.communaywen.core.dreamdim.fishing.LootStack;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class Poissonion extends LootStack {
 
     @Override
     public @NotNull Double getChance() {
-        return 0.33;
+        return 33.0;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class Poissonion extends LootStack {
     }
 
     @Override
-    public void onCatched(@NotNull Player player) {
+    public void onCatched(@NotNull Player player, @NotNull FishHook fishHook) {
 
     }
 }

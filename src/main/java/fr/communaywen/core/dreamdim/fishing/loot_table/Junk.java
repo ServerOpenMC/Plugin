@@ -14,7 +14,7 @@ public class Junk extends LootCategory {
     public @NotNull Set<LootStack> getLoots() {
         return Set.of( //Ajoutez en haut pour éviter les conflits, merci
             new Bowl(),
-            new EauTrouble(),
+            //new EauTrouble(),
             new LeatherBoots()
         );
     }
@@ -26,6 +26,6 @@ public class Junk extends LootCategory {
 
     @Override
     public @NotNull Double getChance(int luckLevel) {
-        return 0.4;
+        return 30.0;
     }
 }
