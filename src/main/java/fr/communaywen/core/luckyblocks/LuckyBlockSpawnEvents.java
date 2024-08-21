@@ -51,7 +51,7 @@ public class LuckyBlockSpawnEvents implements Listener {
                 block.setType(Material.AIR);
 
                 Random random = new Random();
-                int alea = random.nextInt(4);
+                int alea = random.nextInt(5);
 
                 switch (alea){
                     case 0:
@@ -69,6 +69,9 @@ public class LuckyBlockSpawnEvents implements Listener {
                     case 3:
                         location.getWorld().spawn(location, Allay.class);
                         break;
+
+                    case 4:
+                        location.getWorld().spawn(location, Illusioner.class);
 
                 }
             }
