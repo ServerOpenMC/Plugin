@@ -33,8 +33,8 @@ import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.listeners.*;
-import fr.communaywen.core.luckyblocks.LuckyBlockOtherEvents;
-import fr.communaywen.core.luckyblocks.LuckyBlockSpawnEvents;
+import fr.communaywen.core.luckyblocks.*;
+import fr.communaywen.core.luckyblocks.events.*;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
@@ -240,8 +240,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new RTPWand(this),
                 onPlayers,
                 new ExplosionListener(),
-                new LuckyBlockSpawnEvents(),
-                new LuckyBlockOtherEvents(),
+                new PlayerJoinEventListener(),
+                new ExplosionEvent(),
                 new SleepListener(),
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
@@ -259,7 +259,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new BabyFuzeListener(),
                 new MailboxListener(),
                 new ElevatorListener(),
-                new ChunkListManager()
+                new ChunkListManager(),
+                new AllayEvent(),
+                new BreezeEvent(),
+                new ExplosionEvent(),
+                new IllusionerEvent(),
+                new LightningEvent(),
+                new PlayerJoinEventListener(),
+                new SkeletonHorseEvent(),
+                new ZombifiedHorseEvent()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
