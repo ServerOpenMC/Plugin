@@ -165,11 +165,11 @@ public class QuestsListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
-        Entity caught = event.getCaught();
-
-        if (!(caught instanceof Item fishedItemEntity)) { return; }
-
-        ItemStack fishedItem = fishedItemEntity.getItemStack();
+        Item caught = (Item) event.getCaught();
+        
+        if (caught == null) { return; }
+        
+        ItemStack fishedItem = caught.getItemStack();
 
         if (fishedItem.getType() == Material.BREAD && fishedItem.getCustomModelData() == 42) {
             QuestsManager.manageQuestsPlayer(player, QUESTS.HOLY_BREAD, 1, "relique du pain sacré pêchée");
