@@ -26,8 +26,6 @@ public class DreamSlayer implements Listener {
         if (item.hasEnchant(dreamSlayer)) {
             int level = item.getEnchantLevel(dreamSlayer);
             event.setDamage(event.getDamage() + (0.5*(level-1))+1); //https://fr.minecraft.wiki/w/Tranchant
-        } else {
-            player.sendMessage("no enchant");
         }
     }
 }
