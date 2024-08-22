@@ -2,6 +2,7 @@ package fr.communaywen.core.dreamdim.fishing.loot_table.fish;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.dreamdim.DreamUtils;
+import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
 import fr.communaywen.core.dreamdim.fishing.LootStack;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
@@ -33,6 +34,6 @@ public class MoonFish extends LootStack {
 
     @Override
     public void onCatched(@NotNull Player player, @NotNull FishHook fishHook) {
-
+        SimpleAdvancementRegister.grantAdvancement(player, "aywen:fishing/moonfish");
     }
 }

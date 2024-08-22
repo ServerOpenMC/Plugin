@@ -1,5 +1,7 @@
 package fr.communaywen.core.dreamdim.fishing;
 
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -12,12 +14,19 @@ import java.util.*;
 import fr.communaywen.core.dreamdim.fishing.loot_table.*;
 
 public class FishingListener implements Listener {
+    AywenCraftPlugin plugin;
+
+    public FishingListener(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
         if (!(player.getWorld().getName().equals("dreamworld"))) { return; }
 
         if (!(event.getState().equals(PlayerFishEvent.State.CAUGHT_FISH))) { return; }
+        SimpleAdvancementRegister.grantAdvancement(player, "aywen:fishing/root");
 
         /* Picking a random category */
         LootCategory category = null;
@@ -49,11 +58,11 @@ public class FishingListener implements Listener {
         LootStack loot = category.pickOne();
         ItemStack reward = loot.toItemStack(player);
 
-        loot.onCatched(player, event.getHook());
         if (event.getCaught() == null) { return; }
 
         if (event.getCaught() instanceof Item item) {
             item.setItemStack(reward);
         }
+        loot.onCatched(player, event.getHook());
     }
 }

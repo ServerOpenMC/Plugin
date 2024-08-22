@@ -68,7 +68,8 @@ public class AdvancementRegister extends DatabaseConnector implements Listener {
                 new CloudBed(this),
                 new Nightmare(this),
                 new SweetChild(this),
-                new Helldivers(this)
+                new Helldivers(this),
+                new OnCookFish()
         );
     }
 
@@ -110,8 +111,24 @@ public class AdvancementRegister extends DatabaseConnector implements Listener {
                 giveMoney(player, 500, "Advancements Leave Earth");
                 break;
             case "aywen:dreamrush":
-                giveMoney(player, 500, "Advancements Leave Earth");
+                giveMoney(player, 500, "Advancements Ruée vers le rêve");
                 break;
+            case "aywen:fishing/docker":
+                giveMoney(player, 500, "Advancements Dockerfish");
+                break;
+            case "aywen:fishing/poissonion":
+                giveMoney(player, 500, "Advancements Poissonion");
+                break;
+            case "aywen:fishing/moonfish":
+                giveMoney(player, 500, "Advancements Moonfish");
+                break;
+            case "aywen:fishing/comme_un_onion":
+                giveMoney(player, 500, "Advancements Comme un Onion");
+                break;
+            case "aywen:fishing/poissoleil":
+                giveMoney(player, 500, "Advancements Poisson-soleil");
+                break;
+
         }
     }
 
