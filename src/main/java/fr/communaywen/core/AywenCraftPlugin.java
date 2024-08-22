@@ -34,7 +34,6 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.luckyblocks.*;
-import fr.communaywen.core.luckyblocks.events.*;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
@@ -213,6 +212,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ReportCommands(),
                 new ChatChannelCMD(),
                 new MailboxCommand(),
+                new LuckyBlockManager(),
+                new SpawnSkeletonHorse(),
+                new SpawnZombieHorse(),
                 new RandomEventsCommand(this)
         );
 
@@ -240,8 +242,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new RTPWand(this),
                 onPlayers,
                 new ExplosionListener(),
-                new PlayerJoinEventListener(),
-                new ExplosionEvent(),
                 new SleepListener(),
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
@@ -260,14 +260,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MailboxListener(),
                 new ElevatorListener(),
                 new ChunkListManager(),
-                new AllayEvent(),
-                new BreezeEvent(),
-                new ExplosionEvent(),
-                new IllusionerEvent(),
-                new LightningEvent(),
-                new PlayerJoinEventListener(),
-                new SkeletonHorseEvent(),
-                new ZombifiedHorseEvent()
+                new BlockBreakListener()
+
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
