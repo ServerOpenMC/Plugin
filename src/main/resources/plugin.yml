@@ -60,3 +60,6 @@ permissions:
   ayw.command.mailbox:
     description: 'Utilise la boite aux lettres'
     default: true
+  ayw.command.tpagui:
+    description: 'tpagui'
+    default: true
