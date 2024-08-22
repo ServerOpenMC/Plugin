@@ -17,6 +17,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
@@ -86,6 +87,8 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -167,6 +170,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler = BukkitCommandHandler.create(this);
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
+        this.handler.getTranslator().setLocale(Locale.FRENCH);
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
@@ -211,7 +215,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ShowCraftCommand(managers.getCustomItemsManager()),
                 new ReportCommands(),
                 new ChatChannelCMD(),
-                new RandomEventsCommand(this)
+                new MailboxCommand(),
+                new RandomEventsCommand(this),
+                new TeamClaim()
         );
 
         /*  --------  */
