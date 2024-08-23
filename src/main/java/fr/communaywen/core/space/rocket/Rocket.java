@@ -2,6 +2,9 @@ package fr.communaywen.core.space.rocket;
 
 import dev.lone.itemsadder.api.CustomEntity;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -18,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Feature("Fusée")
+@Credit("ri1_")
+@Collaborators("Dartsgame")
 public class Rocket {
     @Getter
     private final CustomEntity entity;
@@ -81,7 +87,6 @@ public class Rocket {
             return;
         }
 
-        //if there's a block in the way, error
         if(entity.getLocation().getWorld().getHighestBlockAt(entity.getLocation()).getY() > entity.getLocation().getY()) {
             MessageManager.sendMessageType(player, "Il y a un bloc sur la trajectoire de la fusée, impossible de décoller", Prefix.SPACE, MessageType.ERROR, true);
             return;
@@ -111,7 +116,6 @@ public class Rocket {
                 player.sendTitle("§c"+i.get(), "§r", 0, 20, 0);
                 if(i.get() == 1) {
                     entity.playAnimation("animation.rocket.launch");
-                    //in 4s
                     new BukkitRunnable() {
                         @Override
                         public void run() {

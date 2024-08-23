@@ -1,6 +1,7 @@
 package fr.communaywen.core.space.moon;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Collaborators;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import lombok.Getter;
@@ -13,7 +14,8 @@ import org.bukkit.event.Listener;
 import java.util.Objects;
 
 @Feature("Moon")
-@Credit("Gyro3630")
+@Credit("ri1_")
+@Collaborators({"Gyro3630", "gab400", "Auburn", "CoolJWB", "Claude"})
 public class MoonDimensionManager implements Listener {
 
     AywenCraftPlugin plugin;
