@@ -69,6 +69,7 @@ public class DimensionManager implements Listener {
         dreamworld.setGameRule(GameRule.DISABLE_RAIDS, true);
         dreamworld.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
         dreamworld.setGameRule(GameRule.DO_TRADER_SPAWNING, false);
+        dreamworld.setGameRule(GameRule.NATURAL_REGENERATION, false);
 
         dreamworld.setTime(18000);
 
