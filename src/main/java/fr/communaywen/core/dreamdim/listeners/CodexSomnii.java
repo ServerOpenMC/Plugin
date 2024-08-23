@@ -50,7 +50,7 @@ public class CodexSomnii implements Listener {
         meta.addPages(Component.text("§5§l1.§r Dimension\n").clickEvent(ClickEvent.changePage(3)).append(
                 Component.text("    §d§l1.§r Flore\n").clickEvent(ClickEvent.changePage(5)).append(
                 Component.text("    §d§l2.§r Pêche\n").clickEvent(ClickEvent.changePage(7)).append(
-                Component.text("    §d§l2.§r Minéraux\n").clickEvent(ClickEvent.changePage(11))
+                Component.text("    §d§l3.§r Minéraux\n").clickEvent(ClickEvent.changePage(11))
         ))));
 
         /* DIMENSION */
