@@ -6,13 +6,12 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.dreamdim.fishing.FishingListener;
 import org.bukkit.*;
-import org.bukkit.entity.Fish;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import fr.communaywen.core.dreamdim.populators.*;
 import fr.communaywen.core.dreamdim.listeners.*;
-import org.checkerframework.checker.units.qual.C;
+import fr.communaywen.core.dreamdim.enchantments.*;
 
 import java.util.Objects;
 
@@ -38,9 +37,11 @@ public class DimensionManager implements Listener {
         this.cloudSoup = new CloudSoup(plugin, register);
 
         plugin.registerEvents(
+                new DreamSlayer(),
+                new Coma(plugin),
+
                 new StripWood(),
                 new FishingListener(plugin),
-                new DreamSlayer(),
                 new CodexSomnii(register),
                 cloudSoup,
                 new MilkListener(),

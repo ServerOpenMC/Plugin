@@ -1,4 +1,4 @@
-package fr.communaywen.core.dreamdim.listeners;
+package fr.communaywen.core.dreamdim.enchantments;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
