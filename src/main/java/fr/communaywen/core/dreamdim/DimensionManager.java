@@ -38,6 +38,7 @@ public class DimensionManager implements Listener {
         this.cloudSoup = new CloudSoup(plugin, register);
 
         plugin.registerEvents(
+                new StripWood(),
                 new FishingListener(plugin),
                 new DreamSlayer(),
                 new CodexSomnii(register),
