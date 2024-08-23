@@ -39,7 +39,7 @@ public class MobListener implements Listener {
         if (entity.getType() == EntityType.SPIDER) {
             ((Spider) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(32);
             ((Spider) entity).getAttribute(Attribute.GENERIC_SCALE).setBaseValue(2);
-            ((Spider) entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(4);
+            ((Spider) entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(10);
         }else if (List.of(EntityType.CREEPER, EntityType.WITCH, EntityType.ZOMBIE_VILLAGER).contains(entity.getType())) {
             e.setCancelled(true);
         } else if (List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.ENDERMAN).contains(entity.getType())) {
