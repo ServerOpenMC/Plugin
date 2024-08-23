@@ -6,6 +6,9 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.CustomEntityDeathEvent;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.menu.TeamMenu;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,6 +20,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -39,6 +43,12 @@ public class RocketListener implements Listener {
             CustomEntity rocket = CustomEntity.byAlreadySpawned(event.getRightClicked());
             if(rocket != null) {
 
+                if(Rocket.getByEntity(rocket) == null) {
+                    new Rocket(rocket);
+                }
+
+                Rocket.getByEntity(rocket).openMenu(event.getPlayer());
+
 
                 //  §r§f%img_offset_-9%%img_rocket_menu%
                 //  54
@@ -56,6 +66,7 @@ public class RocketListener implements Listener {
 
     @EventHandler
     public void onRocketPlace(PlayerInteractEvent event) {
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ItemStack item = event.getItem();
         CustomStack customStack = CustomStack.byItemStack(item);
         if(customStack != null && customStack.getNamespacedID().equals("space:rocket")) {
@@ -63,6 +74,7 @@ public class RocketListener implements Listener {
                 if(event.getClickedBlock().getLocation().add(0, 1, 0).getBlock().getType() == Material.AIR && event.getClickedBlock().getLocation().add(0, 2, 0).getBlock().getType() == Material.AIR){
                     CustomEntity rocket = CustomEntity.spawn("space:rocket", event.getClickedBlock().getLocation().add(0.5, 1.25, 0.5));
                     rocket.playAnimation("animation.rocket.idle");
+                    new Rocket(rocket);
                     event.getPlayer().getInventory().removeItem(item);
                 }
             }
@@ -72,36 +84,45 @@ public class RocketListener implements Listener {
     @EventHandler
     public void onRocketBreak(CustomEntityDeathEvent event) {
         if(event.getNamespacedID().equals("space:rocket")) {
+            if(CustomEntity.byAlreadySpawned(event.getEntity()) == null) AywenCraftPlugin.getInstance().getLogger().info("Unknown rocket");
             event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), CustomStack.getInstance("space:rocket").getItemStack());
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
-        if (e.getView().title().equals(PlaceholderAPI.setPlaceholders((Player) e.getWhoClicked(), "§r§f%img_offset_-9%%img_rocket_menu%"))) {
-            ItemStack clickedItem = e.getCurrentItem();
-
-            if (clickedItem != null && clickedItem.getType() == Material.BLACK_STAINED_GLASS_PANE) {
-                e.setCancelled(true);
-            } /*else if (e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.PAPER) {
-                Player p = (Player) e.getWhoClicked();
-
-                Inventory corpseInventory = e.getClickedInventory();
-                Inventory playerInventory = p.getInventory();
-
-                CorpseMenu corpseMenu = corpseManager.getCorpseMenuByPlayer(p);
-
-                if(corpseMenu == null){
-                    return;
+            Rocket rocket = Rocket.getByEntity(CustomEntity.byAlreadySpawned(event.getEntity()));
+            if(rocket != null) {
+                rocket.getGui().getInventory().close();
+                rocket.remove();
+                if(rocket.getCoalCount() > 0) {
+                    event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.COAL, rocket.getCoalCount()));
                 }
-
-                corpseMenu.swapContents(playerInventory, corpseInventory);
-
-                p.sendMessage("§aVous avez récupéré tout le stuff de la tombe.");
-                p.closeInventory();
-            }*/
+            }
         }
     }
+
+//    @EventHandler
+//    public void onInventoryClick(InventoryClickEvent e) {
+//        if (e.getView().title().equals(PlaceholderAPI.setPlaceholders((Player) e.getWhoClicked(), "§r§f%img_offset_-9%%img_rocket_menu%"))) {
+//            ItemStack clickedItem = e.getCurrentItem();
+//
+//            if (clickedItem != null && clickedItem.getType() == Material.BLACK_STAINED_GLASS_PANE) {
+//                e.setCancelled(true);
+//            } /*else if (e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.PAPER) {
+//                Player p = (Player) e.getWhoClicked();
+//
+//                Inventory corpseInventory = e.getClickedInventory();
+//                Inventory playerInventory = p.getInventory();
+//
+//                CorpseMenu corpseMenu = corpseManager.getCorpseMenuByPlayer(p);
+//
+//                if(corpseMenu == null){
+//                    return;
+//                }
+//
+//                corpseMenu.swapContents(playerInventory, corpseInventory);
+//
+//                p.sendMessage("§aVous avez récupéré tout le stuff de la tombe.");
+//                p.closeInventory();
+//            }*/
+//        }
+//    }
 
 
 }

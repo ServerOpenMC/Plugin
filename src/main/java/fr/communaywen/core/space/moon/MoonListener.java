@@ -6,6 +6,9 @@ import dev.lone.itemsadder.api.CustomEntity;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.menu.TeamMenu;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatMessageType;
@@ -129,6 +132,8 @@ public class MoonListener implements Listener {
         }
     }
 
+
+
     @EventHandler
     public void onMilk(PlayerInteractEntityEvent e) {
         if(!e.getPlayer().getWorld().getName().equals("moon")) return;
@@ -228,14 +233,13 @@ public class MoonListener implements Listener {
                     if(shardLoading.get() == 100) {
                         shardLoading.set(0);
                         shardLoading.remove();
-                        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
-                        e.getPlayer().sendMessage("§6Vous avez trouvé un fragment de lune !");
+                        MessageManager.sendMessageType(e.getPlayer(), "§aVous avez trouvé un fragment de lune !", Prefix.SPACE, MessageType.SUCCESS, true);
                         e.getPlayer().getInventory().addItem(CustomStack.getInstance("space:moon_shard").getItemStack());
                         this.cancel();
                         return;
                     }
                     shardLoading.set(shardLoading.get() + 1);
-                    e.getPlayer().sendTitle("", createProgressBar(shardLoading.get(), 10), 0, 11, 0);
+                    e.getPlayer().sendTitle("", createProgressBar(shardLoading.get(), 10, "§6"), 0, 11, 0);
                 }
             }.runTaskTimer(AywenCraftPlugin.getInstance(), 0, 10);
         }
@@ -278,6 +282,7 @@ public class MoonListener implements Listener {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 160, 3));
 
                 p.sendTitle("§cVous avez besoin d'un scaphandre", "§cpour réspirer sur la lune", 0, 40, 0);
+                MessageManager.sendMessageType(p, "§cVous avec besoin d'un scaphandre pour réspirer sur la lune", Prefix.SPACE, MessageType.ERROR, false);
 
                 if(p.getHealth() <= 4 && p.getHealth() >= 3) {
                     p.playSound(p.getLocation(), "sons:effects.hyperventilate", 1, 1);
