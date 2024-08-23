@@ -229,9 +229,7 @@ public class MoonListener implements Listener {
     public void onBoom(BlockExplodeEvent e) {
         if(!e.getBlock().getWorld().getName().equals("moon")) return;
 
-        for (Block b : e.blockList()) {
-            if(b.getType() == Material.IRON_BLOCK || b.getType() == Material.END_STONE) b.setType(Material.AIR);
-        }
+        e.setCancelled(true);
     }
 
     @EventHandler

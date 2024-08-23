@@ -31,7 +31,7 @@ public class Utils {
         double dotProduct = playerDirection.dot(moonDirection);
 
         // If the dot product is close to 1, the player is looking at the moon
-        return dotProduct > 0.998; // You can adjust this threshold as needed
+        return dotProduct > 0.98; // You can adjust this threshold as needed
     }
 
 }
