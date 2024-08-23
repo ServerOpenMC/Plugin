@@ -5,6 +5,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import dev.lone.itemsadder.api.CustomEntity;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.teams.menu.TeamMenu;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -28,15 +29,16 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,17 +55,20 @@ public class MoonListener implements Listener {
 
         if (!player.getWorld().getName().equals("moon")){ return; }
 
-        //TODO : Créer l'acier
-        /*if (block.getType().equals(Material.IRON_BLOCK)) {
+        if (block.getType().equals(Material.IRON_BLOCK)) {
             event.setDropItems(false);
             player.getWorld().dropItemNaturally(block.getLocation(),
-                    CustomStack.getInstance("space:steel").getItemStack());
-        }*/
+                    CustomStack.getInstance("space:steel_ingot").getItemStack());
+            if(Math.random() < 0.2) {
+                player.getWorld().dropItemNaturally(block.getLocation(),
+                        CustomStack.getInstance("space:steel_ingot").getItemStack());
+            }
+        }
         if(block.getType().equals(Material.END_STONE)) {
             event.setDropItems(false);
             player.getWorld().dropItemNaturally(block.getLocation(),
                     CustomStack.getInstance("space:moon_shard").getItemStack());
-            if(Math.random() < 0.1) {
+            if(Math.random() < 0.3) {
                 player.getWorld().dropItemNaturally(block.getLocation(),
                         CustomStack.getInstance("space:moon_shard").getItemStack());
             }
@@ -113,12 +118,20 @@ public class MoonListener implements Listener {
     public void onEntitySpawn(EntitySpawnEvent e) {
         if(!e.getLocation().getWorld().getName().equals("moon")) return;
         if(List.of(EntityType.ARMOR_STAND, EntityType.BLOCK_DISPLAY, EntityType.ITEM_DISPLAY, EntityType.TEXT_DISPLAY, EntityType.ITEM, EntityType.WOLF, EntityType.PARROT, EntityType.OCELOT, EntityType.CAT, EntityType.TROPICAL_FISH, EntityType.ARROW, EntityType.ENDER_PEARL, EntityType.EXPERIENCE_ORB, EntityType.EXPERIENCE_BOTTLE, EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME, EntityType.TRIDENT, EntityType.POTION, EntityType.AREA_EFFECT_CLOUD, EntityType.SNOWBALL, EntityType.IRON_GOLEM, EntityType.SNOW_GOLEM, EntityType.BREEZE_WIND_CHARGE, EntityType.TNT).contains(e.getEntity().getType())) return;
-        if(!List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.COW, EntityType.SPIDER).contains(e.getEntity().getType())) {
+        if(!List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.COW, EntityType.SPIDER, EntityType.VILLAGER).contains(e.getEntity().getType())) {
             e.setCancelled(true);
         }
         if(e.getEntity().getType().equals(EntityType.SPIDER)) {
             e.setCancelled(true);
-            e.getLocation().getWorld().spawnEntity(e.getLocation(), EntityType.COW);
+
+            double random = Math.random();
+            if(random < 0.2) {
+                e.getLocation().getWorld().spawnEntity(e.getLocation(), EntityType.COW);
+            }
+            if(random >= 0.2 && random < 0.25) {
+                e.getLocation().getWorld().spawnEntity(e.getLocation(), EntityType.VILLAGER);
+            }
+
         }
 
         EntityEquipment ee = ((LivingEntity) e.getEntity()).getEquipment();
@@ -129,6 +142,55 @@ public class MoonListener implements Listener {
         if(e.getEntity().getType().equals(EntityType.COW)) {
             ((LivingEntity) e.getEntity()).customName(Component.text("§eVache lunaire"));
             e.getEntity().setCustomNameVisible(true);
+        }
+        if(e.getEntity().getType().equals(EntityType.VILLAGER)) {
+            Villager villager = (Villager) e.getEntity();
+            villager.customName(Component.text("§eVillageois lunaire"));
+            villager.setCustomNameVisible(true);
+            villager.setProfession(Villager.Profession.ARMORER);
+            villager.setVillagerType(Villager.Type.SNOW);
+            villager.setVillagerLevel(5);
+        }
+    }
+
+    @EventHandler
+    public void onVillagerTradeMenuOpen(InventoryOpenEvent e) {
+        if(!e.getPlayer().getWorld().getName().equals("moon")) return;
+        if(e.getInventory() instanceof MerchantInventory) {
+            MerchantInventory inventory = (MerchantInventory) e.getInventory();
+
+            List<MerchantRecipe> newRecipes = new ArrayList<>();
+
+            MerchantRecipe glassRecipe = new MerchantRecipe(new ItemStack(Material.GLASS), 3);
+            glassRecipe.addIngredient(CustomStack.getInstance("space:moon_shard").getItemStack().add(3));
+            newRecipes.add(glassRecipe);
+
+            MerchantRecipe moonMilkRecipe = new MerchantRecipe(CustomStack.getInstance("space:moon_milk_bucket").getItemStack(), 3);
+            moonMilkRecipe.addIngredient(new ItemStack(Material.BUCKET));
+            moonMilkRecipe.addIngredient(CustomStack.getInstance("space:moon_shard").getItemStack().add(5));
+            newRecipes.add(moonMilkRecipe);
+
+            MerchantRecipe bucketRecipe = new MerchantRecipe(new ItemStack(Material.BUCKET), 3);
+            bucketRecipe.addIngredient(new ItemStack(Material.COAL, 30));
+            newRecipes.add(bucketRecipe);
+
+            MerchantRecipe coalRecipe = new MerchantRecipe(new ItemStack(Material.COAL, 30), 10);
+            coalRecipe.addIngredient(CustomStack.getInstance("space:moon_shard").getItemStack().add(63));
+            coalRecipe.addIngredient(new ItemStack(Material.GLASS));
+            newRecipes.add(coalRecipe);
+
+            MerchantRecipe spyGlassRecipe = new MerchantRecipe(new ItemStack(Material.SPYGLASS, 1), 2);
+            spyGlassRecipe.addIngredient(CustomStack.getInstance("space:moon_shard").getItemStack().add(10));
+            spyGlassRecipe.addIngredient(new ItemStack(Material.GLASS, 3));
+            newRecipes.add(spyGlassRecipe);
+
+            MerchantRecipe cheeseRecipe = new MerchantRecipe(CustomStack.getInstance("space:cheese").getItemStack().add(9), 3);
+            cheeseRecipe.addIngredient(CustomStack.getInstance("space:moon_milk_bucket").getItemStack());
+            newRecipes.add(cheeseRecipe);
+
+            inventory.getMerchant().setRecipes(newRecipes);
+
+
         }
     }
 
@@ -163,17 +225,12 @@ public class MoonListener implements Listener {
         };
     }
 
+    @EventHandler
     public void onBoom(BlockExplodeEvent e) {
         if(!e.getBlock().getWorld().getName().equals("moon")) return;
 
-        for(Block b : e.blockList()) {
-            if(b.getType().equals(Material.END_STONE)) {
-                b.getDrops().clear();
-                b.getWorld().dropItemNaturally(b.getLocation(), CustomStack.getInstance("space:moon_shard").getItemStack());
-            }
-            if(b.getType().equals(Material.IRON_BLOCK)) {
-                b.getDrops().clear();
-            }
+        for (Block b : e.blockList()) {
+            if(b.getType() == Material.IRON_BLOCK || b.getType() == Material.END_STONE) b.setType(Material.AIR);
         }
     }
 

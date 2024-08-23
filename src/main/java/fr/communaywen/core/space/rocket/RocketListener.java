@@ -41,6 +41,7 @@ public class RocketListener implements Listener {
     public void onRocketInteract(PlayerInteractEntityEvent event) {
         if(CustomEntity.isCustomEntity(event.getRightClicked())) {
             CustomEntity rocket = CustomEntity.byAlreadySpawned(event.getRightClicked());
+            if(!rocket.getNamespacedID().equals("space:rocket")) return;
             if(rocket != null) {
 
                 if(Rocket.getByEntity(rocket) == null) {
@@ -50,16 +51,6 @@ public class RocketListener implements Listener {
                 Rocket.getByEntity(rocket).openMenu(event.getPlayer());
 
 
-                //  §r§f%img_offset_-9%%img_rocket_menu%
-                //  54
-
-                //create a gui
-                //RocketMenu rocketMenu = new RocketMenu(event.getPlayer(), rocket);
-                //rocketMenu.open();
-
-                //LaunchAnim launchAnim = new LaunchAnim(rocket, event.getPlayer());
-                //launchAnim.launch();
-                //event.getPlayer().teleport(new Location(Bukkit.getWorld("moon"), rocket.getLocation().getX(), 100, rocket.getLocation().getZ()));
             }
         }
     }
@@ -96,33 +87,6 @@ public class RocketListener implements Listener {
             }
         }
     }
-
-//    @EventHandler
-//    public void onInventoryClick(InventoryClickEvent e) {
-//        if (e.getView().title().equals(PlaceholderAPI.setPlaceholders((Player) e.getWhoClicked(), "§r§f%img_offset_-9%%img_rocket_menu%"))) {
-//            ItemStack clickedItem = e.getCurrentItem();
-//
-//            if (clickedItem != null && clickedItem.getType() == Material.BLACK_STAINED_GLASS_PANE) {
-//                e.setCancelled(true);
-//            } /*else if (e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.PAPER) {
-//                Player p = (Player) e.getWhoClicked();
-//
-//                Inventory corpseInventory = e.getClickedInventory();
-//                Inventory playerInventory = p.getInventory();
-//
-//                CorpseMenu corpseMenu = corpseManager.getCorpseMenuByPlayer(p);
-//
-//                if(corpseMenu == null){
-//                    return;
-//                }
-//
-//                corpseMenu.swapContents(playerInventory, corpseInventory);
-//
-//                p.sendMessage("§aVous avez récupéré tout le stuff de la tombe.");
-//                p.closeInventory();
-//            }*/
-//        }
-//    }
 
 
 }

@@ -107,7 +107,7 @@ public class RocketMenu implements Listener {
             } else {
                 event.setCancelled(true);
             }
-            if(event.getCurrentItem() != null && event.getCurrentItem().getDisplayName().equals("§r§aDémarrer la fusée")) {
+            if((slot >= BUTTON_SLOT-3 && slot <= BUTTON_SLOT+2) || slot >= BUTTON_SLOT-12 && slot <= BUTTON_SLOT-7) {
                 rocket.launch(player);
             }
         } else if (event.isShiftClick() && event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.COAL) {
