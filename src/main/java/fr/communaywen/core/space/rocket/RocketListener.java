@@ -25,10 +25,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -72,6 +69,7 @@ public class RocketListener implements Listener {
         }
     }
 
+
     @EventHandler
     public void onRocketBreak(CustomEntityDeathEvent event) {
         if(event.getNamespacedID().equals("space:rocket")) {
@@ -84,6 +82,15 @@ public class RocketListener implements Listener {
                 if(rocket.getCoalCount() > 0) {
                     event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.COAL, rocket.getCoalCount()));
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpecTP(PlayerTeleportEvent event) {
+        if(event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
+            if(!event.getPlayer().hasPermission("minecraft.command.teleport") && !event.getPlayer().hasPermission("essentials.teleport")) {
+                event.setCancelled(true);
             }
         }
     }
