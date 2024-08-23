@@ -13,6 +13,9 @@ import fr.communaywen.core.teams.menu.TeamMenu;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.teams.utils.TeamUtils;
 import fr.communaywen.core.utils.CommandUtils;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -205,57 +208,24 @@ public class TeamCommand {
         team.openInventory(player);
     }
 
-    @Subcommand("claim add")
-    @Description("Claim une zone définit par un stick")
-    public void claimStickGive(Player player) {
-        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if(team != null && !team.isIn(player.getUniqueId())) {
-            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
-            return;
-        }
-
-        // Check if the player's inventory is full
-        if (player.getInventory().firstEmpty() == -1) {
-            CommandUtils.sendMessage(player, "Votre inventaire est plein !", true);
-            return;
-        }
-
-        if(ClaimListener.getClaimStick(player)) {
-            CommandUtils.sendMessage(player, "Vous avez déjà un claim stick !", true);
-            return;
-        }
-
-        team.giveClaimStick(player);
-    }
-
-    @Subcommand("claim list")
-    @Description("Ouvre la liste des claims")
-    public void claimListMenu(Player player) {
-        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team == null || !team.isIn(player.getUniqueId())) {
-            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
-            return;
-        }
-        new ClaimMenu(player, team).open();
-    }
-
-    @Subcommand("claim bypass")
-    @Description("Bypass les claims de la team")
-    @CommandPermission("ayw.claims.bypass")
-    public void claimBypass(Player player) {
-        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
-        if (team == null || !team.isIn(player.getUniqueId())) {
-            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
-            return;
-        }
-        if(AywenCraftPlugin.playerClaimsByPass.contains(player)) {
-            AywenCraftPlugin.playerClaimsByPass.remove(player);
-            CommandUtils.sendMessage(player, "Vous n'êtes plus en bypass des claims de teams !", false);
-        } else {
-            AywenCraftPlugin.playerClaimsByPass.add(player);
-            CommandUtils.sendMessage(player, "Vous êtes maintenant en bypass des claims de teams !", false);
-        }
-    }
+//    @Subcommand("claim")
+//    @Description("Gestion des claims")
+//    @AutoComplete("@claimsTeams *")
+//    public void claimMenu(Player player, @Default("~") @Named("claim") String claim) {
+//        Team team = teamManager.getTeamByPlayer(player.getUniqueId());
+//        if (team == null || !team.isIn(player.getUniqueId())) {
+//            CommandUtils.sendMessage(player, "Vous n'êtes pas dans une team !", true);
+//            return;
+//        }
+//
+//        if(claim.equalsIgnoreCase("list")) {
+//
+//        } else if(claim.equalsIgnoreCase("bypass")) {
+//
+//        } else if(claim.equalsIgnoreCase("~")) {
+//
+//        }
+//    }
 
     @Subcommand("money add")
     @Description("Transfère de l'argent de ton compte à la team.")
