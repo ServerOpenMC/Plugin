@@ -55,6 +55,7 @@ public class BabyFuzeListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
+        if (player.getWorld().getName().equals("dreamworld")) { return; }
 
         if (entities.containsKey(player.getUniqueId())) {
             CustomEntity customEntity = entities.get(player.getUniqueId());
