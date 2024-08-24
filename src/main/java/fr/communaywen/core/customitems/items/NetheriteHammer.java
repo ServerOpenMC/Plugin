@@ -2,9 +2,9 @@ package fr.communaywen.core.customitems.items;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,28 +17,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Getter
-public class NetheriteHammer implements CustomItems {
+public class NetheriteHammer extends CustomItems implements CustomItemsEvents {
 
-    @Setter
-    private String name;
-
-    @Setter
-    private ItemStack itemStack;
-
-    private final ArrayList<String> recipe = new ArrayList<>() {{
-        add("BBB");
-        add("BSB");
-        add("XSX");
-    }};
-
-    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
-        put('B', new ItemStack(Material.NETHERITE_BLOCK));
-        put('S', new ItemStack(Material.STICK));
-    }};
-
-    @Override
-    public String getNamespacedID() {
-        return "customitems:netherite_hammer";
+    public NetheriteHammer() {
+        super(
+                null,
+                null,
+                new ArrayList<>() {{
+                    add("BBB");
+                    add("BSB");
+                    add("XSX");
+                }},
+                new HashMap<>() {{
+                    put('B', new ItemStack(Material.NETHERITE_BLOCK));
+                    put('S', new ItemStack(Material.STICK));
+                }},
+                "customitems:netherite_hammer"
+        );
     }
 
     @Override

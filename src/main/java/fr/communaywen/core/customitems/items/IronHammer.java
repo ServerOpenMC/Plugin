@@ -2,16 +2,14 @@ package fr.communaywen.core.customitems.items;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,28 +17,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Getter
-public class IronHammer implements CustomItems {
+public class IronHammer extends CustomItems implements CustomItemsEvents {
 
-    @Setter
-    private String name;
-
-    @Setter
-    private ItemStack itemStack;
-
-    private final ArrayList<String> recipe = new ArrayList<>() {{
-        add("BBB");
-        add("BSB");
-        add("XSX");
-    }};
-
-    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
-        put('B', new ItemStack(Material.IRON_BLOCK));
-        put('S', new ItemStack(Material.STICK));
-    }};
-
-    @Override
-    public String getNamespacedID() {
-        return "customitems:iron_hammer";
+    public IronHammer() {
+        super(
+                null,
+                null,
+                new ArrayList<>() {{
+                    add("BBB");
+                    add("BSB");
+                    add("XSX");
+                }},
+                new HashMap<>() {{
+                    put('B', new ItemStack(Material.IRON_BLOCK));
+                    put('S', new ItemStack(Material.STICK));
+                }},
+                "customitems:iron_hammer"
+        );
     }
 
     @Override
