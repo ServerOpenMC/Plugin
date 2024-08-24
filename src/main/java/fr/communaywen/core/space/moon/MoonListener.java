@@ -240,7 +240,7 @@ public class MoonListener implements Listener {
             e.getPlayer().getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(10);
 
             if(e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.GLASS)) {
-                playerBreath(e.getPlayer());
+                //playerBreath(e.getPlayer()); -- Le Joueur respire déjà avec l'event de l'item equip
             } else {
                 playerSuffocate(e.getPlayer());
             }

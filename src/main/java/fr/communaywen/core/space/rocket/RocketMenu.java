@@ -50,7 +50,7 @@ public class RocketMenu implements Listener {
         for (int i = 0; i < INVENTORY_SIZE; i++) {
             if (i == COAL_SLOT) {
                 inventory.setItem(i, createCoalCounterItem());
-            } else if ((i >= BUTTON_SLOT-3 && i <= BUTTON_SLOT+3) || i >= BUTTON_SLOT-12 && i <= BUTTON_SLOT-9) {
+            } else if ((i >= BUTTON_SLOT-3 && i <= BUTTON_SLOT+3) || i >= BUTTON_SLOT-12 && i <= BUTTON_SLOT-6) {
                 inventory.setItem(i, i == BUTTON_SLOT ? createLaunchButton("button") : createLaunchButton("invisible"));
             } else {
                     inventory.setItem(i, invisibleBtn);
@@ -106,7 +106,7 @@ public class RocketMenu implements Listener {
             } else {
                 event.setCancelled(true);
             }
-            if((slot >= BUTTON_SLOT-3 && slot <= BUTTON_SLOT+3) || slot >= BUTTON_SLOT-12 && slot <= BUTTON_SLOT-9) {
+            if((slot >= BUTTON_SLOT-3 && slot <= BUTTON_SLOT+3) || slot >= BUTTON_SLOT-12 && slot <= BUTTON_SLOT-6) {
                 rocket.launch(player);
             }
         } else if (event.isShiftClick() && event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.COAL) {
@@ -140,7 +140,7 @@ public class RocketMenu implements Listener {
             inventory.setItem(i, createLaunchButton(i == BUTTON_SLOT ? "button" : "invisible"));
         }
 
-        for (int i = BUTTON_SLOT-12; i <= BUTTON_SLOT-9; i++) {
+        for (int i = BUTTON_SLOT-12; i <= BUTTON_SLOT-6; i++) {
             inventory.setItem(i, createLaunchButton("invisible"));
         }
 

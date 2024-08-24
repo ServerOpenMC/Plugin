@@ -42,6 +42,7 @@ public class Rocket {
         this.gui = new RocketMenu(this);
         this.isLaunched = false;
         rockets.add(this);
+        AywenCraftPlugin.getInstance().getLogger().info("Rocket at " + this.getEntity().getLocation().getX() + " " + this.getEntity().getLocation().getY() + " " + this.getEntity().getLocation().getZ() + " in " + this.getEntity().getLocation().getWorld().getName() + " created. There's now " + rockets.size() + " rockets");
     }
 
     public void openMenu(Player player) {
@@ -50,10 +51,11 @@ public class Rocket {
 
 
     static public Rocket getByEntity(CustomEntity entity) {
-        return rockets.stream().filter(rocket -> rocket.entity.getId().equals(entity.getId())).findFirst().orElse(null);
+        return rockets.stream().filter(rocket -> rocket.entity.getEntity().getUniqueId().equals(entity.getEntity().getUniqueId())).findFirst().orElse(null);
     }
 
     public void remove() {
+        AywenCraftPlugin.getInstance().getLogger().info("Rocket at " + this.getEntity().getLocation().getX() + " " + this.getEntity().getLocation().getY() + " " + this.getEntity().getLocation().getZ() + " in " + this.getEntity().getLocation().getWorld().getName() + " removed");
         rockets.remove(this);
     }
 
