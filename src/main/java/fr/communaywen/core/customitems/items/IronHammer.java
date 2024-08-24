@@ -1,10 +1,9 @@
 package fr.communaywen.core.customitems.items;
 
-import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
-import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -16,22 +15,32 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@Getter
-public class IronHammer extends CustomItems implements CustomItemsEvents {
+public class IronHammer implements CustomItems {
 
-    public IronHammer() {
-        super(
-                new ArrayList<>() {{
-                    add("BBB");
-                    add("BSB");
-                    add("XSX");
-                }},
-                new HashMap<>() {{
-                    put('B', new ItemStack(Material.IRON_BLOCK));
-                    put('S', new ItemStack(Material.STICK));
-                }},
-                "customitems:iron_hammer"
-        );
+    @Getter
+    @Setter
+    private String name;
+
+    @Getter
+    @Setter
+    private ItemStack itemStack;
+
+    @Getter
+    private final ArrayList<String> recipe = new ArrayList<>() {{
+        add("BBB");
+        add("BSB");
+        add("XSX");
+    }};
+
+    @Getter
+    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
+        put('B', new ItemStack(Material.IRON_BLOCK));
+        put('S', new ItemStack(Material.STICK));
+    }};
+
+    @Override
+    public String getNamespacedID() {
+        return "customitems:iron_hammer";
     }
 
     @Override
@@ -48,7 +57,7 @@ public class IronHammer extends CustomItems implements CustomItemsEvents {
         playerFacing = playerFacing.getOppositeFace();
         ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
 
-        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 0, itemToDamage, player);
+        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 0, itemToDamage);
     }
 
     @Override
@@ -60,22 +69,10 @@ public class IronHammer extends CustomItems implements CustomItemsEvents {
             return;
         }
 
-        ItemStack result = event.getResult();
+        Player player = (Player) event.getView().getPlayer();
 
-        if (result == null) {
-            return;
-        }
-
-        CustomStack customStack = CustomStack.byItemStack(result);
-
-        if (customStack == null) {
-            return;
-        }
-
-        if (!customStack.getNamespacedID().equals(getNamespacedID())) {
-            return;
-        }
-
-        event.setResult(null);
+        player.sendMessage("§cVous ne pouvez pas modifier cet objet");
+        player.getInventory().addItem(item0);
+        player.closeInventory();
     }
 }
