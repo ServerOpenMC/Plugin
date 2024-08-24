@@ -93,10 +93,7 @@ public class ContributionMenu extends Menu {
                 inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
                     itemMeta.setLore(loreinfo);
-                }).setOnClick(inventoryClickEvent -> {
-                    MoreInfoMenu menu = new MoreInfoMenu(getOwner());
-                    menu.open();
-                }));
+                }).setNextMenu(new MoreInfoMenu(getOwner())));
             } else {
                 inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
             }

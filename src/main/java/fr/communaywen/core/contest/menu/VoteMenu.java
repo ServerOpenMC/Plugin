@@ -96,7 +96,6 @@ public class VoteMenu extends Menu {
         loreinfo.add("§7Le déroulement..., Les résultats, ...");
         loreinfo.add("§e§lCLIQUEZ ICI POUR EN VOIR PLUS!");
 
-        int camps = ContestManager.getPlayerCamp(getOwner());
         for(int i = 0; i < getInventorySize().getSize(); i++) {
             if(i==camp1Slot) {
                 inventory.put(camp1Slot, new ItemBuilder(this, m1, itemMeta -> {
@@ -104,7 +103,7 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore1);
                     itemMeta.setEnchantmentGlintOverride(ench1);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (camps == 0) {
+                    if (ContestManager.getPlayerCamp(getOwner()) == 0) {
                         ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp1", "color1");
                         menu.open();
                     }
@@ -115,7 +114,7 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore2);
                     itemMeta.setEnchantmentGlintOverride(ench2);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (camps == 0) {
+                    if (ContestManager.getPlayerCamp(getOwner()) == 0) {
                         ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp2", "color2");
                         menu.open();
                     }
@@ -124,10 +123,7 @@ public class VoteMenu extends Menu {
                 inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
                     itemMeta.setLore(loreinfo);
-                }).setOnClick(inventoryClickEvent -> {
-                    MoreInfoMenu menu = new MoreInfoMenu(getOwner());
-                    menu.open();
-                }));
+                }).setNextMenu(new MoreInfoMenu(getOwner())));
             } else {
                 inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
             }
