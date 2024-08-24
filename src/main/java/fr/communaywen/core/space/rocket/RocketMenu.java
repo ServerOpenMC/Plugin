@@ -28,9 +28,9 @@ import static fr.communaywen.core.utils.ProgressBar.createProgressBar;
 public class RocketMenu implements Listener {
 
     private static final int INVENTORY_SIZE = 54;
-    private static final int COAL_SLOT = 16;
+    private static final int COAL_SLOT = 13;
 
-    private static final int BUTTON_SLOT = 39;
+    private static final int BUTTON_SLOT = 40;
     private final Rocket rocket;
 
     @Getter
@@ -39,7 +39,7 @@ public class RocketMenu implements Listener {
     public RocketMenu(Rocket rocket) {
         JavaPlugin plugin = AywenCraftPlugin.getInstance();
         this.rocket = rocket;
-        String title = PlaceholderAPI.setPlaceholders(null, "§r§f%img_offset_-9%%img_rocket_menu%");
+        String title = PlaceholderAPI.setPlaceholders(null, "§r§f%img_offset_-8%%img_rocket_menu%");
         this.inventory = Bukkit.createInventory(null, INVENTORY_SIZE, title);
         initializeInventory();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -50,14 +50,13 @@ public class RocketMenu implements Listener {
         for (int i = 0; i < INVENTORY_SIZE; i++) {
             if (i == COAL_SLOT) {
                 inventory.setItem(i, createCoalCounterItem());
-            } else if ((i >= BUTTON_SLOT-3 && i <= BUTTON_SLOT+2) || i >= BUTTON_SLOT-12 && i <= BUTTON_SLOT-7) {
+            } else if ((i >= BUTTON_SLOT-3 && i <= BUTTON_SLOT+3) || i >= BUTTON_SLOT-12 && i <= BUTTON_SLOT-9) {
                 inventory.setItem(i, i == BUTTON_SLOT ? createLaunchButton("button") : createLaunchButton("invisible"));
             } else {
                     inventory.setItem(i, invisibleBtn);
             }
         }
     }
-
     private ItemStack createCoalCounterItem() {
         ItemStack coalCounter = CustomStack.getInstance("space:invisiblebtn").getItemStack();
         ItemMeta meta = coalCounter.getItemMeta();
@@ -107,7 +106,7 @@ public class RocketMenu implements Listener {
             } else {
                 event.setCancelled(true);
             }
-            if((slot >= BUTTON_SLOT-3 && slot <= BUTTON_SLOT+2) || slot >= BUTTON_SLOT-12 && slot <= BUTTON_SLOT-7) {
+            if((slot >= BUTTON_SLOT-3 && slot <= BUTTON_SLOT+3) || slot >= BUTTON_SLOT-12 && slot <= BUTTON_SLOT-9) {
                 rocket.launch(player);
             }
         } else if (event.isShiftClick() && event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.COAL) {
@@ -137,11 +136,11 @@ public class RocketMenu implements Listener {
         inventory.setItem(COAL_SLOT, createCoalCounterItem());
 
 
-        for (int i = BUTTON_SLOT-3; i <= BUTTON_SLOT+2; i++) {
+        for (int i = BUTTON_SLOT-3; i <= BUTTON_SLOT+3; i++) {
             inventory.setItem(i, createLaunchButton(i == BUTTON_SLOT ? "button" : "invisible"));
         }
 
-        for (int i = BUTTON_SLOT-12; i <= BUTTON_SLOT-7; i++) {
+        for (int i = BUTTON_SLOT-12; i <= BUTTON_SLOT-9; i++) {
             inventory.setItem(i, createLaunchButton("invisible"));
         }
 
