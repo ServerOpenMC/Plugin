@@ -8,6 +8,7 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
+import fr.communaywen.core.commands.contest.ContestCommand;
 import fr.communaywen.core.commands.credits.CreditCommand;
 import fr.communaywen.core.commands.credits.FeatureCommand;
 import fr.communaywen.core.commands.economy.AdminShopCommand;
@@ -29,6 +30,8 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.contest.ContestIntractEvents;
+import fr.communaywen.core.contest.ContestListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -180,6 +183,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
+                new ContestCommand(),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -243,6 +247,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new ContestListener(this),
+                new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
                 new AntiTrampling(),
