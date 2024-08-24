@@ -15,24 +15,21 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Getter
 public class IronHammer implements CustomItems {
 
-    @Getter
     @Setter
     private String name;
 
-    @Getter
     @Setter
     private ItemStack itemStack;
 
-    @Getter
     private final ArrayList<String> recipe = new ArrayList<>() {{
         add("BBB");
         add("BSB");
         add("XSX");
     }};
 
-    @Getter
     private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
         put('B', new ItemStack(Material.IRON_BLOCK));
         put('S', new ItemStack(Material.STICK));
@@ -57,7 +54,7 @@ public class IronHammer implements CustomItems {
         playerFacing = playerFacing.getOppositeFace();
         ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
 
-        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 0, itemToDamage);
+        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 0, itemToDamage, player);
     }
 
     @Override
