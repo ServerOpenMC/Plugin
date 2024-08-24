@@ -19,9 +19,7 @@ public abstract class CustomItems {
     private final HashMap<Character, ItemStack> ingredients;
     private final String namespacedID;
 
-    public CustomItems(String name, ItemStack itemStack, ArrayList<String> recipe, HashMap<Character, ItemStack> ingredients, String namespacedID) {
-        this.name = name;
-        this.itemStack = itemStack;
+    public CustomItems(ArrayList<String> recipe, HashMap<Character, ItemStack> ingredients, String namespacedID) {
         this.recipe = recipe;
         this.ingredients = ingredients;
         this.namespacedID = namespacedID;

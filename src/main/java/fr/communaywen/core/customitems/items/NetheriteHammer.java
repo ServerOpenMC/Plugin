@@ -21,8 +21,6 @@ public class NetheriteHammer extends CustomItems implements CustomItemsEvents {
 
     public NetheriteHammer() {
         super(
-                null,
-                null,
                 new ArrayList<>() {{
                     add("BBB");
                     add("BSB");

@@ -21,8 +21,6 @@ public class IronHammer extends CustomItems implements CustomItemsEvents {
 
     public IronHammer() {
         super(
-                null,
-                null,
                 new ArrayList<>() {{
                     add("BBB");
                     add("BSB");

@@ -21,8 +21,6 @@ public class DiamondHammer extends CustomItems implements CustomItemsEvents {
 
     public DiamondHammer() {
         super(
-                null,
-                null,
                 new ArrayList<>() {{
                     add("BBB");
                     add("BSB");
