@@ -2,6 +2,7 @@ package fr.communaywen.core.customitems.objects;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 

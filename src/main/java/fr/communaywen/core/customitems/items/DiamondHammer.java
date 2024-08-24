@@ -1,5 +1,6 @@
 package fr.communaywen.core.customitems.items;
 
+import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
@@ -66,10 +67,22 @@ public class DiamondHammer implements CustomItems {
             return;
         }
 
-        Player player = (Player) event.getView().getPlayer();
+        ItemStack result = event.getResult();
 
-        player.sendMessage("§cVous ne pouvez pas modifier cet objet");
-        player.getInventory().addItem(item0);
-        player.closeInventory();
+        if (result == null) {
+            return;
+        }
+
+        CustomStack customStack = CustomStack.byItemStack(result);
+
+        if (customStack == null) {
+            return;
+        }
+
+        if (!customStack.getNamespacedID().equals(getNamespacedID())) {
+            return;
+        }
+
+        event.setResult(null);
     }
 }
