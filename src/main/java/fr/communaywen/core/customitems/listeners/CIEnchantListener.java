@@ -3,7 +3,6 @@ package fr.communaywen.core.customitems.listeners;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.customitems.objects.CustomItems;
-import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,10 +37,6 @@ public class CIEnchantListener implements Listener {
             return;
         }
 
-        if (!(customItems instanceof CustomItemsEvents customItemsEvents)) {
-            return;
-        }
-
-        customItemsEvents.onEnchant(event);
+        customItems.onEnchant(event);
     }
 }
