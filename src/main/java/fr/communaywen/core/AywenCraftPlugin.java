@@ -248,7 +248,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
-                new Insomnia(),
+                new Dream(this),
                 new VpnListener(this),
                 new ThorHammer(),
                 new FriendsListener(managers.getFriendsManager()),
