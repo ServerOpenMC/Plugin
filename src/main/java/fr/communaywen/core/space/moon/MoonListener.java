@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -226,11 +227,11 @@ public class MoonListener implements Listener {
     }
 
     @EventHandler
-    public void onBoom(BlockExplodeEvent e) {
-        if(!e.getBlock().getWorld().getName().equals("moon")) return;
-
+    public void onBoomEntity(EntityExplodeEvent e) {
+        if(!e.getEntity().getWorld().getName().equals("moon")) return;
         e.setCancelled(true);
     }
+
 
     @EventHandler
     public void onDimChange(PlayerChangedWorldEvent e) {
