@@ -5,23 +5,29 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 @Credit("Fnafgameur")
-public interface CustomItems {
+@Getter
+public abstract class CustomItems {
 
-    void setName(String name);
-    String getName();
-    void setItemStack(ItemStack itemStack);
-    ItemStack getItemStack();
-    ArrayList<String> getRecipe();
-    HashMap<Character, ItemStack> getIngredients();
-    String getNamespacedID();
-    default void onBlockBreak(BlockBreakEvent event) {}
-    default void onEnchant(EnchantItemEvent event) {}
-    default void onAnvil(PrepareAnvilEvent event) {}
-    default void onInteract(PlayerInteractEvent event) {}
+    @Setter
+    private String name;
+    @Setter
+    private ItemStack itemStack;
+
+    private final ArrayList<String> recipe;
+    private final HashMap<Character, ItemStack> ingredients;
+    private final String namespacedID;
+
+    public CustomItems(ArrayList<String> recipe, HashMap<Character, ItemStack> ingredients, String namespacedID) {
+        this.recipe = recipe;
+        this.ingredients = ingredients;
+        this.namespacedID = namespacedID;
+    }
 }

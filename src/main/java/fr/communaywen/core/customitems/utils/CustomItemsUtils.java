@@ -4,6 +4,8 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.claim.RegionManager;
 import lombok.Getter;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -29,9 +31,10 @@ public class CustomItemsUtils {
      * @param brokenBlock The block to break
      * @param radius The radius of the area
      * @param depth The depth of the area
-     * @param itemInHand The item to damage
+     * @param itemInHand The item used
+     * @param player The player
      */
-    public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, ItemStack itemInHand) {
+    public static void destroyArea(BlockFace face, Block brokenBlock, int radius, int depth, ItemStack itemInHand, Player player) {
 
         int x;
         int y;
@@ -53,6 +56,10 @@ public class CustomItemsUtils {
                             blockToBrake = brokenBlock.getRelative(x, y, z);
 
                             if (blockToBrake.equals(brokenBlock)) {
+                                continue;
+                            }
+
+                            if (!canDestroy(blockToBrake.getLocation(), player)) {
                                 continue;
                             }
 
@@ -85,6 +92,10 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
+                            if (!canDestroy(blockToBrake.getLocation(), player)) {
+                                continue;
+                            }
+
                             if (blockToBrake.getType().getHardness() > 41) {
                                 continue;
                             }
@@ -111,6 +122,10 @@ public class CustomItemsUtils {
                             blockToBrake = brokenBlock.getRelative(x, y, z);
 
                             if (blockToBrake.equals(brokenBlock)) {
+                                continue;
+                            }
+
+                            if (!canDestroy(blockToBrake.getLocation(), player)) {
                                 continue;
                             }
 
@@ -222,5 +237,18 @@ public class CustomItemsUtils {
         itemBuilder.setItemMeta(itemMeta);
 
         return itemBuilder;
+    }
+
+    private static boolean canDestroy(Location location, Player player) {
+
+        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+            if (!region.isInArea(location)) {
+                continue;
+            }
+
+            return region.isTeamMember(player.getUniqueId());
+        }
+
+        return true;
     }
 }

@@ -2,10 +2,11 @@ package fr.communaywen.core.customitems.items;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,30 +18,28 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@Feature("Diamond Hammer")
+@Feature("Iron Hammer")
 @Getter
-@Setter
+@Getter
 @Credit("Fnafgameur")
 /* Credit to
  * Dartsgame for the 3D model
  */
-public class NetheriteHammer implements CustomItems {
+public class NetheriteHammer extends CustomItems implements CustomItemsEvents {
 
-    private String name;
-    private ItemStack itemStack;
-    private final ArrayList<String> recipe = new ArrayList<>() {{
-        add("BBB");
-        add("BSB");
-        add("XSX");
-    }};
-    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
-        put('B', new ItemStack(Material.NETHERITE_BLOCK));
-        put('S', new ItemStack(Material.STICK));
-    }};
-
-    @Override
-    public String getNamespacedID() {
-        return "customitems:netherite_hammer";
+    public NetheriteHammer() {
+        super(
+                new ArrayList<>() {{
+                    add("BBB");
+                    add("BSB");
+                    add("XSX");
+                }},
+                new HashMap<>() {{
+                    put('B', new ItemStack(Material.NETHERITE_BLOCK));
+                    put('S', new ItemStack(Material.STICK));
+                }},
+                "customitems:netherite_hammer"
+        );
     }
 
     @Override
@@ -57,7 +56,7 @@ public class NetheriteHammer implements CustomItems {
         playerFacing = playerFacing.getOppositeFace();
         ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
 
-        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 2, itemToDamage);
+        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 2, itemToDamage, player);
     }
 
     @Override
@@ -69,10 +68,22 @@ public class NetheriteHammer implements CustomItems {
             return;
         }
 
-        Player player = (Player) event.getView().getPlayer();
+        ItemStack result = event.getResult();
 
-        player.sendMessage("§cVous ne pouvez pas modifier cet objet");
-        player.getInventory().addItem(item0);
-        player.closeInventory();
+        if (result == null) {
+            return;
+        }
+
+        CustomStack customStack = CustomStack.byItemStack(result);
+
+        if (customStack == null) {
+            return;
+        }
+
+        if (!customStack.getNamespacedID().equals(getNamespacedID())) {
+            return;
+        }
+
+        event.setResult(null);
     }
 }
