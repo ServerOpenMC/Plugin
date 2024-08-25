@@ -1,11 +1,15 @@
 package fr.communaywen.core.luckyblocks.listeners;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockListeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+@Feature("Lucky Blocks")
+@Credit("Fnafgameur")
 public class LBPlayerQuitListener implements Listener {
 
     private final LuckyBlockManager luckyBlockManager;

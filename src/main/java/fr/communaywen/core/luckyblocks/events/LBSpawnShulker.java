@@ -2,6 +2,7 @@ package fr.communaywen.core.luckyblocks.events;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -14,7 +15,8 @@ public class LBSpawnShulker extends LuckyBlockEvent {
     public LBSpawnShulker() {
         super("Wingardiuuuum Levioosaaaaa",
                 "Un Shulker est apparu !",
-                0.7f
+                0.7f,
+                EventType.MALUS
         );
     }
 
