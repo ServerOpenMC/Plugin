@@ -3,7 +3,6 @@ package fr.communaywen.core.luckyblocks.managers;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.events.LBMoonGravity;
-import fr.communaywen.core.luckyblocks.events.LBProut;
 import fr.communaywen.core.luckyblocks.events.LBSolarGravity;
 import fr.communaywen.core.luckyblocks.events.LBSpawnShulker;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
@@ -22,7 +21,6 @@ public class LuckyBlockManager {
     private final ArrayList<LuckyBlockEvent> lbEvents = new ArrayList<>();
 
     public LuckyBlockManager() {
-        lbEvents.add(new LBProut());
         lbEvents.add(new LBSpawnShulker());
         lbEvents.add(new LBMoonGravity());
         lbEvents.add(new LBSolarGravity());
