@@ -14,18 +14,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @Feature("Lucky Blocks")
 @Credit("Fnafgameur")
-public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListeners {
+public class LBSolarGravity extends LuckyBlockEvent implements LuckyBlockListeners {
 
-    public LBMoonGravity() {
-        super("Gravité Lunaire!",
-                "Gravité Lunaire pendant 1 minute !",
+    public LBSolarGravity() {
+        super("Gravité solaire!",
+                "Gravité Solaire pendant 1 minute !",
                 0.7f,
-                EventType.BONUS
+                EventType.MALUS
         );
     }
 
+    @Override
     public void onOpen(Player player, Block block) {
-        player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.04);
+        player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(1f);
 
         new BukkitRunnable() {
             public void run() {

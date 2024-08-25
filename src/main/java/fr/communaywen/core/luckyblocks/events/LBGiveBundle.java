@@ -2,6 +2,7 @@ package fr.communaywen.core.luckyblocks.events;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,13 +16,14 @@ public class LBGiveBundle extends LuckyBlockEvent {
     public LBGiveBundle() {
         super("Rangement insolite",
                 "Vous avez obtenu un bundle !",
-                0.7f
+                0.7f,
+                EventType.BONUS
         );
     }
 
     public void onOpen(Player player, Block block) {
 
-        ItemStack bundle = new ItemStack(Material.BUNDLE);
+        final ItemStack bundle = new ItemStack(Material.BUNDLE);
         block.getWorld().dropItemNaturally(block.getLocation(), bundle);
     }
 }

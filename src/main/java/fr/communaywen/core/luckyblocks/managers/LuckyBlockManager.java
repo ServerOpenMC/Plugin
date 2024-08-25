@@ -4,6 +4,7 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.events.LBGiveBundle;
 import fr.communaywen.core.luckyblocks.events.LBMoonGravity;
+import fr.communaywen.core.luckyblocks.events.LBSolarGravity;
 import fr.communaywen.core.luckyblocks.events.LBSpawnShulker;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class LuckyBlockManager {
         lbEvents.add(new LBGiveBundle());
         lbEvents.add(new LBSpawnShulker());
         lbEvents.add(new LBMoonGravity());
+        lbEvents.add(new LBSolarGravity());
     }
 
     /**
