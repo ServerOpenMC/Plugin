@@ -13,7 +13,6 @@ import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
-import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
@@ -50,13 +49,13 @@ public class Managers {
     private ReportManager reportManager;
     private PlayerChatChannel chatChannel;
     private MoonDimensionManager moonDimManager;
+    private LuckyBlockManager luckyBlockManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
     private FileConfiguration welcomeMessageConfig;
     private FileConfiguration levelsConfig;
     private FileConfiguration quizzesConfig;
-    private FileConfiguration customItemsConfig;
 
     public void initConfig(AywenCraftPlugin plugin) {
         plugin.saveDefaultConfig();
@@ -65,7 +64,6 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
-        customItemsConfig = ConfigUtils.loadConfig(plugin, "customitems.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {
@@ -96,9 +94,9 @@ public class Managers {
         }
         // Database
 
+        dreamdimManager = new DimensionManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
-        dreamdimManager = new DimensionManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
@@ -106,17 +104,17 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
-        customItemsManager = new CustomItemsManager(customItemsConfig);
+        customItemsManager = new CustomItemsManager();
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
         moonDimManager = new MoonDimensionManager(plugin);
+        luckyBlockManager = new LuckyBlockManager();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
         dreamdimManager.init();
-        moonDimManager.init();
     }
 
     public void cleanup() {
@@ -131,6 +129,5 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
 
-        moonDimManager.close();
     }
 }
