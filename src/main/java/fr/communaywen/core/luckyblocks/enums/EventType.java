@@ -19,7 +19,10 @@ public enum EventType {
             Sound.ENTITY_FIREWORK_ROCKET_TWINKLE,
             Sound.ENTITY_FIREWORK_ROCKET_LAUNCH,
             Sound.ENTITY_PLAYER_LEVELUP,
-            Sound.ENTITY_ILLUSIONER_CAST_SPELL
+            Sound.ENTITY_ILLUSIONER_CAST_SPELL,
+            Sound.ENTITY_VILLAGER_YES,
+            Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM,
+            Sound.BLOCK_END_PORTAL_SPAWN
     }),
     NEUTRAL("Neutre", ChatColor.GRAY, new Sound[] {
             Sound.BLOCK_NOTE_BLOCK_GUITAR,
@@ -46,7 +49,10 @@ public enum EventType {
             Sound.AMBIENT_CAVE,
             Sound.ENTITY_GHAST_HURT,
             Sound.ENTITY_ELDER_GUARDIAN_CURSE,
-            Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR
+            Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR,
+            Sound.ENTITY_ENDERMAN_SCREAM,
+            Sound.ENTITY_ENDERMAN_STARE,
+            Sound.MUSIC_DISC_11
     });
 
     private final String name;
