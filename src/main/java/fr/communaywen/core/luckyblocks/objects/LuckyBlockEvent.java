@@ -27,7 +27,7 @@ public abstract class LuckyBlockEvent {
     public void triggerOpen(Player player, Block block) {
 
         // Affichage du nom de l'event pendant 1 seconde
-        player.sendTitle("", "§6" + name, 8, 20, 8);
+        player.sendTitle("", "§6§l" + name, 8, 20, 8);
         onOpen(player, block);
     }
 
