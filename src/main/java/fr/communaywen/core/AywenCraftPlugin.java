@@ -241,33 +241,35 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
-                new NoMoreLapins(),
-                new KebabListener(this),
-                new AntiTrampling(),
-                new RTPWand(this),
-                onPlayers,
-                new ExplosionListener(),
-                new SleepListener(),
-                new ChatListener(this, discordWebhook),
-                new FreezeListener(this),
-                new Insomnia(),
-                new VpnListener(this),
-                new ThorHammer(),
-                new TablistListener(this),
-                new TradeListener(),
-                new QuestsListener(),
-                new PasFraisListener(this),
-                new ClaimListener(),
-                new FarineListener(),
-                new FallBloodListener(),
-                new RTPCommand(this),
-                new BabyFuzeListener(),
-                new MailboxListener(),
-                new ElevatorListener(),
-                new ChunkListManager(),
-                new BlockBreakListener()
+    new NoMoreLapins(),
+    new KebabListener(this),
+    new AntiTrampling(),
+    new RTPWand(this),
+    onPlayers,
+    new ExplosionListener(),
+    new SleepListener(),
+    new ChatListener(this, discordWebhook),
+    new FreezeListener(this),
+    new Insomnia(),  // From luckyblocks
+    new WelcomeMessage(managers.getWelcomeMessageConfig()),  // From luckyblocks
+    new Dream(this),  // From luckyblocks
+    new VpnListener(this),
+    new ThorHammer(),
+    new TablistListener(this),
+    new TradeListener(),
+    new QuestsListener(),
+    new PasFraisListener(this),
+    new ClaimListener(),
+    new FarineListener(),
+    new FallBloodListener(this),
+    new RTPCommand(this),
+    new BabyFuzListener(),
+    new MailboxListener(),
+    new ElevatorListener(),
+    new ChunkListManager(),
+    new BlockBreakListener()
+);
 
-        );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
 

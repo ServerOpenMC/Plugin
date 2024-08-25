@@ -1,25 +1,29 @@
 package fr.communaywen.core.listeners;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.AywenCraftPlugin;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.world.TimeSkipEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-@Feature("Insomnie")
-@Credit("Gyro3630")
-public class Insomnia implements Listener {
+public class Dream implements Listener {
     public Set<Player> playersWhoSlept = new HashSet<>();
     public Random random;
+
+    World dreamworld;
+    AywenCraftPlugin plugin;
+
+    public Dream(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+        dreamworld = plugin.getServer().getWorld("dreamworld");
+    }
 
     @EventHandler
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
@@ -41,12 +45,12 @@ public class Insomnia implements Listener {
             }
             for (Player player : playersWhoSlept) {
                 random = new Random();
-                if (random.nextDouble() <= 0.1) {
-                    System.out.println("Giving insomnia to " + player.getName());
-                    player.sendMessage("Tu as fait une insomnie!");
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 200, 1)); // Slowness II
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 0)); // Weakness
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 0)); // Blindness
+                if (random.nextDouble() <= 0.1) { // Pourcentage de chance d
+                    Random r = new Random();
+                    int range = 1000;
+                    int x = r.nextInt(range - (range * -1)) + (range * -1);
+                    int y = r.nextInt(range - (range * -1)) + (range * -1);
+                    player.teleport(dreamworld.getHighestBlockAt(x, y).getLocation().add(0,1,0));
                 }
             }
 
