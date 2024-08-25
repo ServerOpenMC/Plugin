@@ -12,7 +12,10 @@ import org.bukkit.entity.Player;
 public class LBSpawnShulker extends LuckyBlockEvent {
 
     public LBSpawnShulker() {
-        super("Wingardiuuuum Levioosaaaaa", 0.7f);
+        super("Wingardiuuuum Levioosaaaaa",
+                "Un Shulker est apparu !",
+                0.7f
+        );
     }
 
     public void onOpen(Player player, Block block) {

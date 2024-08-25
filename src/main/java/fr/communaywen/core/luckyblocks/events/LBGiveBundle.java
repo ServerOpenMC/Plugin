@@ -13,7 +13,10 @@ import org.bukkit.inventory.ItemStack;
 public class LBGiveBundle extends LuckyBlockEvent {
 
     public LBGiveBundle() {
-        super("Rangement insolite", 0.7f);
+        super("Rangement insolite",
+                "Vous avez obtenu un bundle !",
+                0.7f
+        );
     }
 
     public void onOpen(Player player, Block block) {
