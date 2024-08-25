@@ -12,6 +12,8 @@ import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
@@ -48,7 +50,6 @@ public class Managers {
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
     private PlayerChatChannel chatChannel;
-    private MoonDimensionManager moonDimManager;
     private LuckyBlockManager luckyBlockManager;
 
     private FileConfiguration bookConfig;
@@ -108,7 +109,6 @@ public class Managers {
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
-        moonDimManager = new MoonDimensionManager(plugin);
         luckyBlockManager = new LuckyBlockManager();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
