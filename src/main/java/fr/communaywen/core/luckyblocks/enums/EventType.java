@@ -3,6 +3,7 @@ package fr.communaywen.core.luckyblocks.enums;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
 import java.util.Random;
@@ -12,7 +13,7 @@ import java.util.Random;
 @Getter
 public enum EventType {
 
-    BONUS("Bonus", new Sound[] {
+    BONUS("Bonus", ChatColor.GREEN, new Sound[] {
             Sound.BLOCK_AMETHYST_BLOCK_BREAK,
             Sound.ENTITY_FIREWORK_ROCKET_BLAST,
             Sound.ENTITY_FIREWORK_ROCKET_TWINKLE,
@@ -20,10 +21,24 @@ public enum EventType {
             Sound.ENTITY_PLAYER_LEVELUP,
             Sound.ENTITY_ILLUSIONER_CAST_SPELL
     }),
-    NEUTRAL("Neutre", new Sound[] {
-            Sound.ENTITY_VILLAGER_TRADE
+    NEUTRAL("Neutre", ChatColor.GRAY, new Sound[] {
+            Sound.BLOCK_NOTE_BLOCK_GUITAR,
+            Sound.BLOCK_NOTE_BLOCK_BIT,
+            Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED,
+            Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,
+            Sound.ENTITY_ZOMBIE_VILLAGER_CURE,
+            Sound.WEATHER_RAIN,
+            Sound.ENTITY_SPLASH_POTION_BREAK,
+            Sound.ENTITY_DRAGON_FIREBALL_EXPLODE,
+            Sound.BLOCK_ENCHANTMENT_TABLE_USE,
+            Sound.BLOCK_BEACON_DEACTIVATE,
+            Sound.BLOCK_STEM_BREAK,
+            Sound.BLOCK_DISPENSER_DISPENSE,
+            Sound.BLOCK_SAND_BREAK,
+            Sound.BLOCK_GLASS_BREAK,
+            Sound.BLOCK_ANVIL_DESTROY
     }),
-    MALUS("Malus", new Sound[] {
+    MALUS("Malus", ChatColor.RED, new Sound[] {
             Sound.ENTITY_TNT_PRIMED,
             Sound.ENTITY_WITHER_AMBIENT,
             Sound.ENTITY_WITCH_CELEBRATE,
@@ -35,12 +50,14 @@ public enum EventType {
     });
 
     private final String name;
+    private final ChatColor color;
     private final Sound[] values;
 
     private final Random random = new Random();
 
-    EventType(String name, Sound[] values) {
+    EventType(String name, ChatColor color, Sound[] values) {
         this.name = name;
+        this.color = color;
         this.values = values;
     }
 
