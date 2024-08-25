@@ -18,8 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@Feature("Iron Hammer")
-@Getter
+@Feature("Netherite Hammer")
 @Getter
 @Credit("Fnafgameur")
 /* Credit to

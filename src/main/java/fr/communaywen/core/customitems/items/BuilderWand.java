@@ -6,6 +6,7 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.customitems.enums.ConfigNames;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,31 +37,26 @@ import java.util.HashMap;
  * LVXN456 for the idea
  * _BGIO_ for the 3D model
  */
-public class BuilderWand implements CustomItems {
+public class BuilderWand extends CustomItems implements CustomItemsEvents {
 
-    private String name;
-    private ItemStack itemStack;
-    private FileConfiguration customItemsConfig;
     private final int radius;
-    private final ArrayList<String> recipe = new ArrayList<>() {{
-        add("EDE");
-        add("EBE");
-        add("XBX");
-    }};
-    private final HashMap<Character, ItemStack> ingredients = new HashMap<>() {{
-        put('D', new ItemStack(Material.DIAMOND_BLOCK));
-        put('B', new ItemStack(Material.BLAZE_ROD));
-        put('E', new ItemStack(Material.EMERALD_BLOCK));
-    }};
 
     public BuilderWand(FileConfiguration customItemsConfig) {
-        this.customItemsConfig = customItemsConfig;
-        this.radius = customItemsConfig.getInt(ConfigNames.BUILDER_WAND_RADIUS.getName());
-    }
+        super(
+                new ArrayList<>() {{
+                    add("EDE");
+                    add("EBE");
+                    add("XBX");
+                }},
+                new HashMap<>() {{
+                    put('D', new ItemStack(Material.DIAMOND_BLOCK));
+                    put('B', new ItemStack(Material.BLAZE_ROD));
+                    put('E', new ItemStack(Material.EMERALD_BLOCK));
+                }},
+                "customitems:builder_wand"
+        );
 
-    @Override
-    public String getNamespacedID() {
-        return "customitems:builder_wand";
+        this.radius = customItemsConfig.getInt(ConfigNames.BUILDER_WAND_RADIUS.getName());
     }
 
     @Override

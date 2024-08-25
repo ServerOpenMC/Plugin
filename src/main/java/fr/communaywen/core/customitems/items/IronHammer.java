@@ -20,8 +20,7 @@ import java.util.HashMap;
 
 @Feature("Iron Hammer")
 @Getter
-@Getter
- @Credit("Fnafgameur")
+@Credit("Fnafgameur")
 /* Credit to
  * Dartsgame for the 3D model
  */

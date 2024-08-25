@@ -3,6 +3,7 @@ package fr.communaywen.core.customitems.listeners;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -37,6 +38,10 @@ public class CIPlayerInteractListener implements Listener {
             return;
         }
 
-        customItems.onInteract(event);
+        if (!(customItems instanceof CustomItemsEvents customItemsEvents)) {
+            return;
+        }
+
+        customItemsEvents.onInteract(event);
     }
 }
