@@ -39,6 +39,7 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
 import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
 import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
@@ -224,7 +225,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatChannelCMD(),
                 new MailboxCommand(),
                 new RandomEventsCommand(this),
-                new TeamClaim()
+                new TeamClaim(),
+                new LuckyBlockCommand(managers.getLbPlayerManager())
         );
 
         /*  --------  */
