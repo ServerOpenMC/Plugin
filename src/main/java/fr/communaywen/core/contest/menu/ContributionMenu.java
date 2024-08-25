@@ -1,5 +1,6 @@
 package fr.communaywen.core.contest.menu;
 
+import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
@@ -42,12 +43,9 @@ public class ContributionMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        Integer campInteger = ContestManager.getPlayerCamp(getOwner());
-        String campName = ContestManager.getString("camp" + campInteger);
-        String color = ContestManager.getString("color" + campInteger);
-        String campWool = color.concat("_WOOL");
-        Material m = Material.getMaterial(campWool);
-        ChatColor campColor = ChatColor.valueOf(color);
+        String campName = ContestManager.getPlayerCampName(getOwner());
+        Material m = ContestManager.getPlayerCampWool(getOwner());
+        ChatColor campColor = ContestManager.getPlayerCampChatColor(getOwner());
 
         List<String> loreinfo = new ArrayList<String>();
         List<String> lore_randomevent = new ArrayList<String>();
@@ -62,6 +60,7 @@ public class ContributionMenu extends Menu {
         lore_randomevent.add("§b+x% §7Nuit Terrifiante");
         lore_randomevent.add("§8Les probabilités qu'un event se produise plus souvent, sont choisis dès le début du Contest");
 
+        Material shell_contest = CustomStack.getInstance("contest:contest_shell").getItemStack().getType();
         lore_contribute.add("§7Donner vos §bCoquillages de Contest");
         lore_contribute.add("§7Pour faire gagner votre"+ campColor +" Team!");
         lore_contribute.add("§e§lCliquez pour verser tout vos Coquillages");
@@ -73,12 +72,10 @@ public class ContributionMenu extends Menu {
 
         for(int i = 0; i < getInventorySize().getSize(); i++) {
             if(i==10) {
-                inventory.put(10, new ItemBuilder(this, Material.VILLAGER_SPAWN_EGG, itemMeta -> {
+                inventory.put(10, new ItemBuilder(this, shell_contest, itemMeta -> {
                     itemMeta.setDisplayName("§7Les Trades");
                     itemMeta.setLore(lore_trade);
-                }).setOnClick(inventoryClickEvent -> {
-
-                }));
+                }).setNextMenu(new TradeMenu(getOwner())));
             } else if(i==13) {
                 inventory.put(13, new ItemBuilder(this, m, itemMeta -> {
                     itemMeta.setDisplayName("§r§7Contribuer pour la"+ campColor+ " Team " + campName);

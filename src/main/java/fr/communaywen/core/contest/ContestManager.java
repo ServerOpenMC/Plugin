@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -82,5 +85,26 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    public static String getPlayerCampName(Player player) {
+        Integer campInteger = ContestManager.getPlayerCamp(player);
+        String campName = ContestManager.getString("camp" + campInteger);
+        return campName;
+    }
+
+    public static Material getPlayerCampWool(Player player) {
+        Integer campInteger = ContestManager.getPlayerCamp(player);
+        String color = ContestManager.getString("color" + campInteger);
+        String campWool = color.concat("_WOOL");
+        Material m = Material.getMaterial(campWool);
+        return m;
+    }
+
+    public static ChatColor getPlayerCampChatColor(Player player) {
+        Integer campInteger = ContestManager.getPlayerCamp(player);
+        String color = ContestManager.getString("color" + campInteger);
+        ChatColor campColor = ChatColor.valueOf(color);
+        return campColor;
     }
 }
