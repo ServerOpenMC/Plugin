@@ -63,3 +63,6 @@ permissions:
   ayw.command.tpagui:
     description: 'tpagui'
     default: true
+  ayw.command.luckyblock:
+    description: 'luckyblock'
+    default: true

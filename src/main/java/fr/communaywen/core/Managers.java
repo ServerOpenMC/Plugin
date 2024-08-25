@@ -12,6 +12,7 @@ import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.staff.report.ReportManager;
@@ -50,6 +51,7 @@ public class Managers {
     private ReportManager reportManager;
     private PlayerChatChannel chatChannel;
     private LuckyBlockManager luckyBlockManager;
+    private LBPlayerManager lbPlayerManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -109,6 +111,7 @@ public class Managers {
         reportManager = new ReportManager();
         reportManager.loadReports();
         luckyBlockManager = new LuckyBlockManager();
+        lbPlayerManager = new LBPlayerManager();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
