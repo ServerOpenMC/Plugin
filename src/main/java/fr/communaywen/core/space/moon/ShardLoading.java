@@ -16,6 +16,9 @@ public class ShardLoading {
         this.player = player;
         this.percentage = percentage;
 
+        if(getByPlayer(player) != null) {
+            getByPlayer(player).remove();
+        }
         shardLoadings.add(this);
     }
 

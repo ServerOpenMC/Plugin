@@ -84,6 +84,12 @@ public class Rocket {
             MessageManager.sendMessageType(player, "Cette fusée est déjà partie.", Prefix.SPACE, MessageType.ERROR, true);
             return;
         }
+
+        if(!player.getWorld().getName().equals("world") && !player.getWorld().getName().equals("moon")) {
+            MessageManager.sendMessageType(player, "Cette planète n'a pas de lune, essayez depuis la terre.", Prefix.SPACE, MessageType.ERROR, true);
+            return;
+        }
+
         if(coalCount < 1024) {
             MessageManager.sendMessageType(player, "Il n'y a pas assez de charbon dans la fusée pour démarrer", Prefix.SPACE, MessageType.ERROR, true);
             return;
