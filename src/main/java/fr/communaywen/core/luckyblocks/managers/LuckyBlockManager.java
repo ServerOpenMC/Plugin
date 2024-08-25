@@ -6,6 +6,7 @@ import fr.communaywen.core.luckyblocks.events.LBGiveBundle;
 import fr.communaywen.core.luckyblocks.events.LBMoonGravity;
 import fr.communaywen.core.luckyblocks.events.LBSpawnShulker;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,6 +16,8 @@ import java.util.Random;
 public class LuckyBlockManager {
 
     private final Random random = new Random();
+
+    @Getter
     private final ArrayList<LuckyBlockEvent> lbEvents = new ArrayList<>();
 
     public LuckyBlockManager() {
