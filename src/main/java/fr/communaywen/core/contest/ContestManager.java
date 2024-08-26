@@ -24,9 +24,19 @@ public class ContestManager extends DatabaseConnector {
                 return rs.getInt(column);
             }
         } catch (SQLException e) {
-            System.out.println("Un problème avec la fonction getInt() dans ContestManager");
+            throw new RuntimeException(e);
         }
         return 999;
+    }
+
+    public static ResultSet getTradeSelected(boolean bool) {
+        try {
+            PreparedStatement query = connection.prepareStatement("SELECT * FROM contest_trades WHERE selected = "+ bool +" ORDER BY RAND() LIMIT 12");
+            ResultSet rs = query.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getString(String column) {
@@ -37,15 +47,26 @@ public class ContestManager extends DatabaseConnector {
                 return rs.getString(column);
             }
         } catch (SQLException e) {
-            System.out.println("Un problème avec la fonction getInt() dans ContestManager");
+            throw new RuntimeException(e);
         }
         return "";
     }
 
-    public static void updateColumn(String table, int phase) {
-        String sql = "UPDATE " + table + " SET phase = ?";
+    public static void updateColumnInt(String table, String column, int value) {
+        String sql = "UPDATE " + table + " SET " + column + " = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, phase);
+            stmt.setInt(1, value);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateColumnBooleanFromRandomTrades(Boolean bool, String ress) {
+        String sql = "UPDATE contest_trades SET selected = ? WHERE ress = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setBoolean(1, bool);
+            stmt.setString(2, ress);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

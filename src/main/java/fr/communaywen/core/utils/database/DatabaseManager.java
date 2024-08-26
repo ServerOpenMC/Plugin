@@ -103,6 +103,11 @@ public class DatabaseManager {
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Samsung', 'BLACK', 'Apple', 'WHITE', '0')").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Montagne', 'LIGHT_GRAY', 'Mer', 'LIGHT_BLUE', '0')").executeUpdate();
                 // => pour ajouter des nouveaux contests il faut imprérativement reset la table all_contest
+                //chien vs chat
+                //passé vs futur
+                //Heros vs Villian
+                //Pain au chocolat VS chocolatine
+
             }
         }
 
@@ -116,14 +121,50 @@ public class DatabaseManager {
             if(rs.getInt(1) == 0) {
                 PreparedStatement states = this.getConnection().prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, 'Ketchup', 'RED', 'Mayonnaise', 'YELLOW', ?, 0,0)");
 
-                String dateContestStart = "sam.";
+                String dateContestStart = "ven.";
                 states.setString(1, dateContestStart);
                 states.executeUpdate();
             }
         }
 
-        // table camps
+        // Table camps
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), camps int(11))").executeUpdate();
+
+        // Table contest_trades
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS contest_trades (ress VARCHAR(36), amount int(11), amount_shell int(11), selected BOOLEAN NOT NULL DEFAULT FALSE)").executeUpdate();
+
+        PreparedStatement query = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM contest_trades");
+        ResultSet rs2 = query.executeQuery();
+
+        // push all contest trade
+        if(rs2.next()) {
+            if(rs2.getInt(1) == 0) {
+                    this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('PRISMARINE', '8', '1', false)").executeUpdate();
+                    this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('LARGE_AMETHYST_BUD', '3', '1', false)").executeUpdate();
+                    this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('RABBIT_STEW', '1', '3', false)").executeUpdate();
+                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SLIME_BLOCK', '7', '1', false)").executeUpdate();
+                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('ROOTED_DIRT', '2', '1', false)").executeUpdate();
+                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SEA_LANTERN', '2', '3', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('RECOVERY_COMPASS', '1', '3', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MANGROVE_LOG', '4', '1', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('BEE_NEST', '1', '4', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('GOAT_HORN', '1', '6', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('PACKED_MUD', '3', '1', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('POPPED_CHORUS_FRUIT', '5', '2', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MUSIC_DISC_5', '1', '8', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('END_CRYSTAL', '2', '5', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('TINTED_GLASS', '5', '2', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('CONDUIT', '1', '12', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('DECORATED_POT', '2', '1', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('CALIBRATED_SCULK_SENSOR', '4', '1', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MUDDY_MANGROVE_ROOTS', '2', '3', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('TORCHFLOWER', '2', '3', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SPONGE', '1', '2', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MAGENTA_GLAZED_TERRACOTTA', '2', '5', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('VERDANT_FROGLIGHT', '1', '2', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('HONEYCOMB', '3', '2', false)").executeUpdate();
+            }
+        }
 
         System.out.println("Les tables ont été créées si besoin");
     }

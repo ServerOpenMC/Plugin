@@ -14,9 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+
+import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
 
 
 public class ContestListener implements Listener {
@@ -34,7 +38,7 @@ public class ContestListener implements Listener {
                 DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getString("startdate")));
 
                 if (ContestManager.getInt("phase") == 1 && ContestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
-                    ContestManager.updateColumn("contest", 2);
+                    ContestManager.updateColumnInt("contest", "phase", 2);
                     Bukkit.broadcastMessage(
 
                             "§8§m                                                     §r\n" +
@@ -68,7 +72,26 @@ public class ContestListener implements Listener {
                 }
                 int dayStart = dayStartContestOfWeek.getValue() + 1;
                 if (ContestManager.getInt("phase") == 2 && ContestManager.getCurrentDayOfWeek().getValue() == dayStart) {
-                    ContestManager.updateColumn("contest", 3);
+                    ResultSet rs1 = getTradeSelected(true);
+                    try {
+                        while(rs1.next()) {
+                            ContestManager.updateColumnBooleanFromRandomTrades(false, rs1.getString("ress"));
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    ResultSet rs2 = getTradeSelected(false);
+                    try {
+
+                        while(rs2.next()) {
+                            ContestManager.updateColumnBooleanFromRandomTrades(true, rs2.getString("ress"));
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+                    ContestManager.updateColumnInt("contest", "phase", 3);
                     Bukkit.broadcastMessage(
 
                             "§8§m                                                     §r\n" +
