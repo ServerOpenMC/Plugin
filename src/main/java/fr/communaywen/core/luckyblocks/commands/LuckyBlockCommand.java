@@ -67,6 +67,7 @@ public class LuckyBlockCommand {
         }
 
         playerManager.setLuckyBlocksCooldown(uuid, System.currentTimeMillis());
+        player.sendMessage("§aVous avez réclamé §6" + amount + " §alucky blocks !");
     }
 
     private void sendHelp(Player player) {
