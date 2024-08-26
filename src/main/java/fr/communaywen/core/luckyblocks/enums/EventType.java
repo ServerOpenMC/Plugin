@@ -50,9 +50,7 @@ public enum EventType {
             Sound.ENTITY_GHAST_HURT,
             Sound.ENTITY_ELDER_GUARDIAN_CURSE,
             Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR,
-            Sound.ENTITY_ENDERMAN_SCREAM,
-            Sound.ENTITY_ENDERMAN_STARE,
-            Sound.MUSIC_DISC_11
+            Sound.ENTITY_ENDERMAN_STARE
     });
 
     private final String name;
