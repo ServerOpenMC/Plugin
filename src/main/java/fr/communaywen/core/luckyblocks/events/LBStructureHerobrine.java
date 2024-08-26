@@ -26,7 +26,7 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
     @Override
     public void onOpen(Player player, Block block) {
 
-        File file = Structure.getStructureFile("herobrine");
+        File file = Structure.getStructureFile("lb_herobrine");
 
         try {
             Structure.placeStructure(file, block.getLocation(), false, false, player);
