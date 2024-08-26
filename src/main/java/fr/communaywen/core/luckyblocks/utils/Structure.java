@@ -137,6 +137,11 @@ public class Structure {
         }
     }
 
+    /**
+     * Permet de récupérer un fichier de structure à partir de son nom
+     * @param name Nom du fichier
+     * @return Fichier de structure
+     */
     public static File getStructureFile(String name) {
         name = name.replace(".nbt", "");
         return new File("world/generated/aywencraft/structures/" + name + ".nbt");
