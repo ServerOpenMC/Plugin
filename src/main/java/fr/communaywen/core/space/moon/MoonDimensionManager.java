@@ -14,8 +14,8 @@ import org.bukkit.event.Listener;
 import java.util.Objects;
 
 @Feature("Moon")
-@Credit("ri1_")
-@Collaborators({"Gyro3630", "gab400", "Auburn", "CoolJWB", "Claude"})
+@Credit({"ri1_", "Gyro3630"})
+@Collaborators({"gab400", "Auburn", "CoolJWB", "Claude"})
 public class MoonDimensionManager implements Listener {
 
     AywenCraftPlugin plugin;
