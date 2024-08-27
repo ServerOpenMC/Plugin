@@ -5,9 +5,9 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.MaterialFromChatColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static dev.xernas.menulib.MenuLib.setLastMenu;
 
 public class ContributionMenu extends Menu {
     public ContributionMenu(Player owner) {
@@ -44,8 +43,8 @@ public class ContributionMenu extends Menu {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
         String campName = ContestManager.getPlayerCampName(getOwner());
-        Material m = ContestManager.getPlayerCampWool(getOwner());
         ChatColor campColor = ContestManager.getPlayerCampChatColor(getOwner());
+        Material m = MaterialFromChatColor.getMaterialFromColor(campColor);
 
         List<String> loreinfo = new ArrayList<String>();
         List<String> lore_randomevent = new ArrayList<String>();
@@ -68,6 +67,8 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§7Faites des Trades contre des §bCoquillages de Contest");
         lore_trade.add("§7Utile pour faire gagner ta"+ campColor +" Team");
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
+
+        List<String> trades = new ArrayList<String>();
 
 
         for(int i = 0; i < getInventorySize().getSize(); i++) {
@@ -96,6 +97,7 @@ public class ContributionMenu extends Menu {
             }
         }
 
+        System.out.println(inventory);
         return inventory;
     }
 }

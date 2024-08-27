@@ -3,6 +3,7 @@ package fr.communaywen.core.contest.menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.MaterialFromChatColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -40,16 +41,12 @@ public class VoteMenu extends Menu {
         String camp2Name = ContestManager.getString("camp2");
 
         String camp1Color = ContestManager.getString("color1");
-        String camp1Wool = camp1Color.concat("_WOOL");
-        Material m1 = Material.getMaterial(camp1Wool);
-
         String camp2Color = ContestManager.getString("color2");
-        String camp2Wool = camp2Color.concat("_WOOL");
-        Material m2 = Material.getMaterial(camp2Wool);
-
 
         ChatColor color1 = ChatColor.valueOf(camp1Color);
         ChatColor color2 = ChatColor.valueOf(camp2Color);
+        Material m1 = MaterialFromChatColor.getMaterialFromColor(color1);
+        Material m2 = MaterialFromChatColor.getMaterialFromColor(color2);
 
         Integer camp1Slot = 11;
         Integer camp2Slot = 15;

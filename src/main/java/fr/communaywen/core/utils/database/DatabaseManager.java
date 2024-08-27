@@ -101,12 +101,20 @@ public class DatabaseManager {
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Mayonnaise', 'YELLOW', 'Ketchup', 'RED', '0')").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Pates', 'YELLOW', 'Riz', 'WHITE', '0')").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Samsung', 'BLACK', 'Apple', 'WHITE', '0')").executeUpdate();
-                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Montagne', 'LIGHT_GRAY', 'Mer', 'LIGHT_BLUE', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Montagne', 'GRAY', 'Mer', 'AQUA', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Chien', 'BLUE', 'Chat', 'RED', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Passé', 'GREEN', 'Futur', 'WHITE', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Héros', 'YELLOW', 'Villian', 'RED', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Pain Au Chocolat', 'WHITE', 'Chocolatine', 'BLACK', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Jour', 'YELLOW', 'Nuit', 'DARK_AQUA', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Pizza', 'RED', 'Burger', 'DARK_GREEN', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Ete', 'YELLOW', 'Hiver', 'WHITE', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Sucré', 'LIGHT_PURPLE', 'Salé', 'AQUA', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Pluie', 'BLUE', 'Soleil', 'YELLOW', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Ville', 'GRAY', 'Campagne', 'DARK_GREEN', '0')").executeUpdate();
+                //couleur autorisé : BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED,  DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE
+
                 // => pour ajouter des nouveaux contests il faut imprérativement reset la table all_contest
-                //chien vs chat
-                //passé vs futur
-                //Heros vs Villian
-                //Pain au chocolat VS chocolatine
 
             }
         }
@@ -145,13 +153,13 @@ public class DatabaseManager {
                  this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SLIME_BLOCK', '7', '1', false)").executeUpdate();
                  this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('ROOTED_DIRT', '2', '1', false)").executeUpdate();
                  this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SEA_LANTERN', '2', '3', false)").executeUpdate();
-                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('RECOVERY_COMPASS', '1', '3', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('ENCHANTED_GOLDEN_APPLE', '1', '8', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MANGROVE_LOG', '4', '1', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('BEE_NEST', '1', '4', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('GOAT_HORN', '1', '6', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('PACKED_MUD', '3', '1', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('POPPED_CHORUS_FRUIT', '5', '2', false)").executeUpdate();
-                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MUSIC_DISC_5', '1', '8', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('HEAVY_CORE', '1', '15', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('END_CRYSTAL', '2', '5', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('TINTED_GLASS', '5', '2', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('CONDUIT', '1', '12', false)").executeUpdate();

@@ -114,14 +114,6 @@ public class ContestManager extends DatabaseConnector {
         return campName;
     }
 
-    public static Material getPlayerCampWool(Player player) {
-        Integer campInteger = ContestManager.getPlayerCamp(player);
-        String color = ContestManager.getString("color" + campInteger);
-        String campWool = color.concat("_WOOL");
-        Material m = Material.getMaterial(campWool);
-        return m;
-    }
-
     public static ChatColor getPlayerCampChatColor(Player player) {
         Integer campInteger = ContestManager.getPlayerCamp(player);
         String color = ContestManager.getString("color" + campInteger);

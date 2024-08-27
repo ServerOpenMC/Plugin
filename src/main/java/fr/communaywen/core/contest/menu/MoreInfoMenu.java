@@ -1,6 +1,5 @@
 package fr.communaywen.core.contest.menu;
 
-import dev.xernas.menulib.MenuLib;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
@@ -12,8 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-
-import static dev.xernas.menulib.MenuLib.getLastMenu;
 
 public class MoreInfoMenu extends Menu {
 
