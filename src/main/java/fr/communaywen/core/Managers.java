@@ -5,6 +5,8 @@ import fr.communaywen.core.commands.randomEvents.RandomEventsData;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.dreamdim.AdvancementRegister;
+import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
@@ -31,6 +33,7 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private DimensionManager dreamdimManager;
     private TeamManager teamManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
@@ -83,11 +86,13 @@ public class Managers {
                     TeamManager.class,
                     Team.class,
                     TransactionsManager.class,
+                    AdvancementRegister.class,
                     RandomEventsData.class
             );
         }
         // Database
 
+        dreamdimManager = new DimensionManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
@@ -104,11 +109,18 @@ public class Managers {
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
+
+        dreamdimManager.init();
     }
 
     public void cleanup() {
+        /* Besoin de la db */
+        dreamdimManager.close();
         reportManager.saveReports();
+
+        /* Plus besoin de la db */
         databaseManager.close();
+
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
