@@ -20,7 +20,7 @@ public class ContestCommand {
     @Command("contest")
     @Description("Ouvre l'interface des festivals, et quand un festival commence, vous pouvez choisir votre camp")
     public void onCommand(Player player) {
-        int phase = ContestManager.getInt("phase");
+        int phase = ContestManager.getInt("contest","phase");
         String dayStartContest = ContestManager.getString("startdate");
         int camp = ContestManager.getPlayerCamp(player);
         if (phase==2) {
