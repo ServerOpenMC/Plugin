@@ -23,6 +23,11 @@ public class TpacceptCommand {
             return;
         }
 
+        if (player.getWorld().getName().equals("dreamworld")) {
+            player.sendMessage("§cVous ne pouvez pas vous téléportez dans un rêve");
+            return;
+        }
+
         tpQueue.removeRequest(player);
 
         player.sendMessage("§a" + requester.getName() + " sera téléporté à vous dans 5 secondes. Ne bougez pas !");
