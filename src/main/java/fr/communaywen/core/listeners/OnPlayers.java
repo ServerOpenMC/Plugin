@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -74,7 +73,7 @@ public class OnPlayers implements Listener {
                 player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
             }
 
-            if(ContestManager.getInt("phase") == 2) {
+            if(ContestManager.getInt("contest","phase") == 2) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -86,7 +85,7 @@ public class OnPlayers implements Listener {
                 );
                 return;
             }
-            if(ContestManager.getInt("phase") == 3) {
+            if(ContestManager.getInt("contest","phase") == 3) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
