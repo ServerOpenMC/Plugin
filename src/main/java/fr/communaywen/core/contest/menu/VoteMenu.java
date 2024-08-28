@@ -48,13 +48,13 @@ public class VoteMenu extends Menu {
         Material m1 = MaterialFromChatColor.getMaterialFromColor(color1);
         Material m2 = MaterialFromChatColor.getMaterialFromColor(color2);
 
-        Integer camp1Slot = 11;
-        Integer camp2Slot = 15;
+        int camp1Slot = 11;
+        int camp2Slot = 15;
 
         List<String> lore1 = new ArrayList<String>();
         List<String> lore2 = new ArrayList<String>();
-        Boolean ench1;
-        Boolean ench2;
+        boolean ench1;
+        boolean ench2;
         if(ContestManager.getPlayerCamp(getOwner()) == 0) {
             ench1 = false;
             ench2 = false;

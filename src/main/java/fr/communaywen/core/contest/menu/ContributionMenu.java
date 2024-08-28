@@ -68,9 +68,6 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§7Utile pour faire gagner ta"+ campColor +" Team");
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
-        List<String> trades = new ArrayList<String>();
-
-
         for(int i = 0; i < getInventorySize().getSize(); i++) {
             if(i==10) {
                 inventory.put(10, new ItemBuilder(this, shell_contest, itemMeta -> {
@@ -97,7 +94,6 @@ public class ContributionMenu extends Menu {
             }
         }
 
-        System.out.println(inventory);
         return inventory;
     }
 }

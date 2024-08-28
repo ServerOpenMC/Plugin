@@ -35,9 +35,7 @@ public class ConfirmMenu extends Menu {
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent click) {
-
-    }
+    public void onInventoryClick(InventoryClickEvent click) {}
 
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
