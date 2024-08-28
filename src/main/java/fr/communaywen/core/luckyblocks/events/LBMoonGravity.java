@@ -19,7 +19,7 @@ public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListener
     public LBMoonGravity() {
         super("Gravité Lunaire!",
                 "Gravité Lunaire pendant 1 minute !",
-                0.7f,
+                0.5f,
                 EventType.BONUS
         );
     }

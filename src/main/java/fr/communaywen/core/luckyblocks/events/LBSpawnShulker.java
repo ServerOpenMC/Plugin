@@ -15,7 +15,7 @@ public class LBSpawnShulker extends LuckyBlockEvent {
     public LBSpawnShulker() {
         super("Wingardiuuuum Levioosaaaaa",
                 "Un Shulker est apparu !",
-                0.7f,
+                0.5f,
                 EventType.MALUS
         );
     }

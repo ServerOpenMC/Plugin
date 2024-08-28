@@ -19,7 +19,7 @@ public class LBSolarGravity extends LuckyBlockEvent implements LuckyBlockListene
     public LBSolarGravity() {
         super("Gravité solaire!",
                 "Gravité Solaire pendant 1 minute !",
-                0.7f,
+                0.5f,
                 EventType.MALUS
         );
     }
