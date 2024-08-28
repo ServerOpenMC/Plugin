@@ -75,7 +75,7 @@ public class DreamChunkGenerator extends ChunkGenerator {
                                 List<Material> neighbourBlocks = new ArrayList<Material>(Arrays.asList(chunkData.getType(Math.max(x - 1, 0), y, z), chunkData.getType(x, Math.max(y - 1, 0), z), chunkData.getType(x, y, Math.max(z - 1, 0)))); // A list of all neighbour blocks.
 
                                 // Randomly place vein anchors.
-                                if(random.nextFloat() < 0.002) {
+                                if(random.nextFloat() < 0.01) {
                                     if (random.nextFloat() < 0.025) {
                                         neighbour = Material.ANCIENT_DEBRIS;
                                     } else {
