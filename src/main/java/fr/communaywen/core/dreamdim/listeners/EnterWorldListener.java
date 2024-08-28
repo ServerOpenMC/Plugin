@@ -16,6 +16,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -23,6 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.eclipse.sisu.Priority;
 
 import java.util.HashMap;
 import java.util.List;
@@ -130,7 +132,7 @@ public class EnterWorldListener implements Listener {
         teleportBack(e.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
         World world = p.getWorld();
