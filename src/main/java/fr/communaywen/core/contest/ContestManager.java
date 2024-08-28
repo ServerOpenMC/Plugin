@@ -8,17 +8,68 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 
+import org.antlr.v4.codegen.SourceGenTriggers;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class ContestManager extends DatabaseConnector {
-    public static int getInt(String column) {
+    //import from axeno
+    public static boolean hasEnoughItems(Player player, Material item, int amount) {
+        int totalItems = 0;
+        ItemStack[] contents = player.getInventory().getContents();
+
+        for (ItemStack is : contents) {
+            if (is != null && is.getType() == item) {
+                totalItems += is.getAmount();
+            }
+        }
+
+        return totalItems >= amount;
+    }
+
+    public static void removeItemsFromInventory(Player player, Material item, int quantity) {
+        ItemStack[] contents = player.getInventory().getContents();
+        int remaining = quantity;
+
+        for (int i = 0; i < contents.length && remaining > 0; i++) {
+            ItemStack stack = contents[i];
+            if (stack != null && stack.getType() == item) {
+                int stackAmount = stack.getAmount();
+                if (stackAmount <= remaining) {
+                    player.getInventory().setItem(i, null);
+                    remaining -= stackAmount;
+                } else {
+                    stack.setAmount(stackAmount - remaining);
+                    remaining = 0;
+                }
+            }
+        }
+    }
+
+    //my part
+    public static int getInt(String table, String column) {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM contest");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 999;
+    }
+
+    public static int getIntWhere(String table, String where, String m, String column) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+ table + " WHERE "+ where +" = ?");
+            statement.setString(1, m);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return rs.getInt(column);

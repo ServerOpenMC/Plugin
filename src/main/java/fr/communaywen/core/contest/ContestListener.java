@@ -24,11 +24,9 @@ import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
 
 
 public class ContestListener implements Listener {
-    private AywenCraftPlugin plugin;
     private BukkitRunnable eventRunnable;
 
     public ContestListener(AywenCraftPlugin plugin) {
-        this.plugin = plugin;
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -37,7 +35,7 @@ public class ContestListener implements Listener {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
                 DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getString("startdate")));
 
-                if (ContestManager.getInt("phase") == 1 && ContestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
+                if (ContestManager.getInt("contest","phase") == 1 && ContestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
                     ContestManager.updateColumnInt("contest", "phase", 2);
                     Bukkit.broadcastMessage(
 
@@ -71,7 +69,7 @@ public class ContestListener implements Listener {
                     }
                 }
                 int dayStart = dayStartContestOfWeek.getValue() + 1;
-                if (ContestManager.getInt("phase") == 2 && ContestManager.getCurrentDayOfWeek().getValue() == dayStart) {
+                if (ContestManager.getInt("contest","phase") == 2 && ContestManager.getCurrentDayOfWeek().getValue() == dayStart) {
                     ResultSet rs1 = getTradeSelected(true);
                     try {
                         while(rs1.next()) {
