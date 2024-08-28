@@ -65,6 +65,7 @@ public class CloudSoup implements Listener {
                 }
 
                 if (cooldown.containsKey(playeruuid) && cooldown.get(playeruuid) > 0) {
+                    player.setAllowFlight(true);
                     cooldown.put(playeruuid, cooldown.get(playeruuid) - 1);
 
                     if (cooldown.get(playeruuid) == 60) {
