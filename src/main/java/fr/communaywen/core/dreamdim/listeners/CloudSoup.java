@@ -42,7 +42,6 @@ public class CloudSoup implements Listener {
             } else {
                 player.sendMessage("§aVous pouvez voler pendant 5 minutes.");
                 startTimer(player);
-                event.setReplacement(new ItemStack(Material.BOWL, 1));
             }
         }
     }
