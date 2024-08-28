@@ -3,6 +3,9 @@ package fr.communaywen.core.luckyblocks.objects;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -32,14 +35,14 @@ public abstract class LuckyBlockEvent {
 
     public void triggerOpen(Player player, Block block) {
 
-        String eventTypeName = eventType.getName();
+        Prefix prefix = eventType.getPrefix();
         ChatColor color = eventType.getColor();
 
         // Affichage du nom de l'event pendant 1 seconde en subtitle
         player.sendTitle("", color + "§l" + name, 8, 20, 8);
 
         // Affichage de la description de l'event dans le chat
-        player.sendMessage("§8[§bLucky Block §8- " + color + eventTypeName + "§8]§7 " + description);
+        MessageManager.sendMessageType(player, description, prefix, MessageType.INFO, false);
 
         // Joue un son aléatoire en fonction du type de l'event
         final Sound soundToPlay = EventType.getRandomSoundByType(eventType);
