@@ -128,8 +128,10 @@ public class EnterWorldListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         //Même chose que quand le joueur meurt
-        death(e.getPlayer());
-        teleportBack(e.getPlayer());
+        if (e.getPlayer().getWorld().getName().equals("dreamworld")) {
+            death(e.getPlayer());
+            teleportBack(e.getPlayer());
+        }
     }
 
     @EventHandler(priority= EventPriority.HIGHEST)
