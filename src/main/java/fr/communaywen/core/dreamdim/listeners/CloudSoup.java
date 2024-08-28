@@ -88,6 +88,6 @@ public class CloudSoup implements Listener {
                     cancel();
                 }
             }
-        }.runTaskLater(this.plugin, 20);
+        }.runTaskTimer(this.plugin, 0, 20);
     }
 }
