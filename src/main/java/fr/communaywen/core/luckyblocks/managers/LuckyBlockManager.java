@@ -10,6 +10,7 @@ import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 @Feature("Lucky Blocks")
@@ -17,6 +18,7 @@ import java.util.Random;
 public class LuckyBlockManager {
 
     private final Random random = new Random();
+    private double sum;
 
     @Getter
     private final ArrayList<LuckyBlockEvent> lbEvents = new ArrayList<>();
@@ -26,6 +28,10 @@ public class LuckyBlockManager {
         lbEvents.add(new LBMoonGravity());
         lbEvents.add(new LBSolarGravity());
         lbEvents.add(new LBStructureHerobrine());
+
+        for (LuckyBlockEvent event : lbEvents) {
+            sum += event.getChance();
+        }
     }
 
     /**
@@ -33,6 +39,21 @@ public class LuckyBlockManager {
      * @return un événement aléatoire
      */
     public LuckyBlockEvent getRandomEvent() {
-        return lbEvents.get(random.nextInt(lbEvents.size()));
+
+        LuckyBlockEvent eventToReturn;
+        Collections.shuffle(lbEvents);
+
+        while (true) {
+            double randomNumber = random.nextDouble() * sum;
+            double currentPercentage = 0;
+
+            for (LuckyBlockEvent event : lbEvents) {
+                currentPercentage += event.getChance();
+                if (randomNumber <= currentPercentage) {
+                    eventToReturn = event;
+                    return eventToReturn;
+                }
+            }
+        }
     }
 }

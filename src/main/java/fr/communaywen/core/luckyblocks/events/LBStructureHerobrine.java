@@ -18,7 +18,7 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
     public LBStructureHerobrine() {
         super("Un vieil ami",
                 "Apparition de la structure d'Herobrine !",
-                0.7f,
+                0.5f,
                 EventType.NEUTRAL
         );
     }

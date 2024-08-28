@@ -23,10 +23,10 @@ public abstract class LuckyBlockEvent {
 
     private final String name;
     private final String description;
-    private final float chance;
+    private final double chance;
     private final EventType eventType;
 
-    public LuckyBlockEvent(String name, String description, float chance, EventType eventType) {
+    public LuckyBlockEvent(String name, String description, double chance, EventType eventType) {
         this.name = name;
         this.description = description;
         this.chance = chance;
