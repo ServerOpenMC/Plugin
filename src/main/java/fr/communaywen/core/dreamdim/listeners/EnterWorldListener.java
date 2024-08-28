@@ -138,6 +138,7 @@ public class EnterWorldListener implements Listener {
         World world = p.getWorld();
 
         if (world.getName().equals("dreamworld")) {
+            register.grantAdvancement(p, "aywen:nightmare");
             death(e.getPlayer());
             p.setHealth(2);
             teleportBack(p);
