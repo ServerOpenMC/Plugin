@@ -19,6 +19,12 @@ public enum Prefix {
     HOME("§x§0§8§F§B§5§D§l@§x§2§5§F§C§6§7§lʜ§x§4§1§F§D§7§0§lᴏ§x§5§E§F§E§7§A§lᴍ§x§7§A§F§F§8§3§lᴇ"),
     CLAIM("§x§4§5§9§5§F§F§l@§x§4§1§9§1§F§B§lᴄ§x§3§D§8§D§F§7§lʟ§x§3§9§8§A§F§4§lᴀ§x§3§5§8§6§F§0§lɪ§x§3§1§8§2§E§C§lᴍ"),
 
+    // Lucky Block's prefixes
+    LUCKYBLOCK("§x§F§C§4§5§8§2L§x§F§C§5§C§9§2u§x§F§D§7§4§A§1c§x§F§D§8§B§B§1k§x§F§E§A§2§C§1y§x§F§E§B§9§D§0B§x§F§E§D§1§E§0l§x§F§F§E§8§E§Fo§x§F§F§F§F§F§Fc§x§F§F§F§F§F§Fk"),
+    LUCKYBLOCK_BONUS("§x§F§C§4§5§8§2L§x§F§C§5§C§9§2u§x§F§D§7§4§A§1c§x§F§D§8§B§B§1k§x§F§E§A§2§C§1y§x§F§E§B§9§D§0B§x§F§E§D§1§E§0l§x§F§F§E§8§E§Fo§x§F§F§F§F§F§Fc§x§F§F§F§F§F§Fk §8- §aBonus"),
+    LUCKYBLOCK_NEUTRAL("§x§F§C§4§5§8§2L§x§F§C§5§C§9§2u§x§F§D§7§4§A§1c§x§F§D§8§B§B§1k§x§F§E§A§2§C§1y§x§F§E§B§9§D§0B§x§F§E§D§1§E§0l§x§F§F§E§8§E§Fo§x§F§F§F§F§F§Fc§x§F§F§F§F§F§Fk §8- §7Neutre"),
+    LUCKYBLOCK_MALUS("§x§F§C§4§5§8§2L§x§F§C§5§C§9§2u§x§F§D§7§4§A§1c§x§F§D§8§B§B§1k§x§F§E§A§2§C§1y§x§F§E§B§9§D§0B§x§F§E§D§1§E§0l§x§F§F§E§8§E§Fo§x§F§F§F§F§F§Fc§x§F§F§F§F§F§Fk §8- §cMalus"),
+
     ;
 
     @Getter private final String prefix;

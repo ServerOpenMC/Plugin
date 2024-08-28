@@ -4,6 +4,9 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
@@ -35,13 +38,12 @@ public class LuckyBlockCommand {
         UUID uuid = player.getUniqueId();
 
         if (!playerManager.canClaimLuckyBlocks(uuid)) {
-            StringBuilder sb =new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             int timeHour = playerManager.getRemainingHours(uuid);
             int timeMinute = playerManager.getRemainingMinutes(uuid);
             int timeSecond = playerManager.getRemainingSeconds(uuid);
 
-            sb.append("§cVous avez déjà réclamé vos lucky blocks du jour !\nTemps restant: ")
-                    .append(timeHour)
+            sb.append(timeHour)
                     .append("h")
                     .append(timeMinute)
                     .append("m")
@@ -49,6 +51,7 @@ public class LuckyBlockCommand {
                     .append("s");
 
             player.sendMessage(sb.toString());
+            MessageManager.sendMessageType(player, "Vous avez déjà réclamé vos lucky blocks du jour ! Temps restant : " + sb, Prefix.LUCKYBLOCK, MessageType.ERROR, true);
             return;
         }
 
@@ -67,7 +70,7 @@ public class LuckyBlockCommand {
         }
 
         playerManager.setLuckyBlocksCooldown(uuid, System.currentTimeMillis());
-        player.sendMessage("§aVous avez réclamé §6" + amount + " §alucky blocks !");
+        MessageManager.sendMessageType(player, "§aVous avez réclamé §6" + amount + " §alucky blocks !", Prefix.LUCKYBLOCK, MessageType.SUCCESS, true);
     }
 
     private void sendHelp(Player player) {

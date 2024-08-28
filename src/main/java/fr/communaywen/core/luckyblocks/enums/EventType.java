@@ -2,6 +2,7 @@ package fr.communaywen.core.luckyblocks.enums;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.utils.constant.Prefix;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -13,7 +14,7 @@ import java.util.Random;
 @Getter
 public enum EventType {
 
-    BONUS("Bonus", ChatColor.GREEN, new Sound[] {
+    BONUS(Prefix.LUCKYBLOCK_BONUS, ChatColor.GREEN, new Sound[] {
             Sound.BLOCK_AMETHYST_BLOCK_BREAK,
             Sound.ENTITY_FIREWORK_ROCKET_BLAST,
             Sound.ENTITY_FIREWORK_ROCKET_TWINKLE,
@@ -24,7 +25,7 @@ public enum EventType {
             Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM,
             Sound.BLOCK_END_PORTAL_SPAWN
     }),
-    NEUTRAL("Neutre", ChatColor.GRAY, new Sound[] {
+    NEUTRAL(Prefix.LUCKYBLOCK_NEUTRAL, ChatColor.GRAY, new Sound[] {
             Sound.BLOCK_NOTE_BLOCK_GUITAR,
             Sound.BLOCK_NOTE_BLOCK_BIT,
             Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED,
@@ -41,7 +42,7 @@ public enum EventType {
             Sound.BLOCK_GLASS_BREAK,
             Sound.BLOCK_ANVIL_DESTROY
     }),
-    MALUS("Malus", ChatColor.RED, new Sound[] {
+    MALUS(Prefix.LUCKYBLOCK_MALUS, ChatColor.RED, new Sound[] {
             Sound.ENTITY_TNT_PRIMED,
             Sound.ENTITY_WITHER_AMBIENT,
             Sound.ENTITY_WITCH_CELEBRATE,
@@ -53,14 +54,14 @@ public enum EventType {
             Sound.ENTITY_ENDERMAN_STARE
     });
 
-    private final String name;
+    private final Prefix prefix;
     private final ChatColor color;
     private final Sound[] values;
 
     private final Random random = new Random();
 
-    EventType(String name, ChatColor color, Sound[] values) {
-        this.name = name;
+    EventType(Prefix prefix, ChatColor color, Sound[] values) {
+        this.prefix = prefix;
         this.color = color;
         this.values = values;
     }
