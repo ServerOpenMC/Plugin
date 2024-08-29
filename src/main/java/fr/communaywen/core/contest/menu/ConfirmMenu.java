@@ -3,6 +3,9 @@ package fr.communaywen.core.contest.menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -69,7 +72,7 @@ public class ConfirmMenu extends Menu {
                     String substring = this.getCampName.substring(this.getCampName.length() - 1);
                     ContestManager.insertChoicePlayer(getOwner(), Integer.valueOf(substring));
                     getOwner().playSound(getOwner().getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1.0F, 0.2F);
-                    getOwner().sendMessage("§7Vous avez bien rejoint : "+ colorFinal + "La Team " + ContestManager.getString(getCampName));
+                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + ContestManager.getString(getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
             } else {

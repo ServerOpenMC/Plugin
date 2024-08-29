@@ -73,6 +73,7 @@ public class ContributionMenu extends Menu {
                 inventory.put(10, new ItemBuilder(this, shell_contest, itemMeta -> {
                     itemMeta.setDisplayName("§7Les Trades");
                     itemMeta.setLore(lore_trade);
+                    itemMeta.setCustomModelData(10000);
                 }).setNextMenu(new TradeMenu(getOwner())));
             } else if(i==13) {
                 inventory.put(13, new ItemBuilder(this, m, itemMeta -> {

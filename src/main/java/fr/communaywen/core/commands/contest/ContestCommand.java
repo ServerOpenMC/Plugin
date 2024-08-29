@@ -5,6 +5,9 @@ import fr.communaywen.core.contest.menu.ContributionMenu;
 import fr.communaywen.core.contest.menu.VoteMenu;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
@@ -37,9 +40,9 @@ public class ContestCommand {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
             DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(dayStartContest));
 
-                int days = (dayStartContestOfWeek.getValue() - ContestManager.getCurrentDayOfWeek().getValue() + 7) % 7;
+            int days = (dayStartContestOfWeek.getValue() - ContestManager.getCurrentDayOfWeek().getValue() + 7) % 7;
 
-                player.sendMessage(ChatColor.RED + "Il n'y a aucun Contest ! Revenez dans " + days + " jours.");
+            MessageManager.sendMessageType(player, "§cIl n'y a aucun Contest ! Revenez dans " + days + " jours.", Prefix.CONTEST, MessageType.ERROR, true);
         }
 
     }
