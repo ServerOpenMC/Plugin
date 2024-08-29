@@ -3,12 +3,11 @@ package fr.communaywen.core.dreamdim.listeners;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -22,6 +21,14 @@ public class CloudSoup implements Listener {
     public CloudSoup(AywenCraftPlugin plugin, AdvancementRegister register) {
         this.plugin = plugin;
         this.register = register;
+    }
+
+    @EventHandler
+    public void onPlayerEnter(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (cooldown.containsKey(player.getUniqueId()) && cooldown.get(player.getUniqueId()) > 0) {
+            player.setAllowFlight(true);
+        }
     }
 
     @EventHandler
