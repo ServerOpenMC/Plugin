@@ -104,6 +104,10 @@ public class TeamAdminCommand {
     @Subcommand("inventory")
     @Description("Open team inventory")
     public void openInventory(Player player, String teamName) {
+        if (player.getWorld().getName().equals("dreamworld")) {
+            player.sendMessage("§cVous n'avez pas accès à cette commande actuellement");
+            return;
+        }
         if (!teamManager.teamExists(teamName)) {
             player.sendMessage("§cL'équipe '"+teamName+"' n'existe pas.");
             return;

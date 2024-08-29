@@ -17,16 +17,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MOTDChanger {
 
     private final List<String> motdList = Arrays.asList(
-        "OpenMC - C'est VOTRE serveur SMP en 1.21",
-        "OpenMC - Serveur SMP 1.21 - Rejoignez-nous",
-        "OpenMC - Explorez votre monde en 1.21",
-        "OpenMC - Votre aventure SMP commence ici en 1.21",
-        "OpenMC - La communauté en 1.21 vous attend",
-        "OpenMC - Créé par les joueurs, pour les joueurs en 1.21",
-        "OpenMC - Découvrez les nouveautés de la 1.21",
-        "OpenMC - Vivez l'expérience SMP ultime en 1.21",
-        "OpenMC - Construisez, explorez, survivez en 1.21",
-        "OpenMC - Rejoignez notre serveur SMP en 1.21"
+        "OpenMC - C'est VOTRE serveur SMP en 1.21.1",
+        "OpenMC - Serveur SMP 1.21.1 - Rejoignez-nous",
+        "OpenMC - Explorez votre monde en 1.21.1",
+        "OpenMC - Votre aventure SMP commence ici en 1.21.1",
+        "OpenMC - La communauté en 1.21.1 vous attend",
+        "OpenMC - Créé par les joueurs, pour les joueurs en 1.21.1",
+        "OpenMC - Découvrez les nouveautés de la 1.21.1",
+        "OpenMC - Vivez l'expérience SMP ultime en 1.21.1",
+        "OpenMC - Construisez, explorez, survivez en 1.21.1",
+        "OpenMC - Rejoignez notre serveur SMP en 1.21.1"
 );
 
     public void startMOTDChanger(JavaPlugin plugin) {

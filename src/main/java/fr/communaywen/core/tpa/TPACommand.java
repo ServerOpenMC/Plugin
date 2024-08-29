@@ -42,6 +42,11 @@ public class TPACommand implements Listener {
             return;
         }
 
+        if (target.getWorld().getName().equals("dreamworld")) {
+            player.sendMessage("Vous ne pouvez pas téléporter quelq'un dans la dimension");
+            return;
+        }
+
         sendTPARequest(player, target, plugin);
     }
 
