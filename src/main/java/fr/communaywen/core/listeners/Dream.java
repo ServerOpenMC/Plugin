@@ -45,7 +45,7 @@ public class Dream implements Listener {
             }
             for (Player player : playersWhoSlept) {
                 random = new Random();
-                if (random.nextDouble() <= 0.1) { // Pourcentage de chance d
+                if (random.nextDouble() <= 0.4) { // Pourcentage de chance d
                     Random r = new Random();
                     int range = 1000;
                     int x = r.nextInt(range - (range * -1)) + (range * -1);

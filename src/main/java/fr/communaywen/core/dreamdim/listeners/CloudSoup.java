@@ -42,7 +42,6 @@ public class CloudSoup implements Listener {
             } else {
                 player.sendMessage("§aVous pouvez voler pendant 5 minutes.");
                 startTimer(player);
-                event.setReplacement(new ItemStack(Material.BOWL, 1));
             }
         }
     }
@@ -66,6 +65,7 @@ public class CloudSoup implements Listener {
                 }
 
                 if (cooldown.containsKey(playeruuid) && cooldown.get(playeruuid) > 0) {
+                    player.setAllowFlight(true);
                     cooldown.put(playeruuid, cooldown.get(playeruuid) - 1);
 
                     if (cooldown.get(playeruuid) == 60) {
@@ -88,6 +88,6 @@ public class CloudSoup implements Listener {
                     cancel();
                 }
             }
-        }.runTaskLater(this.plugin, 20);
+        }.runTaskTimer(this.plugin, 0, 20);
     }
 }
