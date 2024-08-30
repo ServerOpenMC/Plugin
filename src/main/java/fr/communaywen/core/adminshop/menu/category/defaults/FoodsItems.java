@@ -2,6 +2,7 @@ package fr.communaywen.core.adminshop.menu.category.defaults;
 
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
+import org.bukkit.Material;
 
 public enum FoodsItems implements BaseItems {
     COOKED_BEEF(13, 10, ShopType.BUY, "§7Steak"),
@@ -52,5 +53,11 @@ public enum FoodsItems implements BaseItems {
     @Override
     public String named() {
         return name();
+    }
+
+    @Override
+    public int getMaxStack() {
+        Material material = Material.getMaterial(this.named());;
+        return material == null ? 64 : material.getMaxStackSize();
     }
 }
