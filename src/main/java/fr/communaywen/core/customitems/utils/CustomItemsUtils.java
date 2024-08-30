@@ -239,6 +239,12 @@ public class CustomItemsUtils {
         return itemBuilder;
     }
 
+    /**
+     * Check if a player can destroy a block in a region
+     * @param location The location of the block
+     * @param player The player
+     * @return True if the player can destroy the block, false otherwise
+     */
     private static boolean canDestroy(Location location, Player player) {
 
         for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
