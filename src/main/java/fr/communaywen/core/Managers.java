@@ -92,9 +92,9 @@ public class Managers {
         }
         // Database
 
-        dreamdimManager = new DimensionManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
+        dreamdimManager = new DimensionManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
