@@ -71,7 +71,7 @@ public class AdminShopBuyConfirm extends Menu {
                 if(balance < (items.getPrize() * quantity)) {
                     getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'argent pour acheter cette item.");
                 } else {
-                    int maxStackSize = 64;
+                    int maxStackSize = items.getMaxStack();
                     int totalQuantity = quantity;
                     Material materials = Material.getMaterial((material == null) ? items.named() : (items.named() + "_" + material));
 
@@ -84,13 +84,15 @@ public class AdminShopBuyConfirm extends Menu {
                             "Achat adminshop"
                     ));
 
+                    getOwner().sendMessage("§aAchat confirmé !");
+                    getOwner().sendMessage("  §2+ §a" + totalQuantity + " " + items.getName() + " §7pour §a" + String.format("%.2f", items.getPrize() * totalQuantity) + "$");
+
                     while (totalQuantity > 0) {
                         int stackSize = Math.min(totalQuantity, maxStackSize);
                         getOwner().getInventory().addItem(new ItemStack(materials, stackSize));
                         totalQuantity -= stackSize;
                     }
 
-                    getOwner().sendMessage("§aAchat confirmé !");
                 }
             }
             getOwner().closeInventory();
@@ -121,13 +123,10 @@ public class AdminShopBuyConfirm extends Menu {
             if(is == null || is.getType() == Material.AIR) {
                 continue;
             }
-
             if(is.getType() == item && is.getAmount() < is.getMaxStackSize()) {
                 return true;
             }
         }
-
-
         return player.getInventory().firstEmpty() != -1;
     }
 }

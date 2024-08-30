@@ -2,6 +2,7 @@ package fr.communaywen.core.adminshop.menu.category.colored;
 
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
+import org.bukkit.Material;
 
 public enum COLOR implements BaseItems {
     WHITE(12, 2, ShopType.BUY, "§7blanc"),
@@ -56,5 +57,11 @@ public enum COLOR implements BaseItems {
     @Override
     public String named() {
         return name();
+    }
+
+    @Override
+    public int getMaxStack() {
+        Material material = Material.getMaterial(this.named());;
+        return material == null ? 64 : material.getMaxStackSize();
     }
 }
