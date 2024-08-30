@@ -6,22 +6,23 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
+import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
+import static fr.communaywen.core.utils.ItemUtils.*;
 
 public class TradeMenu extends Menu {
 
@@ -102,32 +103,79 @@ public class TradeMenu extends Menu {
                                int amount = ContestManager.getIntWhere("contest_trades", "ress", m1, "amount");
                                int amount_shell = ContestManager.getIntWhere("contest_trades", "ress", m1, "amount_shell");
                                ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
-
-                               if (inventoryClickEvent.isLeftClick() && inventoryClickEvent.isShiftClick()) {
-                                   System.out.println("shift left click ");
-                                   System.out.println("full 1" + Arrays.asList(getOwner().getInventory().getStorageContents()).contains(null));
-                                   if (Arrays.asList(getOwner().getInventory().getStorageContents()).contains(null)) {
-                                       System.out.println("full 2" + getOwner().getInventory().firstEmpty());
-                                   }
-                               } else if (inventoryClickEvent.isLeftClick()) {
-                                   if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
-
-                                       //si l'inv a de la place
-                                       if (Arrays.asList(getOwner().getInventory().getStorageContents()).contains(null)) {
-                                           shell_contestItem.add(amount_shell-1);
-                                           getOwner().getInventory().addItem(shell_contestItem);
-                                       } else {
-                                           shell_contestItem.add(amount_shell-1);
-                                           ItemStack[] shell_contest_array = new ItemStack[]{shell_contestItem};
-                                           MailboxManager.sendItems(getOwner(),getOwner(), shell_contest_array);
+                                   if (inventoryClickEvent.isLeftClick() && inventoryClickEvent.isShiftClick()) {
+                                       int items = 0;
+                                       for (ItemStack is : getOwner().getInventory().getContents()) {
+                                           if (is != null && is.getType() == inventoryClickEvent.getCurrentItem().getType()) {
+                                               items = items + is.getAmount();
+                                           }
                                        }
 
-                                       ContestManager.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount);
-                                       MessageManager.sendMessageType(getOwner(), "§7Vous avez échangé §e" + amount + " " + m1 + " §7contre§b " + amount_shell + " Coquillages(s) de Contest", Prefix.CONTEST, MessageType.SUCCESS, true);
-                                   } else {
-                                       MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas assez de cette ressource pour pouvoir l'échanger!", Prefix.CONTEST, MessageType.ERROR, true);
+                                       if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
+                                           int amount_shell2 = (items / amount) * amount_shell;
+                                           int items1 = (amount_shell2 / amount_shell) * amount;
+                                           ContestManager.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), items1);
+                                               int slot_empty = getSlotNull(getOwner());
+                                               int stack_available = slot_empty * 64;
+                                               int additem = Math.min(amount_shell2, stack_available);
+                                               if (stack_available >=64) {
+                                                   shell_contestItem.setAmount(additem);
+                                                       System.out.println(splitAmountIntoStack(shell_contestItem));
+                                                       for (ItemStack item : splitAmountIntoStack(shell_contestItem)) {
+                                                           getOwner().getInventory().addItem(item);
+                                                       }
+                                                   int remain1 = amount_shell2 - additem;
+                                                   if(remain1 != 0) {
+                                                       int numbertoStack = getNumberItemToStack(getOwner(), shell_contestItem);
+                                                       if (numbertoStack > 0) {
+                                                           shell_contestItem.setAmount(numbertoStack);
+                                                           getOwner().getInventory().addItem(shell_contestItem);
+                                                       }
+
+                                                       ItemStack newshell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
+                                                       int remain2 = remain1 - numbertoStack;
+                                                       if (remain2 != 0) {
+                                                           newshell_contestItem.setAmount(remain2);
+                                                           List<ItemStack> itemlist = splitAmountIntoStack(newshell_contestItem);
+                                                           ItemStack[] shell_contest_array = itemlist.toArray(new ItemStack[itemlist.size()]);
+                                                           MailboxManager.sendItems(getOwner(), getOwner(), shell_contest_array);
+                                                       }
+                                                       }
+                                           } else {
+                                               shell_contestItem.setAmount(amount_shell2);
+                                               ItemStack[] shell_contest_array = new ItemStack[]{shell_contestItem, shell_contestItem};
+                                               for (ItemStack item : splitAmountIntoStack(shell_contestItem)) {
+                                                    getOwner().getInventory().addItem(item);
+                                               }
+
+                                               MailboxManager.sendItems(getOwner(), getOwner(), shell_contest_array);
+                                           }
+
+                                           MessageManager.sendMessageType(getOwner(), "§7Vous avez échangé §e" + items1 + " " + m1 + " §7contre§b " + amount_shell2 + " Coquillages(s) de Contest", Prefix.CONTEST, MessageType.SUCCESS, true);
+                                       } else {
+                                           MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas assez de cette ressource pour pouvoir l'échanger!", Prefix.CONTEST, MessageType.ERROR, true);
+                                       }
+                                   } else if (inventoryClickEvent.isLeftClick()) {
+                                       if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
+
+                                           //mettre dans l'inv ou boite mail?
+                                           if (Arrays.asList(getOwner().getInventory().getStorageContents()).contains(null)) {
+                                               shell_contestItem.setAmount(amount_shell);
+                                               for (ItemStack item : splitAmountIntoStack(shell_contestItem)) {
+                                                   getOwner().getInventory().addItem(item);
+                                               }
+                                           } else {
+                                               shell_contestItem.setAmount(amount_shell);
+                                               ItemStack[] shell_contest_array = new ItemStack[]{shell_contestItem};
+                                               MailboxManager.sendItems(getOwner(), getOwner(), shell_contest_array);
+                                           }
+
+                                           ContestManager.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount);
+                                           MessageManager.sendMessageType(getOwner(), "§7Vous avez échangé §e" + amount + " " + m1 + " §7contre§b " + amount_shell + " Coquillages(s) de Contest", Prefix.CONTEST, MessageType.SUCCESS, true);
+                                       } else {
+                                           MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas assez de cette ressource pour pouvoir l'échanger!", Prefix.CONTEST, MessageType.ERROR, true);
+                                       }
                                    }
-                               }
                            }));
 
                            lore_trades.clear();
