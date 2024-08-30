@@ -20,11 +20,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.eclipse.sisu.Priority;
 
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +125,7 @@ public class EnterWorldListener implements Listener {
         bossbars.remove(p);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(PlayerQuitEvent e) {
         //Même chose que quand le joueur meurt
         if (e.getPlayer().getWorld().getName().equals("dreamworld")) {
