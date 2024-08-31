@@ -24,10 +24,20 @@ public class ClaimConfigDataBase extends DatabaseConnector {
                 Location pos1 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos1X"), -62, result.getDouble("pos1Z"));
                 Location pos2 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos2X"), 320, result.getDouble("pos2Z"));
                 Team team = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByName(result.getString("team"));
-                UUID uuid = UUID.fromString(result.getString("claimID"));
-                UUID playerUUID = UUID.fromString(result.getString("claimer")) == null ? team.getOwner() : UUID.fromString(result.getString("claimer"));
-                if (team != null) {
-                    AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid, playerUUID));
+                String uuidString = result.getString("claimID");
+                String playerUUIDString = result.getString("claimer");
+                if(playerUUIDString == null || playerUUIDString.isEmpty() || playerUUIDString.isBlank()) {
+                    playerUUIDString = team.getOwner().toString();
+                }
+
+                try {
+                    UUID uuid = UUID.fromString(uuidString);
+                    UUID playerUUID = UUID.fromString(playerUUIDString);
+                    if (team != null) {
+                        AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid, playerUUID));
+                    }
+                } catch (IllegalArgumentException e) {
+                    AywenCraftPlugin.getInstance().getLogger().severe("Invalid UUID string: " + uuidString + " or " + playerUUIDString);
                 }
             }
 
