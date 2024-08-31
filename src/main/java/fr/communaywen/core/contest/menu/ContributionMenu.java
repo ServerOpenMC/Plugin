@@ -6,6 +6,9 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.MaterialFromChatColor;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -79,6 +82,26 @@ public class ContributionMenu extends Menu {
                 inventory.put(13, new ItemBuilder(this, m, itemMeta -> {
                     itemMeta.setDisplayName("§r§7Contribuer pour la"+ campColor+ " Team " + campName);
                     itemMeta.setLore(lore_contribute);
+                }).setOnClick(inventoryClickEvent -> {
+                    try {
+                        ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
+                        int shell = 0;
+                        for (ItemStack is : getOwner().getInventory().getContents()) {
+                            if (is != null && is.isSimilar(shell_contestItem)) {
+                                shell = shell + is.getAmount();
+                            }
+                        }
+                        if (ContestManager.hasEnoughItems(getOwner(), shell_contest, shell)) {
+                            ContestManager.removeItemsFromInventory(getOwner(), shell_contest, shell);
+                            ContestManager.updateColumnInt("camps", "point_dep", shell + ContestManager.getInt("camps", "point_dep"));
+                            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCamp(getOwner()), shell + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCamp(getOwner())));
+                            MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
+                        } else {
+                            MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
+                        }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 }));
             } else if(i==16) {
                 inventory.put(16, new ItemBuilder(this, Material.OMINOUS_TRIAL_KEY, itemMeta -> {

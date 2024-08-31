@@ -29,13 +29,13 @@ public class ContestCommand {
         if (phase==2) {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
+        } else if (phase==3 && camp == 0) {
+            VoteMenu menu = new VoteMenu(player);
+            menu.open();
         } else if (phase==3) {
             ContributionMenu menu = new ContributionMenu(player);
             menu.open();
 
-        } else if (phase==3 && camp == 0) {
-            VoteMenu menu = new VoteMenu(player);
-            menu.open();
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
             DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(dayStartContest));

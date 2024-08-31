@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 
-import org.antlr.v4.codegen.SourceGenTriggers;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -30,6 +29,7 @@ public class ContestManager extends DatabaseConnector {
             }
         }
 
+        if (amount == 0) return false;
         return totalItems >= amount;
     }
 
@@ -125,7 +125,8 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public static void insertChoicePlayer(Player player, Integer camp) {
-        String sql = "INSERT INTO camps (minecraft_uuid, camps) VALUES (?, ?)";
+
+        String sql = "INSERT INTO camps (minecraft_uuid, camps, point_dep) VALUES (?, ?, 0)";
         try (PreparedStatement states = connection.prepareStatement(sql)) {
             states.setString(1, player.getUniqueId().toString());
             states.setInt(2, camp);

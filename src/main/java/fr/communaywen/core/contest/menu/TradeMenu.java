@@ -6,7 +6,6 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
-import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -120,7 +119,6 @@ public class TradeMenu extends Menu {
                                                int additem = Math.min(amount_shell2, stack_available);
                                                if (stack_available >=64) {
                                                    shell_contestItem.setAmount(additem);
-                                                       System.out.println(splitAmountIntoStack(shell_contestItem));
                                                        for (ItemStack item : splitAmountIntoStack(shell_contestItem)) {
                                                            getOwner().getInventory().addItem(item);
                                                        }
