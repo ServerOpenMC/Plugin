@@ -179,9 +179,11 @@ public class ClaimListener implements Listener {
                     if(region.isInArea(block.getLocation())) {
                         toggleClaimParticles(player, region);
                         if(activeParticleTasks.containsKey(playerUuid)) {
+                            AywenCraftPlugin.getInstance().getLogger().info("Owner:" + region.getTeam().getOwner());
+                            AywenCraftPlugin.getInstance().getLogger().info("Claimer:" + region.getClaimer());
                             player.sendMessage("§7§m                                         ");
                             player.sendMessage("§6Nom de la team: §e" + region.getTeam().getName());
-                            player.sendMessage("§6Claim par: §e" + Bukkit.getOfflinePlayer(region.getClaimer()).getName());
+                            player.sendMessage("§6Claim par: §e" + (region.getClaimer().equals(region.getTeam().getOwner()) ? Bukkit.getOfflinePlayer(region.getClaimer()).getName() + " §7§o(Propriétaire de la team)" : Bukkit.getOfflinePlayer(region.getClaimer()).getName()));
                             player.sendMessage("§6ID de la région: §e" + region.getClaimID());
                             player.sendMessage("§6Coordonnées: §e");
                             player.sendMessage("  §6Position 1: §e" + region.minLoc.getBlockX() + ", " + region.minLoc.getBlockY() + ", " + region.minLoc.getBlockZ());
