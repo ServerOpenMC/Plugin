@@ -66,7 +66,6 @@ public class AdvancementRegister extends DatabaseConnector implements Listener {
         plugin.registerEvents(
                 this,
                 new CloudBed(this),
-                new Nightmare(this),
                 new SweetChild(this),
                 new Helldivers(this),
                 new OnCookFish()

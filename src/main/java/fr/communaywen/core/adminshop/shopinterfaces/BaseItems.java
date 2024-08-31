@@ -12,4 +12,5 @@ public interface BaseItems {
     double getPrize();
     int getSlots();
     ShopType getType();
+    int getMaxStack();
 }

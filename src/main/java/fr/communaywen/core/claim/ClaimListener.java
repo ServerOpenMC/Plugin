@@ -48,7 +48,11 @@ public class ClaimListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamage(EntityDamageByEntityEvent event) { checkRegion((Player) event.getDamager(), event.getEntity().getLocation().getBlock(), event); }
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if(event.getDamager() instanceof Player player) {
+            checkRegion(player, event.getEntity().getLocation().getBlock(), event);
+        }
+    }
 
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {

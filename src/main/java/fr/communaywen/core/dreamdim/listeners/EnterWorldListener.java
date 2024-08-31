@@ -16,9 +16,11 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -123,19 +125,22 @@ public class EnterWorldListener implements Listener {
         bossbars.remove(p);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(PlayerQuitEvent e) {
         //Même chose que quand le joueur meurt
-        death(e.getPlayer());
-        teleportBack(e.getPlayer());
+        if (e.getPlayer().getWorld().getName().equals("dreamworld")) {
+            death(e.getPlayer());
+            teleportBack(e.getPlayer());
+        }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
         World world = p.getWorld();
 
         if (world.getName().equals("dreamworld")) {
+            register.grantAdvancement(p, "aywen:nightmare");
             death(e.getPlayer());
             p.setHealth(2);
             teleportBack(p);
