@@ -1,5 +1,6 @@
 package fr.communaywen.core.teams;
 
+import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.cache.TeamCache;
 import fr.communaywen.core.teams.utils.MethodState;
@@ -95,16 +96,15 @@ public class Team implements Listener {
         inventory.setContents(newinv);
     }
 
-    public void giveClaimStick(Player player) {
-        ItemStack itemStack = new ItemStack(Material.STICK);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("§cBATON DE CLAIM");
-        itemMeta.addEnchant(Enchantment.SHARPNESS, 1, true);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemMeta.setLore(Arrays.asList("§6Faites deux cliques §egauches §6", "§6sur l'endroit où vous voulez claim.", "§6Toutes les locations de la couche §e-62 §6à §e320 §6seront protégés."));
-
-        itemStack.setItemMeta(itemMeta);
-        player.getInventory().addItem(itemStack);
+    public boolean giveClaimStick(Player player) {
+        CustomStack customStack = CustomStack.getInstance("claim_stick");
+        if(customStack != null) {
+            ItemStack itemStack = customStack.getItemStack();
+            player.getInventory().addItem(itemStack);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public UUID getPlayerByUsername(String username) {
