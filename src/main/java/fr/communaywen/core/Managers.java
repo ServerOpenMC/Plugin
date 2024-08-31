@@ -13,6 +13,7 @@ import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
@@ -48,6 +49,7 @@ public class Managers {
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
     private PlayerChatChannel chatChannel;
+    private MoonDimensionManager moonDimManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -106,11 +108,13 @@ public class Managers {
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
+        moonDimManager = new MoonDimensionManager(plugin);
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
         dreamdimManager.init();
+        moonDimManager.init();
     }
 
     public void cleanup() {
@@ -125,5 +129,6 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
 
+        moonDimManager.close();
     }
 }
