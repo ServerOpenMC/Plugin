@@ -166,6 +166,20 @@ public class ContestManager extends DatabaseConnector {
         return campName;
     }
 
+    public static int getPlayerPoints(Player player) {
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                return result.getInt("point_dep");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
     public static ChatColor getPlayerCampChatColor(Player player) {
         Integer campInteger = ContestManager.getPlayerCamp(player);
         String color = ContestManager.getString("color" + campInteger);
