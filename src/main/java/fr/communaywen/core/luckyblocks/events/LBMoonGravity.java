@@ -6,10 +6,12 @@ import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockListeners;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Feature("Lucky Blocks")
@@ -20,7 +22,8 @@ public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListener
         super("Gravité Lunaire!",
                 "Gravité Lunaire pendant 1 minute !",
                 0.5f,
-                EventType.BONUS
+                EventType.BONUS,
+                new ItemStack(Material.WHITE_WOOL)
         );
     }
 

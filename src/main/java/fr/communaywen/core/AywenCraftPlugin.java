@@ -41,6 +41,7 @@ import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
 import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
+import fr.communaywen.core.luckyblocks.listeners.LBPlayerInteractListener;
 import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
@@ -279,7 +280,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ElevatorListener(),
                 new ChunkListManager(),
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
-                new LBPlayerQuitListener(managers.getLuckyBlockManager())
+                new LBPlayerQuitListener(managers.getLuckyBlockManager()),
+                new LBPlayerInteractListener(managers.getLuckyBlockManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor

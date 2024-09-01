@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Feature("Lucky Blocks")
 @Credit("Fnafgameur")
@@ -25,12 +26,14 @@ public abstract class LuckyBlockEvent {
     private final String description;
     private final double chance;
     private final EventType eventType;
+    private final ItemStack iconItem;
 
-    public LuckyBlockEvent(String name, String description, double chance, EventType eventType) {
+    public LuckyBlockEvent(String name, String description, double chance, EventType eventType, ItemStack iconItem) {
         this.name = name;
         this.description = description;
         this.chance = chance;
         this.eventType = eventType;
+        this.iconItem = iconItem;
     }
 
     public void triggerOpen(Player player, Block block) {

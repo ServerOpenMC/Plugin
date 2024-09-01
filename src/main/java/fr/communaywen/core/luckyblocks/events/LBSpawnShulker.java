@@ -4,9 +4,11 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Feature("Lucky Blocks")
 @Credit("Fnafgameur")
@@ -16,7 +18,8 @@ public class LBSpawnShulker extends LuckyBlockEvent {
         super("Wingardiuuuum Levioosaaaaa",
                 "Un Shulker est apparu !",
                 0.5f,
-                EventType.MALUS
+                EventType.MALUS,
+                new ItemStack(Material.SHULKER_BOX)
         );
     }
 

@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomBlock;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
+import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +28,10 @@ public class LBBlockBreakListener implements Listener {
         CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
 
         if (customBlock == null) {
+            return;
+        }
+
+        if (!customBlock.getNamespacedID().equals(LBUtils.getBlockNamespaceID())) {
             return;
         }
 

@@ -5,8 +5,10 @@ import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.luckyblocks.utils.Structure;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,8 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
         super("Un vieil ami",
                 "Apparition de la structure d'Herobrine !",
                 0.5f,
-                EventType.NEUTRAL
+                EventType.NEUTRAL,
+                new ItemStack(Material.PLAYER_HEAD)
         );
     }
 
