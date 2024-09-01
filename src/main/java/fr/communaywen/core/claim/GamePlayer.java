@@ -66,7 +66,7 @@ public class GamePlayer {
         return false;
     }
 
-    private static boolean isInside(ProtectedRegion region, Location location) {
+    public static boolean isInside(ProtectedRegion region, Location location) {
         BlockVector3 min = region.getMinimumPoint();
         BlockVector3 max = region.getMaximumPoint();
 

@@ -21,7 +21,7 @@ public class TeamClaim {
 
     TeamManager teamManager = AywenCraftPlugin.getInstance().getManagers().getTeamManager();
 
-    @DefaultFor("~")
+    @Subcommand("add")
     @Description("Donne un baton de claim")
     public void claimCmd(Player player) {
         Team team = teamManager.getTeamByPlayer(player.getUniqueId());
@@ -40,7 +40,11 @@ public class TeamClaim {
             return;
         }
 
-        team.giveClaimStick(player);
+        if(team.giveClaimStick(player)) {
+            MessageManager.sendMessageType(player, "§aVous avez reçu un claim stick !", Prefix.CLAIM, MessageType.SUCCESS, true);
+        } else {
+            MessageManager.sendMessageType(player, "§4Une erreur est survenue !", Prefix.CLAIM, MessageType.ERROR, true);
+        }
 
     }
 

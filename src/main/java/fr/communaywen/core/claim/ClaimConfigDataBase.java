@@ -6,6 +6,7 @@ import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,16 +19,25 @@ public class ClaimConfigDataBase extends DatabaseConnector {
     public static void loadAllClaims() {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM claim");
-
-
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 Location pos1 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos1X"), -62, result.getDouble("pos1Z"));
                 Location pos2 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos2X"), 320, result.getDouble("pos2Z"));
                 Team team = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByName(result.getString("team"));
-                UUID uuid = UUID.fromString(result.getString("claimID"));
-                if (team != null) {
-                    AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid));
+                String uuidString = result.getString("claimID");
+                String playerUUIDString = result.getString("claimer");
+                if(playerUUIDString == null || playerUUIDString.isEmpty() || playerUUIDString.isBlank()) {
+                    playerUUIDString = team.getOwner().toString();
+                }
+
+                try {
+                    UUID uuid = UUID.fromString(uuidString);
+                    UUID playerUUID = UUID.fromString(playerUUIDString);
+                    if (team != null) {
+                        AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid, playerUUID));
+                    }
+                } catch (IllegalArgumentException e) {
+                    AywenCraftPlugin.getInstance().getLogger().severe("Invalid UUID string: " + uuidString + " or " + playerUUIDString);
                 }
             }
 
@@ -38,9 +48,9 @@ public class ClaimConfigDataBase extends DatabaseConnector {
         }
     }
 
-    public static boolean addClaims(UUID claimID, String teamName, Double pos1X, Double pos1Z, Double pos2X, Double pos2Z, String world) {
+    public static boolean addClaims(UUID claimID, String teamName, Double pos1X, Double pos1Z, Double pos2X, Double pos2Z, String world, UUID claimer) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO claim (claimID, team, pos1x, pos1z, pos2x, pos2z, world) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO claim (claimID, team, pos1x, pos1z, pos2x, pos2z, world, claimer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
             statement.setString(1, String.valueOf(claimID));
             statement.setString(2, teamName);
@@ -49,6 +59,7 @@ public class ClaimConfigDataBase extends DatabaseConnector {
             statement.setDouble(5, pos2X);
             statement.setDouble(6, pos2Z);
             statement.setString(7, world);
+            statement.setString(8, String.valueOf(claimer));
 
             statement.executeUpdate();
 
