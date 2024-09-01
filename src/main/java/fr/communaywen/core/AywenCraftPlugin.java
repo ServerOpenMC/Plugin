@@ -143,6 +143,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+        ClaimConfigDataBase.loadAllClaimsData();
 
         eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
 
@@ -292,7 +293,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
 
         QuestsManager.initializeQuestsTable();
-        ClaimConfigDataBase.loadAllClaims();
+        ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
     }
 
