@@ -218,6 +218,19 @@ public class CustomItemsUtils {
         return navigationButtons;
     }
 
+    public static void damageItem(ItemStack itemToDamage, int damageNum) {
+        ItemMeta itemMeta = itemToDamage.getItemMeta();
+        Damageable damageable = (Damageable) itemMeta;
+        damageable.setDamage(damageable.getDamage() + damageNum);
+        itemToDamage.setItemMeta(itemMeta);
+    }
+
+    /**
+     * Set the name of an ItemBuilder
+     * @param itemBuilder The ItemBuilder
+     * @param name The name
+     * @return The ItemBuilder with the name set
+     */
     private static ItemBuilder itemBuilderSetName(ItemBuilder itemBuilder, String name) {
         ItemMeta itemMeta = itemBuilder.getItemMeta();
         itemMeta.setDisplayName(name);
@@ -226,6 +239,12 @@ public class CustomItemsUtils {
         return itemBuilder;
     }
 
+    /**
+     * Check if a player can destroy a block in a region
+     * @param location The location of the block
+     * @param player The player
+     * @return True if the player can destroy the block, false otherwise
+     */
     private static boolean canDestroy(Location location, Player player) {
 
         for (RegionManager region : AywenCraftPlugin.getInstance().regions) {

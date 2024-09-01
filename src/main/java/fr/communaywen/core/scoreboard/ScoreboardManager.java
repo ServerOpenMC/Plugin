@@ -43,7 +43,7 @@ public class ScoreboardManager {
 
     private Scoreboard createNewScoreboard(Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy", "\uE253");
+        Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy", PlaceholderAPI.setPlaceholders(player, "%img_openmc%"));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         updateScoreboard(player, scoreboard, objective);

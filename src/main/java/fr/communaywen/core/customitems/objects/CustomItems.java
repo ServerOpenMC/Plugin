@@ -1,5 +1,10 @@
 package fr.communaywen.core.customitems.objects;
 
+import fr.communaywen.core.credit.Credit;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
@@ -7,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Credit("Fnafgameur")
 @Getter
 public abstract class CustomItems {
 
