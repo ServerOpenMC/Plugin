@@ -4,8 +4,6 @@ import fr.communaywen.core.teams.Team;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,32 +16,29 @@ public class RegionManager {
     private Team team;
     @Getter
     private UUID claimID;
-    @Getter private final UUID claimer;
     private static final double MIN_Y = -64.0;
     private static final double MAX_Y = 320.0;
 
-    public RegionManager(Location firstPoint, Location secondPoint, Team team, UUID claimer) {
+    public RegionManager(Location firstPoint, Location secondPoint, Team team) {
         minLoc = new Location(firstPoint.getWorld(), min(firstPoint.getX(), secondPoint.getX()), min(MIN_Y, MIN_Y), min(firstPoint.getZ(), secondPoint.getZ()));
         maxLoc = new Location(firstPoint.getWorld(), max(firstPoint.getX(), secondPoint.getX()), max(MAX_Y, MAX_Y), max(firstPoint.getZ(), secondPoint.getZ()));
         this.team = team;
-        this.claimer = claimer;
         this.claimID = UUID.randomUUID();
     }
 
-    public RegionManager(Location firstPoint, Location secondPoint, Team team, UUID claimID, UUID claimer) {
+    public RegionManager(Location firstPoint, Location secondPoint, Team team, UUID claimID) {
         minLoc = new Location(firstPoint.getWorld(), min(firstPoint.getX(), secondPoint.getX()), min(MIN_Y, MIN_Y), min(firstPoint.getZ(), secondPoint.getZ()));
         maxLoc = new Location(firstPoint.getWorld(), max(firstPoint.getX(), secondPoint.getX()), max(MAX_Y, MAX_Y), max(firstPoint.getZ(), secondPoint.getZ()));
         this.team = team;
         this.claimID = claimID;
-        this.claimer = claimer;
     }
 
     public double min(double a, double b) {
-        return Math.min(a, b);
+        return a < b ? a : b;
     }
 
     public double max(double a, double b) {
-        return Math.max(a, b);
+        return a > b ? a : b;
     }
 
     public boolean isInArea(Location loc) {
