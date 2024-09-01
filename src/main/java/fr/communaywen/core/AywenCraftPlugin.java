@@ -46,6 +46,8 @@ import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
+import fr.communaywen.core.space.moon.*;
+import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
@@ -273,7 +275,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new BabyFuzeListener(),
                 new MailboxListener(),
                 new ElevatorListener(),
-                new ChunkListManager()
+                new ChunkListManager(),
+                new RocketListener(),
+                new MoonListener()
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor

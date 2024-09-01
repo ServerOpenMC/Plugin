@@ -1,6 +1,7 @@
 package fr.communaywen.core.scoreboard;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.dreamdim.listeners.CloudSoup;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -42,7 +43,7 @@ public class ScoreboardManager {
 
     private Scoreboard createNewScoreboard(Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy", "\uE253");
+        Objective objective = scoreboard.registerNewObjective("sb_aywen", "dummy", PlaceholderAPI.setPlaceholders(player, "%img_openmc%"));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         updateScoreboard(player, scoreboard, objective);
@@ -79,12 +80,18 @@ public class ScoreboardManager {
         QueryOptions queryOptions = luckPerms.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
         boolean teambool = teamManager.isInTeam(player.getUniqueId());
         Team teamName = teamManager.getTeamByPlayer(player.getUniqueId());
+        String flytime = CloudSoup.getInstance().getFlyTime(player);
         String ipStr = "ᴘʟᴀʏ.ᴏᴘᴇɴᴍᴄ.ꜰʀ";
 
-        objective.getScore(" ").setScore(9);
-        objective.getScore("§d§m                        ").setScore(8);
-        objective.getScore("§8• §fPseudo§7: §b" + player.getName()).setScore(7);
-        objective.getScore("  ").setScore(6);
+        objective.getScore(" ").setScore(10);
+        objective.getScore("§d§m                        ").setScore(9);
+        objective.getScore("§8• §fPseudo§7: §b" + player.getName()).setScore(8);
+        objective.getScore("  ").setScore(7);
+
+        if (flytime != null) {
+            objective.getScore("§8• §fVol§7: §a" + flytime).setScore(6);
+        }
+
         objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(5);
         objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(4);
         objective.getScore("   ").setScore(3);
