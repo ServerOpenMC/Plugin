@@ -1,5 +1,6 @@
 package fr.communaywen.core.commands.contest;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.menu.ContributionMenu;
 import fr.communaywen.core.contest.menu.VoteMenu;
@@ -19,6 +20,11 @@ import java.util.Locale;
 @Feature("Contest")
 @Credit("iambibi_")
 public class ContestCommand {
+    private final AywenCraftPlugin plugin;
+
+    public ContestCommand(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Command("contest")
     @Description("Ouvre l'interface des festivals, et quand un festival commence, vous pouvez choisir votre camp")
@@ -33,7 +39,7 @@ public class ContestCommand {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
         } else if (phase==3) {
-            ContributionMenu menu = new ContributionMenu(player);
+            ContributionMenu menu = new ContributionMenu(player, this.plugin);
             menu.open();
 
         } else {

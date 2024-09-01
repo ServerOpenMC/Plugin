@@ -4,27 +4,33 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.MaterialFromChatColor;
+import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class ContributionMenu extends Menu {
-    public ContributionMenu(Player owner) {
+    private final AywenCraftPlugin plugin;
+
+    public ContributionMenu(Player owner, AywenCraftPlugin plugin) {
         super(owner);
+        this.plugin = plugin;
     }
 
     @Override
@@ -58,8 +64,19 @@ public class ContributionMenu extends Menu {
         loreinfo.add("§7Le déroulement..., Les résultats, ...");
         loreinfo.add("§e§lCLIQUEZ ICI POUR EN VOIR PLUS!");
 
-        lore_randomevent.add("§b+x% §7Pêche Miraculeuse");
-        lore_randomevent.add("§b+x% §7Nuit Terrifiante");
+        FileConfiguration config = this.plugin.getConfig();
+        ConfigurationSection boostEvents = config.getConfigurationSection("contest.boost_event");
+
+        if  (boostEvents != null) {
+            for (String event : boostEvents.getKeys(true)) {
+                ConfigurationSection eventInfo = boostEvents.getConfigurationSection(event);
+
+                if (eventInfo != null) {
+                    lore_randomevent.add("§b+" + eventInfo.getInt("boost") + "% §7" + eventInfo.getString("name"));
+                }
+            }
+        }
+
         lore_randomevent.add("§8Les probabilités qu'un event se produise plus souvent, sont choisis dès le début du Contest");
 
         Material shell_contest = CustomStack.getInstance("contest:contest_shell").getItemStack().getType();
@@ -93,7 +110,7 @@ public class ContributionMenu extends Menu {
                         }
                         if (ContestManager.hasEnoughItems(getOwner(), shell_contest, shell)) {
                             ContestManager.removeItemsFromInventory(getOwner(), shell_contest, shell);
-                            ContestManager.updateColumnInt("camps", "point_dep", shell + ContestManager.getInt("camps", "point_dep"));
+                            ContestManager.updateColumnInt("camps", "point_dep", shell + ContestManager.getPlayerPoints(getOwner()));
                             ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCamp(getOwner()), shell + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCamp(getOwner())));
                             MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
                         } else {

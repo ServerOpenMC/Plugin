@@ -10,23 +10,30 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Random;
 
 import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
 
 
 public class ContestListener implements Listener {
-    private BukkitRunnable eventRunnable;
+    private BukkitRunnable eventRunnable;;
 
-    public ContestListener(AywenCraftPlugin plugin) {
+    public ContestListener(AywenCraftPlugin plugin, FileConfiguration eventConfig) {
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -52,7 +59,7 @@ public class ContestListener implements Listener {
                         player.playSound(player.getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1.0F, 0.2F);
                     }
 
-                    org.bukkit.World world = Bukkit.getWorld(worldsName);
+                    World world = Bukkit.getWorld(worldsName);
                     com.sk89q.worldedit.world.World wgWorld = BukkitAdapter.adapt(world);
 
                     RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
@@ -88,6 +95,41 @@ public class ContestListener implements Listener {
                         throw new RuntimeException(e);
                     }
 
+                    FileConfiguration config = plugin.getConfig();
+                    ConfigurationSection boostEvents = config.getConfigurationSection("contest.boost_event");
+
+                    if  (boostEvents != null) {
+                        for (String event : boostEvents.getKeys(false)) {
+                            ConfigurationSection eventInfo = boostEvents.getConfigurationSection(event);
+                            Random random = new Random();
+                            int boost = random.nextInt(5,25);
+                            plugin.getConfig().set("contest.boost_event."+ event +".boost", boost);
+                            try {
+                                plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            String probaCode = null;
+                            if (eventInfo != null) {
+                                probaCode = eventInfo.getString("probaCode");
+                            }
+
+                            if (probaCode != null) {
+                                double currentProba = Double.parseDouble(eventConfig.get(probaCode).toString());
+                                double addboost = (double) boost / 100;
+                                double newProba = currentProba + addboost;
+                                eventConfig.set(eventInfo.getString("probaCode"), newProba);
+                                try {
+                                    eventConfig.save(new File(plugin.getDataFolder(), "events.yml"));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+
+
+                            }
+                    }
 
                     ContestManager.updateColumnInt("contest", "phase", 3);
                     Bukkit.broadcastMessage(
@@ -105,7 +147,7 @@ public class ContestListener implements Listener {
                         player.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, 1.0F, 0.3F);
                     }
 
-                    org.bukkit.World world = Bukkit.getWorld(worldsName);
+                    World world = Bukkit.getWorld(worldsName);
                     com.sk89q.worldedit.world.World wgWorld = BukkitAdapter.adapt(world);
 
                     RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();

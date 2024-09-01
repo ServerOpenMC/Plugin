@@ -87,6 +87,7 @@ import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -182,7 +183,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
-                new ContestCommand(),
+                new ContestCommand(this),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -246,7 +247,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
-                new ContestListener(this),
+                new ContestListener(this, loadEventsManager()),
                 new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
@@ -311,6 +312,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 player.closeInventory(); // Close inventory
             }
         }
+        try {
+            this.getConfig().save(new File(this.getDataFolder(), "config.yml"));
+            loadEventsManager().save(new File(this.getDataFolder(), "events.yml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         managers.cleanup();
     }
 

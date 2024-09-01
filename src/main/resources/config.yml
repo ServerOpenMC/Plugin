@@ -23,3 +23,13 @@ discord:
   webhookName: Annonce Serveur
 mine:
   name: mine
+contest:
+  boost_event:
+    miraculousFishing:
+        name: "Pêche Miraculeuse"
+        probaCode: "miraculousFishingProbability"
+        boost: 0 #in %
+    terrifyingNight:
+        name: "Nuit Terrifiante"
+        probaCode: "terrifyingNightProbability"
+        boost: 0 #in %
