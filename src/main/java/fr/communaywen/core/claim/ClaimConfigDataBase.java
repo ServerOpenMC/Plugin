@@ -11,41 +11,60 @@ import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 
 public class ClaimConfigDataBase extends DatabaseConnector {
 
-    public static void loadAllClaims() {
+    private static List<Map<String, Object>> tempClaims = new ArrayList<>();
+
+    public static void loadAllClaimsData() {
         try {
+
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM claim");
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                Location pos1 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos1X"), -62, result.getDouble("pos1Z"));
-                Location pos2 = new Location(Bukkit.getWorld(result.getString("world")), result.getDouble("pos2X"), 320, result.getDouble("pos2Z"));
-                Team team = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByName(result.getString("team"));
-                String uuidString = result.getString("claimID");
-                String playerUUIDString = result.getString("claimer");
-                if(playerUUIDString == null || playerUUIDString.isEmpty() || playerUUIDString.isBlank()) {
-                    playerUUIDString = team.getOwner().toString();
-                }
+                Map<String, Object> tempClaim = new HashMap<>();
+                tempClaim.put("claimID", result.getString("claimID"));
+                tempClaim.put("team", result.getString("team"));
+                tempClaim.put("pos1X", result.getDouble("pos1X"));
+                tempClaim.put("pos1Z", result.getDouble("pos1Z"));
+                tempClaim.put("pos2X", result.getDouble("pos2X"));
+                tempClaim.put("pos2Z", result.getDouble("pos2Z"));
+                tempClaim.put("world", result.getString("world"));
+                tempClaim.put("claimer", result.getString("claimer"));
+                tempClaims.add(tempClaim);
+            }
 
-                try {
-                    UUID uuid = UUID.fromString(uuidString);
-                    UUID playerUUID = UUID.fromString(playerUUIDString);
-                    if (team != null) {
-                        AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid, playerUUID));
-                    }
-                } catch (IllegalArgumentException e) {
-                    AywenCraftPlugin.getInstance().getLogger().severe("Invalid UUID string: " + uuidString + " or " + playerUUIDString);
+        } catch (SQLException ignored) {}
+    }
+
+    public static void processStoredClaimData() {
+        for(Map<String, Object> claimData : tempClaims) {
+            Location pos1 = new Location(Bukkit.getWorld((String) claimData.get("world")), (Double) claimData.get("pos1X"), -62, (Double) claimData.get("pos1Z"));
+            Location pos2 = new Location(Bukkit.getWorld((String) claimData.get("world")), (Double) claimData.get("pos2X"), 320, (Double) claimData.get("pos2Z"));
+            Team team = AywenCraftPlugin.getInstance().getManagers().getTeamManager().getTeamByName((String) claimData.get("team"));
+            String uuidString = (String) claimData.get("claimID");
+            String playerUUIDString = (String) claimData.get("claimer");
+
+            if (playerUUIDString == null || playerUUIDString.isEmpty() || playerUUIDString.isBlank()) {
+                if (team != null) {
+                    playerUUIDString = team.getOwner().toString();
+                } else {
+                    continue;
                 }
             }
 
-
-            result.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                UUID uuid = UUID.fromString(uuidString);
+                UUID playerUUID = UUID.fromString(playerUUIDString);
+                if (team != null) {
+                    AywenCraftPlugin.getInstance().regions.add(new RegionManager(pos1, pos2, team, uuid, playerUUID));
+                }
+            } catch (IllegalArgumentException e) {
+                AywenCraftPlugin.getInstance().getLogger().severe("Invalid UUID string: " + uuidString + " or " + playerUUIDString);
+            }
         }
+        tempClaims.clear();
     }
 
     public static boolean addClaims(UUID claimID, String teamName, Double pos1X, Double pos1Z, Double pos2X, Double pos2Z, String world, UUID claimer) {
