@@ -1,4 +1,4 @@
-package fr.communaywen.core.dreamdim;
+package fr.communaywen.core.space.moon;
 
 import fr.communaywen.core.utils.FastNoiseLite;
 import org.bukkit.Material;
@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class DreamChunkGenerator extends ChunkGenerator {
+public class MoonChunkGenerator extends ChunkGenerator {
     /* https://www.spigotmc.org/threads/545616/ */
     private final FastNoiseLite terrainNoise = new FastNoiseLite();
     private final FastNoiseLite detailNoise = new FastNoiseLite();
 
     private final HashMap<Integer, List<Material>> layers = new HashMap<Integer, List<Material>>() {{
-        put(0, Arrays.asList(Material.SCULK));
-        put(1, Arrays.asList(Material.MUD));
-        put(2, Arrays.asList(Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_COPPER_ORE, Material.CRYING_OBSIDIAN));
+        put(0, Arrays.asList(Material.END_STONE));
+        put(1, Arrays.asList(Material.DRIPSTONE_BLOCK));
+        put(2, Arrays.asList(Material.IRON_BLOCK, Material.RAW_IRON_BLOCK, Material.END_STONE));
         put(3, Arrays.asList(Material.BEDROCK));
     }};
 
@@ -25,7 +25,7 @@ public class DreamChunkGenerator extends ChunkGenerator {
         return true;
     }
 
-    public DreamChunkGenerator() {
+    public MoonChunkGenerator() {
         // Set frequencies
         terrainNoise.SetFrequency(0.001f);
         detailNoise.SetFrequency(0.05f);
@@ -44,15 +44,11 @@ public class DreamChunkGenerator extends ChunkGenerator {
                     float noise3 = detailNoise.GetNoise(x + (chunkX * 16), y, z + (chunkZ * 16));
                     float currentY = (65 + (noise2 * 30));
 
-                    if(y < -61) {
+                    if(y < -62) {
                         chunkData.setBlock(x, y, z, layers.get(3).get(random.nextInt(layers.get(3).size())));
                     }
-                    else if (y < -60) {
-                        if (random.nextBoolean()){
-                            chunkData.setBlock(x, y, z, layers.get(3).get(random.nextInt(layers.get(3).size())));
-                        } else {
-                            chunkData.setBlock(x, y, z, Material.DEEPSLATE);
-                        }
+                    else if (y < -61) {
+                            chunkData.setBlock(x, y, z, Material.END_STONE);
                     }
                     else if(y < currentY) {
                         float distanceToSurface = Math.abs(y - currentY); // The absolute y distance to the world surface.
@@ -71,13 +67,13 @@ public class DreamChunkGenerator extends ChunkGenerator {
 
                             // Not close to the surface at all.
                             else {
-                                Material neighbour = Material.DEEPSLATE;
+                                Material neighbour = Material.END_STONE;
                                 List<Material> neighbourBlocks = new ArrayList<Material>(Arrays.asList(chunkData.getType(Math.max(x - 1, 0), y, z), chunkData.getType(x, Math.max(y - 1, 0), z), chunkData.getType(x, y, Math.max(z - 1, 0)))); // A list of all neighbour blocks.
 
                                 // Randomly place vein anchors.
-                                if(random.nextFloat() < 0.01) {
-                                    if (random.nextFloat() < 0.025) {
-                                        neighbour = Material.ANCIENT_DEBRIS;
+                                if(random.nextFloat() < 0.002) {
+                                    if (random.nextFloat() < 0.0075) {
+                                        neighbour = Material.RAW_COPPER_BLOCK;
                                     } else {
                                         neighbour = layers.get(2).get(Math.min(random.nextInt(layers.get(2).size()), random.nextInt(layers.get(2).size()))); // A basic way to shift probability to lower values.
                                     }
@@ -97,7 +93,11 @@ public class DreamChunkGenerator extends ChunkGenerator {
                         }
                     }
                     else if(y < 65) {
-                        chunkData.setBlock(x, y, z, Material.WATER);
+                        if(random.nextFloat() < 0.75) {
+                            chunkData.setBlock(x, y, z, Material.ICE);
+                        } else {
+                            chunkData.setBlock(x, y, z, Material.PACKED_ICE);
+                        }
                     }
                 }
             }

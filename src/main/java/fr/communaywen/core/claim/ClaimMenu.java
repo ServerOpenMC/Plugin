@@ -68,9 +68,20 @@ public class ClaimMenu extends Menu {
                         ChatColor.DARK_GRAY + "  ■ " + ChatColor.GOLD + " X: " + ChatColor.YELLOW + claim.getMiddle().getBlockX(),
                         ChatColor.DARK_GRAY + "  ■ " + ChatColor.GOLD + " Z: " + ChatColor.YELLOW + claim.getMiddle().getBlockZ(),
                         "",
-                        ChatColor.RED + "Cliquez pour supprimer"
+                        ChatColor.RED + "Cliquez gauche pour supprimer",
+                        ChatColor.GREEN + "Cliquez droit pour voir le claim",
+                        "§bⓘ §7Pour plus d'information sur le claim",
+                        "§7faites un clic droit sur le bloc",
+                        "§7avec un §eClaim Info Wand"
                 ));
-            }).setNextMenu(new ClaimDeleteConfirmationMenu(getOwner(), claim, team)));
+            }).setOnClick(event -> {
+                if(event.isLeftClick()) {
+                    new ClaimDeleteConfirmationMenu(getOwner(), claim, team).open();
+                } else if (event.isRightClick()) {
+                    getOwner().closeInventory();
+                    ClaimListener.toggleClaimParticles(getOwner(), claim);
+                }
+            }));
         }
 
         content.put(8, new ItemBuilder(this, Material.BARRIER, itemMeta -> {

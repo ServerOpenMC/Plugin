@@ -67,7 +67,9 @@ public class AdminShopSellConfirm extends Menu {
 
             removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
             economy.addBalance(getOwner(), totalAmount);
-            getOwner().sendMessage("§aVente confirmée ! Vous avez reçu " + totalAmount + "$.");
+            getOwner().sendMessage("§aVente confirmée !");
+            getOwner().sendMessage("  §4- §c" + quantity + " " + items.getName() + " §7pour §a" + String.format("%.2f", totalAmount) + "$");
+
             getOwner().closeInventory();
         }));
 
