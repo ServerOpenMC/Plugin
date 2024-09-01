@@ -2,10 +2,12 @@ package fr.communaywen.core.customitems.managers;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
+import fr.communaywen.core.customitems.items.BuilderWand;
 import fr.communaywen.core.customitems.items.DiamondHammer;
 import fr.communaywen.core.customitems.items.IronHammer;
 import fr.communaywen.core.customitems.items.NetheriteHammer;
 import fr.communaywen.core.customitems.objects.CustomItems;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -15,10 +17,12 @@ public class CustomItemsManager {
 
     private final ArrayList<CustomItems> customItems = new ArrayList<>();
 
-    public CustomItemsManager() {
+    public CustomItemsManager(FileConfiguration customItemsConfig) {
+
         customItems.add(new IronHammer());
         customItems.add(new DiamondHammer());
         customItems.add(new NetheriteHammer());
+        customItems.add(new BuilderWand(customItemsConfig));
 
         initCustomItems();
     }
