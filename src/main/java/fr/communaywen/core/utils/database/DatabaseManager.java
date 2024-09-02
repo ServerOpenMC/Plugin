@@ -73,7 +73,8 @@ public class DatabaseManager {
                 "  pos1z double NOT NULL," +
                 "  pos2x double NOT NULL," +
                 "  pos2z double NOT NULL," +
-                "  world varchar(20) NOT NULL" +
+                "  world varchar(20) NOT NULL," +
+                "  claimer varchar(36) NOT NULL" +
                 ")").executeUpdate();
 
         // Système d'économie
@@ -89,6 +90,7 @@ public class DatabaseManager {
                 ")").executeUpdate();
 
         System.out.println("Les tables ont été créées si besoin");
+        this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
     }
 
     public void close() {

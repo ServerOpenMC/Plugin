@@ -4,6 +4,7 @@ import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import org.bukkit.Material;
 
 @Credit("Axeno")
 @Feature("AdminShop")
@@ -52,5 +53,11 @@ public enum MiscItems implements BaseItems {
     @Override
     public String named() {
         return name();
+    }
+
+    @Override
+    public int getMaxStack() {
+        Material material = Material.getMaterial(this.named());;
+        return material == null ? 64 : material.getMaxStackSize();
     }
 }

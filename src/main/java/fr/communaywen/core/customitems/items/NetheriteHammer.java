@@ -1,5 +1,7 @@
 package fr.communaywen.core.customitems.items;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.objects.CustomItemsEvents;
@@ -16,7 +18,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Feature("Netherite Hammer")
 @Getter
+@Credit("Fnafgameur")
+/* Credit to
+ * Dartsgame for the 3D model
+ */
 public class NetheriteHammer extends CustomItems implements CustomItemsEvents {
 
     public NetheriteHammer() {

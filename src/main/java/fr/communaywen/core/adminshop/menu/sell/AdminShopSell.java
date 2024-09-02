@@ -116,9 +116,7 @@ public class AdminShopSell extends Menu {
         return new ItemBuilder(this, Objects.requireNonNull(Material.getMaterial(items.named())), itemMeta -> {
             itemMeta.setDisplayName(items.getName());
             updateItemMeta(itemMeta);
-        }).setOnClick(event -> {
-            new AdminShopSellConfirm(getOwner(), items, number.get()).open();
-        });
+        }).setNextMenu(new AdminShopSellConfirm(getOwner(), items, number.get()));
     }
 
     private void updateItemMeta(ItemMeta itemMeta) {
@@ -142,6 +140,8 @@ public class AdminShopSell extends Menu {
                 updateItemMeta(itemMeta);
                 itemStack.setItemMeta(itemMeta);
             }
+
+            inventory.setItem(13, createItemDisplay());
         }
         getOwner().updateInventory();
     }
