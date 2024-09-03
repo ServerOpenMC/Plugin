@@ -1,5 +1,6 @@
 package fr.communaywen.core.customitems.utils;
 
+import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import dev.xernas.menulib.Menu;
@@ -59,6 +60,12 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
+                            CustomBlock customBlock = CustomBlock.byAlreadyPlaced(blockToBrake);
+
+                            if (customBlock != null) {
+                                continue;
+                            }
+
                             if (!canDestroy(blockToBrake.getLocation(), player)) {
                                 continue;
                             }
@@ -92,6 +99,12 @@ public class CustomItemsUtils {
                                 continue;
                             }
 
+                            CustomBlock customBlock = CustomBlock.byAlreadyPlaced(blockToBrake);
+
+                            if (customBlock != null) {
+                                continue;
+                            }
+
                             if (!canDestroy(blockToBrake.getLocation(), player)) {
                                 continue;
                             }
@@ -122,6 +135,12 @@ public class CustomItemsUtils {
                             blockToBrake = brokenBlock.getRelative(x, y, z);
 
                             if (blockToBrake.equals(brokenBlock)) {
+                                continue;
+                            }
+
+                            CustomBlock customBlock = CustomBlock.byAlreadyPlaced(blockToBrake);
+
+                            if (customBlock != null) {
                                 continue;
                             }
 
