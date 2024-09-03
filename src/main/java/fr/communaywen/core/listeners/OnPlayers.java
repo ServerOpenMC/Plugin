@@ -42,6 +42,7 @@ public class OnPlayers implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // Donne une permissions en fonction du niveau
+        if (event.joinMessage() == null) { return; }
         Player player = event.getPlayer();
 
         User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
