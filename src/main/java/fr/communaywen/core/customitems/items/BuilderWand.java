@@ -205,6 +205,10 @@ public class BuilderWand extends CustomItems implements CustomItemsEvents {
             return false;
         }
 
+        if (player.getWorld().getName().equals("dreamworld")) {
+            return false;
+        }
+
         for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
             if (region.isInArea(newLoc) && !region.getTeam().getPlayers().contains(player.getUniqueId())) {
                 return false;
