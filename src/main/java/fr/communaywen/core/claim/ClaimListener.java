@@ -13,6 +13,9 @@ import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Container;
+import org.bukkit.block.data.Openable;
+import org.bukkit.block.data.type.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -22,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -35,6 +39,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
+import org.bukkit.material.RedstoneTorch;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ClaimListener implements Listener {
@@ -61,7 +66,7 @@ public class ClaimListener implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         checkRegion(player, event.getRightClicked().getLocation().getBlock(), event);
-    
+
         if (event.getRightClicked().getType() == EntityType.ITEM_FRAME) {
             ItemStack item = player.getItemInHand();
             CustomStack customStack = CustomStack.byItemStack(item);
@@ -69,6 +74,13 @@ public class ClaimListener implements Listener {
                 event.setCancelled(true);
                 MessageManager.sendMessageType(player, "§cVous ne pouvez pas utiliser un BATON DE CLAIM sur un cadre d'item.", Prefix.CLAIM, MessageType.ERROR, true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onHangingBreak(HangingBreakByEntityEvent event) {
+        if(event.getRemover() instanceof Player player) {
+            checkRegion(player, event.getEntity().getLocation().getBlock(), event);
         }
     }
 
@@ -168,8 +180,26 @@ public class ClaimListener implements Listener {
         assert event.getItem() != null;
         Block clickedBlock = event.getClickedBlock();
         CustomStack customStack = CustomStack.byItemStack(event.getItem());
-
+        Action action = event.getAction();
         ItemStack item = event.getItem();
+
+        if (clickedBlock != null && (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK)) {
+            if (clickedBlock.getState().getBlockData() instanceof Openable ||
+                    clickedBlock.getState().getBlockData() instanceof Door ||
+                    clickedBlock.getState().getBlockData() instanceof TrapDoor ||
+                    clickedBlock.getState().getBlockData() instanceof Gate ||
+                    clickedBlock.getState().getBlockData() instanceof RedstoneWire ||
+                    clickedBlock.getState().getBlockData() instanceof RedstoneRail ||
+                    clickedBlock.getState() instanceof Container ||
+                    clickedBlock.getType().isInteractable()){
+
+                if (!checkRegionB(player, clickedBlock, event)) {
+                    return;
+                }
+            }
+
+        }
+
         if (item == null || item.getType() == Material.AIR) return;
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock().getRelative(event.getBlockFace());
@@ -191,7 +221,6 @@ public class ClaimListener implements Listener {
                         }
                     }
                 }
-                return;
             }
 
             if (event.getItem() != null && event.getItem().getType() == Material.BONE_MEAL) {
@@ -406,6 +435,23 @@ public class ClaimListener implements Listener {
             }
         }
         return false;
+    }
+
+    private boolean checkRegionB(Player player, Block block, Event eventHandler) {
+        AywenCraftPlugin plugin = AywenCraftPlugin.getInstance();
+        for (RegionManager region : plugin.regions) {
+            if (region.isInArea(block.getLocation())) {
+                boolean isBypassing = AywenCraftPlugin.playerClaimsByPass.contains(player);
+                boolean isTeamMember = region.isTeamMember(player.getUniqueId());
+
+                if (!isBypassing && !isTeamMember) {
+                    MessageManager.sendMessageType(player, "§cCe n'est pas chez vous", Prefix.CLAIM, MessageType.ERROR, true);
+                    if (eventHandler instanceof Cancellable cancellable) cancellable.setCancelled(true);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // Check if explosion is in region
