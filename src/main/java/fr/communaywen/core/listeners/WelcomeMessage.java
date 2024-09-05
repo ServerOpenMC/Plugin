@@ -52,7 +52,10 @@ public class WelcomeMessage implements Listener {
             }
         }
 
-        event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(event.getJoinMessage())));
+        if (event.getJoinMessage() != null) {
+            event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(event.getJoinMessage())));
+        }
+
         AywenCraftPlugin.getInstance().getManagers().getScoreboardManager().setScoreboard(player);
     }
 }

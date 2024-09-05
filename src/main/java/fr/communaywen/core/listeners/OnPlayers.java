@@ -42,16 +42,13 @@ public class OnPlayers implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // Donne une permissions en fonction du niveau
+        if (event.joinMessage() == null) { return; }
         Player player = event.getPlayer();
 
         User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
         QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
 
         event.setJoinMessage("§8[§a+§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
-
-        if (player.getUniqueId().toString().equals("1581225d-e6a2-44e8-af37-c71702c60665")) {
-            Bukkit.getServer().dispatchCommand(player, "attribute " + player.getUniqueId().toString() + " minecraft:generic.scale base set 0.0625");
-        }
 
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
             DraftAPI draftAPI = new DraftAPI();

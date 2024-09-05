@@ -143,6 +143,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+        ClaimConfigDataBase.loadAllClaimsData();
 
         eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
 
@@ -288,6 +289,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         createFarineRecipe();
+        createCrazyPotion();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
@@ -295,7 +297,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
 
         QuestsManager.initializeQuestsTable();
-        ClaimConfigDataBase.loadAllClaims();
+        ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
     }
 

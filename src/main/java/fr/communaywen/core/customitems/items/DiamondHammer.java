@@ -1,5 +1,6 @@
 package fr.communaywen.core.customitems.items;
 
+import dev.lone.itemsadder.api.CustomBlock;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import dev.lone.itemsadder.api.CustomStack;
@@ -46,6 +47,13 @@ public class DiamondHammer extends CustomItems implements CustomItemsEvents {
     public void onBlockBreak(BlockBreakEvent event) {
 
         Block brokenBlock = event.getBlock();
+        CustomBlock customBlock = CustomBlock.byAlreadyPlaced(brokenBlock);
+
+        if (customBlock != null) {
+            event.setCancelled(true);
+            return;
+        }
+
         Player player = event.getPlayer();
         BlockFace playerFacing = CustomItemsUtils.getDestroyedBlockFace(player);
 
