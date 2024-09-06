@@ -10,12 +10,16 @@ import java.time.DayOfWeek;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+
+import static org.bukkit.Bukkit.getOfflinePlayers;
 
 public class ContestManager extends DatabaseConnector {
     //import from axeno
@@ -126,10 +130,11 @@ public class ContestManager extends DatabaseConnector {
 
     public static void insertChoicePlayer(Player player, Integer camp) {
 
-        String sql = "INSERT INTO camps (minecraft_uuid, camps, point_dep) VALUES (?, ?, 0)";
+        String sql = "INSERT INTO camps (minecraft_uuid, name, camps, point_dep) VALUES (?, ?, ?, 0)";
         try (PreparedStatement states = connection.prepareStatement(sql)) {
             states.setString(1, player.getUniqueId().toString());
-            states.setInt(2, camp);
+            states.setString(2, player.getName());
+            states.setInt(3, camp);
             states.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -160,10 +165,21 @@ public class ContestManager extends DatabaseConnector {
         return 0;
     }
 
-    public static String getPlayerCampName(Player player) {
-        Integer campInteger = ContestManager.getPlayerCamp(player);
-        String campName = ContestManager.getString("camp" + campInteger);
-        return campName;
+    public static ResultSet getAllPlayer() {
+        try {
+            PreparedStatement query = connection.prepareStatement("SELECT * FROM camps");
+            ResultSet rs = query.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static OfflinePlayer getPlayerOffline(String uuid) {
+        for(OfflinePlayer player : getOfflinePlayers()) {
+            if(player.getUniqueId().equals(uuid)) return player;
+        }
+        return null;
     }
 
     public static int getPlayerPoints(Player player) {
@@ -185,5 +201,73 @@ public class ContestManager extends DatabaseConnector {
         String color = ContestManager.getString("color" + campInteger);
         ChatColor campColor = ChatColor.valueOf(color);
         return campColor;
+    }
+    public static String getPlayerCampName(Player player) {
+        Integer campInteger = ContestManager.getPlayerCamp(player);
+        String campName = ContestManager.getString("camp" + campInteger);
+        return campName;
+    }
+    public static Integer getOfflinePlayerCamp(OfflinePlayer player) {
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                return result.getInt("camps");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+
+    public static Integer getVoteTaux(Integer camps) {
+        String sql = "SELECT COUNT(*) FROM camps WHERE camps = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setInt(1, camps);
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                return result.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    public static String getOfflinePlayerCampName(OfflinePlayer player) {
+        Integer campInteger = ContestManager.getOfflinePlayerCamp(player);
+        String campName = ContestManager.getString("camp" + campInteger);
+        return campName;
+    }
+    public static ChatColor getOfflinePlayerCampChatColor(OfflinePlayer player) {
+        Integer campInteger = ContestManager.getOfflinePlayerCamp(player);
+        String color = ContestManager.getString("color" + campInteger);
+        ChatColor campColor = ChatColor.valueOf(color);
+        return campColor;
+    }
+
+    public static Integer getRankPlayerInContest(OfflinePlayer player) {
+        String sql = "SELECT COUNT(*) AS rank FROM camps WHERE point_dep > (SELECT point_dep FROM camps WHERE minecraft_uuid = ?);";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                return result.getInt("rank") + 1;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+
+    public static ResultSet getAllPlayerOrdered() {
+        try {
+            PreparedStatement query = connection.prepareStatement("SELECT * FROM camps ORDER BY point_dep DESC");
+            ResultSet rs = query.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

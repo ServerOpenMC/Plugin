@@ -137,7 +137,7 @@ public class DatabaseManager {
         }
 
         // Table camps
-        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), camps int(11), point_dep int(11))").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), name VARCHAR(36), camps int(11), point_dep int(11))").executeUpdate();
 
         // Table contest_trades
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS contest_trades (ress VARCHAR(36), amount int(11), amount_shell int(11), selected BOOLEAN NOT NULL DEFAULT FALSE)").executeUpdate();
