@@ -48,7 +48,7 @@ public abstract class LuckyBlockEvent {
         MessageManager.sendMessageType(player, description, prefix, MessageType.INFO, false);
 
         // Joue un son aléatoire en fonction du type de l'event
-        final Sound soundToPlay = EventType.getRandomSoundByType(eventType);
+        Sound soundToPlay = EventType.getRandomSoundByType(eventType);
         block.getWorld().playSound(block.getLocation(), soundToPlay , 1, 1);
 
         onOpen(player, block);
