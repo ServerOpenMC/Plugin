@@ -17,6 +17,8 @@ import java.io.IOException;
 @Credit("Fnafgameur")
 public class LBStructureHerobrine extends LuckyBlockEvent {
 
+    private final File file = Structure.getStructureFile("lb_herobrine");
+
     public LBStructureHerobrine() {
         super("Un vieil ami",
                 "Apparition de la structure d'Herobrine !",
@@ -28,8 +30,6 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
 
     @Override
     public void onOpen(Player player, Block block) {
-
-        File file = Structure.getStructureFile("lb_herobrine");
 
         try {
             Structure.placeStructure(file, block.getLocation(), false, false, player);
