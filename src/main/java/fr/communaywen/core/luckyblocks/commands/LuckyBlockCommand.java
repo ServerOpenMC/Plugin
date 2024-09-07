@@ -4,10 +4,12 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Subcommand;
@@ -55,18 +57,17 @@ public class LuckyBlockCommand {
             return;
         }
 
-        CustomStack luckyBlock = CustomStack.getInstance("luckyblock");
-
+        ItemStack luckyBlock = LBUtils.getLuckyBlockItem();
         int amount = random.nextInt(3) + 1;
 
         for (int i = 0; i < amount; i++) {
 
             if (player.getInventory().firstEmpty() == -1) {
-                player.getWorld().dropItem(player.getLocation(), luckyBlock.getItemStack());
+                player.getWorld().dropItem(player.getLocation(), luckyBlock);
                 continue;
             }
 
-            player.getInventory().addItem(luckyBlock.getItemStack());
+            player.getInventory().addItem(luckyBlock);
         }
 
         playerManager.setLuckyBlocksCooldown(uuid, System.currentTimeMillis());
