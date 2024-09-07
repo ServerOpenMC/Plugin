@@ -16,10 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Locale;
-
-import static org.bukkit.Bukkit.getOfflinePlayers;
 
 public class ContestManager extends DatabaseConnector {
     //import from axeno
@@ -175,13 +172,6 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
-    public static OfflinePlayer getPlayerOffline(String uuid) {
-        for(OfflinePlayer player : getOfflinePlayers()) {
-            if(player.getUniqueId().equals(uuid)) return player;
-        }
-        return null;
-    }
-
     public static int getPlayerPoints(Player player) {
         String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
         try (PreparedStatement states = connection.prepareStatement(sql)) {
@@ -269,5 +259,109 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getRankContest(Player player) {
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        int points = 0;
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                points = result.getInt("point_dep");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(points >= 10000) {
+            return "Dictateur en  ";
+        } else if (points >= 2500) {
+            return "Colonel en ";
+        } else if (points >= 2000) {
+            return "Addict en ";
+        } else if (points >= 1500) {
+            return "Dieu en ";
+        } else if (points >= 1000) {
+            return "Légende en ";
+        } else if (points >= 750) {
+            return "Sénior en ";
+        } else if (points >= 500) {
+            return "Pro en ";
+        } else if (points >= 250) {
+            return "Semi-Pro en ";
+        } else if (points >= 100) {
+            return "Amateur en ";
+        } else if (points >= 0) {
+            return "Noob en ";
+        }
+
+        return "";
+    }
+
+    public static int getRepPointsToRank(Player player) {
+        int points = getPlayerPoints(player);
+
+        if(points >= 10000) {
+            return 0;
+        } else if (points >= 2500) {
+            return 10000;
+        } else if (points >= 2000) {
+            return 2500;
+        } else if (points >= 1500) {
+            return 2000;
+        } else if (points >= 1000) {
+            return 1500;
+        } else if (points >= 750) {
+            return 1000;
+        } else if (points >= 500) {
+            return 750;
+        } else if (points >= 250) {
+            return 500;
+        } else if (points >= 100) {
+            return 250;
+        } else if (points >= 0) {
+            return 100;
+        }
+
+        return 0;
+    }
+
+    public static String getRankContestFroOffline(OfflinePlayer player) {
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        int points = 0;
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                points = result.getInt("point_dep");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(points >= 10000) {
+            return "Dictateur en  ";
+        } else if (points >= 2500) {
+            return "Colonel en ";
+        } else if (points >= 2000) {
+            return "Addict en ";
+        } else if (points >= 1500) {
+            return "Dieu en ";
+        } else if (points >= 1000) {
+            return "Légende en ";
+        } else if (points >= 750) {
+            return "Sénior en ";
+        } else if (points >= 500) {
+            return "Pro en ";
+        } else if (points >= 250) {
+            return "Semi-Pro en ";
+        } else if (points >= 100) {
+            return "Amateur en ";
+        } else if (points >= 0) {
+            return "Noob en ";
+        }
+
+        return "";
     }
 }

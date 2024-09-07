@@ -7,16 +7,8 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.mailboxes.MailboxManager;
-import fr.communaywen.core.mailboxes.letter.LetterHead;
-import fr.communaywen.core.mailboxes.menu.PlayerMailbox;
-import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
-import fr.communaywen.core.utils.serializer.BukkitSerializer;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,14 +16,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.WritableBookMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -40,11 +28,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
-import static org.bukkit.Bukkit.getOfflinePlayers;
 
 
 public class ContestListener implements Listener {
-    private BukkitRunnable eventRunnable;;
+    private BukkitRunnable eventRunnable;
 
     public ContestListener(AywenCraftPlugin plugin, FileConfiguration eventConfig) {
         eventRunnable = new BukkitRunnable() {
@@ -218,16 +205,17 @@ public class ContestListener implements Listener {
                             int points1 = ContestManager.getInt("contest", "points1");
                             int points2 = ContestManager.getInt("contest", "points2");
                             int totalpoint = points1 + points2;
-                            int points1Taux = (points1/totalpoint)*100;
+                            int points1Taux = (int) (((double) points1 / totalpoint) * 100);
+                            System.out.println(points1Taux);
                             DecimalFormat df = new DecimalFormat("#.#");
                             points1Taux = Integer.valueOf(df.format(points1Taux));
-                            int points2Taux = (points2/totalpoint)*100;
+                            int points2Taux = (int) (((double) points2 / totalpoint) * 100);
                             points2Taux = Integer.valueOf(df.format(points2Taux));
                             int vote1 = ContestManager.getVoteTaux(1);
                             int vote2 = ContestManager.getVoteTaux(2);
                             int totalvote = vote1 + vote2;
-                            int vote1Taux = (vote1/totalvote)*100;
-                            int vote2Taux = (vote2/totalvote)*100;
+                            int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
+                            int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
 
 
                             if (points1 > points2) {
@@ -257,11 +245,12 @@ public class ContestListener implements Listener {
                                 throw new RuntimeException(e);
                             }
                             bookMeta.addPage(leaderboard);
-                            bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + ContestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
+                            bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + ContestManager.getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + ContestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
                             book.setItemMeta(bookMeta);
 
                             List<ItemStack> itemlist = new ArrayList<>();
                             itemlist.add(book);
+
 
                             //ajouter les recompenses comme argent, loot box, lucky block
                             ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);

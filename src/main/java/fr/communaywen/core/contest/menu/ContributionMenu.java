@@ -7,7 +7,6 @@ import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.MaterialFromChatColor;
-import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -15,11 +14,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -59,6 +56,7 @@ public class ContributionMenu extends Menu {
         List<String> lore_randomevent = new ArrayList<String>();
         List<String> lore_contribute = new ArrayList<String>();
         List<String> lore_trade = new ArrayList<String>();
+        List<String> lore_rang = new ArrayList<String>();
 
         loreinfo.add("§7Apprenez en plus sur les Contest !");
         loreinfo.add("§7Le déroulement..., Les résultats, ...");
@@ -88,7 +86,17 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§7Utile pour faire gagner ta"+ campColor +" Team");
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
+        lore_rang.add(campColor + ContestManager.getRankContest(getOwner()) + campName);
+        lore_rang.add("§7Progression §8: " + campColor + ContestManager.getPlayerPoints(getOwner()) + "§8/" + campColor + ContestManager.getRepPointsToRank(getOwner()));
+        lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
+
         for(int i = 0; i < getInventorySize().getSize(); i++) {
+            if(i==8) {
+                inventory.put(8, new ItemBuilder(this, Material.GOLD_BLOCK, itemMeta -> {
+                    itemMeta.setDisplayName("§6§lVotre Grade");
+                    itemMeta.setLore(lore_rang);
+                }));
+            }
             if(i==10) {
                 inventory.put(10, new ItemBuilder(this, shell_contest, itemMeta -> {
                     itemMeta.setDisplayName("§7Les Trades");
@@ -130,8 +138,6 @@ public class ContributionMenu extends Menu {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
                     itemMeta.setLore(loreinfo);
                 }).setNextMenu(new MoreInfoMenu(getOwner())));
-            } else {
-                inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
             }
         }
 

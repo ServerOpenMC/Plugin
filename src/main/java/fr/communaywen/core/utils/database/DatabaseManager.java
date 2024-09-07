@@ -151,7 +151,7 @@ public class DatabaseManager {
                     this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('PRISMARINE', '3', '1', false)").executeUpdate();
                     this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('LARGE_AMETHYST_BUD', '3', '1', false)").executeUpdate();
                     this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('RABBIT_STEW', '2', '5', false)").executeUpdate();
-                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SLIME_BLOCK', '7', '1', false)").executeUpdate();
+                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SLIME_BLOCK', '4', '1', false)").executeUpdate();
                  this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('ROOTED_DIRT', '2', '1', false)").executeUpdate();
                  this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SEA_LANTERN', '2', '3', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('ENCHANTED_GOLDEN_APPLE', '1', '8', false)").executeUpdate();
@@ -171,7 +171,7 @@ public class DatabaseManager {
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('SPONGE', '1', '2', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('MAGENTA_GLAZED_TERRACOTTA', '2', '5', false)").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('VERDANT_FROGLIGHT', '1', '2', false)").executeUpdate();
-                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('HONEYCOMB', '5', '3', false)").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO contest_trades (ress, amount, amount_shell, selected) VALUES ('HONEYCOMB', '2', '3', false)").executeUpdate();
             }
         }
 
