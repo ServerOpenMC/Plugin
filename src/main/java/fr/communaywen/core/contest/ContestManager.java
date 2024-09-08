@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Random;
 
 public class ContestManager extends DatabaseConnector {
     //import from axeno
@@ -363,5 +364,109 @@ public class ContestManager extends DatabaseConnector {
         }
 
         return "";
+    }
+
+    public static int getRankContestFromOfflineInt(OfflinePlayer player) {
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        int points = 0;
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                points = result.getInt("point_dep");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(points >= 10000) {
+            return 10;
+        } else if (points >= 2500) {
+            return 9;
+        } else if (points >= 2000) {
+            return 8;
+        } else if (points >= 1500) {
+            return 7;
+        } else if (points >= 1000) {
+            return 6;
+        } else if (points >= 750) {
+            return 5;
+        } else if (points >= 500) {
+            return 4;
+        } else if (points >= 250) {
+            return 3;
+        } else if (points >= 100) {
+            return 2;
+        } else if (points >= 0) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public static boolean hasWinInCampForOfflinePlayer(OfflinePlayer player) {
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        int playerCamp = 0;
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, player.getUniqueId().toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                playerCamp = result.getInt("camps");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql2 = "SELECT * FROM contest";
+        int points1 = 0;
+        int points2 = 0;
+        try (PreparedStatement states2 = connection.prepareStatement(sql2)) {
+            ResultSet result = states2.executeQuery();
+            if (result.next()) {
+                points1 = result.getInt("points1");
+                points2 = result.getInt("points2");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (points1 > points2 && playerCamp == 1) {
+            return true;
+        }
+        if (points2 > points1 && playerCamp == 2) {
+            return true;
+        }
+        return false;
+    }
+
+    public static int giveMoneyRandomly(Integer min, Integer max) {
+        int moneyGive = new Random().nextInt(min, max);
+        return moneyGive;
+    }
+
+    public static double getMultiFromRang(int rang) {
+        if(rang == 10) {
+            return 2.4;
+        } else if (rang == 9) {
+            return 2.0;
+        } else if (rang == 8) {
+            return 1.8;
+        } else if (rang == 7) {
+            return 1.7;
+        } else if (rang == 6) {
+            return 1.6;
+        } else if (rang == 5) {
+            return 1.5;
+        } else if (rang == 4) {
+            return 1.4;
+        } else if (rang == 3) {
+            return 1.3;
+        } else if (rang == 2) {
+            return 1.1;
+        } else if (rang == 1) {
+            return 1;
+        }
+
+        return 0;
     }
 }

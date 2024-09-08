@@ -8,6 +8,8 @@ import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.economy.EconomyData;
+import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -246,11 +248,37 @@ public class ContestListener implements Listener {
                             }
                             bookMeta.addPage(leaderboard);
                             bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + ContestManager.getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + ContestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
+                            System.out.println(ContestManager.hasWinInCampForOfflinePlayer(player));
+
+                            int money = 0;
+                            if(ContestManager.hasWinInCampForOfflinePlayer(player)) {
+                                int moneyMin = 12000;
+                                int moneyMax = 14000;
+                                double multi = ContestManager.getMultiFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                                moneyMin = (int) (moneyMin * multi);
+                                moneyMax = (int) (moneyMax * multi);
+
+                                money = ContestManager.giveMoneyRandomly(moneyMin, moneyMax);
+                                System.out.println(money);
+                                EconomyManager.addBalanceOffline(player, money);
+                            } else {
+                                int moneyMin = 4000;
+                                int moneyMax = 6000;
+                                double multi = ContestManager.getMultiFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                                moneyMin = (int) (moneyMin * multi);
+                                moneyMax = (int) (moneyMax * multi);
+
+                                money = ContestManager.giveMoneyRandomly(moneyMin, moneyMax);
+                                EconomyManager.addBalanceOffline(player, money);
+                            }
+                            bookMeta.addPage("§8§lRécompenses\n§0+ " + money);
+
+                            ContestManager.hasWinInCampForOfflinePlayer(player);
+
                             book.setItemMeta(bookMeta);
 
                             List<ItemStack> itemlist = new ArrayList<>();
                             itemlist.add(book);
-
 
                             //ajouter les recompenses comme argent, loot box, lucky block
                             ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
