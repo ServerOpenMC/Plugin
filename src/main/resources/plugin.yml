@@ -31,17 +31,16 @@ permissions:
   ayw.command.tpa:
     description: 'tpa'
     default: true
-  openmc.staff.freeze:
+  ayw.admin.freeze:
     description: 'freeze'
     default: false
-  openmc.command.fboom:
+  ayw.command.fboom:
     description: 'Créer une explosion de falling blocks autour du joueur'
     default: op
   ayw.command.trade:
     description: 'Effectuer un échange de money/items avec un joueur'
     default: true
-
-  openmc.staff.players:
+  ayw.admin.players:
     description: 'Permission pour ouvrir le panneau des joueurs'
     default: false
   aywencraft.antivpn.notification:
@@ -62,4 +61,7 @@ permissions:
     default: true
   ayw.command.tpagui:
     description: 'tpagui'
+    default: true
+  ayw.command.settings:
+    description: 'Ouvrir les parametres du joueur'
     default: true

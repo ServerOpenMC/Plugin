@@ -17,7 +17,7 @@ public class FallBloodCommand {
 
     @Command("fallblood")
     @Description("Give a bandage")
-    @CommandPermission("ayw.command.use.fallblood")
+    @CommandPermission("ayw.command.fallblood")
     public void giveCommands(Player player) {
         player.getInventory().addItem(getBandage());
         player.updateInventory();

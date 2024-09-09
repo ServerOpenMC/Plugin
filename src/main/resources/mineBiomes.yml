@@ -1,0 +1,79 @@
+biomes:
+
+  dark_forest:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  taiga:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  jungle:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  birch_forest:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  forest:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  cherry_groove:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  swamp:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  mangrove:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  savanna:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  badlands:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  mushrooms_island:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  warm_ocean:
+    location:
+      x: 0
+      y: 0
+      z: 0
+
+  frozen_ocean:
+    location:
+      x: 0
+      y: 0
+      z: 0

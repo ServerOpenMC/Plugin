@@ -56,6 +56,7 @@ public class Managers {
     private FileConfiguration welcomeMessageConfig;
     private FileConfiguration levelsConfig;
     private FileConfiguration quizzesConfig;
+    private FileConfiguration mineConfig;
     private FileConfiguration customItemsConfig;
 
     public void initConfig(AywenCraftPlugin plugin) {
@@ -65,6 +66,7 @@ public class Managers {
         welcomeMessageConfig = ConfigUtils.loadConfig(plugin, "welcomeMessageConfig.yml");
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
+        mineConfig = ConfigUtils.loadConfig(plugin, "mineBiomes.yml");
         customItemsConfig = ConfigUtils.loadConfig(plugin, "customitems.yml");
     }
 

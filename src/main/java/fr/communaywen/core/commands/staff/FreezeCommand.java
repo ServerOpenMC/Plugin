@@ -14,7 +14,7 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 public class FreezeCommand {
     @Command("freeze")
     @Description("Freeze un joueur")
-    @CommandPermission("openmc.staff.freeze")
+    @CommandPermission("ayw.admin.freeze")
     public void onCommand(Player player, Player target) {
         FreezeUtils.switch_freeze(player, target);
     }

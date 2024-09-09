@@ -43,7 +43,6 @@ public class FreezeListener implements Listener {
         Player player = e.getPlayer();
         if (plugin.frozenPlayers.contains(player)) {
             e.setTo(e.getFrom());
-            player.sendMessage(FreezeUtils.prefix + ChatColor.DARK_RED + "Vous êtes freeze !");
         }
     }
 

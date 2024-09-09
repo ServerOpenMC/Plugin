@@ -1,6 +1,7 @@
 package fr.communaywen.core;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
@@ -90,7 +91,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -118,6 +119,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public List<RegionManager> regions;
     public MultiverseCore mvCore;
+    
+    MultiverseWorld mineWorld;
+    
     @SneakyThrows
     @Override
     public void onEnable() {
@@ -145,6 +149,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
 
         mvCore = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        mineWorld = mvCore.getMVWorldManager().getMVWorld(getConfig().getString("mine.name"));
 
         LinkerAPI linkerAPI = new LinkerAPI(managers.getDatabaseManager());
 
@@ -320,6 +325,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
+    }
+    
+    public MultiverseWorld getMineWorld() {
+        return mineWorld;
     }
 
 
