@@ -128,7 +128,7 @@ public class DatabaseManager {
         // push first contest
         if(rs.next()) {
             if(rs.getInt(1) == 0) {
-                PreparedStatement states = this.getConnection().prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, 'Ketchup', 'RED', 'Mayonnaise', 'YELLOW', ?, 0,0)");
+                PreparedStatement states = this.getConnection().prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, 'Mayonnaise', 'YELLOW', 'Ketchup', 'RED', ?, 0,0)");
 
                 String dateContestStart = "ven.";
                 states.setString(1, dateContestStart);
