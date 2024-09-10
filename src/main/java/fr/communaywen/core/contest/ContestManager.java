@@ -439,12 +439,12 @@ public class ContestManager extends DatabaseConnector {
         return false;
     }
 
-    public static int giveMoneyRandomly(Integer min, Integer max) {
+    public static int giveRandomly(Integer min, Integer max) {
         int moneyGive = new Random().nextInt(min, max);
         return moneyGive;
     }
 
-    public static double getMultiFromRang(int rang) {
+    public static double getMultiMoneyFromRang(int rang) {
         if(rang == 10) {
             return 2.4;
         } else if (rang == 9) {
@@ -459,6 +459,31 @@ public class ContestManager extends DatabaseConnector {
             return 1.5;
         } else if (rang == 4) {
             return 1.4;
+        } else if (rang == 3) {
+            return 1.3;
+        } else if (rang == 2) {
+            return 1.1;
+        } else if (rang == 1) {
+            return 1;
+        }
+
+        return 0;
+    }
+    public static double getMultiLuckyFromRang(int rang) {
+        if(rang == 10) {
+            return 4;
+        } else if (rang == 9) {
+            return 3.5;
+        } else if (rang == 8) {
+            return 3.2;
+        } else if (rang == 7) {
+            return 3;
+        } else if (rang == 6) {
+            return 2.7;
+        } else if (rang == 5) {
+            return 2.3;
+        } else if (rang == 4) {
+            return 1.8;
         } else if (rang == 3) {
             return 1.3;
         } else if (rang == 2) {

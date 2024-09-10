@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+// import fr.communaywen.core.luckyblocks.utils.LBUtils; wait for pr, feature:luckyblock
 
 import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
 
@@ -175,7 +176,7 @@ public class ContestListener implements Listener {
                 }
                 int dayEnd = dayStart + 2;
                 if (dayEnd>=8) {
-                    dayEnd=1;
+                    dayEnd=2;
                 } //attention ne pas modifier les valeurs de départ des contest sinon le systeme va broke
                 if (ContestManager.getInt("contest","phase") == 3 && ContestManager.getCurrentDayOfWeek().getValue() == dayEnd) {
                     ContestManager.updateColumnInt("contest", "phase", 4); //tempo mettre sql qui delete lai ligne
@@ -208,7 +209,6 @@ public class ContestListener implements Listener {
                             int points2 = ContestManager.getInt("contest", "points2");
                             int totalpoint = points1 + points2;
                             int points1Taux = (int) (((double) points1 / totalpoint) * 100);
-                            System.out.println(points1Taux);
                             DecimalFormat df = new DecimalFormat("#.#");
                             points1Taux = Integer.valueOf(df.format(points1Taux));
                             int points2Taux = (int) (((double) points2 / totalpoint) * 100);
@@ -233,7 +233,6 @@ public class ContestListener implements Listener {
                             ResultSet rs2 = ContestManager.getAllPlayerOrdered();
                             try {
                                 while (rs2.next()) {
-                                    System.out.println(rs2.getString("name"));
                                     OfflinePlayer player2 = Bukkit.getOfflinePlayer(rs2.getString("name"));
                                     ChatColor playerCampColor2 = ContestManager.getOfflinePlayerCampChatColor(player2);
                                     if (rankInt >= 10) {
@@ -248,39 +247,54 @@ public class ContestListener implements Listener {
                             }
                             bookMeta.addPage(leaderboard);
                             bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + ContestManager.getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + ContestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
-                            System.out.println(ContestManager.hasWinInCampForOfflinePlayer(player));
 
                             int money = 0;
+                            int lucky = 0;
+                            ItemStack luckyblock = null; // replace null by LBUtils.getLuckyBlockItem(); when luckyblock is pr
                             if(ContestManager.hasWinInCampForOfflinePlayer(player)) {
                                 int moneyMin = 12000;
                                 int moneyMax = 14000;
-                                double multi = ContestManager.getMultiFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                                double multi = ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player));
                                 moneyMin = (int) (moneyMin * multi);
                                 moneyMax = (int) (moneyMax * multi);
 
-                                money = ContestManager.giveMoneyRandomly(moneyMin, moneyMax);
-                                System.out.println(money);
+                                money = ContestManager.giveRandomly(moneyMin, moneyMax);
+                                EconomyManager.addBalanceOffline(player, money);
+
+                                int luckyMin = 3;
+                                int luckyMax = 6;
+                                double multi2 = ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player));
+
+                                luckyMin = (int) (luckyMin * multi2);
+                                luckyMax = (int) (luckyMax * multi2);
+
+                                lucky = ContestManager.giveRandomly(luckyMin, luckyMax);
+                                lucky = Math.round(lucky);
+                                System.out.println(lucky);
+
                                 EconomyManager.addBalanceOffline(player, money);
                             } else {
                                 int moneyMin = 4000;
                                 int moneyMax = 6000;
-                                double multi = ContestManager.getMultiFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                                double multi = ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player));
                                 moneyMin = (int) (moneyMin * multi);
                                 moneyMax = (int) (moneyMax * multi);
 
-                                money = ContestManager.giveMoneyRandomly(moneyMin, moneyMax);
+                                money = ContestManager.giveRandomly(moneyMin, moneyMax);
                                 EconomyManager.addBalanceOffline(player, money);
                             }
-                            bookMeta.addPage("§8§lRécompenses\n§0+ " + money);
+                            bookMeta.addPage("§8§lRécompenses\n§6+ " + money + "$\n§6+ " + lucky + "§6Lucky Block\n§6+ ");
 
                             ContestManager.hasWinInCampForOfflinePlayer(player);
 
+                            //luckyblock.setAmount(lucky);
                             book.setItemMeta(bookMeta);
 
                             List<ItemStack> itemlist = new ArrayList<>();
                             itemlist.add(book);
+                            //itemlist.add(luckyblock);
 
-                            //ajouter les recompenses comme argent, loot box, lucky block
+                            //ajouter les recompenses loot box - PB : Aucune commande que je connais du au manque du plugin
                             ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
                             MailboxManager.sendItemsToAOfflinePlayer(player, items);
                         }
