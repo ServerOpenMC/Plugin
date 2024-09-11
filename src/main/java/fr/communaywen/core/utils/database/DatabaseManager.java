@@ -98,7 +98,7 @@ public class DatabaseManager {
         // push all contest theme
         if(result.next()) {
             if(result.getInt(1) == 0) {
-                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Chaos', 'ORANGE', 'Ordre', 'WHITE', '0')").executeUpdate();
+                this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Chaos', 'GOLD', 'Ordre', 'WHITE', '0')").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Mayonnaise', 'YELLOW', 'Ketchup', 'RED', '0')").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Pates', 'YELLOW', 'Riz', 'WHITE', '0')").executeUpdate();
                 this.getConnection().prepareStatement("INSERT INTO all_contest (camp1, color1, camp2, color2, selected) VALUES ('Samsung', 'BLACK', 'Apple', 'WHITE', '0')").executeUpdate();
