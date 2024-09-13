@@ -494,4 +494,61 @@ public class ContestManager extends DatabaseConnector {
 
         return 0;
     }
+
+    private static void updateSelected(String camp, int n) {
+        String sql = "UPDATE all_contest SET selected=? WHERE camp1 = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setInt(1, n);
+            states.setString(2, camp);
+            states.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void addOneToLastContest() {
+        String sql = "SELECT * FROM all_contest WHERE camp1 = ?";
+        String camp = getString("camp1");
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, camp);
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                int selected = result.getInt("selected");
+                updateSelected(camp, selected+1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void selectRandomlyContest() {
+        String sql = "SELECT * FROM all_contest ORDER BY all_contest.selected ASC LIMIT 1";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                try (PreparedStatement states2 = connection.prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, ?, ?, ?, ?, ?, 0,0)")) {
+                    states2.setString(1, result.getString("camp1"));
+                    states2.setString(2, result.getString("color1"));
+                    states2.setString(3, result.getString("camp2"));
+                    states2.setString(4, result.getString("color2"));
+                    states2.setString(5, "ven.");
+                    states2.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void deleteTableContest(String table) {
+        String sql = "DELETE FROM " + table;
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

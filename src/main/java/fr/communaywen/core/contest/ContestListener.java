@@ -8,7 +8,6 @@ import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.economy.EconomyData;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import org.bukkit.*;
@@ -176,7 +175,7 @@ public class ContestListener implements Listener {
                 }
                 int dayEnd = dayStart + 2;
                 if (dayEnd>=8) {
-                    dayEnd=2;
+                    dayEnd=3;
                 } //attention ne pas modifier les valeurs de départ des contest sinon le systeme va broke
                 if (ContestManager.getInt("contest","phase") == 3 && ContestManager.getCurrentDayOfWeek().getValue() == dayEnd) {
                     ContestManager.updateColumnInt("contest", "phase", 4); //tempo mettre sql qui delete lai ligne
@@ -186,15 +185,13 @@ public class ContestListener implements Listener {
                         while(rs1.next()) {
                             OfflinePlayer player = Bukkit.getOfflinePlayer(rs1.getString("name"));
                             String playerCampName = ContestManager.getOfflinePlayerCampName(player);
-                            ChatColor playerCampColor = ContestManager.getOfflinePlayerCampChatColor(player);
-                            String camp1Name = ContestManager.getString("camp1");
-                            String camp2Name = ContestManager.getString("camp2");
+                            ChatColor playerCampColor = ColorToReadableColor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
                             String camp1Color = ContestManager.getString("color1");
                             String camp2Color = ContestManager.getString("color2");
-                            ChatColor color1 = ChatColor.valueOf(camp1Color);
-                            ChatColor color2 = ChatColor.valueOf(camp2Color);
-
-
+                            ChatColor color1 = ColorToReadableColor.getReadableColor(ChatColor.valueOf(camp1Color));
+                            ChatColor color2 = ColorToReadableColor.getReadableColor(ChatColor.valueOf(camp2Color));
+                            String camp1Name = ContestManager.getString("camp1");
+                            String camp2Name = ContestManager.getString("camp2");
 
                             ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
                             BookMeta bookMeta = (BookMeta) book.getItemMeta();
@@ -234,7 +231,7 @@ public class ContestListener implements Listener {
                             try {
                                 while (rs2.next()) {
                                     OfflinePlayer player2 = Bukkit.getOfflinePlayer(rs2.getString("name"));
-                                    ChatColor playerCampColor2 = ContestManager.getOfflinePlayerCampChatColor(player2);
+                                    ChatColor playerCampColor2 = ColorToReadableColor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player2));
                                     if (rankInt >= 10) {
                                         break;
                                     }
@@ -282,8 +279,20 @@ public class ContestListener implements Listener {
 
                                 money = ContestManager.giveRandomly(moneyMin, moneyMax);
                                 EconomyManager.addBalanceOffline(player, money);
+
+                                int luckyMin = 1;
+                                int luckyMax = 3;
+                                double multi2 = ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player));
+
+                                luckyMin = (int) (luckyMin * multi2);
+                                luckyMax = (int) (luckyMax * multi2);
+
+                                lucky = ContestManager.giveRandomly(luckyMin, luckyMax);
+                                lucky = Math.round(lucky);
+
+                                EconomyManager.addBalanceOffline(player, money);
                             }
-                            bookMeta.addPage("§8§lRécompenses\n§6+ " + money + "$\n§6+ " + lucky + "§6Lucky Block\n§6+ ");
+                            bookMeta.addPage("§8§lRécompenses\n§7+ " + money + "$\n§7+ " + lucky + " §6Lucky Block");
 
                             ContestManager.hasWinInCampForOfflinePlayer(player);
 
@@ -301,9 +310,10 @@ public class ContestListener implements Listener {
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
-                    //delete camps, contest
-                    //add 1 selected to all_contest
-                    //select contest
+                    ContestManager.addOneToLastContest();
+                    ContestManager.deleteTableContest("contest");
+                    ContestManager.deleteTableContest("camps");
+                    ContestManager.selectRandomlyContest();
 
                     FileConfiguration config = plugin.getConfig();
                     ConfigurationSection boostEvents = config.getConfigurationSection("contest.boost_event");
