@@ -36,6 +36,6 @@ public class LBBlockBreakListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        luckyBlockManager.getRandomEvent().triggerOpen(player, block);
+        luckyBlockManager.getRandomEvent().onOpen(player, block);
     }
 }

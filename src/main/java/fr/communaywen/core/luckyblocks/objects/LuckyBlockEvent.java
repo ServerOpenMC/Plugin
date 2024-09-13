@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 * Credit to every member that'll contribute by adding new events
 */
 @Getter
-public abstract class LuckyBlockEvent {
+public class LuckyBlockEvent {
 
     private final String name;
     private final String description;
@@ -36,8 +36,7 @@ public abstract class LuckyBlockEvent {
         this.iconItem = iconItem;
     }
 
-    public void triggerOpen(Player player, Block block) {
-
+    public void onOpen(Player player, Block block) {
         Prefix prefix = eventType.getPrefix();
         ChatColor color = eventType.getColor();
 
@@ -50,9 +49,5 @@ public abstract class LuckyBlockEvent {
         // Joue un son aléatoire en fonction du type de l'event
         Sound soundToPlay = EventType.getRandomSoundByType(eventType);
         block.getWorld().playSound(block.getLocation(), soundToPlay , 1, 1);
-
-        onOpen(player, block);
     }
-
-    public abstract void onOpen(Player player, Block block);
 }

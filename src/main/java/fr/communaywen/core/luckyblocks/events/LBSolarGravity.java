@@ -29,6 +29,8 @@ public class LBSolarGravity extends LuckyBlockEvent implements LuckyBlockListene
 
     @Override
     public void onOpen(Player player, Block block) {
+        // Permet d'afficher le title et de jouer un son lors de l'ouverture NE PAS L'OUBLIER
+        super.onOpen(player, block);
         player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(1f);
 
         new BukkitRunnable() {

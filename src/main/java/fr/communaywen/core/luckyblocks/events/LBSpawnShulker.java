@@ -23,7 +23,10 @@ public class LBSpawnShulker extends LuckyBlockEvent {
         );
     }
 
+    @Override
     public void onOpen(Player player, Block block) {
+        // Permet d'afficher le title et de jouer un son lors de l'ouverture NE PAS L'OUBLIER
+        super.onOpen(player, block);
         block.getWorld().spawnEntity(block.getLocation(), EntityType.SHULKER);
     }
 }

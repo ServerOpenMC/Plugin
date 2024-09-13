@@ -30,6 +30,8 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
 
     @Override
     public void onOpen(Player player, Block block) {
+        // Permet d'afficher le title et de jouer un son lors de l'ouverture NE PAS L'OUBLIER
+        super.onOpen(player, block);
 
         try {
             Structure.placeStructure(file, block.getLocation(), false, false, player);
