@@ -211,7 +211,7 @@ contest:
       amount: 2
       amount_shell: 3
       selected: false
-
+      
 rewards:
   peluche_aywen: #Example à laisser
     start: 1722636000 # Date de début de l'event
