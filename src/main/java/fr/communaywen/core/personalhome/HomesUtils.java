@@ -6,8 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class HomesUtils {
@@ -68,19 +66,19 @@ public class HomesUtils {
             int localX = (x / 16) - gridX * 13;
 
             if (localX >= 0 && localX < 2) {
-                return gridX;
+                return gridX+1;
             }
         }
 
         return null;
     }
 
-    public static boolean isInHisHome(Player player, Location location) {
+    public static boolean isntInHisHome(Player player, Location location) {
         HashMap<UUID, Home> homes = AywenCraftPlugin.getInstance().getManagers().getHomeManager().getHomes();
 
         Integer id = getPlatformIdFromCoordinates(location.getBlockX(), location.getBlockZ());
-        if (id == null) { return false; }
+        if (id == null) { return true; }
 
-        return id == homes.get(player.getUniqueId()).getId();
+        return id != homes.get(player.getUniqueId()).getId();
     }
 }

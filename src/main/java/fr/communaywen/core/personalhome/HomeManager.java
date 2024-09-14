@@ -2,6 +2,7 @@ package fr.communaywen.core.personalhome;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.personalhome.listeners.BagInteraction;
 import fr.communaywen.core.personalhome.listeners.BuildRestrictions;
 import fr.communaywen.core.personalhome.listeners.PreventFall;
 import fr.communaywen.core.teams.EconomieTeam;
@@ -10,6 +11,7 @@ import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,26 +37,6 @@ public class HomeManager extends DatabaseConnector implements Listener {
     @Getter
     public HashMap<UUID, Home> homes = new HashMap<>();
 
-    @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) { return; }
-        Player player = event.getPlayer();
-        ItemStack item = event.getItem();
-        CustomStack stack = CustomStack.byItemStack(item);
-
-        if (stack == null) { return;}
-        if (!stack.getNamespacedID().equals("aywen:home_bag")) { return; }
-
-        if (List.of("moon", "dreamworld").contains(player.getWorld().getName())) {
-            player.sendMessage("§cVotre maison n'est pas accessible d'où vous êtes");
-            return;
-        }
-
-        Home home = homes.get(player.getUniqueId());
-        player.teleport(home.getSpawnpoint());
-        player.playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_TELEPORT, 1, 1);
-    }
-
     public void assign(Player player) throws SQLException {
         Home home = new Home(player.getUniqueId(), homes.size()+1);
         home.save(connection);
@@ -78,7 +60,7 @@ public class HomeManager extends DatabaseConnector implements Listener {
 
             while (rs.next()) {
                 Home home = new Home(
-                        UUID.fromString(rs.getString("owner")),
+                        UUID.fromString(rs.getString("player")),
                         rs.getInt("id")
                 );
                 @Nullable String spawnpoint = rs.getString("spawnpoint");
@@ -88,6 +70,11 @@ public class HomeManager extends DatabaseConnector implements Listener {
                         home.setSpawnpoint(new Location(homeWorld, coords[0], coords[1], coords[2]));
                     }
                 }
+
+                Biome biome = Biome.valueOf(rs.getString("biome"));
+                home.setBiome(biome);
+
+                homes.put(home.getOwner(), home);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -97,6 +84,7 @@ public class HomeManager extends DatabaseConnector implements Listener {
         plugin.registerEvents(
                 new PreventFall(),
                 new BuildRestrictions(),
+                new BagInteraction(homes),
                 this
         );
     }

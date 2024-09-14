@@ -28,4 +28,18 @@ public class HSCommand {
             player.sendMessage("§aVotre point d'apparition as été changée");
         }
     }
+
+    //@Command("maison gems biome") Retiré parceque y'avais une grosse baisse de TPS
+    public void maisonGemsBiome(CommandSender sender) {
+        if (!(sender instanceof Player player)) { return; }
+        Home home = manager.getHomes().get(player.getUniqueId());
+
+        home.setBiome(player.getLocation().getBlock().getBiome());
+
+        if (home.saveBiome()) {
+            player.sendMessage("§aLe biome de votre maison as été changé!");
+        } else {
+            player.sendMessage("§cImpossible de sauvegarde le biome");
+        }
+    }
 }

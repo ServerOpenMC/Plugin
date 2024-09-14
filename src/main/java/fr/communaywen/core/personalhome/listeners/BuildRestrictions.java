@@ -4,7 +4,6 @@ import fr.communaywen.core.personalhome.HomesUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -29,7 +28,7 @@ public class BuildRestrictions implements Listener {
             return;
         }
 
-        if (!HomesUtils.isInHisHome(player, event.getBlock().getLocation())) {
+        if (HomesUtils.isntInHisHome(player, event.getBlock().getLocation())) {
             player.sendMessage("§cVous n'êtes pas chez vous!");
             event.setCancelled(true);
             return;
@@ -47,7 +46,7 @@ public class BuildRestrictions implements Listener {
             return;
         }
 
-        if (!HomesUtils.isInHisHome(player, event.getBlock().getLocation())) {
+        if (HomesUtils.isntInHisHome(player, event.getBlock().getLocation())) {
             player.sendMessage("§cVous n'êtes pas chez vous!");
             event.setCancelled(true);
             return;
@@ -60,7 +59,7 @@ public class BuildRestrictions implements Listener {
         if (!player.getWorld().getName().equals("homes")) { return; }
 
         try {
-            if (!HomesUtils.isInHisHome(player, event.getClickedBlock().getLocation())) {
+            if (HomesUtils.isntInHisHome(player, event.getClickedBlock().getLocation())) {
                 player.sendMessage("§cVous n'êtes pas chez vous!");
                 event.setCancelled(true);
                 return;
