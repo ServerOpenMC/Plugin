@@ -10,6 +10,7 @@ import fr.communaywen.core.teams.menu.TeamMenu;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import io.papermc.paper.event.entity.EntityPortalReadyEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatMessageType;
@@ -33,6 +34,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
+import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -134,6 +136,9 @@ public class MoonListener implements Listener {
             }
 
         }
+
+        if(!(e.getEntity() instanceof LivingEntity)) return;
+
 
         EntityEquipment ee = ((LivingEntity) e.getEntity()).getEquipment();
         assert ee != null;
@@ -264,6 +269,63 @@ public class MoonListener implements Listener {
     public void onItemUnequip(PlayerArmorChangeEvent e) {
         if(e.getOldItem().getType().equals(Material.GLASS)) {
             playerSuffocate(e.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        if(e.getPlayer().getWorld().getName().equals("moon")) {
+            e.getPlayer().getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.013211);
+            e.getPlayer().getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(10);
+            if(e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.GLASS)) {
+                playerBreath(e.getPlayer());
+            } else {
+                playerSuffocate(e.getPlayer());
+            }
+        }
+    }
+
+
+    //Les portails du nether sont désactivés sur la lune pour éviter le transfert de mobs, items, etc.
+    @EventHandler
+    public void onPortalCreate(PortalCreateEvent e) {
+        if(e.getWorld().getName().equals("moon")) {
+            e.setCancelled(true);
+            if(e.getEntity() instanceof Player) {
+                Player player = (Player) e.getEntity();
+                MessageManager.sendMessageType(player, "§cCette lune n'a aucun nether où vous emmener", Prefix.SPACE, MessageType.ERROR, true);
+            }
+        }
+
+    }
+
+    //On sait jamais pour les portails existants
+    @EventHandler
+    public void onEntityPortalReady(EntityPortalReadyEvent e) {
+        if(e.getEntity().getWorld().getName().equals("moon")) {
+            e.setCancelled(true);
+            if(e.getEntity() instanceof Player) {
+                Player player = (Player) e.getEntity();
+                MessageManager.sendMessageType(player, "§cCette lune n'a aucun nether où vous emmener", Prefix.SPACE, MessageType.ERROR, true);
+            }
+        }
+    }
+
+
+    //On est jamais trop prudent (même si c'est pas censé être possible vu que le drop d'un bloc cassé à la mano est deja check et que les explosions sont désactivées)
+    @EventHandler
+    public void onBlockDropItem(BlockDropItemEvent e) {
+        if(e.getBlock().getWorld().getName().equals("moon")) {
+            e.getItems().forEach(item -> {
+                if(item.getItemStack().getType().equals(Material.END_STONE)) {
+                    e.setCancelled(true);
+                    item.getWorld().dropItemNaturally(item.getLocation(), CustomStack.getInstance("space:moon_shard").getItemStack());
+                }
+                if(item.getItemStack().getType().equals(Material.IRON_BLOCK)) {
+                    e.setCancelled(true);
+                    item.getWorld().dropItemNaturally(item.getLocation(), CustomStack.getInstance("space:steel_ingot").getItemStack());
+                }
+            });
         }
     }
 
