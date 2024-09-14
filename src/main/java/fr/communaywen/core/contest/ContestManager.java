@@ -175,12 +175,12 @@ public class ContestManager extends DatabaseConnector {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(rs1.getString("name"));
                 String playerCampName = ContestManager.getOfflinePlayerCampName(player);
                 ChatColor playerCampColor = ColorToReadableColor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
-                String camp1Color = ContestManager.getString("color1");
-                String camp2Color = ContestManager.getString("color2");
+                String camp1Color = ContestManager.getString("contest", "color1");
+                String camp2Color = ContestManager.getString("contest", "color2");
                 ChatColor color1 = ColorToReadableColor.getReadableColor(ChatColor.valueOf(camp1Color));
                 ChatColor color2 = ColorToReadableColor.getReadableColor(ChatColor.valueOf(camp2Color));
-                String camp1Name = ContestManager.getString("camp1");
-                String camp2Name = ContestManager.getString("camp2");
+                String camp1Name = ContestManager.getString("contest", "camp1");
+                String camp2Name = ContestManager.getString("contest", "camp2");
 
                 ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
                 BookMeta bookMeta = (BookMeta) book.getItemMeta();
@@ -298,7 +298,7 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        ContestManager.addOneToLastContest(ContestManager.getString("camp1"));
+        ContestManager.addOneToLastContest(ContestManager.getString("contest","camp1"));
         ContestManager.deleteTableContest("contest");
         ContestManager.deleteTableContest("camps");
         ContestManager.selectRandomlyContest();
@@ -430,11 +430,12 @@ public class ContestManager extends DatabaseConnector {
         return filteredTrades.stream().limit(12).collect(Collectors.toList());
     }
 
-    public static String getString(String column) {
+    public static String getString(String table, String column) {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM contest");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
+                System.out.println(rs.getString(column));
                 return rs.getString(column);
             }
         } catch (SQLException e) {
@@ -527,13 +528,13 @@ public class ContestManager extends DatabaseConnector {
 
     public static ChatColor getPlayerCampChatColor(Player player) {
         Integer campInteger = ContestManager.getPlayerCamp(player);
-        String color = ContestManager.getString("color" + campInteger);
+        String color = ContestManager.getString("contest","color" + campInteger);
         ChatColor campColor = ChatColor.valueOf(color);
         return campColor;
     }
     public static String getPlayerCampName(Player player) {
         Integer campInteger = ContestManager.getPlayerCamp(player);
-        String campName = ContestManager.getString("camp" + campInteger);
+        String campName = ContestManager.getString("contest","camp" + campInteger);
         return campName;
     }
     public static Integer getOfflinePlayerCamp(OfflinePlayer player) {
@@ -566,12 +567,12 @@ public class ContestManager extends DatabaseConnector {
 
     public static String getOfflinePlayerCampName(OfflinePlayer player) {
         Integer campInteger = ContestManager.getOfflinePlayerCamp(player);
-        String campName = ContestManager.getString("camp" + campInteger);
+        String campName = ContestManager.getString("contest","camp" + campInteger);
         return campName;
     }
     public static ChatColor getOfflinePlayerCampChatColor(OfflinePlayer player) {
         Integer campInteger = ContestManager.getOfflinePlayerCamp(player);
-        String color = ContestManager.getString("color" + campInteger);
+        String color = ContestManager.getString("contest","color" + campInteger);
         ChatColor campColor = ChatColor.valueOf(color);
         return campColor;
     }

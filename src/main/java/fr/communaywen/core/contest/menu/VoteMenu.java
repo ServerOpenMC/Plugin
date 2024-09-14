@@ -37,11 +37,11 @@ public class VoteMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String camp1Name = ContestManager.getString("camp1");
-        String camp2Name = ContestManager.getString("camp2");
+        String camp1Name = ContestManager.getString("contest","camp1");
+        String camp2Name = ContestManager.getString("contest","camp2");
 
-        String camp1Color = ContestManager.getString("color1");
-        String camp2Color = ContestManager.getString("color2");
+        String camp1Color = ContestManager.getString("contest","color1");
+        String camp2Color = ContestManager.getString("contest","color2");
 
         ChatColor color1 = ChatColor.valueOf(camp1Color);
         ChatColor color2 = ChatColor.valueOf(camp2Color);

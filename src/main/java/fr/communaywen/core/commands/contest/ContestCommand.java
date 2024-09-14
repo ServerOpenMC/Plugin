@@ -36,7 +36,7 @@ public class ContestCommand {
     @DefaultFor("~")
     public void defaultCommand(Player player) {
         int phase = ContestManager.getInt("contest","phase");
-        String dayStartContest = ContestManager.getString("startdate");
+        String dayStartContest = ContestManager.getString("contest","startdate");
         int camp = ContestManager.getPlayerCamp(player);
         if (phase==2) {
             VoteMenu menu = new VoteMenu(player);

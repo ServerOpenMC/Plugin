@@ -44,8 +44,8 @@ public class ConfirmMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String campNameFinal = ContestManager.getString(getCampName);
-        String campColor = ContestManager.getString(getColor);
+        String campNameFinal = ContestManager.getString("contest", getCampName);
+        String campColor = ContestManager.getString("contest", getColor);
         ChatColor colorFinal = ChatColor.valueOf(campColor);
 
         List<String> lore1 = new ArrayList<String>();
@@ -72,7 +72,7 @@ public class ConfirmMenu extends Menu {
                     String substring = this.getCampName.substring(this.getCampName.length() - 1);
                     ContestManager.insertChoicePlayer(getOwner(), Integer.valueOf(substring));
                     getOwner().playSound(getOwner().getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1.0F, 0.2F);
-                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + ContestManager.getString(getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
+                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + ContestManager.getString("contest", getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
             } else {

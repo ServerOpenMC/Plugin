@@ -17,7 +17,7 @@ public class ContestListener implements Listener {
             @Override
             public void run() {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
-                DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getString("startdate")));
+                DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getString("contest","startdate")));
 
                 if (ContestManager.getInt("contest","phase") == 1 && ContestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
                     ContestManager.initPhase1();
