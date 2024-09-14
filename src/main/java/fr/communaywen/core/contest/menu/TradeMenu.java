@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
 import static fr.communaywen.core.utils.ItemUtils.*;
 
 public class TradeMenu extends Menu {
@@ -67,7 +68,8 @@ public class TradeMenu extends Menu {
                     itemMeta.setLore(lore_trade);
                     itemMeta.setCustomModelData(10000);
                 }));
-                ResultSet rs1 = ContestManager.getTradeSelected(true);
+                List<Map<String, Object>> selectedTrades = getTradeSelected(true);
+
                 List<Integer> slot_trade = new ArrayList<Integer>();
                 slot_trade.add(10);
                 slot_trade.add(11);
@@ -84,33 +86,34 @@ public class TradeMenu extends Menu {
 
                 List<String> lore_trades = new ArrayList<String>();
 
-                   try {
-                       while (rs1.next()) {
-                           Integer row = rs1.getRow() - 1;
-                           Integer slot = slot_trade.get(row);
+                int index = 0;
+                System.out.println("ets");
+                for (Map<String, Object> trade : selectedTrades) {
+                     Integer slot = slot_trade.get(index);
+                     index++;
 
-                           Material m = Material.getMaterial(rs1.getString("ress"));
+                     Material m = Material.getMaterial((String) trade.get("ress"));
 
-                           lore_trades.add("§7Vendez §e" + rs1.getInt("amount") + " de cette ressource §7pour §b" + rs1.getInt("amount_shell") + " Coquillage(s) de Contest");
-                           lore_trades.add("§e§lCLIQUE-GAUCHE POUR VENDRE UNE FOIS");
-                           lore_trades.add("§e§lSHIFT-CLIQUE-GAUCHE POUR VENDRE TOUTE CETTE RESSOURCE");
+                     lore_trades.add("§7Vendez §e" + trade.get("amount") + " de cette ressource §7pour §b" + trade.get("amount_shell") + " Coquillage(s) de Contest");
+                     lore_trades.add("§e§lCLIQUE-GAUCHE POUR VENDRE UNE FOIS");
+                     lore_trades.add("§e§lSHIFT-CLIQUE-GAUCHE POUR VENDRE TOUTE CETTE RESSOURCE");
 
-                           inventory.put(slot, new ItemBuilder(this, m, itemMeta -> {
-                               itemMeta.setLore(lore_trades);
-                           }).setOnClick(inventoryClickEvent -> {
-                               String m1 = String.valueOf(inventoryClickEvent.getCurrentItem().getType());
-                               int amount = ContestManager.getIntWhere("contest_trades", "ress", m1, "amount");
-                               int amount_shell = ContestManager.getIntWhere("contest_trades", "ress", m1, "amount_shell");
-                               ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
-                                   if (inventoryClickEvent.isLeftClick() && inventoryClickEvent.isShiftClick()) {
-                                       int items = 0;
-                                       for (ItemStack is : getOwner().getInventory().getContents()) {
-                                           if (is != null && is.getType() == inventoryClickEvent.getCurrentItem().getType()) {
-                                               items = items + is.getAmount();
-                                           }
-                                       }
+                     inventory.put(slot, new ItemBuilder(this, m, itemMeta -> {
+                         itemMeta.setLore(lore_trades);
+                     }).setOnClick(inventoryClickEvent -> {
+                         String m1 = String.valueOf(inventoryClickEvent.getCurrentItem().getType());
+                         int amount = (int) trade.get("amount");
+                         int amount_shell = (int) trade.get("amount_shell");
+                         ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
+                         if (inventoryClickEvent.isLeftClick() && inventoryClickEvent.isShiftClick()) {
+                             int items = 0;
+                             for (ItemStack is : getOwner().getInventory().getContents()) {
+                                 if (is != null && is.getType() == inventoryClickEvent.getCurrentItem().getType()) {
+                                     items = items + is.getAmount();
+                                 }
+                             }
 
-                                       if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
+                             if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
                                            int amount_shell2 = (items / amount) * amount_shell;
                                            int items1 = (amount_shell2 / amount_shell) * amount;
                                            ContestManager.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), items1);
@@ -174,13 +177,11 @@ public class TradeMenu extends Menu {
                                            MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas assez de cette ressource pour pouvoir l'échanger!", Prefix.CONTEST, MessageType.ERROR, true);
                                        }
                                    }
+
                            }));
 
                            lore_trades.clear();
-                       }
-                   } catch (SQLException e) {
-                       throw new RuntimeException(e);
-                   }
+                }
 
                    inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                        itemMeta.setDisplayName("§r§aPlus d'info !");
