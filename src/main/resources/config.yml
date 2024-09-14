@@ -23,3 +23,9 @@ discord:
   webhookName: Annonce Serveur
 mine:
   name: mine
+
+rewards:
+  peluche_aywen: #Example à laisser
+    start: 1722636000 # Date de début de l'event
+    end: 1725832800 # Date de fin de l'event
+    reward: "aywen:peluche" # Namespace ItemsAdder
