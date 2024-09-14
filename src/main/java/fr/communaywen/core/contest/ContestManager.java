@@ -435,7 +435,6 @@ public class ContestManager extends DatabaseConnector {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                System.out.println(rs.getString(column));
                 return rs.getString(column);
             }
         } catch (SQLException e) {
