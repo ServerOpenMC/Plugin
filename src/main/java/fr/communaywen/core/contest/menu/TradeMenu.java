@@ -17,8 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
@@ -87,7 +85,6 @@ public class TradeMenu extends Menu {
                 List<String> lore_trades = new ArrayList<String>();
 
                 int index = 0;
-                System.out.println("ets");
                 for (Map<String, Object> trade : selectedTrades) {
                      Integer slot = slot_trade.get(index);
                      index++;

@@ -256,7 +256,6 @@ public class ContestManager extends DatabaseConnector {
 
                     lucky = ContestManager.giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
-                    System.out.println(lucky);
 
                     EconomyManager.addBalanceOffline(player, money);
                 } else {
@@ -835,7 +834,6 @@ public class ContestManager extends DatabaseConnector {
     }
 
     private static void updateSelected(String camp) {
-        System.out.println(config.getMapList("contest.contestList"));
         List<Map<?, ?>> contestList = config.getMapList("contest.contestList");
         List<Map<String, Object>> updatedContestList = new ArrayList<>();
 
@@ -892,8 +890,6 @@ public class ContestManager extends DatabaseConnector {
         orderredContestList.sort(Comparator.comparingInt(c -> (int) c.get("selected")));
 
         Map<String, Object> contest = orderredContestList.get(0);
-
-        System.out.println((String) contest.get("camp1"));
 
         try (PreparedStatement states2 = connection.prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, ?, ?, ?, ?, ?, 0,0)")) {
             states2.setString(1, (String) contest.get("camp1"));

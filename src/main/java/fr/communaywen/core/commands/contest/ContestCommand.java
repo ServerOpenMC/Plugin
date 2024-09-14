@@ -9,25 +9,32 @@ import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
+
 import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Feature("Contest")
 @Credit("iambibi_")
+@Command("contest")
+@Description("Ouvre l'interface des festivals, et quand un festival commence, vous pouvez choisir votre camp")
 public class ContestCommand {
     private final AywenCraftPlugin plugin;
-
-    public ContestCommand(AywenCraftPlugin plugin) {
+    private final FileConfiguration eventConfig;
+    public ContestCommand(AywenCraftPlugin plugin, FileConfiguration eventConfig) {
         this.plugin = plugin;
+        this.eventConfig = eventConfig;
     }
 
-    @Command("contest")
-    @Description("Ouvre l'interface des festivals, et quand un festival commence, vous pouvez choisir votre camp")
-    public void onCommand(Player player) {
+    @DefaultFor("~")
+    public void defaultCommand(Player player) {
         int phase = ContestManager.getInt("contest","phase");
         String dayStartContest = ContestManager.getString("startdate");
         int camp = ContestManager.getPlayerCamp(player);
@@ -50,6 +57,19 @@ public class ContestCommand {
             MessageManager.sendMessageType(player, "§cIl n'y a aucun Contest ! Revenez dans " + days + " jours.", Prefix.CONTEST, MessageType.ERROR, true);
         }
 
+    }
+
+    @Subcommand("setphase")
+    @Description("Permet de lancer une procédure de phase")
+    @CommandPermission("ayw.command.contest.setphase")
+    public void setphase(Integer phase) {
+        if (phase == 1) {
+            ContestManager.initPhase1();
+        } else if (phase == 2) {
+            ContestManager.initPhase2(plugin, eventConfig);
+        } else if (phase == 3) {
+            ContestManager.initPhase3(plugin, eventConfig);
+        }
     }
 
 }

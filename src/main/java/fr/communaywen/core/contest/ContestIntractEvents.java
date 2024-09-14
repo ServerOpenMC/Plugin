@@ -2,7 +2,6 @@ package fr.communaywen.core.contest;
 
 import dev.lone.itemsadder.api.Events.FurnitureInteractEvent;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
