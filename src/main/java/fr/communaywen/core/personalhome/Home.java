@@ -24,7 +24,7 @@ public class Home extends DatabaseConnector {
 
     public Location getSpawnpoint() {
         if (spawnpoint == null) {
-            return new Location(AywenCraftPlugin.getInstance().getManagers().getHomeManager().homeWorld, ((id - 1) * (11 * 16)) + 16,100,16);
+            return new Location(AywenCraftPlugin.getInstance().getManagers().getHomeManager().homeWorld, ((id - 1) * (11 * 16)) + 16,101,16);
         }
         return spawnpoint;
     }
