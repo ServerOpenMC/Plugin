@@ -5,8 +5,8 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.contest.ColorConvertor;
 import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.MaterialFromChatColor;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -50,7 +50,7 @@ public class ContributionMenu extends Menu {
 
         String campName = ContestManager.getPlayerCampName(getOwner());
         ChatColor campColor = ContestManager.getPlayerCampChatColor(getOwner());
-        Material m = MaterialFromChatColor.getMaterialFromColor(campColor);
+        Material m = ColorConvertor.getMaterialFromColor(campColor);
 
         List<String> loreinfo = new ArrayList<String>();
         List<String> lore_randomevent = new ArrayList<String>();

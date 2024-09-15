@@ -174,11 +174,11 @@ public class ContestManager extends DatabaseConnector {
             while(rs1.next()) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(rs1.getString("name"));
                 String playerCampName = ContestManager.getOfflinePlayerCampName(player);
-                ChatColor playerCampColor = ColorToReadableColor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
+                ChatColor playerCampColor = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
                 String camp1Color = ContestManager.getString("contest", "color1");
                 String camp2Color = ContestManager.getString("contest", "color2");
-                ChatColor color1 = ColorToReadableColor.getReadableColor(ChatColor.valueOf(camp1Color));
-                ChatColor color2 = ColorToReadableColor.getReadableColor(ChatColor.valueOf(camp2Color));
+                ChatColor color1 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp1Color));
+                ChatColor color2 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp2Color));
                 String camp1Name = ContestManager.getString("contest", "camp1");
                 String camp2Name = ContestManager.getString("contest", "camp2");
 
@@ -220,7 +220,7 @@ public class ContestManager extends DatabaseConnector {
                 try {
                     while (rs2.next()) {
                         OfflinePlayer player2 = Bukkit.getOfflinePlayer(rs2.getString("name"));
-                        ChatColor playerCampColor2 = ColorToReadableColor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player2));
+                        ChatColor playerCampColor2 = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player2));
                         if (rankInt >= 10) {
                             break;
                         }
