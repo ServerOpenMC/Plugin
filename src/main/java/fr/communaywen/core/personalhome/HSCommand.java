@@ -1,8 +1,12 @@
 package fr.communaywen.core.personalhome;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.node.Node;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.SecretCommand;
 
 public class HSCommand {
     HomeManager manager;
@@ -29,7 +33,25 @@ public class HSCommand {
         }
     }
 
-    //@Command("maison gems biome") Retiré parceque y'avais une grosse baisse de TPS
+    @Command("maison bypass")
+    @SecretCommand
+    public void maisonBypass(CommandSender sender) {
+        if (!(sender instanceof Player player)) { return; }
+        LuckPerms api = LuckPermsProvider.get();
+        if (player.hasPermission("ayw.maisons.canbypass")) {
+            if (player.hasPermission("ayw.maisons.bypass")) {
+                api.getUserManager().modifyUser(player.getUniqueId(), user -> user.data().remove(Node.builder("ayw.maisons.bypass").build()));
+                player.sendMessage("§aTu as désactivé le bypass des maisons");
+            } else {
+                api.getUserManager().modifyUser(player.getUniqueId(), user -> user.data().add(Node.builder("ayw.maisons.bypass").build()));
+                player.sendMessage("§aTu as activé le bypass des maisons");
+            }
+        } else {
+            player.sendMessage("§cTu dois spécifier une sous-commande !");
+        }
+    }
+
+    @Command("maison gems biome")
     public void maisonGemsBiome(CommandSender sender) {
         if (!(sender instanceof Player player)) { return; }
         Home home = manager.getHomes().get(player.getUniqueId());

@@ -1,5 +1,10 @@
 package fr.communaywen.core.personalhome;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.biome.BiomeType;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import lombok.Getter;
@@ -31,17 +36,21 @@ public class Home extends DatabaseConnector {
 
     public void setBiome(Biome biome) {
         this.biome = biome;
-        if (true) { return; } // Unreachable statment :))
+        BiomeType biometype = BukkitAdapter.adapt(this.biome);
+
+        com.sk89q.worldedit.world.World weworld = BukkitAdapter.adapt(this.homeworld);
 
         int delta = (id-1)*13*16;
 
+        EditSession editSession = WorldEdit.getInstance().newEditSession(weworld);
         for (int x = delta; x < 32+delta; x++) {
             for (int z = delta; z < 32+delta; z++) {
                 for (int y = -64; y < 300; y++) {
-                    homeworld.setBiome(x, y, z, biome);
+                    editSession.setBiome(BlockVector3.at(x, y, z), biometype);
                 }
             }
         }
+        editSession.close();
     }
 
     public boolean saveBiome() {
