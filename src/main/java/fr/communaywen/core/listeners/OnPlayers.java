@@ -1,6 +1,7 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.utils.DraftAPI;
 import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
@@ -15,7 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -68,6 +68,30 @@ public class OnPlayers implements Listener {
 
             if (discordPlayerId.isEmpty()) {
                 player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
+            }
+
+            if(ContestManager.getInt("contest","phase") == 2) {
+                player.sendMessage(
+                        "§8§m                                                     §r\n" +
+                                "§7\n" +
+                                "§6§lCONTEST!§r §7 Les votes ont été ouvert !§7" +
+                                "§7\n" +
+                                "§8§oon se retrouve au spawn pour pouvoir voter ou /contest...\n" +
+                                "§7\n" +
+                                "§8§m                                                     §r"
+                );
+                return;
+            }
+            if(ContestManager.getInt("contest","phase") == 3) {
+                player.sendMessage(
+                        "§8§m                                                     §r\n" +
+                                "§7\n" +
+                                "§6§lCONTEST!§r §7Les contributions ont commencé!§7" +
+                                "§7\nEchanger des ressources contre des Coquillages de Contest. Récoltez en un max et déposez les\n" +
+                                "§8§ovia la Borne des Contest ou /contest\n" +
+                                "§7\n" +
+                                "§8§m                                                     §r"
+                );
                 return;
             }
 
