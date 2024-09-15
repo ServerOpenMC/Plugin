@@ -12,6 +12,8 @@ import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.personalhome.Home;
+import fr.communaywen.core.personalhome.HomeManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
@@ -35,6 +37,7 @@ public class Managers {
 
     private AywenCraftPlugin plugin;
     private DimensionManager dreamdimManager;
+    private HomeManager homeManager;
     private TeamManager teamManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
@@ -88,6 +91,8 @@ public class Managers {
                     Blacklist.class,
                     RewardCommand.class,
                     TeamManager.class,
+                    HomeManager.class,
+                    Home.class,
                     Team.class,
                     TransactionsManager.class,
                     AdvancementRegister.class,
@@ -99,6 +104,7 @@ public class Managers {
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
+        homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
@@ -116,6 +122,7 @@ public class Managers {
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
         dreamdimManager.init();
+        homeManager.init();
         moonDimManager.init();
     }
 

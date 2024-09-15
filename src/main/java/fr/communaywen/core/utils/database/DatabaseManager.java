@@ -52,6 +52,8 @@ public class DatabaseManager {
                                                       "refused BOOLEAN NOT NULL DEFAULT FALSE" +
                                                       ")").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS blacklists (Owner VARCHAR(36), Blocked VARCHAR(36))").executeUpdate();
+
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS personal_homes (id SMALLINT unsigned NOT NULL PRIMARY KEY, player VARCHAR(36), spawnpoint VARCHAR(255) DEFAULT NULL, biome VARCHAR(255) DEFAULT 'PLAINS')").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(36))").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link_verif (minecraft_uuid VARCHAR(36) NOT NULL, code int(11) NOT NULL)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS events_rewards (player VARCHAR(36) NOT NULL PRIMARY KEY, scope VARCHAR(32) NOT NULL, isClaimed BOOLEAN)").executeUpdate();
