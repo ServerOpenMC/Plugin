@@ -30,13 +30,15 @@ public class FirerocketSpawnListener implements Listener {
         config = plugin.getConfig();
         plugins = plugin;
 
-        eventRunnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                spawnFireworksInWorldEditRegion();
-            }
-        };
-        eventRunnable.runTaskTimer(plugin, 0, 200);
+        if(ContestManager.getInt("contest", "phase") != 1) {
+            eventRunnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    spawnFireworksInWorldEditRegion();
+                }
+            };
+            eventRunnable.runTaskTimer(plugin, 0, 200);
+        }
     }
 
     private void spawnFireworksInWorldEditRegion() {
