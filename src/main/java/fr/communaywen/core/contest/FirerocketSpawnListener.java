@@ -33,7 +33,6 @@ public class FirerocketSpawnListener implements Listener {
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
-                System.out.println("FireRocketSpawnListener");
                 spawnFireworksInWorldEditRegion();
             }
         };
