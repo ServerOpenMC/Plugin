@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 
 public class DatabaseManager {
 
@@ -44,8 +45,8 @@ public class DatabaseManager {
                 ")").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS mailbox_items (" +
                                                       "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                                                      "sender_id UUID NOT NULL," +
-                                                      "receiver_id UUID NOT NULL," +
+                                                      "sender_id VARCHAR(36) NOT NULL," +
+                                                      "receiver_id VARCHAR(36) NOT NULL," +
                                                       "items BLOB NOT NULL," +
                                                       "items_count INT NOT NULL," +
                                                       "sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
@@ -88,6 +89,26 @@ public class DatabaseManager {
                 "  player varchar(36) NOT NULL PRIMARY KEY," +
                 "  difficulty TINYINT NOT NULL" +
                 ")").executeUpdate();
+
+        // Système de Contest
+        // table prog contest
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS contest (phase int(11), camp1 VARCHAR(36), color1 VARCHAR(36), camp2 VARCHAR(36), color2 VARCHAR(36), startdate VARCHAR(36), points1 int(11), points2 int(11))").executeUpdate();
+        PreparedStatement state = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM contest");
+        ResultSet rs = state.executeQuery();
+
+        // push first contest
+        if(rs.next()) {
+            if(rs.getInt(1) == 0) {
+                PreparedStatement states = this.getConnection().prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, 'Mayonnaise', 'YELLOW', 'Ketchup', 'RED', ?, 0,0)");
+
+                String dateContestStart = "ven.";
+                states.setString(1, dateContestStart);
+                states.executeUpdate();
+            }
+        }
+
+        // Table camps
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), name VARCHAR(36), camps int(11), point_dep int(11))").executeUpdate();
 
         System.out.println("Les tables ont été créées si besoin");
         this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();

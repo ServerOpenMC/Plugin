@@ -70,6 +70,35 @@ public class MailboxManager extends DatabaseConnector {
         }
     }
 
+    public static void sendItemsToAOfflinePlayer(OfflinePlayer player, ItemStack[] items) {
+        String receiverUUID = player.getUniqueId().toString();
+        int itemsCount = Arrays.stream(items).mapToInt(ItemStack::getAmount).sum();
+        String senderUUID = player.getUniqueId().toString();
+
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO `mailbox_items` (sender_id, receiver_id, items, items_count) VALUES (?, ?, ?, ?);", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            byte[] itemsBytes = BukkitSerializer.serializeItemStacks(items);
+            statement.setString(1, senderUUID);
+            statement.setString(2, receiverUUID);
+            statement.setBytes(3, itemsBytes);
+            statement.setInt(4, itemsCount);
+            if (statement.executeUpdate() == 0) return;
+            try (ResultSet result = statement.getGeneratedKeys()) {
+                if (result.next()) {
+                    int id = result.getInt(1);
+                    Player receiverPlayer = player.getPlayer();
+                    if (receiverPlayer != null) {
+                        if (MailboxMenuManager.playerInventories.get(receiverPlayer) instanceof PlayerMailbox receiverMailbox) {
+                            LetterHead letterHead = new LetterHead(player, id, itemsCount, result.getTimestamp(1).toLocalDateTime());
+                            receiverMailbox.addLetter(letterHead);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     // todo
     public static boolean canSend(Player sender, OfflinePlayer receiver) {
         return true;

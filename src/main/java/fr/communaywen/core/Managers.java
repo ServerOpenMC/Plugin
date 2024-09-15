@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -35,6 +36,7 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private ContestManager contestManager;
     private DimensionManager dreamdimManager;
     private TeamManager teamManager;
     private FeatureManager featureManager;
@@ -99,6 +101,7 @@ public class Managers {
         // Database
 
         dreamdimManager = new DimensionManager(plugin);
+        contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);

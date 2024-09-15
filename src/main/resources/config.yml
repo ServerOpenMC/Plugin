@@ -23,3 +23,197 @@ discord:
   webhookName: Annonce Serveur
 mine:
   name: mine
+contest:
+  config:
+    worldName: "world"
+    spawnRegionName: "spawn"
+  boost_event:
+    miraculousFishing:
+        name: "Pêche Miraculeuse"
+        probaCode: "miraculousFishingProbability"
+        boost: 0 #in %
+    terrifyingNight:
+        name: "Nuit Terrifiante"
+        probaCode: "terrifyingNightProbability"
+        boost: 0 #in %
+  # La Liste des Contest
+  # - Couleur autorisé : BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED,  DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE
+  contestList:
+    - camp1: "Mayonnaise"
+      color1: "YELLOW"
+      camp2: "Ketchup"
+      color2: "RED"
+      selected: 0
+    - camp1: "Héros"
+      color1: "YELLOW"
+      camp2: "Villian"
+      color2: "RED"
+      selected: 0
+    - camp1: "Chaos"
+      color1: "GOLD"
+      camp2: "Ordre"
+      color2: "WHITE"
+      selected: 0
+    - camp1: "Pates"
+      color1: "YELLOW"
+      camp2: "Riz"
+      color2: "WHITE"
+      selected: 0
+    - camp1: "Samsung"
+      color1: "BLACK"
+      camp2: "Apple"
+      color2: "WHITE"
+      selected: 0
+    - camp1: "Montagne"
+      color1: "GRAY"
+      camp2: "Mer"
+      color2: "AQUA"
+      selected: 0
+    - camp1: "Chien"
+      color1: "BLUE"
+      camp2: "Chat"
+      color2: "RED"
+      selected: 0
+    - camp1: "Passé"
+      color1: "GREEN"
+      camp2: "Futur"
+      color2: "WHITE"
+      selected: 0
+    - camp1: "Pain Au Chocolat"
+      color1: "WHITE"
+      camp2: "Chocolatine"
+      color2: "BLACK"
+      selected: 0
+    - camp1: "Jour"
+      color1: "YELLOW"
+      camp2: "Nuit"
+      color2: "DARK_AQUA"
+      selected: 0
+    - camp1: "Pizza"
+      color1: "RED"
+      camp2: "Burger"
+      color2: "DARK_GREEN"
+      selected: 0
+    - camp1: "Ete"
+      color1: "YELLOW"
+      camp2: "Hiver"
+      color2: "WHITE"
+      selected: 0
+    - camp1: "Sucré"
+      color1: "LIGHT_PURPLE"
+      camp2: "Salé"
+      color2: "AQUA"
+      selected: 0
+    - camp1: "Pluie"
+      color1: "BLUE"
+      camp2: "Soleil"
+      color2: "YELLOW"
+      selected: 0
+    - camp1: "Ville"
+      color1: "GRAY"
+      camp2: "Campagne"
+      color2: "DARK_GREEN"
+      selected: 0
+  contestTrades:
+    - ress: PRISMARINE
+      amount: 2
+      amount_shell: 1
+      selected: false
+    - ress: LARGE_AMETHYST_BUD
+      amount: 1
+      amount_shell: 2
+      selected: false
+    - ress: RABBIT_STEW
+      amount: 2
+      amount_shell: 5
+      selected: false
+    - ress: SLIME_BLOCK
+      amount: 4
+      amount_shell: 1
+      selected: false
+    - ress: ROOTED_DIRT
+      amount: 2
+      amount_shell: 1
+      selected: false
+    - ress: SEA_LANTERN
+      amount: 2
+      amount_shell: 3
+      selected: false
+    - ress: ENCHANTED_GOLDEN_APPLE
+      amount: 1
+      amount_shell: 8
+      selected: false
+    - ress: MANGROVE_LOG
+      amount: 4
+      amount_shell: 1
+      selected: false
+    - ress: BEE_NEST
+      amount: 1
+      amount_shell: 4
+      selected: false
+    - ress: GOAT_HORN
+      amount: 1
+      amount_shell: 7
+      selected: false
+    - ress: PACKED_MUD
+      amount: 3
+      amount_shell: 1
+      selected: false
+    - ress: POPPED_CHORUS_FRUIT
+      amount: 5
+      amount_shell: 2
+      selected: false
+    - ress: HEAVY_CORE
+      amount: 1
+      amount_shell: 18
+      selected: false
+    - ress: END_CRYSTAL
+      amount: 2
+      amount_shell: 5
+      selected: false
+    - ress: TINTED_GLASS
+      amount: 3
+      amount_shell: 1
+      selected: false
+    - ress: CONDUIT
+      amount: 1
+      amount_shell: 15
+      selected: false
+    - ress: DECORATED_POT
+      amount: 2
+      amount_shell: 1
+      selected: false
+    - ress: CALIBRATED_SCULK_SENSOR
+      amount: 4
+      amount_shell: 1
+      selected: false
+    - ress: MUDDY_MANGROVE_ROOTS
+      amount: 2
+      amount_shell: 3
+      selected: false
+    - ress: TORCHFLOWER
+      amount: 2
+      amount_shell: 3
+      selected: false
+    - ress: SPONGE
+      amount: 1
+      amount_shell: 2
+      selected: false
+    - ress: MAGENTA_GLAZED_TERRACOTTA
+      amount: 2
+      amount_shell: 5
+      selected: false
+    - ress: VERDANT_FROGLIGHT
+      amount: 1
+      amount_shell: 2
+      selected: false
+    - ress: HONEYCOMB
+      amount: 2
+      amount_shell: 3
+      selected: false
+      
+rewards:
+  peluche_aywen: #Example à laisser
+    start: 1722636000 # Date de début de l'event
+    end: 1725832800 # Date de fin de l'event
+    reward: "aywen:peluche" # Namespace ItemsAdder

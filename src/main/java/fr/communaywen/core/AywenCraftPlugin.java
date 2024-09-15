@@ -8,6 +8,7 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
+import fr.communaywen.core.commands.contest.ContestCommand;
 import fr.communaywen.core.commands.credits.CreditCommand;
 import fr.communaywen.core.commands.credits.FeatureCommand;
 import fr.communaywen.core.commands.economy.AdminShopCommand;
@@ -29,6 +30,9 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.contest.ContestIntractEvents;
+import fr.communaywen.core.contest.ContestListener;
+import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -88,10 +92,10 @@ import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -185,6 +189,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
+                new ContestCommand(this, loadEventsManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -249,6 +254,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new FirerocketSpawnListener(this),
+                new ContestListener(this, loadEventsManager()),
+                new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
                 new AntiTrampling(),
@@ -315,6 +323,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 player.closeInventory(); // Close inventory
             }
         }
+        try {
+            this.getConfig().save(new File(this.getDataFolder(), "config.yml"));
+            loadEventsManager().save(new File(this.getDataFolder(), "events.yml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         managers.cleanup();
     }
 
