@@ -30,7 +30,7 @@ public class FirerocketSpawnListener implements Listener {
         config = plugin.getConfig();
         plugins = plugin;
 
-        if(ContestManager.getInt("contest", "phase") != 1) {
+        if(ContestManager.getInt("contest", "phase") != 1 && !Bukkit.getOnlinePlayers().isEmpty()) {
             eventRunnable = new BukkitRunnable() {
                 @Override
                 public void run() {
