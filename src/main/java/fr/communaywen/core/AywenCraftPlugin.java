@@ -37,13 +37,16 @@ import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
 import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
-import fr.communaywen.core.customitems.listeners.CIPlayerInteractListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
+import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
+import fr.communaywen.core.luckyblocks.listeners.LBPlayerInteractListener;
+import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
@@ -51,8 +54,6 @@ import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
-import fr.communaywen.core.space.moon.*;
-import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
@@ -99,29 +100,36 @@ import java.util.*;
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
-
-    @Getter
-    private final Managers managers = new Managers();
-
-    public EventsManager eventsManager; // TODO: include to Managers.java
-
     @Getter
     private static AywenCraftPlugin instance;
+    @Getter
+    private final Managers managers = new Managers();
+    public EventsManager eventsManager; // TODO: include to Managers.java
     public LuckPerms api;
-
+    public List<RegionManager> regions;
+    public MultiverseCore mvCore;
     @Getter
     private BukkitAudiences adventure;
     @Getter
     private InteractiveHelpMenu interactiveHelpMenu;
-
     @Getter
     private BukkitCommandHandler handler;
-
     @Getter
     private TabList tabList;
 
-    public List<RegionManager> regions;
-    public MultiverseCore mvCore;
+    /**
+     * Format a permission with the permission prefix.
+     *
+     * @param category the permission category
+     * @param suffix   the permission suffix
+     * @return The formatted permission.
+     * @see PermissionCategory #PERMISSION_PREFIX
+     */
+    public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
+            final @NotNull String suffix) {
+        return category.formatPermission(suffix);
+    }
+
     @SneakyThrows
     @Override
     public void onEnable() {
@@ -134,8 +142,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
-        }
-        else {
+        } else {
             getLogger().severe("LuckPerms not found !");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -225,7 +232,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatChannelCMD(),
                 new MailboxCommand(),
                 new RandomEventsCommand(this),
-                new TeamClaim()
+                new TeamClaim(),
+                new LuckyBlockCommand(managers.getLbPlayerManager())
         );
 
         /*  --------  */
@@ -272,24 +280,26 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ClaimListener(),
                 new FarineListener(),
                 new FallBloodListener(),
+                new RTPCommand(this),
                 new CIBreakBlockListener(managers.getCustomItemsManager()),
                 new CIEnchantListener(managers.getCustomItemsManager()),
                 new CIPrepareAnvilListener(managers.getCustomItemsManager()),
-                new CIPlayerInteractListener(managers.getCustomItemsManager()),
                 new BabyFuzeListener(),
                 new MailboxListener(),
                 new ElevatorListener(),
                 new ChunkListManager(),
-                new RocketListener(),
-                new MoonListener()
+                new LBBlockBreakListener(managers.getLuckyBlockManager()),
+                new LBPlayerQuitListener(managers.getLuckyBlockManager()),
+                new LBPlayerInteractListener(managers.getLuckyBlockManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
-        
+
         /* --------- */
 
         saveDefaultConfig();
 
+        createSandRecipe();
         createFarineRecipe();
         createCrazyPotion();
 
@@ -306,8 +316,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onDisable() {
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            for(QUESTS quests : QUESTS.values()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
                 QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
                 player.closeInventory(); // Close inventory
@@ -333,12 +343,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         return frozenPlayers;
     }
 
+
+    // Farine pour fabriquer du pain
+
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
     }
-
-
-    // Farine pour fabriquer du pain
 
     private void createFarineRecipe() {
         ItemStack farine = new ItemStack(Material.SUGAR);
@@ -405,18 +415,5 @@ public final class AywenCraftPlugin extends JavaPlugin {
             saveResource("events.yml", false);
         }
         return YamlConfiguration.loadConfiguration(eventsFile);
-    }
-
-    /**
-     * Format a permission with the permission prefix.
-     *
-     * @param category the permission category
-     * @param suffix   the permission suffix
-     * @return The formatted permission.
-     * @see PermissionCategory #PERMISSION_PREFIX
-     */
-    public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
-                                                   final @NotNull String suffix) {
-        return category.formatPermission(suffix);
     }
 }
