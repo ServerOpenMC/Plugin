@@ -10,6 +10,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 
@@ -236,7 +237,7 @@ public class ContestManager extends DatabaseConnector {
 
                 int money = 0;
                 int lucky = 0;
-                ItemStack luckyblock = null; // replace null by LBUtils.getLuckyBlockItem(); when luckyblock is pr
+                ItemStack luckyblock = LBUtils.getLuckyBlockItem();
                 if(ContestManager.hasWinInCampForOfflinePlayer(player)) {
                     int moneyMin = 12000;
                     int moneyMax = 14000;
@@ -284,14 +285,13 @@ public class ContestManager extends DatabaseConnector {
 
                 ContestManager.hasWinInCampForOfflinePlayer(player);
 
-                //luckyblock.setAmount(lucky);
+                luckyblock.setAmount(lucky);
                 book.setItemMeta(bookMeta);
 
                 List<ItemStack> itemlist = new ArrayList<>();
                 itemlist.add(book);
-                //itemlist.add(luckyblock);
+                itemlist.add(luckyblock);
 
-                //ajouter les recompenses loot box - PB : Aucune commande que je connais du au manque du plugin
                 ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
                 MailboxManager.sendItemsToAOfflinePlayer(player, items);
             }

@@ -29,7 +29,7 @@ public class ContestListener implements Listener {
                 }
                 int dayEnd = dayStart + 2;
                 if (dayEnd>=8) {
-                    dayEnd=3;
+                    dayEnd=1;
                 } //attention ne pas modifier les valeurs de départ des contest sinon le systeme va broke
                 if (ContestManager.getInt("contest","phase") == 3 && ContestManager.getCurrentDayOfWeek().getValue() == dayEnd) {
                     ContestManager.initPhase3(plugin, eventConfig);

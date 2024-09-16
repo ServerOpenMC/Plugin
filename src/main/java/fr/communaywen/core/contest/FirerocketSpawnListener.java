@@ -33,7 +33,9 @@ public class FirerocketSpawnListener implements Listener {
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
-                spawnFireworksInWorldEditRegion();
+            if(ContestManager.getInt("contest", "phase") != 1 && Bukkit.getOnlinePlayers().size() >= 1) {
+                 spawnFireworksInWorldEditRegion();
+            }
             }
         };
         eventRunnable.runTaskTimer(plugin, 0, 200);
@@ -88,7 +90,7 @@ public class FirerocketSpawnListener implements Listener {
                 .build();
 
         meta.addEffect(effect);
-        meta.setPower(2);
+        meta.setPower(1);
         firework.setFireworkMeta(meta);
 
         new BukkitRunnable() {
