@@ -47,6 +47,7 @@ public class ContestManager extends DatabaseConnector {
         plugins = plugin;
     }
 
+    //PHASE 1
     public static void initPhase1() {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
@@ -83,6 +84,7 @@ public class ContestManager extends DatabaseConnector {
         }
         System.out.println("[CONTEST] Ouverture des votes");
     }
+    //PHASE 2
     public static void initPhase2(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
@@ -169,6 +171,7 @@ public class ContestManager extends DatabaseConnector {
         }
         System.out.println("[CONTEST] Ouverture des trades");
     }
+    //PHASE 3
     public static void initPhase3(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
