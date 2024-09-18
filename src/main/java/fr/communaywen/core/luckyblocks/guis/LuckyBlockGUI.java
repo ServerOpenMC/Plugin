@@ -1,12 +1,11 @@
-package fr.communaywen.core.customitems.guis;
+package fr.communaywen.core.luckyblocks.guis;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.customitems.managers.CustomItemsManager;
-import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
+import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
+import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,14 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Credit("Fnafgameur")
-public class ShowcraftMainGUI extends PaginatedMenu {
+public class LuckyBlockGUI extends PaginatedMenu {
 
-    private final CustomItemsManager customItemsManager;
+    private final LuckyBlockManager luckyBlockManager;
 
-    public ShowcraftMainGUI(Player owner, CustomItemsManager customItemsManager) {
+    public LuckyBlockGUI(Player owner, LuckyBlockManager luckyBlockManager) {
         super(owner);
-        this.customItemsManager = customItemsManager;
+        this.luckyBlockManager = luckyBlockManager;
     }
 
     @Override
@@ -43,19 +41,13 @@ public class ShowcraftMainGUI extends PaginatedMenu {
     public @NotNull List<ItemStack> getItems() {
 
         List<ItemStack> content = new ArrayList<>();
-        ArrayList<CustomItems> customItems = customItemsManager.getCustomItems();
+        ArrayList<LuckyBlockEvent> luckyBlockEvents = luckyBlockManager.getLbEvents();
 
-        for (CustomItems customItem : customItems) {
-            ItemStack itemStack = customItem.getItemStack();
+        for (LuckyBlockEvent luckyBlockEvent : luckyBlockEvents) {
+            ItemStack itemStack = luckyBlockEvent.getIconItem();
+            ItemBuilder itemBuilder = new ItemBuilder(this, itemStack);
 
-            if (itemStack == null) {
-                itemStack = new ItemBuilder(this, Material.AIR);
-            } else {
-                itemStack = new ItemBuilder(this, itemStack)
-                        .setNextMenu(new ShowcraftMenuGUI(getOwner(), customItem));
-            }
-
-            content.add(itemStack);
+            content.add(itemBuilder);
         }
 
         return content;
@@ -76,7 +68,7 @@ public class ShowcraftMainGUI extends PaginatedMenu {
 
     @Override
     public @NotNull String getName() {
-        return "Showcraft";
+        return "Lucky Block Events";
     }
 
     @Override
