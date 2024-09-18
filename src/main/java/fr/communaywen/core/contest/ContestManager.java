@@ -25,7 +25,6 @@ import java.time.DayOfWeek;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -39,7 +38,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
-import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendSuccessMessage;
 
 public class ContestManager extends DatabaseConnector {
     static FileConfiguration config;
