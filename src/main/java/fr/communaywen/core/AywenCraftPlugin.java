@@ -1,6 +1,11 @@
 package fr.communaywen.core;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
@@ -116,6 +121,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private BukkitCommandHandler handler;
     @Getter
     private TabList tabList;
+    private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
 
     /**
      * Format a permission with the permission prefix.
@@ -128,6 +134,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
             final @NotNull String suffix) {
         return category.formatPermission(suffix);
+    }
+
+    @Override
+    public void onLoad() {
+        this.registerFlags(new StateFlag("disable-thor-hammer", true));
     }
 
     @SneakyThrows
@@ -269,7 +280,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
                 new Dream(this),
                 new VpnListener(this),
-                new ThorHammer(),
+                new ThorHammer(this),
                 new FriendsListener(managers.getFriendsManager()),
                 new TablistListener(this),
                 new LevelsListeners(managers.getLevelsManager()),
@@ -337,6 +348,37 @@ public final class AywenCraftPlugin extends JavaPlugin {
         for (Listener listener : args) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
+    }
+
+    private void registerFlags(Flag<?> flag) {
+        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        if (this.flags == null) {
+            this.flags = new HashMap<>();
+        }
+        try {
+            registry.register(flag);
+            if (flags.containsKey(flag.getClass())) {
+                this.flags.get(flag.getClass()).put(flag.getName(), flag);
+            } else {
+                this.flags.put(flag.getClass(), new HashMap<>());
+                this.flags.get(flag.getClass()).put(flag.getName(), flag);
+            }
+        } catch (FlagConflictException e) {
+            Flag<?> existing = registry.get(flag.getName());
+            if (existing instanceof StateFlag) {
+                if (flags.containsKey(flag.getClass())) {
+                    this.flags.get(flag.getClass()).put(flag.getName(), flag);
+                } else {
+                    this.flags.put(flag.getClass(), new HashMap<>());
+                    this.flags.get(flag.getClass()).put(flag.getName(), flag);
+                }
+            } else {
+                System.out.println("Flag: " + flag.getName() + " could not be registered!");
+            }
+        }
+    }
+    public HashMap<Class<?>, HashMap<String, Flag<?>>> getCustomFlags() {
+        return flags;
     }
 
     public ArrayList<Player> getFrozenPlayers() {
