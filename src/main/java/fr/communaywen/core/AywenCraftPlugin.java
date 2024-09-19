@@ -139,6 +139,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         this.registerFlags(new StateFlag("disable-thor-hammer", true));
+        this.registerFlags(new StateFlag("disable-fly", true));
     }
 
     @SneakyThrows
@@ -265,6 +266,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),
                 new ContestIntractEvents(),
