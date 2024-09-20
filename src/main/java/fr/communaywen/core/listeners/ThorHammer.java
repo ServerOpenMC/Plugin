@@ -33,10 +33,8 @@ public class ThorHammer implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-            System.out.println("1 "+event.getItem());
-            System.out.println("2 "+CustomStack.getInstance("thor:hammer").getItemStack());
+
             if (event.getMaterial() == CustomStack.getInstance("thor:hammer").getItemStack().getType()) {
-                System.out.println("in");
                 Player player = event.getPlayer();
 
                 if (!player.isSneaking()) return;
