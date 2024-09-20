@@ -33,20 +33,25 @@ public class ThorHammer implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-            Player player = event.getPlayer();
+            System.out.println("1 "+event.getItem());
+            System.out.println("2 "+CustomStack.getInstance("thor:hammer").getItemStack());
+            if (event.getMaterial() == CustomStack.getInstance("thor:hammer").getItemStack().getType()) {
+                System.out.println("in");
+                Player player = event.getPlayer();
 
-            if (!player.isSneaking()) return;
+                if (!player.isSneaking()) return;
 
-            // WorldGuard
-            RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            RegionQuery query = container.createQuery();
-            ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
-            if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-thor-hammer"))) {
-                event.setCancelled(false);
-                useThorHammer(player, event.getClickedBlock().getLocation());
+                // WorldGuard
+                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                RegionQuery query = container.createQuery();
+                ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
+                if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-thor-hammer"))) {
+                    event.setCancelled(false);
+                    useThorHammer(player, event.getClickedBlock().getLocation());
 
-            } else {
-                event.setCancelled(true);
+                } else {
+                    event.setCancelled(true);
+                }
             }
         }
     }

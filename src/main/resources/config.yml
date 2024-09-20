@@ -128,7 +128,7 @@ contest:
       amount_shell: 5
       selected: false
     - ress: SHROOMLIGHT
-      amount: 3t
+      amount: 3
       amount_shell: 1
       selected: false
     - ress: ROOTED_DIRT
