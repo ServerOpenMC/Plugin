@@ -141,7 +141,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.registerFlags(new StateFlag("disable-thor-hammer", true));
         this.registerFlags(new StateFlag("disable-hammer", true));
         this.registerFlags(new StateFlag("disable-builder-wand", true));
-        this.registerFlags(new StateFlag("disable-fly", true));
+        this.registerFlags(new StateFlag("disable-fly", false));
     }
 
     @SneakyThrows
