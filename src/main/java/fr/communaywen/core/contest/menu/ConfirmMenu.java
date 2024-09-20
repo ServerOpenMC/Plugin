@@ -54,7 +54,6 @@ public class ConfirmMenu extends Menu {
 
         List<String> lore0 = new ArrayList<String>();
         lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campNameFinal);
-Material.SHROOMLIGHT
         for(int i = 0; i < getInventorySize().getSize(); i++) {
                 inventory.put(11, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§cAnnuler");
