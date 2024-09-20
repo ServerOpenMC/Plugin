@@ -127,8 +127,8 @@ contest:
       amount: 2
       amount_shell: 5
       selected: false
-    - ress: SLIME_BLOCK
-      amount: 4
+    - ress: SHROOMLIGHT
+      amount: 3t
       amount_shell: 1
       selected: false
     - ress: ROOTED_DIRT
