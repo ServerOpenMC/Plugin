@@ -2,6 +2,7 @@ package fr.communaywen.core.customitems.managers;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.customitems.items.BuilderWand;
 import fr.communaywen.core.customitems.items.DiamondHammer;
 import fr.communaywen.core.customitems.items.IronHammer;
@@ -17,12 +18,13 @@ public class CustomItemsManager {
 
     private final ArrayList<CustomItems> customItems = new ArrayList<>();
 
-    public CustomItemsManager(FileConfiguration customItemsConfig) {
+    static AywenCraftPlugin plugin;
+    public CustomItemsManager(AywenCraftPlugin plugin, FileConfiguration customItemsConfig) {
 
-        customItems.add(new IronHammer());
-        customItems.add(new DiamondHammer());
-        customItems.add(new NetheriteHammer());
-        customItems.add(new BuilderWand(customItemsConfig));
+        customItems.add(new IronHammer(plugin));
+        customItems.add(new DiamondHammer(plugin));
+        customItems.add(new NetheriteHammer(plugin));
+        customItems.add(new BuilderWand(plugin, customItemsConfig));
 
         initCustomItems();
     }

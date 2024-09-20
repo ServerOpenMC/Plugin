@@ -111,7 +111,7 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
-        customItemsManager = new CustomItemsManager(customItemsConfig);
+        customItemsManager = new CustomItemsManager(plugin, customItemsConfig);
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
