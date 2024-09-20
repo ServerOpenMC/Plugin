@@ -94,6 +94,7 @@ public class MailboxManager extends DatabaseConnector {
                     }
                 }
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -69,32 +69,23 @@ public class MoreInfoMenu extends Menu {
         }
 
 
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
-            if(i==11) {
                 inventory.put(11, new ItemBuilder(this, Material.BLUE_STAINED_GLASS_PANE, itemMeta -> {
                     itemMeta.setDisplayName("§r§1Les Votes !");
                     itemMeta.setLore(lore0);
                     itemMeta.setEnchantmentGlintOverride(ench0);
                 }));
-            }else if(i==13) {
                 inventory.put(13, new ItemBuilder(this, Material.RED_STAINED_GLASS_PANE, itemMeta -> {
                     itemMeta.setDisplayName("§r§cL'Affrontement");
                     itemMeta.setLore(lore1);
                     itemMeta.setEnchantmentGlintOverride(ench1);
                 }));
-            } else if(i==15) {
                 inventory.put(15, new ItemBuilder(this, Material.YELLOW_STAINED_GLASS_PANE, itemMeta -> {
                     itemMeta.setDisplayName("§r§eLes Résultats");
                     itemMeta.setLore(lore2);
                 }));
-            } else if(i==18) {
                 inventory.put(18, new ItemBuilder(this, Material.ARROW, itemMeta -> {
                     itemMeta.setDisplayName("§r§aRetour");
                 }).setBackButton());
-            } else {
-                inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
-            }
-        }
         return inventory;
     }
 }

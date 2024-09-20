@@ -180,6 +180,10 @@ public class TradeMenu extends Menu {
                            lore_trades.clear();
                 }
 
+                    inventory.put(27, new ItemBuilder(this, Material.ARROW, itemMeta -> {
+                        itemMeta.setDisplayName("§r§aRetour");
+                    }).setBackButton());
+
                    inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                        itemMeta.setDisplayName("§r§aPlus d'info !");
                        itemMeta.setLore(loreinfo);

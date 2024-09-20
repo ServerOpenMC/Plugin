@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,6 +37,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
+
 public class ContestManager extends DatabaseConnector {
     static FileConfiguration config;
     static JavaPlugin plugins;
@@ -43,6 +47,7 @@ public class ContestManager extends DatabaseConnector {
         plugins = plugin;
     }
 
+    //PHASE 1
     public static void initPhase1() {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
@@ -79,6 +84,7 @@ public class ContestManager extends DatabaseConnector {
         }
         System.out.println("[CONTEST] Ouverture des votes");
     }
+    //PHASE 2
     public static void initPhase2(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
@@ -165,6 +171,7 @@ public class ContestManager extends DatabaseConnector {
         }
         System.out.println("[CONTEST] Ouverture des trades");
     }
+    //PHASE 3
     public static void initPhase3(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
@@ -225,7 +232,7 @@ public class ContestManager extends DatabaseConnector {
                         if (rankInt >= 10) {
                             break;
                         }
-                        String rankStr = "\n§0#" + ContestManager.getRankPlayerInContest(player2)+ " " + playerCampColor2 + rs2.getString("name") + " §8- §b" + rs2.getString("point_dep");
+                        String rankStr = "\n§0#" + (rankInt+1) + " " + playerCampColor2 + rs2.getString("name") + " §8- §b" + rs2.getString("point_dep");
                         leaderboard = leaderboard + rankStr;
                         rankInt++;
                     }
@@ -237,6 +244,7 @@ public class ContestManager extends DatabaseConnector {
 
                 int money = 0;
                 int lucky = 0;
+                int key = 0;
                 ItemStack luckyblock = LBUtils.getLuckyBlockItem();
                 if(ContestManager.hasWinInCampForOfflinePlayer(player)) {
                     int moneyMin = 12000;
@@ -257,8 +265,6 @@ public class ContestManager extends DatabaseConnector {
 
                     lucky = ContestManager.giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
-
-                    EconomyManager.addBalanceOffline(player, money);
                 } else {
                     int moneyMin = 4000;
                     int moneyMax = 6000;
@@ -281,7 +287,7 @@ public class ContestManager extends DatabaseConnector {
 
                     EconomyManager.addBalanceOffline(player, money);
                 }
-                bookMeta.addPage("§8§lRécompenses\n§7+ " + money + "$\n§7+ " + lucky + " §6Lucky Block");
+                bookMeta.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player)) +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player)) + ")");
 
                 ContestManager.hasWinInCampForOfflinePlayer(player);
 
@@ -294,6 +300,7 @@ public class ContestManager extends DatabaseConnector {
 
                 ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
                 MailboxManager.sendItemsToAOfflinePlayer(player, items);
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -350,6 +357,16 @@ public class ContestManager extends DatabaseConnector {
                         "§7\n" +
                         "§8§m                                                     §r"
         );
+        Component message = Component.text("Vous avez reçu la lettre du Contest", NamedTextColor.DARK_GREEN)
+                .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
+                .clickEvent(getRunCommand("mail"))
+                .hoverEvent(getHoverEvent("Ouvrir la mailbox"))
+                .append(Component.text(" pour ouvrir la mailbox", NamedTextColor.GOLD));
+        Bukkit.broadcast(message);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
+        }
 
         World world = Bukkit.getWorld(worldsName);
         com.sk89q.worldedit.world.World wgWorld = BukkitAdapter.adapt(world);
@@ -873,7 +890,6 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public static void selectRandomlyContest() {
-        // A FAIRE
         List<Map<?, ?>> contestList = config.getMapList("contest.contestList");
         List<Map<String, Object>> orderredContestList = new ArrayList<>();
 
@@ -912,5 +928,15 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
+    public static void addPointPlayer(Integer points_dep, Player player) {
+        String sql = "UPDATE camps SET point_dep = ? WHERE minecraft_uuid = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, points_dep);
+            stmt.setString(2, player.getUniqueId().toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
