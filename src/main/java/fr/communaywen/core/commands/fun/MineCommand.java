@@ -18,12 +18,16 @@ public class MineCommand {
         FileConfiguration config = AywenCraftPlugin.getInstance().getConfig();
         MultiverseWorld mineWorld = AywenCraftPlugin.getInstance().mvCore.getMVWorldManager().getMVWorld(config.getString("mine.name"));
 
+        if (player.hasPermission("ayw.block.mine")) {
+            player.sendMessage("§cTu n'as pas accès à cette commande!");
+            return;
+        }
+
         if(mineWorld != null || AywenCraftPlugin.getInstance().mvCore != null) {
             assert mineWorld != null;
 
             Random rand = new Random();
 
-            Location spawn = mineWorld.getSpawnLocation();
             int x = rand.nextInt(3000);
             int z = rand.nextInt(3000);
             int y = mineWorld.getCBWorld().getHighestBlockYAt(x, z);

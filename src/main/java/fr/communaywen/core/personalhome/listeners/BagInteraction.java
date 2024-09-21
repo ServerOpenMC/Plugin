@@ -40,6 +40,11 @@ public class BagInteraction implements Listener {
             return;
         }
 
+        if (player.hasPermission("aywen.block.maisons")) {
+            player.sendMessage("§cVotre maison n'est pas accessible !");
+            return;
+        }
+
         if (!player.getWorld().getName().equals("homes")) {
             Home home = homes.get(player.getUniqueId());
 
