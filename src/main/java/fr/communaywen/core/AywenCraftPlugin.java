@@ -55,6 +55,7 @@ import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
+import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
@@ -203,6 +204,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
+                new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),

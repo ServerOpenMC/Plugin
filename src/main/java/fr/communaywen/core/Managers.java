@@ -14,9 +14,12 @@ import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.personalhome.Home;
+import fr.communaywen.core.personalhome.HomeManager;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
@@ -40,6 +43,8 @@ public class Managers {
     private ArenaManager arenaManager;
     private ContestManager contestManager;
     private DimensionManager dreamdimManager;
+    private MoonDimensionManager moonDimManager;
+    private HomeManager homeManager;
     private TeamManager teamManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
@@ -94,6 +99,8 @@ public class Managers {
                     Blacklist.class,
                     RewardCommand.class,
                     TeamManager.class,
+                    HomeManager.class,
+                    Home.class,
                     Team.class,
                     TransactionsManager.class,
                     AdvancementRegister.class,
@@ -103,10 +110,13 @@ public class Managers {
         // Database
 
         dreamdimManager = new DimensionManager(plugin);
+        moonDimManager = new MoonDimensionManager(plugin);
         arenaManager = new ArenaManager(plugin);
         contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
+        dreamdimManager = new DimensionManager(plugin);
+        homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
@@ -125,6 +135,8 @@ public class Managers {
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
         dreamdimManager.init();
+        homeManager.init();
+        moonDimManager.init();
     }
 
     public void cleanup() {
