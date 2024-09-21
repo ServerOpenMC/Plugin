@@ -31,7 +31,6 @@ public class Home extends DatabaseConnector {
 
     public void setBiome(Biome biome) {
         this.biome = biome;
-        if (true) { return; } // Unreachable statment :))
 
         int delta = (id-1)*13*16;
 
