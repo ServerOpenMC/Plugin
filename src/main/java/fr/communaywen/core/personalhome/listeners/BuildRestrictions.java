@@ -22,6 +22,8 @@ public class BuildRestrictions implements Listener {
         if (!event.getBlock().getWorld().getName().equals("homes")) { return; }
         Player player = event.getPlayer();
 
+        if (player.hasPermission("ayw.maisons.bypass")) { return; }
+
         if (HomesUtils.isOutOfHome(event.getBlock().getLocation())) {
             player.sendMessage("§cVous avez dépasser les bordures de votre maison.");
             event.setCancelled(true);
@@ -40,6 +42,8 @@ public class BuildRestrictions implements Listener {
         if (!event.getBlock().getWorld().getName().equals("homes")) { return; }
         Player player = event.getPlayer();
 
+        if (player.hasPermission("ayw.maisons.bypass")) { return; }
+
         if (HomesUtils.isOutOfHome(event.getBlock().getLocation())) {
             player.sendMessage("§cVous avez dépasser les bordures de votre maison.");
             event.setCancelled(true);
@@ -57,6 +61,8 @@ public class BuildRestrictions implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (!player.getWorld().getName().equals("homes")) { return; }
+
+        if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
         try {
             if (HomesUtils.isntInHisHome(player, event.getClickedBlock().getLocation())) {
