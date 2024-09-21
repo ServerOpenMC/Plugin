@@ -30,7 +30,7 @@ public class HSCommand {
         }
     }
 
-    @Command("maison gems biome")
+    @Command("maison setbiome")
     public void maisonGemsBiome(CommandSender sender) {
         if (!(sender instanceof Player player)) { return; }
         Home home = manager.getHomes().get(player.getUniqueId());
