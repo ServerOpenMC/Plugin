@@ -23,6 +23,19 @@ discord:
   webhookName: Annonce Serveur
 mine:
   name: mine
+arena:
+  arena_pvp:
+    world: "world"
+    spawnpoint:
+      - posX: 0.0
+        posY: 0.0
+        posZ: 0.0
+      - posX: 32.0
+        posY: 2.0
+        posZ: 92.0
+      - posX: -32.0
+        posY: -2.0
+        posZ: -92.0
 contest:
   config:
     worldName: "world"

@@ -35,7 +35,7 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.contest.ContestIntractEvents;
+import fr.communaywen.core.listeners.IntractEvents;
 import fr.communaywen.core.contest.ContestListener;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
@@ -271,7 +271,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),
-                new ContestIntractEvents(),
+                new IntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
                 new AntiTrampling(),

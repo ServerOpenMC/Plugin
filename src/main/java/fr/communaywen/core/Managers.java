@@ -1,5 +1,6 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.arena.ArenaManager;
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
 import fr.communaywen.core.contest.ContestManager;
@@ -36,6 +37,7 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private ArenaManager arenaManager;
     private ContestManager contestManager;
     private DimensionManager dreamdimManager;
     private TeamManager teamManager;
@@ -101,6 +103,7 @@ public class Managers {
         // Database
 
         dreamdimManager = new DimensionManager(plugin);
+        arenaManager = new ArenaManager(plugin);
         contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
