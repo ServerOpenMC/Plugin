@@ -424,7 +424,7 @@ public class ContestManager extends DatabaseConnector {
     //my part
     public static int getInt(String table, String column) {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +table + " LIMIT 1");
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return rs.getInt(column);
