@@ -54,9 +54,7 @@ public class ConfirmMenu extends Menu {
 
         List<String> lore0 = new ArrayList<String>();
         lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campNameFinal);
-
         for(int i = 0; i < getInventorySize().getSize(); i++) {
-            if(i==11) {
                 inventory.put(11, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§cAnnuler");
                     itemMeta.setLore(lore0);
@@ -64,7 +62,6 @@ public class ConfirmMenu extends Menu {
                     VoteMenu menu = new VoteMenu(getOwner());
                     menu.open();
                 }));
-            } else if(i==15) {
                 inventory.put(15, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§aConfirmer");
                     itemMeta.setLore(lore1);
@@ -75,9 +72,6 @@ public class ConfirmMenu extends Menu {
                     MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + ContestManager.getString("contest", getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
-            } else {
-                inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
-            }
         }
         return inventory;
     }
