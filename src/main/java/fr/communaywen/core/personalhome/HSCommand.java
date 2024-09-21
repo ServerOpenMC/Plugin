@@ -11,13 +11,13 @@ public class HSCommand {
         this.manager = manager;
     }
 
-    @Command("maison sethome")
+    @Command("maison setspawn")
     public void maisonSetHome(CommandSender sender) {
         if (!(sender instanceof Player player)) { return; }
         Home home = manager.getHomes().get(player.getUniqueId());
 
-        if (!player.getWorld().getName().equals("homes") || HomesUtils.isOnPlatform(player.getLocation(), home.getId())) {
-            player.sendMessage("§cTu doit être dans ta maison pour effectuer cette commande");
+        if (!player.getWorld().getName().equals("homes")) {
+            player.sendMessage("§cTu dois être dans ta maison pour effectuer cette commande");
             return;
         }
 

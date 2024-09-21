@@ -60,7 +60,11 @@ public class Home extends DatabaseConnector {
 
     public Location getSpawnpoint() {
         if (spawnpoint == null) {
-            return new Location(homeworld, ((id - 1) * (11 * 16)) + 16,101,16);
+            if (id == 0) {
+                return new Location(homeworld, 16, 101, 16);
+            } else {
+                return new Location(homeworld, ((id - 1) * (13 * 16)) + 16, 101, 16);
+            }
         }
         return spawnpoint;
     }
