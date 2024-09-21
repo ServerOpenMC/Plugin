@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -14,6 +15,8 @@ import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
 import fr.communaywen.core.personalhome.Home;
 import fr.communaywen.core.personalhome.HomeManager;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
@@ -36,7 +39,9 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private ContestManager contestManager;
     private DimensionManager dreamdimManager;
+    private MoonDimensionManager moonDimManager;
     private HomeManager homeManager;
     private TeamManager teamManager;
     private FeatureManager featureManager;
@@ -52,7 +57,8 @@ public class Managers {
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
     private PlayerChatChannel chatChannel;
-    private MoonDimensionManager moonDimManager;
+    private LuckyBlockManager luckyBlockManager;
+    private LBPlayerManager lbPlayerManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -101,6 +107,9 @@ public class Managers {
         }
         // Database
 
+        dreamdimManager = new DimensionManager(plugin);
+        moonDimManager = new MoonDimensionManager(plugin);
+        contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
@@ -116,7 +125,8 @@ public class Managers {
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
-        moonDimManager = new MoonDimensionManager(plugin);
+        luckyBlockManager = new LuckyBlockManager();
+        lbPlayerManager = new LBPlayerManager();
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
@@ -138,6 +148,5 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
 
-        moonDimManager.close();
     }
 }

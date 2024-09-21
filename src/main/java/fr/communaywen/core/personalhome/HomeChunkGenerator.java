@@ -18,6 +18,8 @@ public class HomeChunkGenerator extends ChunkGenerator {
         int gridX = Math.floorDiv(chunkX, TOTAL_SPACING);
         int localX = chunkX - gridX * TOTAL_SPACING;
 
+        if (chunkX < 0) { return; }
+
         if (chunkZ != 1 && chunkZ != 0) {
             return;
         }

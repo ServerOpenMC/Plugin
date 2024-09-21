@@ -21,6 +21,7 @@ public class BuildRestrictions implements Listener {
     public void onBlockPlaced(BlockPlaceEvent event) {
         if (!event.getBlock().getWorld().getName().equals("homes")) { return; }
         Player player = event.getPlayer();
+        if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
         if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
@@ -33,7 +34,6 @@ public class BuildRestrictions implements Listener {
         if (HomesUtils.isntInHisHome(player, event.getBlock().getLocation())) {
             player.sendMessage("§cVous n'êtes pas chez vous!");
             event.setCancelled(true);
-            return;
         }
     }
 
@@ -41,6 +41,7 @@ public class BuildRestrictions implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         if (!event.getBlock().getWorld().getName().equals("homes")) { return; }
         Player player = event.getPlayer();
+        if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
         if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
@@ -53,7 +54,6 @@ public class BuildRestrictions implements Listener {
         if (HomesUtils.isntInHisHome(player, event.getBlock().getLocation())) {
             player.sendMessage("§cVous n'êtes pas chez vous!");
             event.setCancelled(true);
-            return;
         }
     }
 
@@ -61,6 +61,7 @@ public class BuildRestrictions implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (!player.getWorld().getName().equals("homes")) { return; }
+        if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
         if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
@@ -72,7 +73,6 @@ public class BuildRestrictions implements Listener {
             }
         } catch (Exception e) {
             // Surement parceque event.getClickedBlock() est null
-            return;
         }
     }
 }
