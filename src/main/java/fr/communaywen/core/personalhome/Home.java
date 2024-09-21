@@ -34,9 +34,9 @@ public class Home extends DatabaseConnector {
 
         int delta = (id-1)*13*16;
 
-        for (int x = delta; x < 32+delta; x++) {
-            for (int z = delta; z < 32+delta; z++) {
-                for (int y = -64; y < 300; y++) {
+        for (int x = delta; x <= 32+delta; x++) {
+            for (int z = 0; z <= 32; z++) {
+                for (int y = -64; y <= 300; y++) {
                     homeworld.setBiome(x, y, z, biome);
                 }
             }
