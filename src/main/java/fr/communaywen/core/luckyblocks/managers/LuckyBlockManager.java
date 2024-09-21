@@ -29,6 +29,7 @@ public class LuckyBlockManager {
         lbEvents.add(new LBStructureHerobrine());
         lbEvents.add(new LBSpawnBreeze());
         lbEvents.add(new LBSpawnIllusioner());
+        lbEvents.add(new LBSpawnAllay());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();
