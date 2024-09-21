@@ -9,12 +9,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class LBBreeze extends LuckyBlockEvent {
+public class LBSpawnBreeze extends LuckyBlockEvent {
 
-    public LBBreeze() {
+    public LBSpawnBreeze() {
         super(
-                "Breeze",
-                "§7Un vent de fraîcheur souffle sur vous.",
+                "La brise s'affole.",
+                "Un breeze est apparu !",
                 0.2f,
                 EventType.MALUS,
                 new ItemStack(Material.BREEZE_ROD)

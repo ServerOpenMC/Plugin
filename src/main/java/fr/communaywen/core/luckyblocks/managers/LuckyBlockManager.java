@@ -27,7 +27,8 @@ public class LuckyBlockManager {
         lbEvents.add(new LBMoonGravity());
         lbEvents.add(new LBSolarGravity());
         lbEvents.add(new LBStructureHerobrine());
-        lbEvents.add(new LBBreeze());
+        lbEvents.add(new LBSpawnBreeze());
+        lbEvents.add(new LBSpawnIllusioner());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();
