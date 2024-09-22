@@ -65,6 +65,7 @@ public class HomeManager extends DatabaseConnector implements Listener {
 
                 Biome biome = Biome.valueOf(rs.getString("biome"));
                 home.setBiome(biome);
+                home.allow_visit = rs.getBoolean("allow_visit");
 
                 homes.put(home.getOwner(), home);
             }

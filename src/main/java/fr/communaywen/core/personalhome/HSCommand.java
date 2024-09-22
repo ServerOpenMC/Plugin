@@ -17,6 +17,62 @@ public class HSCommand {
         this.manager = manager;
     }
 
+    @Command("maison visit")
+    @CommandPermission("ayw.maisons.visit")
+    public void maisonVisit(CommandSender sender, @Named("player") OfflinePlayer target) {
+        if (!(sender instanceof Player player)) { return; }
+        Home home = manager.getHomes().get(target.getUniqueId());
+
+        if (home == null) {
+            player.sendMessage(Component.text("§cImpossible de trouver la maison de "+target.getName()));
+            return;
+        }
+
+        if (!player.getWorld().getName().equals("homes")) {
+            player.sendMessage("§cTu dois être dans ton sac pour visiter une maison");
+            return;
+        }
+
+        if (home.canVisit()) {
+            player.teleport(home.getSpawnpoint());
+        } else {
+            player.sendMessage("§cCe joueur n'accepte pas les visites");
+        }
+    }
+
+    @Command("maison allowvisits")
+    public void maisonAllowVisit(CommandSender sender, @Named("state") boolean state) {
+        if (!(sender instanceof Player player)) { return; }
+
+        Home home = manager.getHomes().get(player.getUniqueId());
+
+        if (home == null) {
+            sender.sendMessage("Impossible de trouver votre maison");
+            return;
+        }
+
+        String stateString = "activé";
+
+        if (!state) {
+            stateString = "désactivé";
+        }
+
+        if (home.allow_visit == state) {
+            player.sendMessage("Les visites sont déjà "+stateString);
+            return;
+        }
+
+        if (home.setVisit(state)) {
+            player.sendMessage("Les visites ont été "+stateString);
+        } else {
+            if (state) {
+                player.sendMessage("§cImpossible d'activer les visites");
+            } else {
+                player.sendMessage("§cImpossible de désactiver les visites");
+            }
+        }
+    }
+
     @Command("maison find")
     @CommandPermission("ayw.maisons.locate")
     public void maisonFind(CommandSender sender, @Named("player") OfflinePlayer target) {

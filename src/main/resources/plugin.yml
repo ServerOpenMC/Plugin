@@ -13,6 +13,8 @@ permissions:
   ayw.admin.version:
     description: Permission pour utiliser la commande /version
     default: op
+  ayw.maisons.visit:
+    default: true
   ayw.command.manuallink:
     description: Permission de lier un deux comptes manuellement
     default: op
