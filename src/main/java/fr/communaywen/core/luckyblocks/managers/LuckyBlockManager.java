@@ -2,10 +2,7 @@ package fr.communaywen.core.luckyblocks.managers;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
-import fr.communaywen.core.luckyblocks.events.bonus.LBEnderchest;
-import fr.communaywen.core.luckyblocks.events.bonus.LBMoonGravity;
-import fr.communaywen.core.luckyblocks.events.bonus.LBSpawnAllay;
-import fr.communaywen.core.luckyblocks.events.bonus.LBSuperHero;
+import fr.communaywen.core.luckyblocks.events.bonus.*;
 import fr.communaywen.core.luckyblocks.events.malus.*;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBSpawnGlowsquid;
@@ -45,6 +42,7 @@ public class LuckyBlockManager {
         lbEvents.add(new LBPoison());
         lbEvents.add(new LBSuperHero());
         lbEvents.add(new LBSuperZero());
+        lbEvents.add(new LBDecapitation());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();
