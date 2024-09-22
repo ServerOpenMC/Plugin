@@ -17,14 +17,7 @@ public class BuildRestrictions implements Listener {
             event.setNewCurrent(event.getOldCurrent());
         }
     }
-
-    @EventHandler
-    public void onPiston(BlockPistonEvent event) {
-        if (event.getBlock().getWorld().getName().equals("homes")) {
-            event.setCancelled(true);
-        }
-    }
-
+    
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent event) {
         if (!event.getBlock().getWorld().getName().equals("homes")) { return; }
