@@ -203,6 +203,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getTranslator().setLocale(Locale.FRENCH);
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
+        this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
 
         this.handler.register(
                 new HSCommand(getManagers().getHomeManager()),

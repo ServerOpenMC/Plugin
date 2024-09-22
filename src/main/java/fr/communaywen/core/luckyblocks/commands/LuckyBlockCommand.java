@@ -13,10 +13,7 @@ import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.DefaultFor;
-import revxrsal.commands.annotation.Named;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.Random;
@@ -89,7 +86,8 @@ public class LuckyBlockCommand {
 
     @Subcommand("event")
     @CommandPermission("ayw.command.luckyblock.admin")
-    public void event(Player player, @Named("eventId") String eventId) {
+    @AutoComplete("@lbEventsId")
+    public void event(Player player, @Named("lbEventsId") String eventId) {
 
         LuckyBlockEvent event = luckyBlockManager.getEventById(eventId);
 
