@@ -137,6 +137,8 @@ public class EventsManager implements Listener {
         
         Integer difficulty;
         for (Player player : Bukkit.getOnlinePlayers()) {
+            if (List.of("homes", "dreamworld", "moon").contains(player.getWorld().getName())) { continue; }
+
             difficulty = RandomEventsData.getPlayerDifficulty(player);
 
             if (difficulty == EventsDifficulties.DISABLED) {
