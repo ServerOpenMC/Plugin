@@ -44,6 +44,7 @@ public class LuckyBlockManager {
         lbEvents.add(new LBDarkness());
         lbEvents.add(new LBPoison());
         lbEvents.add(new LBSuperHero());
+        lbEvents.add(new LBSuperZero());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();
