@@ -1,5 +1,7 @@
 package fr.communaywen.core.luckyblocks.events.malus;
 
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
@@ -9,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Feature("Lucky Blocks")
+@Credit("Fnafgameur")
 public class LBDarkness extends LuckyBlockEvent {
 
     public LBDarkness() {

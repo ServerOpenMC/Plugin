@@ -1,26 +1,27 @@
-package fr.communaywen.core.luckyblocks.events.bonus;
+package fr.communaywen.core.luckyblocks.events.malus;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 @Feature("Lucky Blocks")
 @Credit("Fnafgameur")
-public class LBEnderchest extends LuckyBlockEvent {
+public class LBPoison extends LuckyBlockEvent {
 
-    public LBEnderchest() {
+    public LBPoison() {
         super(
-                "Toujours connectés",
-                "2 enderchests sont apparus !",
-                0.5f,
-                EventType.BONUS,
-                new ItemStack(Material.ENDER_CHEST)
+                "Aïe...",
+                "Effet de poison pendant 30 secondes !",
+                0.4f,
+                EventType.MALUS,
+                new ItemStack(Material.POISONOUS_POTATO)
         );
     }
 
@@ -28,9 +29,6 @@ public class LBEnderchest extends LuckyBlockEvent {
     public void onOpen(Player player, Block block) {
         super.onOpen(player, block);
 
-        World world = block.getWorld();
-        ItemStack enderchest = new ItemStack(Material.ENDER_CHEST, 2);
-
-        world.dropItemNaturally(block.getLocation(), enderchest);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*30, 1));
     }
 }
