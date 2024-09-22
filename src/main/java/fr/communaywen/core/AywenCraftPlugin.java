@@ -50,6 +50,7 @@ import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
 import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
+import fr.communaywen.core.luckyblocks.listeners.LBEntityDeathListener;
 import fr.communaywen.core.luckyblocks.listeners.LBPlayerInteractListener;
 import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
@@ -249,7 +250,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MailboxCommand(),
                 new RandomEventsCommand(this),
                 new TeamClaim(),
-                new LuckyBlockCommand(managers.getLbPlayerManager())
+                new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager())
         );
 
         /*  --------  */
@@ -307,7 +308,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChunkListManager(),
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
                 new LBPlayerQuitListener(managers.getLuckyBlockManager()),
-                new LBPlayerInteractListener(managers.getLuckyBlockManager())
+                new LBPlayerInteractListener(managers.getLuckyBlockManager()),
+                new LBEntityDeathListener(managers.getLuckyBlockManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
