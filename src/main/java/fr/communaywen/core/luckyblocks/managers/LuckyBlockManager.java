@@ -40,6 +40,7 @@ public class LuckyBlockManager {
         lbEvents.add(new LBSpawnGlowsquid());
         lbEvents.add(new LBBatman());
         lbEvents.add(new LBEnderchest());
+        lbEvents.add(new LBDarkness());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();
