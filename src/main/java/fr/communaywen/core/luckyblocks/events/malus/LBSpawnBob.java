@@ -24,7 +24,7 @@ public class LBSpawnBob extends LuckyBlockEvent implements LuckyBlockListeners {
         super(
                 "spawn_bob",
                 "Jaloux ?",
-                "§l§4Bob§7 est apparu !",
+                "§l§4Bob§f est apparu !",
                 0.2f,
                 EventType.MALUS,
                 new ItemStack(Material.ZOMBIE_HEAD)

@@ -26,6 +26,6 @@ public class LBSuperHero extends LuckyBlockEvent {
     public void onOpen(Player player, Block block) {
         super.onOpen(player, block);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 20*60, 4));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 20*60, 3));
     }
 }

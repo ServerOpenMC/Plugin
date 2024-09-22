@@ -19,7 +19,7 @@ public class LBPoison extends LuckyBlockEvent {
         super(
                 "poison",
                 "Aïe...",
-                "Effet de poison pendant 30 secondes !",
+                "Effet de poison pendant 20 secondes !",
                 0.4f,
                 EventType.MALUS,
                 new ItemStack(Material.POISONOUS_POTATO)
@@ -30,6 +30,6 @@ public class LBPoison extends LuckyBlockEvent {
     public void onOpen(Player player, Block block) {
         super.onOpen(player, block);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*30, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*20, 0));
     }
 }

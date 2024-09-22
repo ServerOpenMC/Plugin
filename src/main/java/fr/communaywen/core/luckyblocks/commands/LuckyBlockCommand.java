@@ -101,7 +101,7 @@ public class LuckyBlockCommand {
     }
 
     @Subcommand("eventlist")
-    @CommandPermission("ayw.command.luckyblock.admin")
+    @CommandPermission("ayw.command.luckyblock")
     public void eventList(Player player) {
         Menu menu = new LuckyBlockGUI(player, luckyBlockManager);
         menu.open();
@@ -112,12 +112,12 @@ public class LuckyBlockCommand {
         String help = """
                 §7---------- §bLucky Blocks §7----------
                 §8/§eluckyblock §bclaim §8- §7Permet de réclamer entre 1 et 3 lucky blocks par jour
+                §8/§eluckyblock §beventlist §8- §7Permet de voir la liste des événements
                 """;
 
         if (player.hasPermission("ayw.command.luckyblock.admin")) {
             help += """
-                    §8/§eluckyblock §bevent §a<eventId> §8- §7Permet de déclencher un événement
-                    §8/§eluckyblock §beventlist §8- §7Permet de voir la liste des événements""";
+                    §8/§eluckyblock §bevent §a<eventId> §8- §7Permet de déclencher un événement""";
         }
 
         player.sendMessage(help);
