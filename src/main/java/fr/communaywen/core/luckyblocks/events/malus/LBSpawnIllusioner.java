@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.malus;
 
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
@@ -9,15 +9,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class LBSpawnBreeze extends LuckyBlockEvent {
+public class LBSpawnIllusioner extends LuckyBlockEvent {
 
-    public LBSpawnBreeze() {
+    public LBSpawnIllusioner() {
         super(
-                "La brise s'affole.",
-                "Un breeze est apparu !",
-                0.2f,
+                "Avada Kedavra!",
+                "Un Illusioner est apparu !",
+                0.1f,
                 EventType.MALUS,
-                new ItemStack(Material.BREEZE_ROD)
+                new ItemStack(Material.BOW)
         );
     }
 
@@ -26,6 +26,6 @@ public class LBSpawnBreeze extends LuckyBlockEvent {
         super.onOpen(player, block);
 
         World world = block.getWorld();
-        world.spawnEntity(block.getLocation(), EntityType.BREEZE);
+        world.spawnEntity(block.getLocation(), EntityType.ILLUSIONER);
     }
 }

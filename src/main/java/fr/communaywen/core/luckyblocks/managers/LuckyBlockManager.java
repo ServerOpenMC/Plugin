@@ -2,7 +2,12 @@ package fr.communaywen.core.luckyblocks.managers;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
-import fr.communaywen.core.luckyblocks.events.*;
+import fr.communaywen.core.luckyblocks.events.bonus.LBMoonGravity;
+import fr.communaywen.core.luckyblocks.events.bonus.LBSpawnAllay;
+import fr.communaywen.core.luckyblocks.events.malus.*;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBSpawnGlowsquid;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBStructureHerobrine;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +37,7 @@ public class LuckyBlockManager {
         lbEvents.add(new LBSpawnAllay());
         lbEvents.add(new LBSpawnBob());
         lbEvents.add(new LBSpawnGlowsquid());
+        lbEvents.add(new LBBatman());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();

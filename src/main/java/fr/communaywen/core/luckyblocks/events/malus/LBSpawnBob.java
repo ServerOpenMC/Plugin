@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.malus;
 
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;

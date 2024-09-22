@@ -1,8 +1,7 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.neutrals;
 
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
-import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;

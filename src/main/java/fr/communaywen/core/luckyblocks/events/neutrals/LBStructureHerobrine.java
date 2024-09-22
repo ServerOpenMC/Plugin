@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.neutrals;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;

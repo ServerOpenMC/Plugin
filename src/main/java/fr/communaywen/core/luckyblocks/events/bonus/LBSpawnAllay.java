@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.bonus;
 
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
@@ -9,15 +9,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class LBSpawnIllusioner extends LuckyBlockEvent {
+public class LBSpawnAllay extends LuckyBlockEvent {
 
-    public LBSpawnIllusioner() {
+    public LBSpawnAllay() {
         super(
-                "Avada Kedavra!",
-                "Un Illusioner est apparu !",
-                0.1f,
-                EventType.MALUS,
-                new ItemStack(Material.BOW)
+                "Le Schtroumpf volant",
+                "Un allay est apparu !",
+                0.4f,
+                EventType.BONUS,
+                new ItemStack(Material.ALLAY_SPAWN_EGG)
         );
     }
 
@@ -26,6 +26,6 @@ public class LBSpawnIllusioner extends LuckyBlockEvent {
         super.onOpen(player, block);
 
         World world = block.getWorld();
-        world.spawnEntity(block.getLocation(), EntityType.ILLUSIONER);
+        world.spawnEntity(block.getLocation(), EntityType.ALLAY);
     }
 }

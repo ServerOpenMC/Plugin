@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.malus;
 
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
@@ -9,15 +9,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class LBSpawnAllay extends LuckyBlockEvent {
+public class LBSpawnBreeze extends LuckyBlockEvent {
 
-    public LBSpawnAllay() {
+    public LBSpawnBreeze() {
         super(
-                "Le Schtroumpf volant",
-                "Un allay est apparu !",
-                0.4f,
-                EventType.BONUS,
-                new ItemStack(Material.ALLAY_SPAWN_EGG)
+                "La brise s'affole.",
+                "Un breeze est apparu !",
+                0.2f,
+                EventType.MALUS,
+                new ItemStack(Material.BREEZE_ROD)
         );
     }
 
@@ -26,6 +26,6 @@ public class LBSpawnAllay extends LuckyBlockEvent {
         super.onOpen(player, block);
 
         World world = block.getWorld();
-        world.spawnEntity(block.getLocation(), EntityType.ALLAY);
+        world.spawnEntity(block.getLocation(), EntityType.BREEZE);
     }
 }

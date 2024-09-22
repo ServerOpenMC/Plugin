@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.bonus;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
@@ -16,14 +16,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @Feature("Lucky Blocks")
 @Credit("Fnafgameur")
-public class LBSolarGravity extends LuckyBlockEvent implements LuckyBlockListeners {
+public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListeners {
 
-    public LBSolarGravity() {
-        super("Gravité solaire!",
-                "Gravité Solaire pendant 1 minute !",
+    public LBMoonGravity() {
+        super("Gravité Lunaire!",
+                "Gravité Lunaire pendant 1 minute !",
                 0.5f,
-                EventType.MALUS,
-                new ItemStack(Material.ORANGE_WOOL)
+                EventType.BONUS,
+                new ItemStack(Material.WHITE_WOOL)
         );
     }
 
@@ -31,7 +31,7 @@ public class LBSolarGravity extends LuckyBlockEvent implements LuckyBlockListene
     public void onOpen(Player player, Block block) {
         // Permet d'afficher le title et de jouer un son lors de l'ouverture NE PAS L'OUBLIER
         super.onOpen(player, block);
-        player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(1f);
+        player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(0.04);
 
         new BukkitRunnable() {
             public void run() {
