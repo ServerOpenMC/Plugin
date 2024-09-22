@@ -1,6 +1,8 @@
 package fr.communaywen.core.personalhome;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -87,10 +89,11 @@ public class HSCommand {
         int y = spawn.getY();
         int z = spawn.getZ();
         int originX = (home.getId()-1)*208;
+        originX = originX-16;
 
         sender.sendMessage("§6Maison de "+target.getName()+" (§4"+home.getId()+"§6)");
-        sender.sendMessage(Component.text("§5Coords:§r "+x+" "+y+" "+z));
-        sender.sendMessage("Origin: "+originX+" 101 0");
+        sender.sendMessage(Component.text("§5Coords:§r ").append(Component.text(+x+" "+y+" "+z).clickEvent(ClickEvent.runCommand("/minecraft:tp @s "+x+" "+y+" "+z)).hoverEvent(HoverEvent.showText(Component.text("Cliquer pour s'y téléporté")))));
+        sender.sendMessage(Component.text("§dOrigin: §r").append(Component.text(+originX+" 101 ").clickEvent(ClickEvent.runCommand("/minecraft:tp @s "+x+".0 101 0.0")).hoverEvent(HoverEvent.showText(Component.text("Cliquer pour s'y téléporté")))));
         sender.sendMessage("§2Biome: §a"+home.getBiome().name());
     }
 
