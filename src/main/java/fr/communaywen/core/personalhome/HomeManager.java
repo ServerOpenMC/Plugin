@@ -1,27 +1,19 @@
 package fr.communaywen.core.personalhome;
 
-import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.personalhome.listeners.BagInteraction;
 import fr.communaywen.core.personalhome.listeners.BuildRestrictions;
 import fr.communaywen.core.personalhome.listeners.PreventFall;
-import fr.communaywen.core.teams.EconomieTeam;
-import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.utils.database.DatabaseConnector;
-import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
