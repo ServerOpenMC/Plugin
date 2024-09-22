@@ -46,6 +46,10 @@ public class LBUtils {
         return true;
     }
 
+    /**
+     * Spawn a zombie with a full netherite armor and a netherite sword
+     * @param location The location where the zombie will spawn
+     */
     public static void spawnBob(Location location) {
 
         World world = location.getWorld();
