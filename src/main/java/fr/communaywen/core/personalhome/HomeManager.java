@@ -59,7 +59,12 @@ public class HomeManager extends DatabaseConnector implements Listener {
                 if (spawnpoint != null) {
                     int[] coords = HomesUtils.deserializeCoords(spawnpoint);
                     if (coords != null) {
-                        home.setSpawnpoint(new Location(homeWorld, coords[0], coords[1], coords[2]));
+                        Location location = new Location(homeWorld, coords[0], coords[1], coords[2]);
+                        if (coords.length == 5) {
+                            location.setYaw(coords[3]);
+                            location.setPitch(coords[4]);
+                        }
+                        home.setSpawnpoint(location);
                     }
                 }
 
