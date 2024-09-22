@@ -1,18 +1,13 @@
 package fr.communaywen.core.claim;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Container;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.*;
@@ -39,7 +34,6 @@ import org.bukkit.inventory.ItemStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
-import org.bukkit.material.RedstoneTorch;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ClaimListener implements Listener {

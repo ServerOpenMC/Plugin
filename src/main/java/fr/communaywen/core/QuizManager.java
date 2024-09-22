@@ -86,7 +86,7 @@ public class QuizManager {
         int points = 10;
         // make a config file
 
-        if (ContestManager.getInt("contest","phase") == 3) {
+        if (ContestManager.getPhaseCache() == 3) {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +
                             "§7\n" +

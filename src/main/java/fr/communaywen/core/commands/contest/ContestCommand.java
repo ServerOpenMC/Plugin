@@ -11,10 +11,7 @@ import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.DefaultFor;
-import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.time.DayOfWeek;
@@ -33,10 +30,10 @@ public class ContestCommand {
         this.eventConfig = eventConfig;
     }
 
+    @Cooldown(4)
     @DefaultFor("~")
     public void defaultCommand(Player player) {
-        int phase = ContestManager.getInt("contest","phase");
-        String dayStartContest = ContestManager.getString("contest","startdate");
+        int phase = ContestManager.getPhaseCache();
         int camp = ContestManager.getPlayerCamp(player);
         if (phase==2) {
             VoteMenu menu = new VoteMenu(player);
@@ -49,6 +46,7 @@ public class ContestCommand {
             menu.open();
 
         } else {
+            String dayStartContest = ContestManager.getStartDateCache();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
             DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(dayStartContest));
 

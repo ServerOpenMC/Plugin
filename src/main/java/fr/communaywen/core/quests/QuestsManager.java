@@ -7,7 +7,6 @@ import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -51,9 +50,6 @@ public class QuestsManager extends DatabaseConnector {
     }
 
     public static PlayerQuests getPlayerQuests(Player player) {
-        return playerQuests.get(player.getUniqueId());
-    }
-    public static PlayerQuests getPlayerQuestsOffline(OfflinePlayer player) {
         return playerQuests.get(player.getUniqueId());
     }
 
