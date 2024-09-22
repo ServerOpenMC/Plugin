@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,7 +23,7 @@ public class BuildRestrictions implements Listener {
         Player player = event.getPlayer();
         if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
-        if (player.hasPermission("ayw.maisons.bypass")) { return; }
+        if (event.getBlock().getX() < 0) { return; }
 
         if (HomesUtils.isOutOfHome(event.getBlock().getLocation())) {
             player.sendMessage("§cVous avez dépasser les bordures de votre maison.");
@@ -44,8 +43,6 @@ public class BuildRestrictions implements Listener {
         Player player = event.getPlayer();
         if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
-        if (player.hasPermission("ayw.maisons.bypass")) { return; }
-
         if (HomesUtils.isOutOfHome(event.getBlock().getLocation())) {
             player.sendMessage("§cVous avez dépasser les bordures de votre maison.");
             event.setCancelled(true);
@@ -62,8 +59,6 @@ public class BuildRestrictions implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (!player.getWorld().getName().equals("homes")) { return; }
-        if (player.hasPermission("ayw.maisons.bypass")) { return; }
-
         if (player.hasPermission("ayw.maisons.bypass")) { return; }
 
         try {

@@ -12,13 +12,15 @@ import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Home extends DatabaseConnector {
     @Getter UUID owner;
     @Getter int id;
     @Nullable @Setter Location spawnpoint;
-    @Getter Biome biome;
+    boolean allow_visit;
+    Biome biome;
 
     private World homeworld;
 
@@ -27,6 +29,24 @@ public class Home extends DatabaseConnector {
         this.id = id;
 
         this.homeworld = AywenCraftPlugin.getInstance().getManagers().getHomeManager().homeWorld;
+    }
+
+    public Biome getBiome() {
+        return Objects.requireNonNullElse(biome, Biome.PLAINS);
+    }
+
+    public boolean setVisit(boolean visit) {
+        allow_visit = visit;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE personal_homes SET allow_visit=? WHERE id=?");
+            statement.setBoolean(1, allow_visit);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void setBiome(Biome biome) {
@@ -67,6 +87,10 @@ public class Home extends DatabaseConnector {
         return spawnpoint;
     }
 
+    public boolean canVisit(){
+        return allow_visit;
+    }
+
     public boolean saveSpawnpoint() {
         if (spawnpoint == null) {
             return true;
@@ -85,7 +109,7 @@ public class Home extends DatabaseConnector {
     }
 
     public void save(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO personal_homes VALUE (?, ?, NULL, 'PLAINS')");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO personal_homes VALUE (?, ?, NULL, 'PLAINS', FALSE)");
         statement.setInt(1, id);
         statement.setString(2, owner.toString());
 
