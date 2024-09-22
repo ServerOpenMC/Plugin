@@ -1,5 +1,6 @@
 package fr.communaywen.core.luckyblocks.events.bonus;
 
+import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Credit("Fnafgameur")
 public class LBSuperHero extends LuckyBlockEvent {
 
     public LBSuperHero() {
@@ -26,6 +28,6 @@ public class LBSuperHero extends LuckyBlockEvent {
     public void onOpen(Player player, Block block) {
         super.onOpen(player, block);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 20*60, 4));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 20*60, 3));
     }
 }
