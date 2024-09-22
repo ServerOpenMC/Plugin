@@ -80,6 +80,7 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -203,6 +204,19 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getTranslator().setLocale(Locale.FRENCH);
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
+        handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
+            OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
+            List<String> playerNames = new ArrayList<>();
+
+            for (OfflinePlayer player : offlinePlayers) {
+                String playerName = player.getName();
+                if (playerName != null) {
+                    playerNames.add(playerName);
+                }
+            }
+
+            return playerNames;
+        }));
 
         this.handler.register(
                 new HSCommand(getManagers().getHomeManager()),
