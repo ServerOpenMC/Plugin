@@ -22,13 +22,15 @@ import org.bukkit.inventory.ItemStack;
 @Getter
 public class LuckyBlockEvent {
 
+    private final String id;
     private final String name;
     private final String description;
     private final double chance;
     private final EventType eventType;
     private final ItemStack iconItem;
 
-    public LuckyBlockEvent(String name, String description, double chance, EventType eventType, ItemStack iconItem) {
+    public LuckyBlockEvent(String id, String name, String description, double chance, EventType eventType, ItemStack iconItem) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.chance = chance;

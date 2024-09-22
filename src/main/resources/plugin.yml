@@ -1,7 +1,7 @@
 name: AywenCraftPlugin
 version: '${version}'
 main: fr.communaywen.core.AywenCraftPlugin
-api-version: '1.21'
+api-version: '1.21.1'
 depend:
   - ProtocolLib
   - ItemsAdder
@@ -68,3 +68,6 @@ permissions:
   ayw.command.luckyblock:
     description: 'luckyblock'
     default: true
+  ayw.command.luckyblock.admin:
+    description: 'luckyblock admin'
+    default: false
