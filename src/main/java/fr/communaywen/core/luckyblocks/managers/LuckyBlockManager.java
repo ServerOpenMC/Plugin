@@ -2,17 +2,20 @@ package fr.communaywen.core.luckyblocks.managers;
 
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
-import fr.communaywen.core.luckyblocks.events.LBMoonGravity;
-import fr.communaywen.core.luckyblocks.events.LBSolarGravity;
-import fr.communaywen.core.luckyblocks.events.LBSpawnShulker;
-import fr.communaywen.core.luckyblocks.events.LBStructureHerobrine;
+import fr.communaywen.core.luckyblocks.events.bonus.*;
+import fr.communaywen.core.luckyblocks.events.malus.*;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBSpawnGlowsquid;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBStructureHerobrine;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 @Feature("Lucky Blocks")
@@ -30,6 +33,18 @@ public class LuckyBlockManager {
         lbEvents.add(new LBMoonGravity());
         lbEvents.add(new LBSolarGravity());
         lbEvents.add(new LBStructureHerobrine());
+        lbEvents.add(new LBSpawnBreeze());
+        lbEvents.add(new LBSpawnIllusioner());
+        lbEvents.add(new LBSpawnAllay());
+        lbEvents.add(new LBSpawnBob());
+        lbEvents.add(new LBSpawnGlowsquid());
+        lbEvents.add(new LBBatman());
+        lbEvents.add(new LBEnderchest());
+        lbEvents.add(new LBDarkness());
+        lbEvents.add(new LBPoison());
+        lbEvents.add(new LBSuperHero());
+        lbEvents.add(new LBSuperZero());
+        lbEvents.add(new LBDecapitation());
 
         for (LuckyBlockEvent event : lbEvents) {
             sum += event.getChance();
@@ -61,6 +76,24 @@ public class LuckyBlockManager {
         }
     }
 
+    public List<String> getLuckyBlocksIds() {
+        List<String> names = new ArrayList<>();
+        for (LuckyBlockEvent event : lbEvents) {
+            names.add(event.getId());
+        }
+        return names;
+    }
+
+    @Nullable
+    public LuckyBlockEvent getEventById(String id) {
+        for (LuckyBlockEvent event : lbEvents) {
+            if (event.getId().equalsIgnoreCase(id)) {
+                return event;
+            }
+        }
+        return null;
+    }
+
     private void initEventsIcon() {
         for (LuckyBlockEvent event : lbEvents) {
 
@@ -69,7 +102,8 @@ public class LuckyBlockManager {
             ArrayList<String> lore = new ArrayList<>();
 
             itemMeta.setDisplayName("§6" + event.getName());
-            lore.add("§bChance: §a" + event.getChance() * 100 + "%");
+            lore.add("§bId: §a" + event.getId());
+            lore.add("§bChance: §a" + Math.round(event.getChance() * 100) + "%");
             lore.add("§bType: " + event.getEventType().getColor() + event.getEventType().getName());
             lore.add("§bDescription: §f" + event.getDescription());
             itemMeta.setLore(lore);
