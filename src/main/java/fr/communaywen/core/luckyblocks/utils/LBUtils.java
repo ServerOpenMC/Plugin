@@ -3,12 +3,20 @@ package fr.communaywen.core.luckyblocks.utils;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.RegionManager;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 
 public class LBUtils {
 
+    public static final String BOB_NAME = "§4Bob";
     public static String getBlockNamespaceID() {
         return "luckyblock:luckyblock";
     }
@@ -37,5 +45,39 @@ public class LBUtils {
         }
 
         return true;
+    }
+
+    public static void spawnBob(Location location) {
+
+        World world = location.getWorld();
+        ItemStack helmet = new ItemStack(Material.NETHERITE_HELMET);
+        ItemStack chestplate = new ItemStack(Material.NETHERITE_CHESTPLATE);
+        ItemStack boots = new ItemStack(Material.NETHERITE_BOOTS);
+        ItemStack leggings = new ItemStack(Material.NETHERITE_LEGGINGS);
+        ItemStack sword = new ItemStack(Material.NETHERITE_SWORD);
+
+        // Setup of the armor
+        helmet.addEnchantment(Enchantment.PROTECTION, 4);
+        chestplate.addEnchantment(Enchantment.THORNS, 3);
+        chestplate.addEnchantment(Enchantment.PROTECTION, 4);
+        leggings.addEnchantment(Enchantment.PROTECTION, 4);
+        boots.addEnchantment(Enchantment.PROTECTION, 4);
+
+        // Setup of the sword
+        sword.addEnchantment(Enchantment.SHARPNESS, 5);
+        sword.addEnchantment(Enchantment.FIRE_ASPECT, 2);
+
+        // Spawn of the zombie
+        Zombie zombie = world.spawn(location, Zombie.class);
+        zombie.setCustomName(BOB_NAME);
+        zombie.setCustomNameVisible(true);
+        zombie.getEquipment().setHelmet(helmet);
+        zombie.getEquipment().setChestplate(chestplate);
+        zombie.getEquipment().setLeggings(leggings);
+        zombie.getEquipment().setBoots(boots);
+        zombie.getEquipment().setItemInMainHand(sword);
+
+        zombie.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
+        zombie.setHealth(zombie.getHealth() * 2);
     }
 }
