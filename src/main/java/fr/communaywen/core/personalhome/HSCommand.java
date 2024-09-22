@@ -1,15 +1,41 @@
 package fr.communaywen.core.personalhome;
 
+import net.kyori.adventure.text.Component;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Named;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 public class HSCommand {
     HomeManager manager;
 
     public HSCommand(HomeManager manager) {
         this.manager = manager;
+    }
+
+    @Command("maison find")
+    @CommandPermission("ayw.maisons.locate")
+    public void maisonFind(CommandSender sender, @Named("player") OfflinePlayer target) {
+        Home home = manager.getHomes().get(target.getUniqueId());
+
+        if (home == null) {
+            sender.sendMessage("Impossible de trouver une maison pour "+target.getName());
+            return;
+        }
+        Block spawn = home.getSpawnpoint().getBlock();
+        int x = spawn.getX();
+        int y = spawn.getY();
+        int z = spawn.getZ();
+        int originX = (home.getId()-1)*208;
+
+        sender.sendMessage("§6Maison de "+target.getName()+" (§4"+home.getId()+"§6)");
+        sender.sendMessage(Component.text("§5Coords:§r "+x+" "+y+" "+z));
+        sender.sendMessage("Origin: "+originX+" 101 0");
+        sender.sendMessage("§2Biome: §a"+home.getBiome().name());
     }
 
     @Command("maison setspawn")
