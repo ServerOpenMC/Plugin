@@ -20,7 +20,9 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
     private final File file = Structure.getStructureFile("lb_herobrine");
 
     public LBStructureHerobrine() {
-        super("Un vieil ami",
+        super(
+                "structure_herobrine",
+                "Un vieil ami",
                 "Apparition de la structure d'Herobrine !",
                 0.5f,
                 EventType.NEUTRAL,

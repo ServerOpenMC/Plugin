@@ -15,7 +15,9 @@ import org.bukkit.inventory.ItemStack;
 public class LBSpawnShulker extends LuckyBlockEvent {
 
     public LBSpawnShulker() {
-        super("Wingardiuuuum Levioosaaaaa",
+        super(
+                "spawn_shulker",
+                "Wingardiuuuum Levioosaaaaa",
                 "Un Shulker est apparu !",
                 0.5f,
                 EventType.MALUS,

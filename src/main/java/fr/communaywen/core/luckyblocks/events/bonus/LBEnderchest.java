@@ -16,6 +16,7 @@ public class LBEnderchest extends LuckyBlockEvent {
 
     public LBEnderchest() {
         super(
+                "enderchest",
                 "Toujours connectés",
                 "2 enderchests sont apparus !",
                 0.5f,

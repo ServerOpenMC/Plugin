@@ -19,7 +19,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class LBSolarGravity extends LuckyBlockEvent implements LuckyBlockListeners {
 
     public LBSolarGravity() {
-        super("Gravité solaire!",
+        super(
+                "solar_gravity",
+                "Gravité solaire!",
                 "Gravité Solaire pendant 1 minute !",
                 0.5f,
                 EventType.MALUS,

@@ -18,6 +18,7 @@ public class LBSpawnGlowsquid extends LuckyBlockEvent {
 
     public LBSpawnGlowsquid() {
         super(
+                "spawn_glowsquid",
                 "Tempête tropicale ?",
                 "Un glowsquid tombe du ciel !",
                 0.4f,

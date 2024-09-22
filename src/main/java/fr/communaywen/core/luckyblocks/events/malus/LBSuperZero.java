@@ -13,6 +13,7 @@ public class LBSuperZero extends LuckyBlockEvent {
 
     public LBSuperZero() {
         super(
+                "super_zero",
                 "Super-Zéro",
                 "Effet d'unluck pendant 1 minute !",
                 0.4f,

@@ -17,6 +17,7 @@ public class LBPoison extends LuckyBlockEvent {
 
     public LBPoison() {
         super(
+                "poison",
                 "Aïe...",
                 "Effet de poison pendant 30 secondes !",
                 0.4f,

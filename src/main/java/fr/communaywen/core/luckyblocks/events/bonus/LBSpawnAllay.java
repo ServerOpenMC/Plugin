@@ -17,6 +17,7 @@ public class LBSpawnAllay extends LuckyBlockEvent {
 
     public LBSpawnAllay() {
         super(
+                "spawn_allay",
                 "Le Schtroumpf volant",
                 "Un allay est apparu !",
                 0.4f,

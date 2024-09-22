@@ -13,6 +13,7 @@ public class LBSuperHero extends LuckyBlockEvent {
 
     public LBSuperHero() {
         super(
+                "super_hero",
                 "Super-Héro",
                 "Effet de résistance IV pendant 1 minute !",
                 0.1f,

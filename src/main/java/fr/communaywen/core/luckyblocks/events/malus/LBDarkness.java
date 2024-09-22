@@ -17,6 +17,7 @@ public class LBDarkness extends LuckyBlockEvent {
 
     public LBDarkness() {
         super(
+                "darkness",
                 "Aveugle !",
                 "Effet de darkness pendant 1 minute !",
                 0.3f,
@@ -29,6 +30,6 @@ public class LBDarkness extends LuckyBlockEvent {
     public void onOpen(Player player, Block block) {
         super.onOpen(player, block);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*60, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20*60, 1));
     }
 }

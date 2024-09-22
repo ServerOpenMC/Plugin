@@ -22,6 +22,7 @@ public class LBSpawnBob extends LuckyBlockEvent implements LuckyBlockListeners {
 
     public LBSpawnBob() {
         super(
+                "spawn_bob",
                 "Jaloux ?",
                 "§l§4Bob§7 est apparu !",
                 0.2f,

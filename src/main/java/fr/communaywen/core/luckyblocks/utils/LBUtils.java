@@ -77,7 +77,9 @@ public class LBUtils {
         zombie.getEquipment().setBoots(boots);
         zombie.getEquipment().setItemInMainHand(sword);
 
+        double zombieHealth = zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         zombie.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
-        zombie.setHealth(zombie.getHealth() * 2);
+        zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(zombieHealth * 1.5);
+        zombie.setMaxHealth(zombieHealth * 1.5);
     }
 }

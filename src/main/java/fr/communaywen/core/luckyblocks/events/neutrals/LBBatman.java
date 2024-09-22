@@ -17,6 +17,7 @@ public class LBBatman extends LuckyBlockEvent {
 
     public LBBatman() {
         super(
+                "batman",
                 "Je suis Batman",
                 "Vous êtes sur une chauve souris !",
                 0.3f,
