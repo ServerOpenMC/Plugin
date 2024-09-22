@@ -13,8 +13,8 @@ public class LBSuperHero extends LuckyBlockEvent {
 
     public LBSuperHero() {
         super(
-                "super_hero",
-                "Super-Héro",
+                "super_heros",
+                "Super-Héros",
                 "Effet de résistance IV pendant 1 minute !",
                 0.1f,
                 EventType.BONUS,
