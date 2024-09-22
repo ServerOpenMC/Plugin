@@ -12,19 +12,31 @@ public class HomesUtils {
     public static int[] deserializeCoords(String coords) {
         String[] parts = coords.split(";");
 
-        if (parts.length != 3) {
+        if (parts.length == 3) {
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+            int z = Integer.parseInt(parts[2]);
+
+            return new int[]{x, y, z};
+        } else if (parts.length == 5) {
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+            int z = Integer.parseInt(parts[2]);
+            int yaw = Integer.parseInt(parts[3]);
+            int pitch = Integer.parseInt(parts[4]);
+
+            return new int[]{x, y, z, yaw, pitch};
+        } else {
             return null;
         }
-
-        int x = Integer.parseInt(parts[0]);
-        int y = Integer.parseInt(parts[1]);
-        int z = Integer.parseInt(parts[2]);
-
-        return new int[]{x, y, z};
     }
 
     public static String serializeCoords(Location location) {
-        return location.getBlockX()+";"+location.getBlockY()+";"+location.getBlockZ();
+        return location.getBlockX()+";"+
+               location.getBlockY()+";"+
+               location.getBlockZ()+";"+
+               Math.round(location.getYaw())+";"+
+               Math.round(location.getPitch());
     }
 
     public static boolean isOnPlatform(Location location, int platformId) {

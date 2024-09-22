@@ -92,6 +92,7 @@ jar {
 
 shadowJar {
     destinationDirectory.set(file("./builds/"))
+    archiveFileName = "AywenCraft.jar"
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'
