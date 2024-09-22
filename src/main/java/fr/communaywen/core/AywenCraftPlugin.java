@@ -154,6 +154,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         // Gardez les au début sinon ça pète tout
         instance = this;
 
+
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();

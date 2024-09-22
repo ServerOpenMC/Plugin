@@ -26,14 +26,19 @@ public class FirerocketSpawnListener implements Listener {
 
     static FileConfiguration config;
     static JavaPlugin plugins;
+    static String camp1Color;
+    static String camp2Color;
+
     public FirerocketSpawnListener(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
+        camp1Color = ContestManager.getColor1Cache();
+        camp2Color = ContestManager.getColor2Cache();
 
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
-            if(ContestManager.getInt("contest", "phase") != 1 && Bukkit.getOnlinePlayers().size() >= 1) {
+            if(ContestManager.getPhaseCache() != 1 && Bukkit.getOnlinePlayers().size() >= 1) {
                  spawnFireworksInWorldEditRegion();
             }
             }
@@ -77,8 +82,6 @@ public class FirerocketSpawnListener implements Listener {
         Firework firework = (Firework) location.getWorld().spawn(location, Firework.class);
         FireworkMeta meta = firework.getFireworkMeta();
 
-        String camp1Color = ContestManager.getString("contest","color1");
-        String camp2Color = ContestManager.getString("contest", "color2");
         ChatColor color1 = ChatColor.valueOf(camp1Color);
         ChatColor color2 = ChatColor.valueOf(camp2Color);
 

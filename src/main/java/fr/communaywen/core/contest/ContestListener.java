@@ -1,8 +1,8 @@
 package fr.communaywen.core.contest;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.DayOfWeek;
@@ -12,26 +12,26 @@ import java.util.*;
 public class ContestListener implements Listener {
     private BukkitRunnable eventRunnable;
 
-    public ContestListener(AywenCraftPlugin plugin, FileConfiguration eventConfig) {
+    public ContestListener(JavaPlugin plugin, FileConfiguration eventConfig) {
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
-                DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getString("contest","startdate")));
-
-                if (ContestManager.getInt("contest","phase") == 1 && ContestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
+                DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getStartDateCache()));
+                int phase = ContestManager.getPhaseCache();
+                if (phase == 1 && ContestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
                     ContestManager.initPhase1();
                 }
                 int dayStart = dayStartContestOfWeek.getValue() + 1;
                 if (dayStart==8) {dayStart=1;}
-                if (ContestManager.getInt("contest","phase") == 2 && ContestManager.getCurrentDayOfWeek().getValue() == dayStart) {
+                if (phase == 2 && ContestManager.getCurrentDayOfWeek().getValue() == dayStart) {
                     ContestManager.initPhase2(plugin, eventConfig);
                 }
                 int dayEnd = dayStart + 2;
                 if (dayEnd>=8) {
                     dayEnd=1;
                 } //attention ne pas modifier les valeurs de départ des contest sinon le systeme va broke
-                if (ContestManager.getInt("contest","phase") == 3 && ContestManager.getCurrentDayOfWeek().getValue() == dayEnd) {
+                if (phase == 3 && ContestManager.getCurrentDayOfWeek().getValue() == dayEnd) {
                     ContestManager.initPhase3(plugin, eventConfig);
                 }
             }

@@ -15,7 +15,6 @@ import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-
 /**
  * La commande /trade
  * <p>

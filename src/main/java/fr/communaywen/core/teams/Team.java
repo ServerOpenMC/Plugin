@@ -4,25 +4,19 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.cache.TeamCache;
 import fr.communaywen.core.teams.utils.MethodState;
-import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.*;
 
 public class Team implements Listener {
