@@ -70,7 +70,7 @@ public class OnPlayers implements Listener {
                 player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
             }
 
-            if(ContestManager.getInt("contest","phase") == 2) {
+            if(ContestManager.getPhaseCache() == 2) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -82,7 +82,7 @@ public class OnPlayers implements Listener {
                 );
                 return;
             }
-            if(ContestManager.getInt("contest","phase") == 3) {
+            if(ContestManager.getPhaseCache() == 3) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +

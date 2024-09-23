@@ -1,6 +1,5 @@
 package fr.communaywen.core.contest;
 
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flags;
@@ -183,12 +182,12 @@ public class ContestManager extends DatabaseConnector {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(rs1.getString("name"));
                 String playerCampName = ContestManager.getOfflinePlayerCampName(player);
                 ChatColor playerCampColor = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
-                String camp1Color = ContestManager.getString("contest", "color1");
-                String camp2Color = ContestManager.getString("contest", "color2");
+                String camp1Color = ContestManager.getColor1Cache();
+                String camp2Color = ContestManager.getColor2Cache();
                 ChatColor color1 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp1Color));
                 ChatColor color2 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp2Color));
-                String camp1Name = ContestManager.getString("contest", "camp1");
-                String camp2Name = ContestManager.getString("contest", "camp2");
+                String camp1Name = ContestManager.getCamp1Cache();
+                String camp2Name = ContestManager.getCamp2Cache();
 
                 ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
                 BookMeta bookMeta = (BookMeta) book.getItemMeta();
@@ -305,7 +304,7 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        ContestManager.addOneToLastContest(ContestManager.getString("contest","camp1"));
+        ContestManager.addOneToLastContest(ContestManager.getCamp1Cache());
         ContestManager.deleteTableContest("contest");
         ContestManager.deleteTableContest("camps");
         ContestManager.selectRandomlyContest();
@@ -420,6 +419,84 @@ public class ContestManager extends DatabaseConnector {
             }
         }
     }
+
+    private static String camp1Cache = null;
+    private static long lastCamp1Update = 0;
+    private static String camp2Cache = null;
+    private static long lastCamp2Update = 0;
+    private static String color1Cache = null;
+    private static long lastColor1Update = 0;
+    private static String color2Cache = null;
+    private static long lastColor2Update = 0;
+    private static String startDateCache = null;
+    private static long lastStartDateUpdate = 0;
+    private static Integer phaseCache = null;
+    private static long lastPhaseUpdate = 0;
+    private static final long cacheDuration = 120000;
+
+    public static String getCamp1Cache() {
+        long currentTime = System.currentTimeMillis();
+
+        if (camp1Cache == null || (currentTime - lastCamp1Update) > cacheDuration) {
+            camp1Cache = ContestManager.getString("contest", "camp1");
+            lastCamp1Update = currentTime;
+        }
+
+        return camp1Cache;
+    }
+
+    public static String getCamp2Cache() {
+        long currentTime = System.currentTimeMillis();
+
+        if (camp2Cache == null || (currentTime - lastCamp2Update) > cacheDuration) {
+            camp2Cache = ContestManager.getString("contest", "camp2");
+            lastCamp2Update = currentTime;
+        }
+
+        return camp2Cache;
+    }
+    public static String getColor1Cache() {
+        long currentTime = System.currentTimeMillis();
+
+        if (color1Cache == null || (currentTime - lastColor1Update) > cacheDuration) {
+            color1Cache = ContestManager.getString("contest", "color1");
+            lastColor1Update = currentTime;
+        }
+
+        return color1Cache;
+    }
+
+    public static String getColor2Cache() {
+        long currentTime = System.currentTimeMillis();
+
+        if (color2Cache == null || (currentTime - lastColor2Update) > cacheDuration) {
+            color2Cache = ContestManager.getString("contest", "color2");
+            lastColor2Update = currentTime;
+        }
+
+        return color2Cache;
+    }
+    public static int getPhaseCache() {
+        long currentTime = System.currentTimeMillis();
+
+        if (phaseCache == null || (currentTime - lastPhaseUpdate) > cacheDuration) {
+            phaseCache = ContestManager.getInt("contest", "phase");
+            lastColor1Update = currentTime;
+        }
+
+        return phaseCache;
+    }
+    public static String getStartDateCache() {
+        long currentTime = System.currentTimeMillis();
+
+        if (startDateCache == null || (currentTime - lastStartDateUpdate) > cacheDuration) {
+            startDateCache = ContestManager.getString("contest", "startdate");
+            lastStartDateUpdate = currentTime;
+        }
+
+        return startDateCache;
+    }
+
 
     //my part
     public static int getInt(String table, String column) {
