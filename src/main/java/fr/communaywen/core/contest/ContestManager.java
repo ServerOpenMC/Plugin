@@ -432,6 +432,7 @@ public class ContestManager extends DatabaseConnector {
     private static long lastStartDateUpdate = 0;
     private static Integer phaseCache = null;
     private static long lastPhaseUpdate = 0;
+    private static final Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
     private static final long cacheDuration = 120000;
 
     public static String getCamp1Cache() {
@@ -495,6 +496,64 @@ public class ContestManager extends DatabaseConnector {
         }
 
         return startDateCache;
+    }
+
+    public static void initPlayerDataCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, playerUUID.toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                int points = result.getInt("point_dep");
+                int camp = result.getInt("camps");
+                String color = ContestManager.getString("contest","color" + camp);
+                ChatColor campColor = ChatColor.valueOf(color);
+
+                playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int getPlayerPointsCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        ContestPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getPoints();
+        } else {
+            initPlayerDataCache(player);
+            assert cache != null;
+            return cache.getPoints();
+        }
+    }
+
+    public static int getPlayerCampsCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        ContestPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getCamp();
+        } else {
+            initPlayerDataCache(player);
+            assert cache != null;
+            return cache.getCamp();
+        }
+    }
+    public static ChatColor getPlayerColorCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        ContestPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getColor();
+        } else {
+            initPlayerDataCache(player);
+            assert cache != null;
+            return cache.getColor();
+        }
     }
 
 
@@ -581,20 +640,6 @@ public class ContestManager extends DatabaseConnector {
         return DayOfWeek.from(formatter.parse(currentDayString));
     }
 
-    public static Integer getPlayerCamp(Player player) {
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, player.getUniqueId().toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                return result.getInt("camps");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
     public static ResultSet getAllPlayer() {
         try {
             PreparedStatement query = connection.prepareStatement("SELECT * FROM camps");
@@ -605,28 +650,8 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
-    public static int getPlayerPoints(Player player) {
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, player.getUniqueId().toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                return result.getInt("point_dep");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
-    public static ChatColor getPlayerCampChatColor(Player player) {
-        Integer campInteger = ContestManager.getPlayerCamp(player);
-        String color = ContestManager.getString("contest","color" + campInteger);
-        ChatColor campColor = ChatColor.valueOf(color);
-        return campColor;
-    }
     public static String getPlayerCampName(Player player) {
-        Integer campInteger = ContestManager.getPlayerCamp(player);
+        Integer campInteger = ContestManager.getPlayerCampsCache(player);
         String campName = ContestManager.getString("contest","camp" + campInteger);
         return campName;
     }
@@ -695,17 +720,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public static String getRankContest(Player player) {
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        int points = 0;
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, player.getUniqueId().toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                points = result.getInt("point_dep");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        int points = getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return "Dictateur en  ";
@@ -733,7 +748,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public static int getRepPointsToRank(Player player) {
-        int points = getPlayerPoints(player);
+        int points = getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return 0;

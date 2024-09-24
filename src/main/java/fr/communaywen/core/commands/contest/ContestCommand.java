@@ -34,7 +34,7 @@ public class ContestCommand {
     @DefaultFor("~")
     public void defaultCommand(Player player) {
         int phase = ContestManager.getPhaseCache();
-        int camp = ContestManager.getPlayerCamp(player);
+        int camp = ContestManager.getPlayerCampsCache(player);
         if (phase==2) {
             VoteMenu menu = new VoteMenu(player);
             menu.open();

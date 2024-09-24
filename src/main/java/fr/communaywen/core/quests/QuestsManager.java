@@ -53,9 +53,6 @@ public class QuestsManager extends DatabaseConnector {
     public static PlayerQuests getPlayerQuests(Player player) {
         return playerQuests.get(player.getUniqueId());
     }
-    public static PlayerQuests getPlayerQuestsOffline(OfflinePlayer player) {
-        return playerQuests.get(player.getUniqueId());
-    }
 
     public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
         PlayerQuests pq = getPlayerQuests(player);
