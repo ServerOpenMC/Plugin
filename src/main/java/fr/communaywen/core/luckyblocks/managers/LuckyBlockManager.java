@@ -59,6 +59,7 @@ public class LuckyBlockManager {
      */
     public LuckyBlockEvent getRandomEvent() {
 
+        List<LuckyBlockEvent> lbEvents = new ArrayList<>(this.lbEvents);
         LuckyBlockEvent eventToReturn;
         Collections.shuffle(lbEvents);
 
