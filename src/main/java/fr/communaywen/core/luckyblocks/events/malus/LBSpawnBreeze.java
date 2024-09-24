@@ -18,7 +18,7 @@ public class LBSpawnBreeze extends LuckyBlockEvent {
     public LBSpawnBreeze() {
         super(
                 "spawn_breeze",
-                "La brise s'affole.",
+                "La brise s'affole",
                 "Un breeze est apparu !",
                 0.2f,
                 EventType.MALUS,

@@ -18,7 +18,7 @@ public class LBSpawnIllusioner extends LuckyBlockEvent {
     public LBSpawnIllusioner() {
         super(
                 "spawn_illusioner",
-                "Avada Kedavra!",
+                "Avada Kedavra !",
                 "Un Illusioner est apparu !",
                 0.1f,
                 EventType.MALUS,
