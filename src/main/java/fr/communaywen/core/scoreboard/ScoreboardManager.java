@@ -99,20 +99,12 @@ public class ScoreboardManager {
         objective.getScore("   ").setScore(6);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(5);
 
-        /*
-        String camp1Name = ContestManager.getString("contest","camp1");
-        String camp2Name = ContestManager.getString("contest","camp2");
-        String camp1Color = ContestManager.getString("contest","color1");
-        String camp2Color = ContestManager.getString("contest", "color2");
-        ChatColor color1 = ChatColor.valueOf(camp1Color);
-        ChatColor color2 = ChatColor.valueOf(camp2Color);
-
-        if(ContestManager.getInt("contest", "phase") != 1) {
+        if(ContestManager.getPhaseCache() != 1) {
             objective.getScore(" ").setScore(4);
             objective.getScore("§8• §6§lCONTEST!").setScore(3);
-            objective.getScore(color1 + camp1Name + " §8VS " + color2 + camp2Name).setScore(2);
+            objective.getScore(ChatColor.valueOf(ContestManager.getColor1Cache()) + ContestManager.getCamp1Cache() + " §8VS " + ChatColor.valueOf(ContestManager.getColor2Cache())  + ContestManager.getCamp2Cache()).setScore(2);
         }
-        */
+
         objective.getScore("§d§m                         §r").setScore(1);
         objective.getScore("§d    " + ipStr).setScore(0);
 

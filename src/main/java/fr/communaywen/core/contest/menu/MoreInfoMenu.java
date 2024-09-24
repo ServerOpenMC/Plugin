@@ -53,7 +53,7 @@ public class MoreInfoMenu extends Menu {
         lore2.add("§7Sera élu. Et des récompenses sont attribué");
         lore2.add("§7A chacun.");
 
-        int phase = ContestManager.getInt("contest","phase");
+        int phase = ContestManager.getPhaseCache();
 
         boolean ench0;
         boolean ench1;
