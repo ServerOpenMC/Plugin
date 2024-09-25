@@ -40,7 +40,7 @@ import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 
 public class ContestManager extends DatabaseConnector {
     static FileConfiguration config;
-    static JavaPlugin plugins;
+    static AywenCraftPlugin plugins;
     public ContestManager(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
@@ -526,8 +526,10 @@ public class ContestManager extends DatabaseConnector {
             return cache.getPoints();
         } else {
             initPlayerDataCache(player);
-            assert cache != null;
-            return cache.getPoints();
+            if (cache!=null) {
+                return cache.getPoints();
+            }
+            return 0;
         }
     }
 
@@ -539,8 +541,10 @@ public class ContestManager extends DatabaseConnector {
             return cache.getCamp();
         } else {
             initPlayerDataCache(player);
-            assert cache != null;
-            return cache.getCamp();
+            if (cache!=null) {
+                return cache.getCamp();
+            }
+            return 0;
         }
     }
     public static ChatColor getPlayerColorCache(Player player) {
@@ -551,8 +555,10 @@ public class ContestManager extends DatabaseConnector {
             return cache.getColor();
         } else {
             initPlayerDataCache(player);
-            assert cache != null;
-            return cache.getColor();
+            if (cache!=null) {
+                return cache.getColor();
+            }
+            return null;
         }
     }
 

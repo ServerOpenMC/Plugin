@@ -25,9 +25,9 @@ import java.util.Locale;
 public class ContestCommand {
     private final AywenCraftPlugin plugin;
     private final FileConfiguration eventConfig;
-    public ContestCommand(AywenCraftPlugin plugin, FileConfiguration eventConfig) {
-        this.plugin = plugin;
-        this.eventConfig = eventConfig;
+    public ContestCommand(AywenCraftPlugin plugins, FileConfiguration eventConfigs) {
+        plugin = plugins;
+        eventConfig = eventConfigs;
     }
 
     @Cooldown(4)
@@ -42,7 +42,7 @@ public class ContestCommand {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
         } else if (phase==3) {
-            ContributionMenu menu = new ContributionMenu(player, this.plugin);
+            ContributionMenu menu = new ContributionMenu(player, plugin);
             menu.open();
 
         } else {
@@ -53,7 +53,6 @@ public class ContestCommand {
 
             MessageManager.sendMessageType(player, "§cIl n'y a aucun Contest ! Revenez dans " + days + " jours.", Prefix.CONTEST, MessageType.ERROR, true);
         }
-
     }
 
     @Subcommand("setphase")
