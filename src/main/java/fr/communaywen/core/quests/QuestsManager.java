@@ -53,9 +53,6 @@ public class QuestsManager extends DatabaseConnector {
     public static PlayerQuests getPlayerQuests(Player player) {
         return playerQuests.get(player.getUniqueId());
     }
-    public static PlayerQuests getPlayerQuestsOffline(OfflinePlayer player) {
-        return playerQuests.get(player.getUniqueId());
-    }
 
     public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
         PlayerQuests pq = getPlayerQuests(player);
@@ -75,7 +72,8 @@ public class QuestsManager extends DatabaseConnector {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, progress);
             stmt.setString(2, player.getUniqueId().toString());
-            stmt.executeUpdate();
+            stmt.addBatch();
+            stmt.executeBatch();
         }
     }
 
