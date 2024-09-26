@@ -72,7 +72,8 @@ public class QuestsManager extends DatabaseConnector {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, progress);
             stmt.setString(2, player.getUniqueId().toString());
-            stmt.executeUpdate();
+            stmt.addBatch();
+            stmt.executeBatch();
         }
     }
 
