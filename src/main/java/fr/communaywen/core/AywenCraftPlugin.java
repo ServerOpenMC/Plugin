@@ -38,6 +38,7 @@ import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.contest.ContestIntractEvents;
 import fr.communaywen.core.contest.ContestListener;
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
@@ -207,7 +208,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
-      
+        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+
         this.handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
             OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
             List<String> playerNames = new ArrayList<>();
