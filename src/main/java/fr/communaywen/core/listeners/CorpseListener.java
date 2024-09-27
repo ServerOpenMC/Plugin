@@ -37,6 +37,7 @@ public class CorpseListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
+        System.out.println("moirt");
         Player player = e.getEntity();
 
         if (player.getWorld().getName().equals("dreamworld")) { return; }
@@ -85,6 +86,7 @@ public class CorpseListener implements Listener {
             }
             waterDeaths.put(player.getUniqueId(), items);
         } else {
+            System.out.println("addCorpse");
             corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory(), deathLocation);
         }
     }

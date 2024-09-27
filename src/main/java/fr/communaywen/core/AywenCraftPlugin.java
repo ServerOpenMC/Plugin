@@ -14,6 +14,7 @@ import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.commands.contest.ContestCommand;
+import fr.communaywen.core.commands.contest.CorpseCommand;
 import fr.communaywen.core.commands.credits.CreditCommand;
 import fr.communaywen.core.commands.credits.FeatureCommand;
 import fr.communaywen.core.commands.economy.AdminShopCommand;
@@ -221,6 +222,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
+                new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
                 new TeamAdminCommand(this),
