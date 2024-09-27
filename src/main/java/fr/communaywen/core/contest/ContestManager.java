@@ -9,7 +9,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
-import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import fr.communaywen.core.utils.database.DatabaseConnector;
@@ -581,8 +580,6 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
-
-    //my part
     public static int getInt(String table, String column) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
