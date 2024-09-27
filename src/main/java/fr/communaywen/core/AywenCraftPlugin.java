@@ -146,6 +146,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.registerFlags(new StateFlag("disable-hammer", false));
         this.registerFlags(new StateFlag("disable-builder-wand", false));
         this.registerFlags(new StateFlag("disable-fly", false));
+        this.registerFlags(new StateFlag("disable-spawn-grave", false));
     }
 
     @SneakyThrows
@@ -309,7 +310,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new FriendsListener(managers.getFriendsManager()),
                 new TablistListener(this),
                 new LevelsListeners(managers.getLevelsManager()),
-                new CorpseListener(managers.getCorpseManager()),
+                new CorpseListener(managers.getCorpseManager(), this),
                 new TradeListener(),
                 new QuestsListener(),
                 new PasFraisListener(this),
