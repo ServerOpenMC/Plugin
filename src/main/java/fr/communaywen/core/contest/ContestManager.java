@@ -497,12 +497,10 @@ public class ContestManager extends DatabaseConnector {
     }
     public static int getPhaseCache() {
         long currentTime = System.currentTimeMillis();
-
         if (phaseCache == null || (currentTime - lastPhaseUpdate) > cacheDuration) {
             phaseCache = ContestManager.getInt("contest", "phase");
-            lastColor1Update = currentTime;
+            lastPhaseUpdate = currentTime;
         }
-
         return phaseCache;
     }
     public static String getStartDateCache() {
