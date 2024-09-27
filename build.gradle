@@ -17,6 +17,10 @@ repositories {
         url = "https://openmc-mvn.notri1.fr/release"
     }
     maven {
+        name = "gyro-repository-releases"
+        url = "https://mvn.coolcraft.ovh/releases"
+    }
+    maven {
         url 'https://jitpack.io'
     }
     maven {
@@ -92,6 +96,7 @@ jar {
 
 shadowJar {
     destinationDirectory.set(file("./builds/"))
+    archiveFileName = "AywenCraft.jar"
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'

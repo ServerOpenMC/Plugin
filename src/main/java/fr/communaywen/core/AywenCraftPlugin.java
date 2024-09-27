@@ -23,9 +23,6 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
-import fr.communaywen.core.commands.homes.DelhomesCommands;
-import fr.communaywen.core.commands.homes.HomesCommands;
-import fr.communaywen.core.commands.homes.SethomesCommands;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -48,8 +45,6 @@ import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
-import fr.communaywen.core.homes.Home;
-import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
@@ -85,7 +80,6 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -109,7 +103,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -210,67 +203,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getTranslator().setLocale(Locale.FRENCH);
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
-        this.handler.getAutoCompleter().registerSuggestion("homes", (args, sender, command) -> {
-            Player player = Bukkit.getPlayer(sender.getUniqueId());
-            List<String> suggestions = new ArrayList<>();
-
-            assert player != null;
-            if(args.isEmpty()) {
-                if(player.hasPermission("ayw.home.teleport.others")) {
-                    suggestions.addAll(Bukkit.getOnlinePlayers().stream()
-                            .map(OfflinePlayer::getName)
-                            .map(name -> name + ":")
-                            .toList());
-
-                }
-                suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
-            } else {
-                String arg = args.getFirst();
-
-                if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
-                    String[] parts = arg.split(":", 2);
-                    Player target = Bukkit.getPlayer(parts[0]);
-
-                    if(target != null) {
-                        String prefix = parts[0] + ":";
-                        suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
-                                .stream()
-                                .map(home -> prefix + home)
-                                .toList());
-                    }
-                } else {
-                    if (player.hasPermission("ayw.home.teleport.others")) {
-                        suggestions.addAll(Bukkit.getOnlinePlayers().stream()
-                                .map(OfflinePlayer::getName)
-                                .filter(name -> name.toLowerCase().startsWith(arg.toLowerCase()))
-                                .map(name -> name + ":")
-                                .toList());
-                    }
-
-                    suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
-                            .stream()
-                            .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
-                            .toList());
-                }
-
-                return suggestions;
-            }
-
-            if(player.hasPermission("ayw.home.teleport.others")) {
-
-                System.out.println("args: " + args);
-
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(OfflinePlayer::getName)
-                        .map(name -> name + ":")
-                        .collect(Collectors.toList());
-            }
-
-            return HomesManagers.homes.stream()
-                    .filter(home -> home.getPlayer().equals(sender.getUniqueId().toString()))
-                    .map(Home::getName)
-                    .collect(Collectors.toList());
-        });
 
         this.handler.register(
                 new HSCommand(getManagers().getHomeManager()),
@@ -318,10 +250,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MailboxCommand(),
                 new RandomEventsCommand(this),
                 new TeamClaim(),
-                new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager()),
-                new HomesCommands(managers.getHomeUpgradeManager(), managers.getHomesManagers()),
-                new SethomesCommands(managers.getHomesManagers()),
-                new DelhomesCommands(managers.getHomesManagers())
+                new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager())
         );
 
         /*  --------  */

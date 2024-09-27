@@ -11,10 +11,7 @@ import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.DefaultFor;
-import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.time.DayOfWeek;
@@ -28,16 +25,16 @@ import java.util.Locale;
 public class ContestCommand {
     private final AywenCraftPlugin plugin;
     private final FileConfiguration eventConfig;
-    public ContestCommand(AywenCraftPlugin plugin, FileConfiguration eventConfig) {
-        this.plugin = plugin;
-        this.eventConfig = eventConfig;
+    public ContestCommand(AywenCraftPlugin plugins, FileConfiguration eventConfigs) {
+        plugin = plugins;
+        eventConfig = eventConfigs;
     }
 
+    @Cooldown(4)
     @DefaultFor("~")
     public void defaultCommand(Player player) {
-        int phase = ContestManager.getInt("contest","phase");
-        String dayStartContest = ContestManager.getString("contest","startdate");
-        int camp = ContestManager.getPlayerCamp(player);
+        int phase = ContestManager.getPhaseCache();
+        int camp = ContestManager.getPlayerCampsCache(player);
         if (phase==2) {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
@@ -45,18 +42,17 @@ public class ContestCommand {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
         } else if (phase==3) {
-            ContributionMenu menu = new ContributionMenu(player, this.plugin);
+            ContributionMenu menu = new ContributionMenu(player, plugin);
             menu.open();
 
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
-            DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(dayStartContest));
+            DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestManager.getStartDateCache()));
 
             int days = (dayStartContestOfWeek.getValue() - ContestManager.getCurrentDayOfWeek().getValue() + 7) % 7;
 
             MessageManager.sendMessageType(player, "§cIl n'y a aucun Contest ! Revenez dans " + days + " jours.", Prefix.CONTEST, MessageType.ERROR, true);
         }
-
     }
 
     @Subcommand("setphase")

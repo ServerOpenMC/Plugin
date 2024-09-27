@@ -23,7 +23,7 @@ public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListener
                 "moon_gravity",
                 "Gravité Lunaire!",
                 "Gravité Lunaire pendant 1 minute !",
-                0.5f,
+                0.4f,
                 EventType.BONUS,
                 new ItemStack(Material.WHITE_WOOL)
         );
