@@ -620,8 +620,7 @@ public class ContestManager extends DatabaseConnector {
         String sql = "UPDATE " + table + " SET " + column + " = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, value);
-            stmt.addBatch();
-            stmt.executeBatch();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -1047,8 +1046,7 @@ public class ContestManager extends DatabaseConnector {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, points_dep);
             stmt.setString(2, player.getUniqueId().toString());
-            stmt.addBatch();
-            stmt.executeBatch();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
