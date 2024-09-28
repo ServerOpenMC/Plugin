@@ -61,8 +61,8 @@ public class FirerocketSpawnListener implements Listener {
 
                 Random random = new Random();
 
-                int x = random.nextInt((max.getBlockX() - min.getBlockX()) + 1) + min.getBlockX();
-                int z = random.nextInt((max.getBlockZ() - min.getBlockZ()) + 1) + min.getBlockZ();
+                int x = random.nextInt((max.x() - min.x()) + 1) + min.x();
+                int z = random.nextInt((max.z() - min.z()) + 1) + min.z();
                 int y = 81;
 
                 Location location = new Location(world, x, y, z);
