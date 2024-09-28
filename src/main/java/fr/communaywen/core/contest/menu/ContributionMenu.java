@@ -49,7 +49,7 @@ public class ContributionMenu extends Menu {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
         String campName = ContestManager.getPlayerCampName(getOwner());
-        ChatColor campColor = ContestManager.getPlayerCampChatColor(getOwner());
+        ChatColor campColor = ContestManager.getPlayerColorCache(getOwner());
         Material m = ColorConvertor.getMaterialFromColor(campColor);
 
         List<String> loreinfo = new ArrayList<String>();
@@ -87,7 +87,7 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
         lore_rang.add(campColor + ContestManager.getRankContest(getOwner()) + campName);
-        lore_rang.add("§7Progression §8: " + campColor + ContestManager.getPlayerPoints(getOwner()) + "§8/" + campColor + ContestManager.getRepPointsToRank(getOwner()));
+        lore_rang.add("§7Progression §8: " + campColor + ContestManager.getPlayerPointsCache(getOwner()) + "§8/" + campColor + ContestManager.getRepPointsToRank(getOwner()));
         lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
 
         for(int i = 0; i < getInventorySize().getSize(); i++) {
@@ -119,7 +119,7 @@ public class ContributionMenu extends Menu {
                         if (ContestManager.hasEnoughItems(getOwner(), shell_contest, shell)) {
                             ContestManager.removeItemsFromInventory(getOwner(), shell_contest, shell);
                             ContestManager.addPointPlayer(shell + ContestManager.getPlayerPoints(getOwner()), getOwner());
-                            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCamp(getOwner()), shell + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCamp(getOwner())));
+                            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCampsCache(getOwner()), shell + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCampsCache(getOwner())));
                             MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
                         } else {
                             MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);

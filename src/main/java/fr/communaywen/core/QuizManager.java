@@ -86,7 +86,7 @@ public class QuizManager {
         int points = 10;
         // make a config file
 
-        if (ContestManager.getInt("contest","phase") == 3) {
+        if (ContestManager.getPhaseCache() == 3) {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +
                             "§7\n" +
@@ -96,8 +96,9 @@ public class QuizManager {
                             "§7\n" +
                             "§8§m                                                     §r"
             );
-            ContestManager.updateColumnInt("camps", "point_dep", points + ContestManager.getPlayerPoints(event.getPlayer()));
-            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCamp(event.getPlayer()), points + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCamp(event.getPlayer())));
+
+            ContestManager.addPointPlayer(points + ContestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
+            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCampsCache(event.getPlayer()), points + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCampsCache(event.getPlayer())));
         } else {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +

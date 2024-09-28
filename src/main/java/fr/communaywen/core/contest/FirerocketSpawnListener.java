@@ -33,12 +33,12 @@ public class FirerocketSpawnListener implements Listener {
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
-            if(ContestManager.getInt("contest", "phase") != 1 && Bukkit.getOnlinePlayers().size() >= 1) {
-                 spawnFireworksInWorldEditRegion();
-            }
+                if(ContestManager.getPhaseCache() != 1 && Bukkit.getOnlinePlayers().size() >= 1) {
+                    spawnFireworksInWorldEditRegion();
+                }
             }
         };
-        eventRunnable.runTaskTimer(plugin, 0, 200);
+        eventRunnable.runTaskTimer(plugin, 0, 400);
     }
 
     private void spawnFireworksInWorldEditRegion() {
@@ -54,7 +54,7 @@ public class FirerocketSpawnListener implements Listener {
             RegionManager regions = container.get(wgWorld);
             ProtectedRegion region = regions.getRegion(regionsName);
 
-            for (int i = 0; i<7; i++) {
+            for (int i = 0; i<6; i++) {
                 BlockVector3 min = region.getMinimumPoint();
                 BlockVector3 max = region.getMaximumPoint();
 
@@ -62,7 +62,7 @@ public class FirerocketSpawnListener implements Listener {
 
                 int x = random.nextInt((max.getBlockX() - min.getBlockX()) + 1) + min.getBlockX();
                 int z = random.nextInt((max.getBlockZ() - min.getBlockZ()) + 1) + min.getBlockZ();
-                int y = 73;
+                int y = 81;
 
                 Location location = new Location(world, x, y, z);
                 spawnFireworkAtLocation(location);
@@ -77,8 +77,8 @@ public class FirerocketSpawnListener implements Listener {
         Firework firework = (Firework) location.getWorld().spawn(location, Firework.class);
         FireworkMeta meta = firework.getFireworkMeta();
 
-        String camp1Color = ContestManager.getString("contest","color1");
-        String camp2Color = ContestManager.getString("contest", "color2");
+        String camp1Color = ContestManager.getColor1Cache();
+        String camp2Color = ContestManager.getColor2Cache();
         ChatColor color1 = ChatColor.valueOf(camp1Color);
         ChatColor color2 = ChatColor.valueOf(camp2Color);
 
@@ -89,6 +89,7 @@ public class FirerocketSpawnListener implements Listener {
                 .withFlicker()
                 .build();
 
+
         meta.addEffect(effect);
         meta.setPower(1);
         firework.setFireworkMeta(meta);
@@ -98,7 +99,7 @@ public class FirerocketSpawnListener implements Listener {
             public void run() {
                 firework.detonate();
             }
-        }.runTaskLater(plugins, 40);
+        }.runTaskLater(plugins, 50);
 
 
     }

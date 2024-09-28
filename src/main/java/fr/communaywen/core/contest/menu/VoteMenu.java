@@ -37,11 +37,11 @@ public class VoteMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String camp1Name = ContestManager.getString("contest","camp1");
-        String camp2Name = ContestManager.getString("contest","camp2");
+        String camp1Name = ContestManager.getCamp1Cache();
+        String camp2Name = ContestManager.getCamp2Cache();
 
-        String camp1Color = ContestManager.getString("contest","color1");
-        String camp2Color = ContestManager.getString("contest","color2");
+        String camp1Color = ContestManager.getColor1Cache();
+        String camp2Color = ContestManager.getColor2Cache();
 
         ChatColor color1 = ChatColor.valueOf(camp1Color);
         ChatColor color2 = ChatColor.valueOf(camp2Color);
@@ -55,7 +55,7 @@ public class VoteMenu extends Menu {
         List<String> lore2 = new ArrayList<String>();
         boolean ench1;
         boolean ench2;
-        if(ContestManager.getPlayerCamp(getOwner()) == 0) {
+        if(ContestManager.getPlayerCampsCache(getOwner()) == 0) {
             ench1 = false;
             ench2 = false;
             lore1.add("§7Votez pour la Team " + color1 + camp1Name);
@@ -66,7 +66,7 @@ public class VoteMenu extends Menu {
             lore2.add("§7Faites la gagner en déposant le plus de points");
             lore2.add("§c§lATTENTION! Le choix est définitif!");
 
-        } else if(ContestManager.getPlayerCamp(getOwner()) == 1) {
+        } else if(ContestManager.getPlayerCampsCache(getOwner()) == 1) {
             lore1.add("§7Vous avez votez pour la Team " + color1 + camp1Name);
             lore1.add("§7Faites la gagner en déposant le plus de points!");
             ench1 = true;
@@ -74,7 +74,7 @@ public class VoteMenu extends Menu {
             lore2.add("§7Faites perdre la Team " + color2 + camp2Name);
             lore2.add("§7En Apportant le plus de points que vous pouvez!");
             ench2 = false;
-        } else if(ContestManager.getPlayerCamp(getOwner()) == 2) {
+        } else if(ContestManager.getPlayerCampsCache(getOwner()) == 2) {
             lore1.add("§7Faites perdre la Team " + color1 + camp1Name);
             lore1.add("§7En Apportant le plus de points que vous pouvez!");
             ench1 = false;
@@ -100,7 +100,7 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore1);
                     itemMeta.setEnchantmentGlintOverride(ench1);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (ContestManager.getPlayerCamp(getOwner()) == 0) {
+                    if (ContestManager.getPlayerCampsCache(getOwner()) == 0) {
                         ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp1", "color1");
                         menu.open();
                     }
@@ -111,7 +111,7 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore2);
                     itemMeta.setEnchantmentGlintOverride(ench2);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (ContestManager.getPlayerCamp(getOwner()) == 0) {
+                    if (ContestManager.getPlayerCampsCache(getOwner()) == 0) {
                         ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp2", "color2");
                         menu.open();
                     }

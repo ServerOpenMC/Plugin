@@ -19,7 +19,7 @@ public class LBSpawnShulker extends LuckyBlockEvent {
                 "spawn_shulker",
                 "Wingardiuuuum Levioosaaaaa",
                 "Un Shulker est apparu !",
-                0.5f,
+                0.1f,
                 EventType.MALUS,
                 new ItemStack(Material.SHULKER_BOX)
         );
