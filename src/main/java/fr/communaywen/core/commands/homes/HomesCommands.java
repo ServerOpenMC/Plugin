@@ -16,8 +16,8 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
-import fr.communaywen.core.homes.HomesMenu;
-import fr.communaywen.core.homes.UpgradeHomesMenu;
+import fr.communaywen.core.homes.menu.HomesMenu;
+import fr.communaywen.core.homes.menu.UpgradeHomesMenu;
 import revxrsal.commands.annotation.AutoComplete;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Default;
@@ -40,9 +40,15 @@ public class HomesCommands {
     public void homes(Player player, @Default("~") @Named("homes") String name) {
 
         if(!player.getWorld().equals(AywenCraftPlugin.getInstance().getServer().getWorlds().get(0))) {
-            MessageManager.sendMessageType(player, "§cTu ne peux définir un home que dans le monde principal.", Prefix.HOME, MessageType.ERROR, true);
+            MessageManager.sendMessageType(player, "§cTu ne peux te téléporter à un home que dans le monde principal.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
+
+        if(AywenCraftPlugin.frozenPlayers.contains(player)) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas te téléporter à un home car tu es gelé.", Prefix.HOME, MessageType.ERROR, true);
+            return;
+        }
+
         if (name.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
             String[] parts = name.split(":");
             OfflinePlayer target = Bukkit.getOfflinePlayer(parts[0]);
@@ -77,7 +83,7 @@ public class HomesCommands {
                 MessageManager.sendMessageType(player, "§cCe home n'existe pas pour le joueur spécifié.", Prefix.HOME, MessageType.ERROR, true);
             } else {
                 List<Home> homes = HomesManagers.homes.stream()
-                        .filter(home -> home.getPlayer().equals(target.getName()))
+                        .filter(home -> home.getPlayer().equals(target.getUniqueId().toString()))
                         .toList();
 
                 if(homes.isEmpty()) {
@@ -85,19 +91,23 @@ public class HomesCommands {
                     return;
                 }
 
-                MessageManager.sendMessage(player, "§aHome de §e" + target.getName() + "§a:" + homes.stream().map(Home::getName).collect(Collectors.joining(", ")), Prefix.HOME, MessageType.INFO);
+                HomesMenu menu = new HomesMenu(player, homes, target.getName());
+                menu.open();
+
+                MessageManager.sendMessage(player, "§aHome de §e" + target.getName() + "§a: " + homes.stream().map(Home::getName).collect(Collectors.joining(", ")), Prefix.HOME, MessageType.INFO);
             }
         } else {
             List<Home> homes = HomesManagers.homes.stream()
                     .filter(home -> home.getPlayer().equals(player.getUniqueId().toString()))
                     .toList();
+
             if(name.equals("~")) {
                 if(homes.isEmpty()) {
                     MessageManager.sendMessageType(player, "§cTu n'as pas de home.", Prefix.HOME, MessageType.ERROR, true);
                     return;
                 }
 
-                HomesMenu menu = new HomesMenu(player, homes);
+                HomesMenu menu = new HomesMenu(player, homes, player.getName());
                 menu.open();
             } else if(name.equalsIgnoreCase("upgrade")) {
                 new UpgradeHomesMenu(player, upgradeManager, homesManagers).open();

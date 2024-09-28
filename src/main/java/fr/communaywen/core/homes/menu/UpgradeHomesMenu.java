@@ -1,10 +1,13 @@
-package fr.communaywen.core.homes;
+package fr.communaywen.core.homes.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.communaywen.core.homes.HomeUpgrade;
+import fr.communaywen.core.homes.HomeUpgradeManager;
+import fr.communaywen.core.homes.HomesManagers;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -50,7 +53,6 @@ public class UpgradeHomesMenu extends Menu {
 
         int currentHomes = homesManagers.getHomeNamesByPlayer(getOwner().getUniqueId()).size();
 
-        // Get the last upgrade in HomeUpgrade enum where name is UPGRADE_NUMBER
         HomeUpgrade lastUpgrade = HomeUpgrade.valueOf("UPGRADE_" + HomeUpgrade.values().length);
 
         HomeUpgrade nextUpgrade = upgradeManager.getNextUpgrade(currentHomes) != null
@@ -58,17 +60,16 @@ public class UpgradeHomesMenu extends Menu {
                 : lastUpgrade;
 
         items.put(13, new ItemBuilder(this, Material.EXPERIENCE_BOTTLE, itemMeta -> {
-            itemMeta.setDisplayName("Améliorer les homes");
+            itemMeta.setDisplayName("§8● §6Améliorer les homes §8(Click gauche)");
             List<String> lore = new ArrayList<>();
             if (nextUpgrade.equals(lastUpgrade)) {
                 lore.add("§cVous avez atteint le nombre maximum de homes");
                 lore.add("§eNombre de home actuel: " + currentHomes);
             } else {
-                lore.add("§7Clique pour améliorer tes homes");
-                lore.add("§eNombre de home actuel: " + currentHomes);
-                lore.add("§ePrix: §a" + nextUpgrade.getPrice() + "$");
-                lore.add("§eClique pour acheter");
-                lore.add("§eNombre de home au prochain niveau: " + nextUpgrade.getHomes());
+                lore.add("§6Nombre de home actuel: §e" + currentHomes);
+                lore.add("§bPrix: §a" + nextUpgrade.getPrice() + "$");
+                lore.add("§6Nombre de home au prochain niveau: §e" + nextUpgrade.getHomes());
+                lore.add("§7→ Clique pour améliorer tes homes");
             }
 
             itemMeta.setLore(lore);

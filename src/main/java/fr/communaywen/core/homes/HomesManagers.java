@@ -54,6 +54,23 @@ public class HomesManagers extends DatabaseConnector {
         }
     }
 
+    public void renameHome(Home home, String newName) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE homes SET name = ? WHERE player = ? AND name = ?");
+            statement.setString(1, newName);
+            statement.setString(2, home.getPlayer());
+            statement.setString(3, home.getName());
+            statement.executeUpdate();
+
+            home.setName(newName);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<String> getHomeNamesByPlayer(UUID playerId) {
         return homes.stream()
                 .filter(home -> home.getPlayer().equals(playerId.toString()))

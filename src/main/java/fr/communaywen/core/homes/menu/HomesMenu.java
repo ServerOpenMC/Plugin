@@ -1,4 +1,4 @@
-package fr.communaywen.core.homes;
+package fr.communaywen.core.homes.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +7,11 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -24,10 +24,12 @@ import net.md_5.bungee.api.ChatColor;
 public class HomesMenu extends PaginatedMenu {
     
     private final List<Home> homes;
+    private final String playerName;
 
-    public HomesMenu(Player owner, List<Home> homes) {
+    public HomesMenu(Player owner, List<Home> homes, String playerName) {
         super(owner);
         this.homes = homes;
+        this.playerName = playerName;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class HomesMenu extends PaginatedMenu {
 
     @Override
     public @NotNull String getName() {
-        return "Liste des homes de " + getOwner().getName();
+        return "Liste des homes de " + playerName;
     }
 
     @Override

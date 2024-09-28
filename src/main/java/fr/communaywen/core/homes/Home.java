@@ -1,12 +1,13 @@
 package fr.communaywen.core.homes;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 
 
 public class Home {
-    @Getter
-    private final String player, name;
+    @Getter private final String player;
+    @Getter @Setter private String name;
     private final Location location;
 
     public Home(String playerUUID, String name, Location location) {
