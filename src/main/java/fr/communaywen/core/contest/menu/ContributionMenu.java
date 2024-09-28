@@ -86,7 +86,6 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§7Utile pour faire gagner ta"+ campColor +" Team");
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
-        System.out.println(getOwner().getName() + " a " + ContestManager.getPlayerPointsCache(getOwner()));
         lore_rang.add(campColor + ContestManager.getRankContest(getOwner()) + campName);
         lore_rang.add("§7Progression §8: " + campColor + ContestManager.getPlayerPointsCache(getOwner()) + "§8/" + campColor + ContestManager.getRepPointsToRank(getOwner()));
         lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
@@ -119,7 +118,7 @@ public class ContributionMenu extends Menu {
                         }
                         if (ContestManager.hasEnoughItems(getOwner(), shell_contest, shell)) {
                             ContestManager.removeItemsFromInventory(getOwner(), shell_contest, shell);
-                            ContestManager.addPointPlayer(shell + ContestManager.getPlayerPointsCache(getOwner()), getOwner());
+                            ContestManager.addPointPlayer(shell + ContestManager.getPlayerPoints(getOwner()), getOwner());
                             ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCampsCache(getOwner()), shell + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCampsCache(getOwner())));
                             MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
                         } else {

@@ -1,4 +1,4 @@
-package fr.communaywen.core.commands.contest;
+package fr.communaywen.core.commands.corpse;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.ContestManager;
