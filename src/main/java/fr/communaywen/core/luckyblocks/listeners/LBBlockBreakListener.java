@@ -28,7 +28,7 @@ public class LBBlockBreakListener implements Listener {
         this.luckyBlockManager = luckyBlockManager;
     }
 
-    @EventHandler()
+    @EventHandler
     public void onBreak(BlockBreakEvent event) {
 
         Player player = event.getPlayer();
@@ -72,7 +72,6 @@ public class LBBlockBreakListener implements Listener {
             return;
         }
 
-        block.setType(Material.AIR);
         luckyBlockManager.getRandomEvent().onOpen(player, block);
     }
 }
