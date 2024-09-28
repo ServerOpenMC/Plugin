@@ -549,6 +549,24 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
+    public static int getPlayerPoints(Player player) {
+        UUID playerUUID = player.getUniqueId();
+
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, playerUUID.toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                int points = result.getInt("point_dep");
+
+                return points;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
     public static int getPlayerCampsCache(Player player) {
         UUID playerUUID = player.getUniqueId();
         ContestPlayerCache cache = playerCache.get(playerUUID);
