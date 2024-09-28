@@ -50,6 +50,6 @@ jobs:
           panel-host: ${{ secrets.PANEL_HOST }}
           api-key: ${{ secrets.API_KEY }}
           server-id: ${{ secrets.SERVER_ID }}
-          source: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
+          source: ${{ env.artifactPath }}/AywenCraft.jar
           target: "./plugins/AywenCraft.jar"
           restart: true
