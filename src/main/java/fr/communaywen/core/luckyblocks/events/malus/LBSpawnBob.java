@@ -45,6 +45,10 @@ public class LBSpawnBob extends LuckyBlockEvent implements LuckyBlockListeners {
             return;
         }
 
+        if (zombie.customName() == null) {
+            return;
+        }
+
         if (zombie.getCustomName().isBlank() || !zombie.getCustomName().equals(LBUtils.BOB_NAME)) {
             return;
         }
