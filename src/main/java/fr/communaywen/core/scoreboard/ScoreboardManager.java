@@ -84,6 +84,7 @@ public class ScoreboardManager {
         Team teamName = teamManager.getTeamByPlayer(player.getUniqueId());
         String flytime = CloudSoup.getInstance().getFlyTime(player);
         String ipStr = "ᴘʟᴀʏ.ᴏᴘᴇɴᴍᴄ.ꜰʀ";
+        int phase = ContestManager.getPhaseCache();
 
         objective.getScore(" ").setScore(13);
         objective.getScore("§d§m                        ").setScore(12);
@@ -99,12 +100,13 @@ public class ScoreboardManager {
         objective.getScore("   ").setScore(6);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(5);
 
-        if(ContestManager.getPhaseCache() != 1) {
+        /**
+        if(phase != 1) {
             objective.getScore(" ").setScore(4);
             objective.getScore("§8• §6§lCONTEST!").setScore(3);
             objective.getScore(ChatColor.valueOf(ContestManager.getColor1Cache()) + ContestManager.getCamp1Cache() + " §8VS " + ChatColor.valueOf(ContestManager.getColor2Cache())  + ContestManager.getCamp2Cache()).setScore(2);
         }
-
+        **/
         objective.getScore("§d§m                         §r").setScore(1);
         objective.getScore("§d    " + ipStr).setScore(0);
 
