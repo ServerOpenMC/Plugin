@@ -45,7 +45,7 @@ jobs:
           path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
       - name: Deploy to server
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        uses: rexlmanu/pterodactyl-upload-action@v2.1
+        uses: rexlmanu/pterodactyl-upload-action@v2.4
         with:
           panel-host: ${{ secrets.PANEL_HOST }}
           api-key: ${{ secrets.API_KEY }}
