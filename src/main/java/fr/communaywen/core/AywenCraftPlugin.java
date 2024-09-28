@@ -23,6 +23,9 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.homes.DelhomesCommands;
+import fr.communaywen.core.commands.homes.HomesCommands;
+import fr.communaywen.core.commands.homes.SethomesCommands;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -210,6 +213,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
             Player player = Bukkit.getPlayer(sender.getUniqueId());
             List<String> suggestions = new ArrayList<>();
 
+            suggestions.add("upgrade");
+
             assert player != null;
             if(args.isEmpty()) {
                 if(player.hasPermission("ayw.home.teleport.others")) {
@@ -256,16 +261,18 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
                 System.out.println("args: " + args);
 
-                return Bukkit.getOnlinePlayers().stream()
+                suggestions.addAll(Bukkit.getOnlinePlayers().stream()
                         .map(OfflinePlayer::getName)
                         .map(name -> name + ":")
-                        .collect(Collectors.toList());
+                        .toList());
             }
 
-            return HomesManagers.homes.stream()
+            suggestions.addAll(HomesManagers.homes.stream()
                     .filter(home -> home.getPlayer().equals(sender.getUniqueId().toString()))
                     .map(Home::getName)
-                    .collect(Collectors.toList());
+                    .toList());
+
+            return suggestions;
         });
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
@@ -315,7 +322,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MailboxCommand(),
                 new RandomEventsCommand(this),
                 new TeamClaim(),
-                new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager())
+                new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager()),
+                new HomesCommands(managers.getHomeUpgradeManager(), managers.getHomesManagers()),
+                new SethomesCommands(managers.getHomesManagers()),
+                new DelhomesCommands(managers.getHomesManagers())
         );
 
         /*  --------  */
