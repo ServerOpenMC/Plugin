@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: AywenCraft-${{ env.git_hash }}.jar
-          path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
+          path: ${{ env.artifactPath }}/AywenCraft.jar
       - name: Deploy to server
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: rexlmanu/pterodactyl-upload-action@v2.4
