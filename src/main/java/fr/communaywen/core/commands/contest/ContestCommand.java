@@ -73,14 +73,19 @@ public class ContestCommand {
     @CommandPermission("ayw.command.contest.setcontest")
     @AutoComplete("@colorContest")
     public void setcontest(Player player, String camp1, @Named("colorContest") String color1, String camp2, @Named("colorContest") String color2) {
-        if (ContestManager.getColorContestList().contains(color1) || ContestManager.getColorContestList().contains(color2)) {
-            ContestManager.deleteTableContest("contest");
-            ContestManager.deleteTableContest("camps");
-            ContestManager.insertCustomContest(camp1, color1, camp2, color2);
+        int phase = ContestManager.getPhaseCache();
+        if (phase == 1) {
+            if (ContestManager.getColorContestList().contains(color1) || ContestManager.getColorContestList().contains(color2)) {
+                ContestManager.deleteTableContest("contest");
+                ContestManager.deleteTableContest("camps");
+                ContestManager.insertCustomContest(camp1, color1, camp2, color2);
 
-            player.sendMessage("§aLe Contest : " + camp1 + " VS " + camp2 + " a bien été sauvegarder\nMerci d'attendre que les données en cache s'actualise.");
+                player.sendMessage("§aLe Contest : " + camp1 + " VS " + camp2 + " a bien été sauvegarder\nMerci d'attendre que les données en cache s'actualise.");
+            } else {
+                player.sendMessage("§c/contest setcontest <camp1> <color1> <camp2> <color2> et color doit comporter une couleur valide");
+            }
         } else {
-            player.sendMessage("§c/contest setcontest <camp1> <color1> <camp2> <color2> et color doit comporter une couleur valide");
+            player.sendMessage("§cVous pouvez pas définir un contest lorsqu'il a commencé");
         }
     }
 

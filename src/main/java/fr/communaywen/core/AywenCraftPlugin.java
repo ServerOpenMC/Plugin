@@ -58,6 +58,7 @@ import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
+import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
@@ -292,6 +293,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                //new LeaderboardListener(this),
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),
@@ -351,6 +353,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
+
+        //LeaderboardManager.createLeaderboard();
     }
 
     @SneakyThrows

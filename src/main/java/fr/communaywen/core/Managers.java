@@ -13,6 +13,7 @@ import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.Home;
 import fr.communaywen.core.personalhome.HomeManager;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
@@ -40,6 +41,7 @@ public class Managers {
 
     private AywenCraftPlugin plugin;
     private ContestManager contestManager;
+    private LeaderboardManager leaderboardManager;
     private DimensionManager dreamdimManager;
     private MoonDimensionManager moonDimManager;
     private HomeManager homeManager;
@@ -107,6 +109,7 @@ public class Managers {
         }
         // Database
 
+       // leaderboardManager = new LeaderboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
         contestManager = new ContestManager(plugin);

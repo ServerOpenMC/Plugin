@@ -316,7 +316,6 @@ public class ContestManager extends DatabaseConnector {
 
                 ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
                 MailboxManager.sendItemsToAOfflinePlayer(player, items);
-
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -382,6 +381,7 @@ public class ContestManager extends DatabaseConnector {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
+            initPlayerDataCache(player);
         }
 
         World world = Bukkit.getWorld(worldsName);
