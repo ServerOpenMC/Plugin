@@ -41,9 +41,26 @@ import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 public class ContestManager extends DatabaseConnector {
     static FileConfiguration config;
     static AywenCraftPlugin plugins;
+    private static final ArrayList<String> colorContest = new ArrayList<>();
     public ContestManager(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
+        colorContest.add("WHITE");
+        colorContest.add("YELLOW");
+        colorContest.add("LIGHT_PURPLE");
+        colorContest.add("RED");
+        colorContest.add("AQUA");
+        colorContest.add("GREEN");
+        colorContest.add("BLUE");
+        colorContest.add("DARK_GRAY");
+        colorContest.add("GRAY");
+        colorContest.add("GOLD");
+        colorContest.add("DARK_PURPLE");
+        colorContest.add("DARK_AQUA");
+        colorContest.add("DARK_RED");
+        colorContest.add("DARK_GREEN");
+        colorContest.add("DARK_BLUE");
+        colorContest.add("BLACK");
     }
 
     //PHASE 1
@@ -299,7 +316,6 @@ public class ContestManager extends DatabaseConnector {
 
                 ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
                 MailboxManager.sendItemsToAOfflinePlayer(player, items);
-
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -365,6 +381,7 @@ public class ContestManager extends DatabaseConnector {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
+            initPlayerDataCache(player);
         }
 
         World world = Bukkit.getWorld(worldsName);
@@ -456,6 +473,7 @@ public class ContestManager extends DatabaseConnector {
 
         return camp2Cache;
     }
+
     public static String getColor1Cache() {
         long currentTime = System.currentTimeMillis();
 
@@ -479,12 +497,10 @@ public class ContestManager extends DatabaseConnector {
     }
     public static int getPhaseCache() {
         long currentTime = System.currentTimeMillis();
-
         if (phaseCache == null || (currentTime - lastPhaseUpdate) > cacheDuration) {
             phaseCache = ContestManager.getInt("contest", "phase");
-            lastColor1Update = currentTime;
+            lastPhaseUpdate = currentTime;
         }
-
         return phaseCache;
     }
     public static String getStartDateCache() {
@@ -562,8 +578,6 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
-
-    //my part
     public static int getInt(String table, String column) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
@@ -606,8 +620,7 @@ public class ContestManager extends DatabaseConnector {
         String sql = "UPDATE " + table + " SET " + column + " = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, value);
-            stmt.addBatch();
-            stmt.executeBatch();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -1033,11 +1046,31 @@ public class ContestManager extends DatabaseConnector {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, points_dep);
             stmt.setString(2, player.getUniqueId().toString());
-            stmt.addBatch();
-            stmt.executeBatch();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+
+    public static List<String> getColorContestList() {
+        List<String> color = new ArrayList<>();
+        for (String colorName : colorContest) {
+            color.add(colorName);
+        }
+        return color;
+    }
+
+    public static void insertCustomContest(String camp1, String color1, String camp2, String color2) {
+        try (PreparedStatement states2 = connection.prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, ?, ?, ?, ?, ?, 0,0)")) {
+            states2.setString(1, camp1);
+            states2.setString(2, color1);
+            states2.setString(3, camp2);
+            states2.setString(4, color2);
+            states2.setString(5, "ven.");
+            states2.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

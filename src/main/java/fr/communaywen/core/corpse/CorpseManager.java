@@ -18,14 +18,16 @@ import java.util.*;
 @Credit("Martinouxx")
 public class CorpseManager implements Listener {
 
-    private Map<CorpseBlock, CorpseMenu> corpses = new HashMap<>();
+    private static Map<CorpseBlock, CorpseMenu> corpses = new HashMap<>();
 
     public void addCorpse(Player p, Inventory inv, Location deathLocation) {
+        System.out.println("mort tombe creation");
         CorpseMenu corpseMenu = new CorpseMenu(p, inv);
 
         CustomBlock block = CustomBlock.getInstance("omc_blocks:grave");
 
         if (block != null) {
+            System.out.println("block?");
             block.place(deathLocation);
 
             CorpseBlock corpseBlock = new CorpseBlock(block, deathLocation, p.getUniqueId());
@@ -74,7 +76,7 @@ public class CorpseManager implements Listener {
         }
     }
 
-    public void remove(CorpseBlock corpseBlock){
+    public static void remove(CorpseBlock corpseBlock){
         if (corpseBlock != null) {
             corpseBlock.remove();
         }
@@ -133,4 +135,15 @@ public class CorpseManager implements Listener {
         return locations;
     }
 
+    public static CorpseBlock getCorpseBlock(Location location) {
+        for (CorpseBlock corpseBlock : corpses.keySet()) {
+            Location loc = corpseBlock.getLocation().toBlockLocation();
+            loc.setPitch(0f);
+            loc.setYaw(0f);
+            if (loc.equals(location.toBlockLocation())) {
+                return corpseBlock;
+            }
+        }
+        return null;
+    }
 }

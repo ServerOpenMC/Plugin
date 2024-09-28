@@ -23,6 +23,12 @@ discord:
   webhookName: Annonce Serveur
 mine:
   name: mine
+leaderboard:
+  baltop:
+    posX: 285
+    posY: 80
+    posZ: 160
+    world: "world"
 contest:
   config:
     worldName: "world"
