@@ -27,6 +27,17 @@ public class LBBlockBreakListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
 
+        Block block = event.getBlock();
+        CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
+
+        if (customBlock == null) {
+            return;
+        }
+
+        if (!customBlock.getNamespacedID().equals(LBUtils.getBlockNamespaceID())) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
         String itemName = itemInHand.getType().name();
@@ -43,7 +54,6 @@ public class LBBlockBreakListener implements Listener {
             return;
         }
 
-        Block block = event.getBlock();
         float blockHardness = block.getType().getHardness();
         float breakSpeed = block.getBreakSpeed(player);
 
@@ -55,16 +65,6 @@ public class LBBlockBreakListener implements Listener {
 
         if (!LBUtils.canDestroyBlockInClaim(player, block)) {
             event.setCancelled(true);
-            return;
-        }
-
-        CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
-
-        if (customBlock == null) {
-            return;
-        }
-
-        if (!customBlock.getNamespacedID().equals(LBUtils.getBlockNamespaceID())) {
             return;
         }
 
