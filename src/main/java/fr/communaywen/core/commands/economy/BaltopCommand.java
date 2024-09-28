@@ -17,7 +17,7 @@ import java.util.UUID;
 @Feature("baltop")
 @Credit("ddemile")
 public class BaltopCommand {
-    private AywenCraftPlugin plugin;
+    private static AywenCraftPlugin plugin;
 
     public BaltopCommand(AywenCraftPlugin plugin) {
         this.plugin = plugin;
@@ -55,7 +55,7 @@ public class BaltopCommand {
         player.sendMessage(String.join("\n", lines));
     }
 
-    private String getColor(int index) {
+    public static String getColor(int index) {
         return (switch (index) {
             case 1 -> ChatColor.GOLD;
             case 2 -> ChatColor.of("#d7d7d7");
@@ -64,7 +64,7 @@ public class BaltopCommand {
         }).toString();
     }
 
-    private List<PlayerBalance> getBalances() {
+    public static List<PlayerBalance> getBalances() {
         List<PlayerBalance> balances = new ArrayList<>();
 
         plugin.getManagers().getEconomyManager().getBalances().forEach((UUID uuid, Double balance) -> {
@@ -76,7 +76,7 @@ public class BaltopCommand {
         return balances;
     }
 
-    private class PlayerBalance {
+    public static class PlayerBalance {
         public UUID playerId;
         public Double balance;
 
