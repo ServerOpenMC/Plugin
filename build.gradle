@@ -27,6 +27,10 @@ repositories {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
     maven {
+        name = "minecraft-repo"
+        url = "https://libraries.minecraft.net"
+    }
+    maven {
         url = 'https://maven.enginehub.org/repo/'
     }
     maven { url = "https://repo.onarandombox.com/content/groups/public/" }
@@ -39,6 +43,7 @@ dependencies {
     // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
     compileOnly 'net.luckperms:api:5.4'
+    compileOnly 'com.mojang:authlib:1.5.21'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'com.github.dmulloy2:ProtocolLib:-SNAPSHOT'
