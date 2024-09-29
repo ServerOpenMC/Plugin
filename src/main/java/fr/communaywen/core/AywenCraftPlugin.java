@@ -108,6 +108,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
+
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
@@ -293,7 +294,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
-                //new LeaderboardListener(this),
+                new LeaderboardListener(this),
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),
@@ -354,12 +355,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
 
-        //LeaderboardManager.createLeaderboard();
+        LeaderboardManager.createLeaderboardBalTop();
+        LeaderboardManager.updateLeaderboardBalTop();
     }
 
     @SneakyThrows
     @Override
     public void onDisable() {
+        LeaderboardManager.removeLeaderboardBalTop();
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress

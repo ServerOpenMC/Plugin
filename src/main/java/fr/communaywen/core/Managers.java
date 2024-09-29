@@ -109,7 +109,7 @@ public class Managers {
         }
         // Database
 
-       // leaderboardManager = new LeaderboardManager(plugin);
+        leaderboardManager = new LeaderboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
         contestManager = new ContestManager(plugin);
