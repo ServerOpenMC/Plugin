@@ -4,15 +4,15 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Collaborators;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.dreamdim.enchantments.Coma;
+import fr.communaywen.core.dreamdim.enchantments.DreamSlayer;
 import fr.communaywen.core.dreamdim.fishing.FishingListener;
+import fr.communaywen.core.dreamdim.listeners.*;
+import fr.communaywen.core.dreamdim.populators.LightPopulator;
+import fr.communaywen.core.dreamdim.populators.TreePopulator;
 import org.bukkit.*;
-import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-
-import fr.communaywen.core.dreamdim.populators.*;
-import fr.communaywen.core.dreamdim.listeners.*;
-import fr.communaywen.core.dreamdim.enchantments.*;
 
 import java.util.Objects;
 
@@ -40,7 +40,7 @@ public class DimensionManager implements Listener {
         plugin.registerEvents(
                 new DreamSlayer(),
                 new Coma(plugin),
-
+                new HoeListener(),
                 new StripWood(),
                 new FishingListener(plugin),
                 new CodexSomnii(register),

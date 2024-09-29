@@ -34,6 +34,10 @@ public class BossFight {
                 if (blockState.getBlockType() == BlockTypes.BEDROCK) {
                     editSession.setBlock(position, BlockTypes.DEEPSLATE.getDefaultState());
                 }
+
+                if (blockState.getBlockType() == BlockTypes.REINFORCED_DEEPSLATE) {
+                    editSession.setBlock(position, BlockTypes.CHISELED_TUFF_BRICKS.getDefaultState());
+                }
             }
         } catch (MaxChangedBlocksException e) {
             throw new RuntimeException(e);

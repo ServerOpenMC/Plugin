@@ -12,7 +12,6 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import dev.lone.itemsadder.api.CustomStack;
@@ -32,9 +31,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -115,12 +113,14 @@ public class BossManager implements Listener {
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
         if (new Random().nextDouble() <= 1) { //TODO: Remove dev
+            player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3, 1);
+            player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
+
             paste(player.getLocation(), new File(AywenCraftPlugin.getInstance().getDataFolder(), "dream_boss_area.schem"));
             Location location = player.getLocation();
             location.setYaw(-90);
             location.setPitch((float) -5.5);
             player.teleport(location);
-            player.playSound(player, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
 
             Location spawnloc = player.getLocation().add(11, 1, 0);
 
@@ -171,18 +171,30 @@ public class BossManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
+        Player player = event.getPlayer();
+        if (!bosses.containsKey(player)) return;
+
+        BossFight fight = fights.get(bosses.get(player));
+
+        if (event.getDamageSource().getCausingEntity() != fight.getBoss()) { return; }
+
+        fight.clean();
+        fights.remove(bosses.get(player));
+        bosses.remove(player);
+    }
+
+    @EventHandler
     public void onBossDeath(@NotNull EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        System.out.println("Entity died");
         if (!entity.getWorld().getName().equals("dreamworld")) return;
-        System.out.println("in Dream");
-        if (Objects.equals(entity.getPersistentDataContainer().get(NamespacedKey.minecraft("boss_type"), PersistentDataType.STRING), "devoreve")) return;
-        System.out.println("was Dévorêve");
+        if (!(Objects.equals(entity.getPersistentDataContainer().get(NamespacedKey.minecraft("boss_type"), PersistentDataType.STRING), "devoreve"))) return;
         if (!(event.getDamageSource().getCausingEntity() instanceof Player player)) return;
-        System.out.println("caused by a player");
 
         BossFight fight = fights.get(entity);
         fight.clean();
+        fights.remove(entity);
+        bosses.remove(player);
 
         if (player != fight.getPlayer()) {
             player.kick(Component.text("Tu as volé l'honneur d'un autre."));
@@ -201,21 +213,29 @@ public class BossManager implements Listener {
         drops.add(essence);
 
         if (random.nextDouble() <= 1) { //TODO: Remove dev
-            ItemStack hoe = getWeapon();
-            hoe.removeEnchantments();
-            hoe.addEnchant(Enchantment.UNBREAKING, 5, true);
+            ItemStack chestplate = getChestplate();
 
-            drops.add(hoe);
+            drops.add(chestplate);
             SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/chestplate");
         }
 
         if (random.nextDouble() <= 1) { //TODO: Remove dev
-            // TODO
+            ItemStack head = getHelmet();
+
+            drops.add(head);
             SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/skull");
         }
 
         if (random.nextDouble() <= 1) { //TODO: Remove dev
-            // TODO
+            ItemStack hoe = getWeapon();
+            hoe.removeEnchantments();
+            hoe.addEnchant(Enchantment.UNBREAKING, 5, true);
+
+            ItemMeta meta = hoe.getItemMeta();
+            meta.getPersistentDataContainer().set(NamespacedKey.fromString("replenish", AywenCraftPlugin.getInstance()), PersistentDataType.BOOLEAN, true);
+            hoe.setItemMeta(meta);
+
+            drops.add(hoe);
             SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/weapon");
         }
     }
@@ -225,14 +245,14 @@ public class BossManager implements Listener {
         weapon.addEnchant(Enchantment.SHARPNESS, 3, true);
 
         ItemMeta meta = weapon.getItemMeta();
-        meta.displayName(Component.text("§r§dHoux du Dévorêve"));
+        meta.displayName(Component.text("§r§dHoue du Dévorêve"));
         meta.lore(List.of(
                 Component.text("§7Replantation"),
                 Component.text(""),
-                Component.text("§4D'après les pires légendes"),
+                Component.text("§4D'après les pires légendes,"),
                 Component.text("§4il s'en servirait pour"),
                 Component.text("§4dépouiller la peau des"),
-                Component.text("§4réveurs égarés")
+                Component.text("§4réveurs égarés.")
                 ));
         meta.setEnchantmentGlintOverride(false);
         weapon.setItemMeta(meta);
@@ -241,7 +261,20 @@ public class BossManager implements Listener {
     }
 
     private @NotNull ItemStack getHelmet() {
-        return Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");
+        ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");;
+
+        ItemMeta meta = helmet.getItemMeta();
+        meta.displayName(Component.text("§r§dTête du Dévorêve"));
+        meta.setEnchantmentGlintOverride(false);
+        helmet.setItemMeta(meta);
+
+        helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
+
+        helmet.lore(List.of(
+                Component.text("§7Wazzup?")
+        ));
+
+        return helmet;
     }
 
     private @NotNull ItemStack getChestplate() {
@@ -252,6 +285,7 @@ public class BossManager implements Listener {
 
         ArmorMeta armorMeta = (ArmorMeta) chestplate.getItemMeta();
         armorMeta.setTrim(new ArmorTrim(TrimMaterial.NETHERITE, TrimPattern.SPIRE));
+        armorMeta.displayName(Component.text("§r§dPlastron du Dévorêve"));
         chestplate.setItemMeta(armorMeta);
 
         return chestplate;
