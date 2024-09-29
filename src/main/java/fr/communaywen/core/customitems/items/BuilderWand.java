@@ -1,5 +1,11 @@
 package fr.communaywen.core.customitems.items;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.credit.Credit;
@@ -41,7 +47,8 @@ public class BuilderWand extends CustomItems implements CustomItemsEvents {
 
     private final int radius;
 
-    public BuilderWand(FileConfiguration customItemsConfig) {
+    static AywenCraftPlugin plugin;
+    public BuilderWand(AywenCraftPlugin plugins, FileConfiguration customItemsConfig) {
         super(
                 new ArrayList<>() {{
                     add("EDE");
@@ -56,50 +63,59 @@ public class BuilderWand extends CustomItems implements CustomItemsEvents {
                 "customitems:builder_wand"
         );
 
+        plugin = plugins;
         this.radius = customItemsConfig.getInt(ConfigNames.BUILDER_WAND_RADIUS.getName());
     }
 
     @Override
     public void onInteract(PlayerInteractEvent event) {
-
-        if (event.getHand() == null) {
-            return;
-        }
-
-        if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
-            return;
-        }
-
-        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            return;
-        }
-
-        Block interactedBlock = event.getClickedBlock();
-
-        if (interactedBlock == null) {
-            return;
-        }
-
-        Material blockType = interactedBlock.getType();
-
-        if (blockType.isAir()) {
-            return;
-        }
-
-        Player player = event.getPlayer();
-        BlockFace blockFace = event.getBlockFace();
-
-        if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getInventory().contains(blockType)) {
-            return;
-        }
-
-        // Mettre un micro delay permet d'éviter que l'event se trigger 2 fois de suite
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                placeBlocks(player, interactedBlock, blockType, blockFace);
+    // WorldGuard
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionQuery query = container.createQuery();
+        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
+        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-builder-wand"))) {
+            event.setCancelled(false);
+            if (event.getHand() == null) {
+                return;
             }
-        }.runTaskLater(AywenCraftPlugin.getInstance(), 1L);
+
+            if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
+                return;
+            }
+
+            if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+                return;
+            }
+
+            Block interactedBlock = event.getClickedBlock();
+
+            if (interactedBlock == null) {
+                return;
+            }
+
+            Material blockType = interactedBlock.getType();
+
+            if (blockType.isAir()) {
+                return;
+            }
+
+            Player player = event.getPlayer();
+            BlockFace blockFace = event.getBlockFace();
+
+            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getInventory().contains(blockType)) {
+                return;
+            }
+
+            // Mettre un micro delay permet d'éviter que l'event se trigger 2 fois de suite
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    placeBlocks(player, interactedBlock, blockType, blockFace);
+                }
+            }.runTaskLater(AywenCraftPlugin.getInstance(), 1L);
+        } else {
+            event.setCancelled(true);
+        }
     }
 
     private void placeBlocks(Player player, Block interactedBlock, Material blockType, BlockFace blockFace) {

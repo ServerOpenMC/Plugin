@@ -2,6 +2,7 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -10,8 +11,15 @@ import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
+import fr.communaywen.core.homes.HomeUpgradeManager;
+import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.managers.LeaderboardManager;
+import fr.communaywen.core.personalhome.Home;
+import fr.communaywen.core.personalhome.HomeManager;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
@@ -34,7 +42,11 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private ContestManager contestManager;
+    private LeaderboardManager leaderboardManager;
     private DimensionManager dreamdimManager;
+    private MoonDimensionManager moonDimManager;
+    private HomeManager homeManager;
     private TeamManager teamManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
@@ -49,7 +61,10 @@ public class Managers {
     private CustomItemsManager customItemsManager;
     private ReportManager reportManager;
     private PlayerChatChannel chatChannel;
-    private MoonDimensionManager moonDimManager;
+    private LuckyBlockManager luckyBlockManager;
+    private LBPlayerManager lbPlayerManager;
+    private HomesManagers homesManagers;
+    private HomeUpgradeManager homeUpgradeManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -88,6 +103,8 @@ public class Managers {
                     Blacklist.class,
                     RewardCommand.class,
                     TeamManager.class,
+                    HomeManager.class,
+                    Home.class,
                     Team.class,
                     TransactionsManager.class,
                     AdvancementRegister.class,
@@ -96,9 +113,14 @@ public class Managers {
         }
         // Database
 
+       // leaderboardManager = new LeaderboardManager(plugin);
+        dreamdimManager = new DimensionManager(plugin);
+        moonDimManager = new MoonDimensionManager(plugin);
+        contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
+        homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
@@ -106,17 +128,23 @@ public class Managers {
         fbeManager = new FallingBlocksExplosionManager();
         levelsManager = new LevelsManager();
         transactionsManager = new TransactionsManager();
-        customItemsManager = new CustomItemsManager(customItemsConfig);
+        customItemsManager = new CustomItemsManager(plugin, customItemsConfig);
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
-        moonDimManager = new MoonDimensionManager(plugin);
+        luckyBlockManager = new LuckyBlockManager();
+        lbPlayerManager = new LBPlayerManager();
+        homesManagers = new HomesManagers();
+        homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
+
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
         dreamdimManager.init();
+        homeManager.init();
         moonDimManager.init();
+        homesManagers.loadHomes();
     }
 
     public void cleanup() {
@@ -131,6 +159,5 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
 
-        moonDimManager.close();
     }
 }

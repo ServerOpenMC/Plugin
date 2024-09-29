@@ -1,5 +1,6 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
@@ -82,19 +83,35 @@ public class QuizManager {
         if (!event.getMessage().toLowerCase().equals(currentQuiz.answer)) return;
 
         int money = new Random().nextInt(config.getInt("rewards.money.min"), config.getInt("rewards.money.max"));
+        int points = 10;
+        // make a config file
 
-        Bukkit.broadcastMessage(
-                "§8§m                                                     §r\n" +
-                        "§7\n" +
-                        "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
-                        "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
-                        "§bIl remporte §7" + money + " §bde monnaie !\n" +
-                        "§7\n" +
-                        "§8§m                                                     §r"
-        );
+        if (ContestManager.getPhaseCache() == 3) {
+            Bukkit.broadcastMessage(
+                    "§8§m                                                     §r\n" +
+                            "§7\n" +
+                            "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
+                            "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
+                            "§bIl remporte §7" + money + " §bde monnaie ainsi que §6" + points + "§b points pour son équipe!" + ". \n" +
+                            "§7\n" +
+                            "§8§m                                                     §r"
+            );
+
+            ContestManager.addPointPlayer(points + ContestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
+            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCampsCache(event.getPlayer()), points + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCampsCache(event.getPlayer())));
+        } else {
+            Bukkit.broadcastMessage(
+                    "§8§m                                                     §r\n" +
+                            "§7\n" +
+                            "§6Bravo à §7" + event.getPlayer().getDisplayName() + " §6qui a trouvé la réponse en premier ! \n§7" +
+                            "§eLa réponse au quizz était §7" + currentQuiz.answer + ". \n§7" +
+                            "§bIl remporte §7" + money + " §bde monnaie !\n" +
+                            "§7\n" +
+                            "§8§m                                                     §r"
+            );
+        }
 
         event.setCancelled(true);
-
         this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
         currentQuiz = null;
         this.timeoutExecutor.shutdownNow();

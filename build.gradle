@@ -13,8 +13,8 @@ repositories {
         url "https://repo.purpurmc.org/snapshots"
     }
     maven {
-        name = "reposiliteRepositoryReleases"
-        url = "https://openmc-mvn.notri1.fr/release"
+        name = "gyro-repository-releases"
+        url = "https://mvn.coolcraft.ovh/releases"
     }
     maven {
         url 'https://jitpack.io'
@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
     compileOnly "org.purpurmc.purpur:purpur-api:1.21.1-R0.1-SNAPSHOT"
+    implementation("com.flowpowered:flow-nbt:1.0.0")
     implementation 'dev.xernas:menulib:1.1.0'
     // Jetbrains annotations (@NotNull, @Nullable)
     implementation 'org.jetbrains:annotations:24.1.0'
@@ -91,6 +92,7 @@ jar {
 
 shadowJar {
     destinationDirectory.set(file("./builds/"))
+    archiveFileName = "AywenCraft.jar"
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'

@@ -1,9 +1,16 @@
 package fr.communaywen.core.customitems.items;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.CustomBlock;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
-import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
@@ -28,7 +35,8 @@ import java.util.HashMap;
 
 public class DiamondHammer extends CustomItems implements CustomItemsEvents {
 
-    public DiamondHammer() {
+    static AywenCraftPlugin plugin;
+    public DiamondHammer(AywenCraftPlugin plugins) {
         super(
                 new ArrayList<>() {{
                     add("BBB");
@@ -41,30 +49,42 @@ public class DiamondHammer extends CustomItems implements CustomItemsEvents {
                 }},
                 "customitems:diamond_hammer"
         );
+        plugin = plugins;
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        Block brokenBlock = event.getBlock();
-        CustomBlock customBlock = CustomBlock.byAlreadyPlaced(brokenBlock);
+        // WorldGuard
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionQuery query = container.createQuery();
+        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getBlock().getLocation()));
+        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-hammer"))) {
+            event.setCancelled(false);
+            Block brokenBlock = event.getBlock();
+            CustomBlock customBlock = CustomBlock.byAlreadyPlaced(brokenBlock);
 
-        if (customBlock != null) {
+            if (customBlock != null) {
+                event.setCancelled(true);
+                return;
+            }
+
+            Player player = event.getPlayer();
+            BlockFace playerFacing = CustomItemsUtils.getDestroyedBlockFace(player);
+
+            if (playerFacing == null) {
+                return;
+            }
+
+            playerFacing = playerFacing.getOppositeFace();
+            ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
+
+            CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 2, itemToDamage, player);
+
+        } else {
             event.setCancelled(true);
-            return;
         }
 
-        Player player = event.getPlayer();
-        BlockFace playerFacing = CustomItemsUtils.getDestroyedBlockFace(player);
-
-        if (playerFacing == null) {
-            return;
-        }
-
-        playerFacing = playerFacing.getOppositeFace();
-        ItemStack itemToDamage = event.getPlayer().getInventory().getItemInMainHand();
-
-        CustomItemsUtils.destroyArea(playerFacing, brokenBlock, 1, 2, itemToDamage, player);
     }
 
     @Override

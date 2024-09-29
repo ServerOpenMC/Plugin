@@ -1,6 +1,13 @@
 package fr.communaywen.core.listeners;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.utils.FallingBlocksExplosion;
@@ -18,14 +25,32 @@ import org.bukkit.inventory.ItemStack;
 @Credit("ri1_")
 public class ThorHammer implements Listener {
 
+    static AywenCraftPlugin plugin;
+    public ThorHammer(AywenCraftPlugin plugins) {
+        plugin = plugins;
+    }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-            Player player = event.getPlayer();
 
-            if (!player.isSneaking()) return;
+            if (event.getMaterial() == CustomStack.getInstance("thor:hammer").getItemStack().getType()) {
+                Player player = event.getPlayer();
 
-            useThorHammer(player, event.getClickedBlock().getLocation());
+                if (!player.isSneaking()) return;
+
+                // WorldGuard
+                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                RegionQuery query = container.createQuery();
+                ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
+                if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-thor-hammer"))) {
+                    event.setCancelled(false);
+                    useThorHammer(player, event.getClickedBlock().getLocation());
+
+                } else {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 

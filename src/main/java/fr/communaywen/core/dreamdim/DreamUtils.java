@@ -6,7 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public class DreamUtils {
-    /*
+    /**
     Déclare qu'un ItemStack provient de la dimension des rêves
      */
     public static void setFromDream(ItemStack itemStack) {

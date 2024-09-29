@@ -8,6 +8,7 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.quests.qenum.TYPE;
 import lombok.Getter;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Credit("TheR0001")
 public class EconomyManager {
     @Getter
-    private final Map<UUID, Double> balances;
+    private static Map<UUID, Double> balances = Map.of();
 
     public EconomyManager(File dataFolder) {
         this.balances = EconomyData.loadBalances();
@@ -27,6 +28,11 @@ public class EconomyManager {
     public double getBalance(Player player) {
         return balances.getOrDefault(player.getUniqueId(), 0.0);
     }
+
+    public static double getBalanceOffline(OfflinePlayer player) {
+        return balances.getOrDefault(player.getUniqueId(), 0.0);
+    }
+
 
     public void addBalance(Player player, double amount) {
         UUID uuid = player.getUniqueId();
@@ -41,6 +47,13 @@ public class EconomyManager {
                 }
             }
         }
+    }
+
+    public static void addBalanceOffline(OfflinePlayer player, double amount) {
+        UUID uuid = player.getUniqueId();
+        balances.put(uuid, getBalanceOffline(player) + amount);
+
+        saveBalancesOffline(player);
     }
 
     public boolean withdrawBalance(Player player, double amount) {
@@ -74,5 +87,8 @@ public class EconomyManager {
 
     private void saveBalances(Player player) {
         EconomyData.saveBalances(player, balances);
+    }
+    private static void saveBalancesOffline(OfflinePlayer player) {
+        EconomyData.saveBalancesOffline(player, balances);
     }
 }

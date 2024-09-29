@@ -7,6 +7,7 @@ import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,8 @@ public class QuestsManager extends DatabaseConnector {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, progress);
             stmt.setString(2, player.getUniqueId().toString());
-            stmt.executeUpdate();
+            stmt.addBatch();
+            stmt.executeBatch();
         }
     }
 
