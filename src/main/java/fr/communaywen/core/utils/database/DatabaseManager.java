@@ -112,8 +112,24 @@ public class DatabaseManager {
         // Table camps
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), name VARCHAR(36), camps int(11), point_dep int(11))").executeUpdate();
 
-        System.out.println("Les tables ont été créées si besoin");
+        // Système de homes
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS homes (" +
+                "  player varchar(36) NOT NULL," +
+                "  name varchar(10) NOT NULL," +
+                "  location mediumtext NOT NULL" +
+                ")").executeUpdate();
+
+        // Système de players
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS players (" +
+                "player VARCHAR(36) NOT NULL PRIMARY KEY," +
+                "homes_limit INT NOT NULL DEFAULT 1" +
+                ")").executeUpdate();
+
         this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
+
+
+        System.out.println("Les tables ont été créer si besoin");
+
     }
 
     public void close() {
