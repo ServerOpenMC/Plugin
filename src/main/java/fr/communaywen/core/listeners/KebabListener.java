@@ -87,7 +87,7 @@ public class KebabListener implements Listener {
             this.plugin.getServer().broadcastMessage("Au lit " + damaged.getName() + "!");
             damagedPlayer.damage(100);
         } else {
-            player.sendMessage(customstack.getNamespacedID());
+            //player.sendMessage(customstack.getNamespacedID());
         }
     }
 }
