@@ -2,6 +2,9 @@ package fr.communaywen.core.managers;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.commands.economy.BaltopCommand;
+import fr.communaywen.core.teams.EconomieTeam;
+import fr.communaywen.core.teams.Team;
+import fr.communaywen.core.teams.TeamManager;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -55,7 +58,7 @@ public class LeaderboardManager {
         }
 
         List<String> lines = new ArrayList<>();
-        lines.add(ChatColor.LIGHT_PURPLE + "§lListe des plus riches !");
+        lines.add("§dLes Joueurs les plus riches sur le §fserveur");
 
         int index = 1;
         for (BaltopCommand.PlayerBalance playerBalance : balances) {
@@ -71,7 +74,6 @@ public class LeaderboardManager {
         }
 
         String leaderboardText = String.join("\n", lines);
-
         textDisplayBalTop.setText(Component.text(leaderboardText).content());
     }
 
@@ -79,6 +81,60 @@ public class LeaderboardManager {
         if (textDisplayBalTop != null && !textDisplayBalTop.isDead()) {
             textDisplayBalTop.remove();
             textDisplayBalTop = null;
+        }
+    }
+
+    private static TextDisplay textDisplayTeamTop;
+
+    public static void createLeaderboardTeamTop() {
+        World world = Bukkit.getWorld((String) config.get("leaderboard.teamtop.world"));
+        if (world == null) return;
+
+        Location location = new Location(world, config.getDouble("leaderboard.teamtop.posX"), config.getDouble("leaderboard.teamtop.posY"), config.getDouble("leaderboard.teamtop.posZ"));
+
+        textDisplayTeamTop = (TextDisplay) world.spawn(location, TextDisplay.class);
+
+        textDisplayTeamTop.setBillboard(TextDisplay.Billboard.CENTER);
+        textDisplayTeamTop.setViewRange(100.0F);
+        textDisplayTeamTop.setDefaultBackground(false);
+        textDisplayTeamTop.setAlignment(TextDisplay.TextAlignment.CENTER);
+
+        textDisplayTeamTop.setCustomNameVisible(false);
+        textDisplayTeamTop.setCustomName("teamtop");
+    }
+
+    public static void updateLeaderboardTeamTop() {
+        if (textDisplayTeamTop == null) return;
+        List<Team> teamBalances = TeamManager.getTeams();
+        teamBalances.sort((a, b) -> a.getBalance().intValue() - b.getBalance().intValue());
+
+        teamBalances = teamBalances.reversed();
+
+        if (teamBalances.size() > 10) {
+            teamBalances = teamBalances.subList(0, 10);
+        }
+
+        List<String> lines = new ArrayList<>();
+        lines.add("§dLes Teams les plus riches sur le §fserveur");
+
+        int index = 1;
+        System.out.println(teamBalances);
+        for (Team team : teamBalances) {
+            String teamName = team.getName();
+            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, EconomieTeam.getTeamBalances(team.getName()).toString()));
+
+            index++;
+        }
+
+        String leaderboardText = String.join("\n", lines);
+
+        textDisplayTeamTop.setText(Component.text(leaderboardText).content());
+    }
+
+    public static void removeLeaderboardTeamTop() {
+        if ((textDisplayTeamTop != null) && !textDisplayTeamTop.isDead()) {
+            textDisplayTeamTop.remove();
+            textDisplayTeamTop = null;
         }
     }
 }

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static fr.communaywen.core.managers.LeaderboardManager.updateLeaderboardBalTop;
+import static fr.communaywen.core.managers.LeaderboardManager.updateLeaderboardTeamTop;
 
 
 public class LeaderboardListener implements Listener {
@@ -18,6 +19,7 @@ public class LeaderboardListener implements Listener {
             public void run() {
                 if (Bukkit.getOnlinePlayers().size() >= 1) {
                     updateLeaderboardBalTop();
+                    updateLeaderboardTeamTop();
                 }
             }
         };

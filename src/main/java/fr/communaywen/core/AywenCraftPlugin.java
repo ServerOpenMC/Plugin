@@ -437,12 +437,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         LeaderboardManager.createLeaderboardBalTop();
         LeaderboardManager.updateLeaderboardBalTop();
+        LeaderboardManager.createLeaderboardTeamTop();
+        LeaderboardManager.updateLeaderboardTeamTop();
     }
 
     @SneakyThrows
     @Override
     public void onDisable() {
         LeaderboardManager.removeLeaderboardBalTop();
+        LeaderboardManager.removeLeaderboardTeamTop();
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
