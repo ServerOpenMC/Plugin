@@ -77,19 +77,13 @@ import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
-import fr.communaywen.core.utils.DiscordWebhook;
-import fr.communaywen.core.utils.LinkerAPI;
-import fr.communaywen.core.utils.MOTDChanger;
-import fr.communaywen.core.utils.PermissionCategory;
+import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -435,10 +429,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
 
+        // BETTER SPAWN
+        // - Leaderboard
         LeaderboardManager.createLeaderboardBalTop();
         LeaderboardManager.updateLeaderboardBalTop();
         LeaderboardManager.createLeaderboardTeamTop();
         LeaderboardManager.updateLeaderboardTeamTop();
+        // - Particle
+        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES);
     }
 
     @SneakyThrows
