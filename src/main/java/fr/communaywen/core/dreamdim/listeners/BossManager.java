@@ -271,7 +271,7 @@ public class BossManager implements Listener {
         helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
 
         helmet.lore(List.of(
-                Component.text("§7Wazzup?")
+                Component.text("§8Wazzup?")
         ));
 
         return helmet;
