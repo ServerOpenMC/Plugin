@@ -13,10 +13,6 @@ repositories {
         url "https://repo.purpurmc.org/snapshots"
     }
     maven {
-        name = "reposiliteRepositoryReleases"
-        url = "https://openmc-mvn.notri1.fr/release"
-    }
-    maven {
         name = "gyro-repository-releases"
         url = "https://mvn.coolcraft.ovh/releases"
     }

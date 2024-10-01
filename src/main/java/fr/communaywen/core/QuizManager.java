@@ -96,9 +96,11 @@ public class QuizManager {
                             "§7\n" +
                             "§8§m                                                     §r"
             );
+
             ContestManager.updateColumnInt("camps", "point_dep", points + ContestManager.getPlayerPointsCache(event.getPlayer()));
             String playerCamp = "points" + ContestManager.getPlayerCampsCache(event.getPlayer());
             ContestManager.updateColumnInt("contest", playerCamp, points + ContestManager.getInt("contest", playerCamp));
+          
         } else {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +

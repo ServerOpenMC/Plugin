@@ -11,7 +11,7 @@ import org.bukkit.Material;
 @Feature("AdminShop")
 public enum OresItems implements BaseItems {
     COAL(13, 3, ShopType.SELL_BUY, "§7Charbon"),
-    COPPER_ORE(20, 4, ShopType.SELL_BUY, "§7Lingot de cuivre"),
+    COPPER_INGOT(20, 4, ShopType.SELL_BUY, "§7Lingot de cuivre"),
     IRON_INGOT(21, 8, ShopType.SELL_BUY, "§7Lingot de fer"),
     GOLD_INGOT(22, 12, ShopType.SELL_BUY, "§7Lingot d'or"),
     LAPIS_LAZULI(23, 6, ShopType.SELL_BUY, "§7Lapis lazuli"),

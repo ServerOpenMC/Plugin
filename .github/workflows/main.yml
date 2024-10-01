@@ -39,17 +39,19 @@ jobs:
           echo "snapshotVersion=5.5-SNAPSHOT" >> $GITHUB_ENV
           echo "artifactPath=$(pwd)/builds" >> $GITHUB_ENV
       - name: Upload Plugin jar
+        continue-on-error: true
         uses: actions/upload-artifact@v3
         with:
           name: AywenCraft-${{ env.git_hash }}.jar
-          path: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
+          path: ${{ env.artifactPath }}/AywenCraft.jar
       - name: Deploy to server
+        continue-on-error: true
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        uses: rexlmanu/pterodactyl-upload-action@v2.1
+        uses: rexlmanu/pterodactyl-upload-action@v2.4
         with:
           panel-host: ${{ secrets.PANEL_HOST }}
           api-key: ${{ secrets.API_KEY }}
           server-id: ${{ secrets.SERVER_ID }}
-          source: ${{ env.artifactPath }}/core-1.0-SNAPSHOT-all.jar
+          source: ${{ env.artifactPath }}/AywenCraft.jar
           target: "./plugins/AywenCraft.jar"
           restart: true

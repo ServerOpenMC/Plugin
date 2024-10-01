@@ -1,5 +1,11 @@
 package fr.communaywen.core.listeners;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.RegionManager;
@@ -30,62 +36,71 @@ public class CorpseListener implements Listener {
 
     private final CorpseManager corpseManager;
     private final Map<UUID, List<Item>> waterDeaths = new HashMap<>();
+    static AywenCraftPlugin plugin;
 
-    public CorpseListener(CorpseManager corpseManager) {
+    public CorpseListener(CorpseManager corpseManager, AywenCraftPlugin plugins) {
         this.corpseManager = corpseManager;
+        plugin = plugins;
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
-        Player player = e.getEntity();
+        // WorldGuard
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionQuery query = container.createQuery();
+        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(e.getPlayer().getLocation()));
+        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-spawn-grave"))) {
+            Player player = e.getEntity();
 
-        if (player.getWorld().getName().equals("dreamworld")) { return; }
+            if (player.getWorld().getName().equals("dreamworld")) { return; }
 
-        Location deathLocation = player.getLocation();
-        Block blockBelow = deathLocation.getBlock();
+            Location deathLocation = player.getLocation();
+            Block blockBelow = deathLocation.getBlock();
 
-        Material typeBelow = blockBelow.getType();
-        if (isHalfBlock(typeBelow)) {
-            deathLocation.add(0, 1, 0);
-        }
+            Material typeBelow = blockBelow.getType();
+            if (isHalfBlock(typeBelow)) {
+                deathLocation.add(0, 1, 0);
+            }
 
-        boolean waterNearby = false;
-        for (int x = -7; x <= 7; x++) {
-            for (int y = -7; y <= 7; y++) {
-                for (int z = -7; z <= 7; z++) {
-                    Block block = player.getLocation().add(x, y, z).getBlock();
-                    if (block.getType() == Material.WATER) {
-                        waterNearby = true;
-                        break;
+            boolean waterNearby = false;
+            for (int x = -7; x <= 7; x++) {
+                for (int y = -7; y <= 7; y++) {
+                    for (int z = -7; z <= 7; z++) {
+                        Block block = player.getLocation().add(x, y, z).getBlock();
+                        if (block.getType() == Material.WATER) {
+                            waterNearby = true;
+                            break;
+                        }
                     }
+                    if (waterNearby) break;
                 }
                 if (waterNearby) break;
             }
-            if (waterNearby) break;
-        }
 
-        e.getDrops().clear();
+            e.getDrops().clear();
 
-        boolean isArea = false;
+            boolean isArea = false;
 
-        for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
-            if(region.isInArea(deathLocation)){
-                isArea = true;
-                break;
-            }
-        }
-
-        if (waterNearby || isArea) {
-            List<Item> items = new ArrayList<>();
-            for (ItemStack itemStack : player.getInventory().getContents()) {
-                if (itemStack != null) {
-                    Item item = player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                    items.add(item);
+            for (RegionManager region : AywenCraftPlugin.getInstance().regions) {
+                if(region.isInArea(deathLocation)){
+                    isArea = true;
+                    break;
                 }
             }
-            waterDeaths.put(player.getUniqueId(), items);
-        } else {
-            corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory(), deathLocation);
+
+            if (waterNearby || isArea) {
+                List<Item> items = new ArrayList<>();
+                for (ItemStack itemStack : player.getInventory().getContents()) {
+                    if (itemStack != null) {
+                        Item item = player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+                        items.add(item);
+                    }
+                }
+                waterDeaths.put(player.getUniqueId(), items);
+            } else {
+                corpseManager.addCorpse(e.getEntity(), e.getEntity().getInventory(), deathLocation);
+            }
+
         }
     }
 
