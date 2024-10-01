@@ -6,8 +6,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static fr.communaywen.core.managers.LeaderboardManager.updateLeaderboardBalTop;
-import static fr.communaywen.core.managers.LeaderboardManager.updateLeaderboardTeamTop;
+import java.io.IOException;
+
+import static fr.communaywen.core.managers.LeaderboardManager.*;
 
 
 public class LeaderboardListener implements Listener {
@@ -20,6 +21,11 @@ public class LeaderboardListener implements Listener {
                 if (Bukkit.getOnlinePlayers().size() >= 1) {
                     updateLeaderboardBalTop();
                     updateLeaderboardTeamTop();
+                    try {
+                        updateLeaderboardContribution();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         };

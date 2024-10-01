@@ -5,6 +5,7 @@ import fr.communaywen.core.commands.economy.BaltopCommand;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
+import fr.communaywen.core.utils.GitHubAPI;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -13,7 +14,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.TextDisplay;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +62,7 @@ public class LeaderboardManager {
         }
 
         List<String> lines = new ArrayList<>();
-        lines.add("§dLes Joueurs les plus riches sur le §fserveur");
+        lines.add("§dLes §f10 §dJoueurs les plus riches sur le serveur");
 
         int index = 1;
         for (BaltopCommand.PlayerBalance playerBalance : balances) {
@@ -115,12 +119,12 @@ public class LeaderboardManager {
         }
 
         List<String> lines = new ArrayList<>();
-        lines.add("§dLes Teams les plus riches sur le §fserveur");
+        lines.add("§dLes §f10 §dTeams les plus riches sur le serveur");
 
         int index = 1;
         for (Team team : teamBalances) {
             String teamName = team.getName();
-            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, EconomieTeam.getTeamBalances(team.getName()).toString()));
+            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, ChatColor.DARK_PURPLE + EconomieTeam.getTeamBalances(team.getName()).toString()));
 
             index++;
         }
@@ -134,6 +138,58 @@ public class LeaderboardManager {
         if ((textDisplayTeamTop != null) && !textDisplayTeamTop.isDead()) {
             textDisplayTeamTop.remove();
             textDisplayTeamTop = null;
+        }
+    }
+
+    private static TextDisplay textDisplayContribution;
+
+    public static void createLeaderboardContribution() {
+        World world = Bukkit.getWorld((String) config.get("leaderboard.contribution.world"));
+        if (world == null) return;
+
+        Location location = new Location(world, config.getDouble("leaderboard.contribution.posX"), config.getDouble("leaderboard.contribution.posY"), config.getDouble("leaderboard.contribution.posZ"));
+
+        textDisplayContribution = (TextDisplay) world.spawn(location, TextDisplay.class);
+
+        textDisplayContribution.setBillboard(TextDisplay.Billboard.CENTER);
+        textDisplayContribution.setViewRange(100.0F);
+        textDisplayContribution.setDefaultBackground(false);
+        textDisplayContribution.setAlignment(TextDisplay.TextAlignment.CENTER);
+
+        textDisplayContribution.setCustomNameVisible(false);
+        textDisplayContribution.setCustomName("contribution");
+    }
+
+    public static void updateLeaderboardContribution() throws IOException {
+        if (textDisplayContribution == null) return;
+
+        List<String> lines = new ArrayList<>();
+        lines.add("§dClassement des §f10 §dMeilleurs Contributeurs");
+        GitHubAPI gitHubAPI = new GitHubAPI();
+        String jsonResponse = gitHubAPI.getContributors();
+        int index = 1;
+
+        if (jsonResponse.startsWith("Error:")) {
+            lines.add(ChatColor.RED + "Erreur :(");
+        } else {
+            JSONArray contributors = new JSONArray(jsonResponse);
+            for (int i = 0; i < contributors.length() && i < 10; i++) {
+                JSONObject contributor = contributors.getJSONObject(i);
+                String login = contributor.getString("login");
+                lines.add(MessageFormat.format("{0}# {1}", getColor(index) + index, ChatColor.GRAY + login));
+                index++;
+            }
+        }
+
+        String leaderboardText = String.join("\n", lines);
+
+        textDisplayContribution.setText(Component.text(leaderboardText).content());
+    }
+
+    public static void removeLeaderboardContribution() {
+        if ((textDisplayContribution != null) && !textDisplayContribution.isDead()) {
+            textDisplayContribution.remove();
+            textDisplayContribution = null;
         }
     }
 }

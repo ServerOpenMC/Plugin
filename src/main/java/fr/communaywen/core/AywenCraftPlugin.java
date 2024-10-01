@@ -431,6 +431,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LeaderboardManager.updateLeaderboardBalTop();
         LeaderboardManager.createLeaderboardTeamTop();
         LeaderboardManager.updateLeaderboardTeamTop();
+        LeaderboardManager.createLeaderboardContribution();
+        try {
+            LeaderboardManager.updateLeaderboardContribution();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         // - Particle
         ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 75, 150);
         if (ContestManager.getPhaseCache() != 1) {
@@ -442,16 +448,19 @@ public final class AywenCraftPlugin extends JavaPlugin {
             int[] rgb1 = ColorConvertor.getRGBFromChatColor(color1);
             int[] rgb2 = ColorConvertor.getRGBFromChatColor(color2);
 
-            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 50, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
-            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 50, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
+            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
+            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
         }
     }
 
     @SneakyThrows
     @Override
     public void onDisable() {
+        // Remove Leaderboard
         LeaderboardManager.removeLeaderboardBalTop();
         LeaderboardManager.removeLeaderboardTeamTop();
+        LeaderboardManager.removeLeaderboardContribution();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress

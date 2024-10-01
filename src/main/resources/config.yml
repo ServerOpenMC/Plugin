@@ -28,8 +28,18 @@ leaderboard:
   baltop:
     posX: 285
     posY: 80
+    posZ: 170
+    world: world
+  teamtop:
+    posX: 285
+    posY: 80
     posZ: 160
-    world: "world"
+    world: world
+  contribution:
+    posX: 285
+    posY: 75
+    posZ: 165
+    world: world
 contest:
   config:
     worldName: "world"
