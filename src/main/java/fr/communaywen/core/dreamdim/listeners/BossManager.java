@@ -34,8 +34,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -116,7 +116,7 @@ public class BossManager implements Listener {
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
         if (new Random().nextDouble() <= 1) { //TODO: Remove dev
-            player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3, 1);
+            player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 1*20);
             player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
 
             paste(player.getLocation(), new File(AywenCraftPlugin.getInstance().getDataFolder(), "dream_boss_area.schem"));
@@ -173,18 +173,22 @@ public class BossManager implements Listener {
         }
     }
 
-    @EventHandler
-    public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
-        Player player = event.getPlayer();
+    private void onLose(Player player) {
         if (!bosses.containsKey(player)) return;
 
         BossFight fight = fights.get(bosses.get(player));
 
-        if (event.getDamageSource().getCausingEntity() != fight.getBoss()) { return; }
-
+        fight.getBoss().remove();
         fight.clean();
         fights.remove(bosses.get(player));
         bosses.remove(player);
+    }
+
+    @EventHandler
+    public void dimensionSwap(@NotNull PlayerChangedWorldEvent event) {
+        if (event.getFrom().getName().equals("dreamworld")) {
+            onLose(event.getPlayer());
+        }
     }
 
     @EventHandler
