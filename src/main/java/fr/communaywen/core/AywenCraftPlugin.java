@@ -24,6 +24,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.head.HeadCommand;
 import fr.communaywen.core.commands.homes.DelhomesCommands;
 import fr.communaywen.core.commands.homes.HomesCommands;
 import fr.communaywen.core.commands.homes.RenameHomeCommands;
@@ -69,6 +70,7 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
+import fr.communaywen.core.spawn.head.HeadListener;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
@@ -293,6 +295,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
+                new HeadCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
@@ -364,6 +367,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new HeadListener(this),
                 new LeaderboardListener(this),
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),

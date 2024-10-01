@@ -127,6 +127,8 @@ public class DatabaseManager {
 
         this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
 
+        //Table pour stocker le nombre de head qu'a trouver le joueur
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_head (uuid VARCHAR(36), heads int(11))").executeUpdate();
 
         System.out.println("Les tables ont été créer si besoin");
 

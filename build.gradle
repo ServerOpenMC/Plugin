@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
     compileOnly "org.purpurmc.purpur:purpur-api:1.21.1-R0.1-SNAPSHOT"
+    implementation 'com.mojang:authlib:1.5.21'
     implementation("com.flowpowered:flow-nbt:1.0.0")
     implementation 'dev.xernas:menulib:1.1.0'
     // Jetbrains annotations (@NotNull, @Nullable)
