@@ -21,6 +21,8 @@ import fr.communaywen.core.dreamdim.DreamUtils;
 import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
 import fr.communaywen.core.utils.Skull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
@@ -188,9 +190,11 @@ public class BossManager implements Listener {
     @EventHandler
     public void disableEnchant(@NotNull PrepareAnvilEvent event) {
         ItemStack item = event.getResult();
-        assert item != null;
-        if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString("replenish", AywenCraftPlugin.getInstance()), PersistentDataType.BOOLEAN)) return;
+        if (item == null) return;
+        if (item.getItemMeta() == null) return;
         if (event.getInventory().getFirstItem() == null) return;
+
+        if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString("replenish", AywenCraftPlugin.getInstance()), PersistentDataType.BOOLEAN)) return;
         if (event.getInventory().getFirstItem().getEnchantments() != item.getEnchantments()) {
             event.setResult(null);
         }
@@ -257,7 +261,7 @@ public class BossManager implements Listener {
         weapon.addEnchant(Enchantment.SHARPNESS, 3, true);
 
         ItemMeta meta = weapon.getItemMeta();
-        meta.displayName(Component.text("§r§dHoue du Dévorêve"));
+        meta.displayName(Component.text("Houe du Dévorêve").color(TextColor.color(16733695)).decoration(TextDecoration.ITALIC, false));
         meta.lore(List.of(
                 Component.text("§7Replantation"),
                 Component.text(""),
