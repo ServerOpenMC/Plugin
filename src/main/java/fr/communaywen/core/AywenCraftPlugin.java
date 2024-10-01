@@ -40,10 +40,7 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.contest.ContestIntractEvents;
-import fr.communaywen.core.contest.ContestListener;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.FirerocketSpawnListener;
+import fr.communaywen.core.contest.*;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -107,7 +104,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public final class AywenCraftPlugin extends JavaPlugin {
@@ -436,7 +432,19 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LeaderboardManager.createLeaderboardTeamTop();
         LeaderboardManager.updateLeaderboardTeamTop();
         // - Particle
-        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES);
+        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 75, 150);
+        if (ContestManager.getPhaseCache() != 1) {
+            String camp1Color = ContestManager.getColor1Cache();
+            String camp2Color = ContestManager.getColor2Cache();
+            ChatColor color1 = ChatColor.valueOf(camp1Color);
+            ChatColor color2 = ChatColor.valueOf(camp2Color);
+
+            int[] rgb1 = ColorConvertor.getRGBFromChatColor(color1);
+            int[] rgb2 = ColorConvertor.getRGBFromChatColor(color2);
+
+            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 50, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
+            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 50, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
+        }
     }
 
     @SneakyThrows

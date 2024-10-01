@@ -118,7 +118,6 @@ public class LeaderboardManager {
         lines.add("§dLes Teams les plus riches sur le §fserveur");
 
         int index = 1;
-        System.out.println(teamBalances);
         for (Team team : teamBalances) {
             String teamName = team.getName();
             lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, EconomieTeam.getTeamBalances(team.getName()).toString()));
