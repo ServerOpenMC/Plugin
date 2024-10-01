@@ -33,6 +33,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -182,6 +183,17 @@ public class BossManager implements Listener {
         fight.clean();
         fights.remove(bosses.get(player));
         bosses.remove(player);
+    }
+
+    @EventHandler
+    public void disableEnchant(@NotNull PrepareAnvilEvent event) {
+        ItemStack item = event.getResult();
+        assert item != null;
+        if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString("replenish", AywenCraftPlugin.getInstance()), PersistentDataType.BOOLEAN)) return;
+        if (event.getInventory().getFirstItem() == null) return;
+        if (event.getInventory().getFirstItem().getEnchantments() != item.getEnchantments()) {
+            event.setResult(null);
+        }
     }
 
     @EventHandler
