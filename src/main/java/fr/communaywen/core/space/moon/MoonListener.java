@@ -49,6 +49,7 @@ import java.util.*;
 
 import static fr.communaywen.core.space.moon.Utils.isPlayerLookingAtMoon;
 import static fr.communaywen.core.utils.ProgressBar.createProgressBar;
+import static fr.communaywen.core.utils.Skull.*;
 
 public class MoonListener implements Listener {
 
@@ -168,8 +169,10 @@ public class MoonListener implements Listener {
 
         //1 chance sur 10 de drop la tete de cosmonaute
         if(Math.random() < 0.1) {
-            ItemStack item = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner("FuzeIII").setName("§6Tête de cosmonaute").setLore("§r", "§r§fTête d'un cosmonaute mort sur la lune", "§r§f§oPermet d'activer un rituel...", "§r").toItemStack();
-            e.getDrops().add(item);
+            ItemStack head = getCustomSkull("https://textures.minecraft.net/texture/c5545c6457c447464f308f0063876e334bc48747dc0dfc442efd8fed89b3c292");
+            head.setDisplayName("§6Tête de cosmonaute");
+            head.setLore(Arrays.asList("§r", "§r§fTête d'un cosmonaute mort sur la lune", "§r§f§oPermet d'activer un rituel...", "§r"));
+            e.getDrops().add(head);
         }
     }
 
@@ -478,7 +481,6 @@ public class MoonListener implements Listener {
         World world = loc.getWorld();
         assert world != null;
         world.strikeLightning(loc);
-        new FallingBlocksExplosion(3, loc, false);
         world.playSound(loc, Sound.ITEM_TOTEM_USE,  SoundCategory.HOSTILE, 1, 0);
 
         //remove the blocks
@@ -505,8 +507,10 @@ public class MoonListener implements Listener {
             bossBar.addPlayer(player);
         }
 
+        AywenCraftPlugin.getInstance().getLogger().info("Spawned Cosmonaut boss : " + loc.toString() + " by " + e.getPlayer().getName());
+
         //spawn the boss
-        Entity boss = world.spawnEntity(loc.add(0.5, 0, 0.5), EntityType.ZOMBIE, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
+        Entity boss = world.spawnEntity(loc.add(0.5, 0, 0.5), EntityType.ZOMBIE, CreatureSpawnEvent.SpawnReason.DEFAULT, entity -> {
             entity.customName(Component.text("§6§lCosmonaute"));
             entity.setCustomNameVisible(true);
             entity.setInvulnerable(true);
@@ -514,6 +518,17 @@ public class MoonListener implements Listener {
             entity.setGravity(false);
             entity.setMetadata("isCosmonaut", new FixedMetadataValue(AywenCraftPlugin.getInstance(), true));
         });
+
+        if(!boss.isValid()) {
+            AywenCraftPlugin.getInstance().getLogger().warning("Failed to spawn Cosmonaut boss (serveur en eau)");
+            //remboursement des items
+            MessageManager.sendMessageType(e.getPlayer(), "§cUne erreur est survenue lors du spawn du boss, vous avez été remboursé(e) !\nDate et heure de l'incident : " + new Date().toString(), Prefix.SPACE, MessageType.ERROR, true);
+            e.getPlayer().getInventory().addItem(e.getItem().asOne());
+            e.getPlayer().getInventory().addItem(CustomStack.getInstance("space:steel_block").getItemStack().add(8));
+            e.getPlayer().getInventory().addItem(CustomStack.getInstance("space:cheese_block").getItemStack());
+
+            return;
+        }
 
         bossBars.put(boss.getUniqueId(), bossBar);
 
@@ -527,7 +542,7 @@ public class MoonListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(!boss.isValid()) {
+                if(!boss.isValid() || boss.isDead()) {
                     this.cancel();
                     removeBossBar(boss.getUniqueId());
                     return;
