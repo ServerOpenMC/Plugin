@@ -11,9 +11,11 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Named;
 import revxrsal.commands.annotation.Range;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Feature("Taille")
 @Credit({"Gyro3630", "Gexary"})
+@CommandPermission("ayw.command.taille")
 public class TailleCommand {
     @Command({"taille", "size"})
     @Description("Change la taille du joueur (Par défaut 187cm)")

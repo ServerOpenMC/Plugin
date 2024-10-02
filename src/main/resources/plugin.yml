@@ -7,6 +7,9 @@ depend:
   - ItemsAdder
 
 permissions:
+  ayw.command.taille:
+    description: Change la taille d'un joueur
+    default: true
   ayw.command.wiki:
     description: Affiche le wiki
     default: true

@@ -7,17 +7,16 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.communaywen.core.AywenCraftPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Random;
 
 public class FirerocketSpawnListener implements Listener {
@@ -33,8 +32,10 @@ public class FirerocketSpawnListener implements Listener {
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if(ContestManager.getPhaseCache() != 1 && Bukkit.getOnlinePlayers().size() >= 1) {
-                    spawnFireworksInWorldEditRegion();
+                if (isPlayerInRegion((String) config.get("contest.config.spawnRegionName"), Bukkit.getWorld((String) config.get("contest.config.worldName"))) && Bukkit.getOnlinePlayers().size() >= 1) {
+                    if (ContestManager.getPhaseCache() != 1) {
+                        spawnFireworksInWorldEditRegion();
+                    }
                 }
             }
         };
@@ -60,8 +61,8 @@ public class FirerocketSpawnListener implements Listener {
 
                 Random random = new Random();
 
-                int x = random.nextInt((max.getBlockX() - min.getBlockX()) + 1) + min.getBlockX();
-                int z = random.nextInt((max.getBlockZ() - min.getBlockZ()) + 1) + min.getBlockZ();
+                int x = random.nextInt((max.x() - min.x()) + 1) + min.x();
+                int z = random.nextInt((max.z() - min.z()) + 1) + min.z();
                 int y = 81;
 
                 Location location = new Location(world, x, y, z);
@@ -102,5 +103,32 @@ public class FirerocketSpawnListener implements Listener {
         }.runTaskLater(plugins, 50);
 
 
+    }
+
+    public static boolean isPlayerInRegion(String regionId, World world) {
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+
+        RegionManager regionManager = container.get(BukkitAdapter.adapt(world));
+
+        if (regionManager == null) {
+            return false;
+        }
+
+        ProtectedRegion region = regionManager.getRegion(regionId);
+        if (region == null) {
+            return false;
+        }
+
+        List<Player> playersInWorld = world.getPlayers();
+        for (Player player : playersInWorld) {
+            Location playerLocation = player.getLocation();
+            BlockVector3 playerVector = BukkitAdapter.asBlockVector(playerLocation);
+
+            if (region.contains(playerVector)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
