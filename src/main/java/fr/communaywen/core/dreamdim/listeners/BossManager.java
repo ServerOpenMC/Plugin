@@ -115,7 +115,7 @@ public class BossManager implements Listener {
 
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
-        if (new Random().nextDouble() <= 1) { //TODO: Remove dev
+        if (new Random().nextDouble() <= 0.075) {
             player.getServer().broadcast(Component.text(player.getName()+" a commencé un combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
             player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 20);
             player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
@@ -236,21 +236,21 @@ public class BossManager implements Listener {
         essence.setAmount(random.nextInt(4)+1);
         drops.add(essence);
 
-        if (random.nextDouble() <= 1) { //TODO: Remove dev
+        if (random.nextDouble() <= 0.3) {
             ItemStack chestplate = getChestplate();
 
             drops.add(chestplate);
             SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/chestplate");
         }
 
-        if (random.nextDouble() <= 1) { //TODO: Remove dev
+        if (random.nextDouble() <= 0.3) {
             ItemStack head = getHelmet();
 
             drops.add(head);
             SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/skull");
         }
 
-        if (random.nextDouble() <= 1) { //TODO: Remove dev
+        if (random.nextDouble() <= 0.1) {
             ItemStack hoe = getWeapon();
             hoe.removeEnchantments();
             hoe.addEnchant(Enchantment.UNBREAKING, 5, true);
