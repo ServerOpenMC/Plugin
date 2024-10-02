@@ -23,8 +23,8 @@ public class BlockPlacement implements Listener {
         Player player = event.getPlayer();
         if (!player.getWorld().getName().equals("dreamworld")) { return; }
         if (List.of(Material.ANCIENT_DEBRIS, Material.ENDER_CHEST, Material.SHULKER_BOX).contains(block.getType())) {
-            //event.setBuild(false);
-            //event.setCancelled(true);
+            event.setBuild(false);
+            event.setCancelled(true);
         }
     }
 }
