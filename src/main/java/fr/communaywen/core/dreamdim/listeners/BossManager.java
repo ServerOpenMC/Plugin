@@ -116,7 +116,8 @@ public class BossManager implements Listener {
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
         if (new Random().nextDouble() <= 1) { //TODO: Remove dev
-            player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 1*20);
+            player.getServer().broadcast(Component.text(player.getName()+" a commencé un combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
+            player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 20);
             player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
 
             paste(player.getLocation(), new File(AywenCraftPlugin.getInstance().getDataFolder(), "dream_boss_area.schem"));
@@ -178,6 +179,7 @@ public class BossManager implements Listener {
 
         BossFight fight = fights.get(bosses.get(player));
 
+        player.getServer().broadcast(Component.text(player.getName()+" a été vaincu par le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
         fight.getBoss().remove();
         fight.clean();
         fights.remove(bosses.get(player));
@@ -220,6 +222,8 @@ public class BossManager implements Listener {
             player.kick(Component.text("Tu as volé l'honneur d'un autre."));
             return;
         }
+
+        player.getServer().broadcast(Component.text(player.getName()+" a gagné son combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
 
         event.setDroppedExp(2500);
         SimpleAdvancementRegister.grantAdvancement(player, "aywen:dreameater");
@@ -275,6 +279,7 @@ public class BossManager implements Listener {
                 Component.text("§4réveurs égarés.")
                 ));
         meta.setEnchantmentGlintOverride(false);
+        meta.setFireResistant(true);
         weapon.setItemMeta(meta);
 
         return weapon;
@@ -286,6 +291,7 @@ public class BossManager implements Listener {
         ItemMeta meta = helmet.getItemMeta();
         meta.displayName(Component.text("§r§dTête du Dévorêve"));
         meta.setEnchantmentGlintOverride(false);
+        meta.setFireResistant(true);
         helmet.setItemMeta(meta);
 
         helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
@@ -306,6 +312,7 @@ public class BossManager implements Listener {
         ArmorMeta armorMeta = (ArmorMeta) chestplate.getItemMeta();
         armorMeta.setTrim(new ArmorTrim(TrimMaterial.NETHERITE, TrimPattern.SPIRE));
         armorMeta.displayName(Component.text("§r§dPlastron du Dévorêve"));
+        armorMeta.setFireResistant(true);
         chestplate.setItemMeta(armorMeta);
 
         return chestplate;
