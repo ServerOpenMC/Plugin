@@ -1,6 +1,7 @@
 package fr.communaywen.core.contest;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.weather.WeatherType;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -92,6 +93,7 @@ public class ContestManager extends DatabaseConnector {
 
 
         region.setFlag(Flags.TIME_LOCK, "12700");
+        region.setFlag(Flags.WEATHER_LOCK, WeatherType.REGISTRY.get("clear"));
 
         try {
             regions.save();
@@ -179,6 +181,7 @@ public class ContestManager extends DatabaseConnector {
         ProtectedRegion region = regions.getRegion(regionsName);
 
         region.setFlag(Flags.TIME_LOCK, "15000");
+        region.setFlag(Flags.WEATHER_LOCK, WeatherType.REGISTRY.get("clear"));
 
         try {
             regions.save();
@@ -393,6 +396,7 @@ public class ContestManager extends DatabaseConnector {
 
 
         region.setFlag(Flags.TIME_LOCK, null);
+        region.setFlag(Flags.WEATHER_LOCK, null);
 
         try {
             regions.save();

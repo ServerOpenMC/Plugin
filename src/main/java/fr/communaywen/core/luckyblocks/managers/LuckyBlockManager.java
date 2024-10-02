@@ -5,6 +5,7 @@ import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.events.bonus.*;
 import fr.communaywen.core.luckyblocks.events.malus.*;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;
+import fr.communaywen.core.luckyblocks.events.neutrals.LBLeakContest;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBSpawnGlowsquid;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBStructureHerobrine;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
@@ -29,6 +30,7 @@ public class LuckyBlockManager {
     private final ArrayList<LuckyBlockEvent> lbEvents = new ArrayList<>();
 
     public LuckyBlockManager() {
+        lbEvents.add(new LBLeakContest());
         lbEvents.add(new LBSpawnShulker());
         lbEvents.add(new LBMoonGravity());
         lbEvents.add(new LBSolarGravity());
