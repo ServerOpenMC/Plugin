@@ -70,6 +70,8 @@ import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
+import fr.communaywen.core.space.moon.MoonListener;
+import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.spawn.head.HeadListener;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
@@ -295,7 +297,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
-                new HeadCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
@@ -369,6 +370,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         registerEvents(
                 new HeadListener(this),
                 new LeaderboardListener(this),
+                new RocketListener(),
+                new MoonListener(),
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),

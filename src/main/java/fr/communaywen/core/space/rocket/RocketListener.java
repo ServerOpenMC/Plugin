@@ -36,6 +36,7 @@ public class RocketListener implements Listener {
 
     @EventHandler
     public void onRocketInteract(PlayerInteractEntityEvent event) {
+        if(event.isCancelled()) return;
         if(CustomEntity.isCustomEntity(event.getRightClicked())) {
             CustomEntity rocket = CustomEntity.byAlreadySpawned(event.getRightClicked());
             if(!rocket.getNamespacedID().equals("space:rocket")) return;
@@ -55,6 +56,8 @@ public class RocketListener implements Listener {
     @EventHandler
     public void onRocketPlace(PlayerInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(event.isCancelled()) return;
+
         ItemStack item = event.getItem();
         CustomStack customStack = CustomStack.byItemStack(item);
         if(customStack != null && customStack.getNamespacedID().equals("space:rocket")) {

@@ -23,6 +23,10 @@ repositories {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
     maven {
+        name = "minecraft-repo"
+        url = "https://libraries.minecraft.net"
+    }
+    maven {
         url = 'https://maven.enginehub.org/repo/'
     }
     maven { url = "https://repo.onarandombox.com/content/groups/public/" }
@@ -39,6 +43,7 @@ dependencies {
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'com.github.dmulloy2:ProtocolLib:-SNAPSHOT'
+    compileOnly 'commons-codec:commons-codec:1.16.1'
     implementation 'org.json:json:20231013'
     implementation 'com.github.Revxrsal.Lamp:common:3.2.1'
     implementation 'com.github.Revxrsal.Lamp:bukkit:3.2.1'
@@ -88,6 +93,11 @@ processResources {
 
 
 jar {
+    manifest {
+        attributes(
+                "GIT-COMMIT" : System.getenv("GITHUB_SHA") ?: "unknown"
+        )
+    }
     destinationDirectory.set(file("./builds/"))
 }
 
