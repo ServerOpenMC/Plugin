@@ -131,7 +131,7 @@ contest:
       selected: false
     - ress: RABBIT_STEW
       amount: 2
-      amount_shell: 5
+      amount_shell: 4
       selected: false
     - ress: SHROOMLIGHT
       amount: 3
@@ -150,7 +150,7 @@ contest:
       amount_shell: 8
       selected: false
     - ress: MANGROVE_LOG
-      amount: 4
+      amount: 6
       amount_shell: 1
       selected: false
     - ress: BEE_NEST
@@ -159,7 +159,7 @@ contest:
       selected: false
     - ress: GOAT_HORN
       amount: 1
-      amount_shell: 7
+      amount_shell: 9
       selected: false
     - ress: PACKED_MUD
       amount: 3
@@ -194,7 +194,7 @@ contest:
       amount_shell: 1
       selected: false
     - ress: MUDDY_MANGROVE_ROOTS
-      amount: 2
+      amount: 5
       amount_shell: 3
       selected: false
     - ress: TORCHFLOWER
@@ -211,7 +211,7 @@ contest:
       selected: false
     - ress: VERDANT_FROGLIGHT
       amount: 1
-      amount_shell: 2
+      amount_shell: 3
       selected: false
     - ress: HONEYCOMB
       amount: 2
