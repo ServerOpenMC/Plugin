@@ -92,6 +92,11 @@ processResources {
 
 
 jar {
+    manifest {
+        attributes(
+                "GIT-COMMIT" : System.getenv("GITHUB_SHA") ?: "unknown"
+        )
+    }
     destinationDirectory.set(file("./builds/"))
 }
 
