@@ -304,6 +304,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
+                new SettingsCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
@@ -347,7 +348,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ShowCraftCommand(managers.getCustomItemsManager()),
                 new ReportCommands(),
                 new ChatChannelCMD(),
-                new MailboxCommand(),
+                new MailboxCommand(this),
                 new RandomEventsCommand(this),
                 new TeamClaim(),
                 new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager()),
@@ -375,7 +376,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
-                //new LeaderboardListener(this),
+                // new LeaderboardListener(this),       // Desactivé de base
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),

@@ -21,6 +21,7 @@ import fr.communaywen.core.personalhome.HomeManager;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.settings.SettingsManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
@@ -65,6 +66,7 @@ public class Managers {
     private LBPlayerManager lbPlayerManager;
     private HomesManagers homesManagers;
     private HomeUpgradeManager homeUpgradeManager;
+    private SettingsManager settingsManager;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -113,7 +115,7 @@ public class Managers {
         }
         // Database
 
-       // leaderboardManager = new LeaderboardManager(plugin);
+       // leaderboardManager = new LeaderboardManager(plugin);          // desactivé de base
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
         contestManager = new ContestManager(plugin);
@@ -136,7 +138,7 @@ public class Managers {
         lbPlayerManager = new LBPlayerManager();
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
-
+        settingsManager = new SettingsManager(plugin);
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));

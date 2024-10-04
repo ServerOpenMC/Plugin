@@ -10,7 +10,7 @@ public enum COLOR implements BaseItems {
     GRAY(14, 2, ShopType.BUY, "§7gris"),
     BLACK(20, 2, ShopType.BUY, "§7noir"),
     RED(21, 2, ShopType.BUY, "§7orange"),
-    ORANGE(22, 2, ShopType.BUY, "§7Blanche"),
+    ORANGE(22, 2, ShopType.BUY, "§7orange"),
     YELLOW(23, 2, ShopType.BUY, "§7jaune"),
     LIME(24, 2, ShopType.BUY, "§7vert clair"),
     BROWN(29, 2, ShopType.BUY, "§7marron"),

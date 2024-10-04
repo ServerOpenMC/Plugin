@@ -1,5 +1,6 @@
 package fr.communaywen.core.mailboxes.menu;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
 import fr.communaywen.core.mailboxes.menu.letter.SendingLetter;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
@@ -11,13 +12,17 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
+
 import static fr.communaywen.core.mailboxes.utils.MailboxMenuManager.getCustomItem;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getHead;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getItem;
 
 public class HomeMailbox extends MailboxInv {
     private static final String INV_NAME = "\uF990\uE004";
-
+    
+    static AywenCraftPlugin plugin;
+    
     public HomeMailbox(Player player) {
         super(player);
         this.inventory = Bukkit.createInventory(this, 9, MailboxMenuManager.getInvTitle(INV_NAME));
@@ -32,8 +37,8 @@ public class HomeMailbox extends MailboxInv {
         playersList.openInventory();
     }
 
-    public static void openSendingMailbox(Player player, OfflinePlayer receiver) {
-        SendingLetter sendingLetter = new SendingLetter(player, receiver);
+    public static void openSendingMailbox(Player player, OfflinePlayer receiver) throws SQLException {
+        SendingLetter sendingLetter = new SendingLetter(player, receiver, plugin);
         sendingLetter.openInventory();
     }
 

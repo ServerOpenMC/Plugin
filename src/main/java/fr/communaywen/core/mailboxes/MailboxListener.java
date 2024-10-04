@@ -11,6 +11,7 @@ import fr.communaywen.core.mailboxes.menu.letter.SendingLetter;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
 import fr.communaywen.core.mailboxes.utils.PaginatedMailbox;
 import fr.communaywen.core.utils.database.DatabaseConnector;
+import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -31,6 +32,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -160,7 +162,7 @@ public class MailboxListener extends DatabaseConnector implements Listener {
     private void runTask(Runnable runnable) {
         plugin.getServer().getScheduler().runTask(plugin, runnable);
     }
-
+    
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inv = event.getView().getTopInventory();
@@ -235,7 +237,13 @@ public class MailboxListener extends DatabaseConnector implements Listener {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
                 OfflinePlayer receiver = meta.getOwningPlayer();
                 if (receiver == null) return;
-                runTask(() -> HomeMailbox.openSendingMailbox(player, receiver));
+                runTask(() -> {
+	                try {
+		                HomeMailbox.openSendingMailbox(player, receiver);
+	                } catch (SQLException e) {
+		                e.printStackTrace();
+	                }
+                });
             }
         }
     }
