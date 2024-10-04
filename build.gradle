@@ -8,8 +8,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven { url = "https://nexus.frengor.com/repository/public/" } // Laisser avant mavenLocal() !!!
-    mavenLocal()
+    maven { url = "https://nexus.frengor.com/repository/public/" }
     maven { url = "https://repo.purpurmc.org/snapshots" }
     maven { url = "https://mvn.coolcraft.ovh/releases" }
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
