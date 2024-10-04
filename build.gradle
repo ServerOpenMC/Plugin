@@ -9,26 +9,10 @@ version = '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
     mavenLocal()
-    maven {
-        url "https://repo.purpurmc.org/snapshots"
-    }
-    maven {
-        name = "gyro-repository-releases"
-        url = "https://mvn.coolcraft.ovh/releases"
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
-    maven {
-        name = "minecraft-repo"
-        url = "https://libraries.minecraft.net"
-    }
-    maven {
-        url = 'https://maven.enginehub.org/repo/'
-    }
+    maven { url = "https://repo.purpurmc.org/snapshots" }
+    maven { url = "https://mvn.coolcraft.ovh/releases" }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = 'https://maven.enginehub.org/repo/' }
     maven { url = "https://repo.onarandombox.com/content/groups/public/" }
 }
 
