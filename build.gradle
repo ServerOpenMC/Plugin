@@ -7,8 +7,8 @@ group = "fr.communaywen"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven { url = "https://nexus.frengor.com/repository/public/" }
     mavenCentral()
+    maven { url = "https://nexus.frengor.com/repository/public/" } // Laisser avant mavenLocal() !!!
     mavenLocal()
     maven { url = "https://repo.purpurmc.org/snapshots" }
     maven { url = "https://mvn.coolcraft.ovh/releases" }
