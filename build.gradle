@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'fr.communaywen'
-version = '1.0-SNAPSHOT'
+version = "GIT-"+System.getenv("GITHUB_SHA") ?: "unknown"
 
 repositories {
     mavenCentral()

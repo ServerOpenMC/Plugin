@@ -97,8 +97,10 @@ public class QuizManager {
                             "§8§m                                                     §r"
             );
 
-            ContestManager.addPointPlayer(points + ContestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
-            ContestManager.updateColumnInt("contest", "points" + ContestManager.getPlayerCampsCache(event.getPlayer()), points + ContestManager.getInt("contest", "points" + ContestManager.getPlayerCampsCache(event.getPlayer())));
+            ContestManager.updateColumnInt("camps", "point_dep", points + ContestManager.getPlayerPointsCache(event.getPlayer()));
+            String playerCamp = "points" + ContestManager.getPlayerCampsCache(event.getPlayer());
+            ContestManager.updateColumnInt("contest", playerCamp, points + ContestManager.getInt("contest", playerCamp));
+          
         } else {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +
