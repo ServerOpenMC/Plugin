@@ -38,18 +38,8 @@ public class HeadListener implements Listener {
         plugin = plugins;
     }
 
-    private static long lastCooldown = 0;
-    private static final long cooldownDuration = 120000;
-
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        long currentTime = System.currentTimeMillis();
-        if (!((currentTime - lastCooldown) > cooldownDuration)) {
-            return;
-        } else {
-            lastCooldown = currentTime;
-        }
-
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }

@@ -2,7 +2,9 @@ package fr.communaywen.core.scoreboard;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.dreamdim.listeners.CloudSoup;
+import fr.communaywen.core.spawn.head.HeadManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -10,7 +12,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -84,7 +85,6 @@ public class ScoreboardManager {
         Team teamName = teamManager.getTeamByPlayer(player.getUniqueId());
         String flytime = CloudSoup.getInstance().getFlyTime(player);
         String ipStr = "ᴘʟᴀʏ.ᴏᴘᴇɴᴍᴄ.ꜰʀ";
-        int phase = ContestManager.getPhaseCache();
 
         objective.getScore(" ").setScore(13);
         objective.getScore("§d§m                        ").setScore(12);
@@ -99,7 +99,13 @@ public class ScoreboardManager {
         objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(7);
         objective.getScore("   ").setScore(6);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(5);
+        if (FirerocketSpawnListener.isPlayerInRegion("spawn", Bukkit.getWorld("world"))) {
+            int heads = HeadManager.getHeadFoundIntCache(player);
+            int maxHeads = HeadManager.getMaxHeads();
 
+            objective.getScore("   ").setScore(5);
+            objective.getScore("§8• §fHeads§7: §d" + heads + "§8/§d"+ maxHeads).setScore(4);
+        }
         /**
         if(phase != 1) {
             objective.getScore(" ").setScore(4);

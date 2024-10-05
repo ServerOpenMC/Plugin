@@ -77,7 +77,7 @@ public class HeadManager extends DatabaseConnector  {
                 JSONArray headsArray = new JSONArray(heads);
                 List<String> headFound = headsArray.toList().stream().map(Object::toString).toList();
 
-                playerCache.put(playerUUID, new HeadPlayerCache(headFound));
+                playerCache.put(playerUUID, new HeadPlayerCache(headFound, headFound.size()));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -96,6 +96,21 @@ public class HeadManager extends DatabaseConnector  {
                 return cache.getHeadsFound();
             }
             return null;
+        }
+    }
+
+    public static int getHeadFoundIntCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        HeadPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getHeadsFoundInt();
+        } else {
+            initPlayerDataCache(player);
+            if (cache!=null) {
+                return cache.getHeadsFoundInt();
+            }
+            return 0;
         }
     }
 
