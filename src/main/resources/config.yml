@@ -40,6 +40,10 @@ leaderboard:
     posY: 75
     posZ: 165
     world: world
+head:
+  world: "world"
+  region: "spawn"
+  list:
 contest:
   config:
     worldName: "world"

@@ -297,6 +297,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
+                new HeadCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
@@ -457,6 +458,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
             ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
             ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
+
         }
     }
 

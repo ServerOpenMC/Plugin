@@ -1,23 +1,24 @@
 package fr.communaywen.core.commands.head;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.menu.ContributionMenu;
-import fr.communaywen.core.contest.menu.VoteMenu;
+import fr.communaywen.core.corpse.CorpseBlock;
+import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.spawn.head.HeadManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-import java.time.DayOfWeek;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 @Feature("Heads")
 @Credit("iambibi_")
@@ -33,13 +34,43 @@ public class HeadCommand {
     @Cooldown(4)
     @DefaultFor("~")
     public void defaultCommand(Player player) {
-
+        MessageManager.sendMessageType(player, "§7Vous avez trouvé une tête! (§d" + HeadManager.getNumberHeads(player) + "§8/§d" + HeadManager.getMaxHeads() + "§7)", Prefix.HEAD, MessageType.SUCCESS, true);
     }
 
-    @Subcommand("give")
-    @Description("Permet de lancer une procédure de phase")
-    @CommandPermission("ayw.command.heads.give")
-    public void give(Player player) {
-        HeadManager.giveHead(player);
+    @Subcommand("add")
+    @Description("Ajoute une tete")
+    @CommandPermission("ayw.command.heads.add")
+    public void add(Player player, Integer headId) {
+        List<Map<?, ?>> headList = plugin.getConfig().getMapList("head.list");
+        Boolean canPass = true;
+
+        for (Map<?, ?> head : headList) {
+            if (head.containsKey("id") && (int) head.get("id") == headId) {
+                canPass = false;
+                MessageManager.sendMessageType(player, "§cCet id est déja utilisé", Prefix.HEAD, MessageType.ERROR, true);
+                break;
+            }
+        }
+
+        if (canPass && (player.getTargetBlock(null, 100).getType() == Material.PLAYER_HEAD || player.getTargetBlock(null, 100).getType() == Material.PLAYER_WALL_HEAD)) {
+            Location blockLocation = player.getTargetBlock(null, 100).getLocation();
+            double posX = blockLocation.getX();
+            double posY = blockLocation.getY();
+            double posZ = blockLocation.getZ();
+            String world = blockLocation.getWorld().getName();
+
+            Map<String, Object> newHead = new HashMap<>();
+            newHead.put("id", headId);
+            newHead.put("posX", posX);
+            newHead.put("posY", posY);
+            newHead.put("posZ", posZ);
+
+            headList.add(newHead);
+            plugin.getConfig().set("head.list", headList);
+            plugin.saveConfig();
+            MessageManager.sendMessageType(player, "§7Tête ajoutée avec succès X=" + posX + " Y=" + posY + " Z=" + posZ + " WORLD = " + world, Prefix.HEAD, MessageType.SUCCESS, true);
+        } else {
+            MessageManager.sendMessageType(player, "§cVous devez viser une tête", Prefix.HEAD, MessageType.ERROR, true);
+        }
     }
 }
