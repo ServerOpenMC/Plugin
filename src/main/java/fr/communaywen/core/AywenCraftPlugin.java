@@ -24,12 +24,10 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
-import fr.communaywen.core.commands.spawn.head.HeadCommand;
 import fr.communaywen.core.commands.homes.DelhomesCommands;
 import fr.communaywen.core.commands.homes.HomesCommands;
 import fr.communaywen.core.commands.homes.RenameHomeCommands;
 import fr.communaywen.core.commands.homes.SethomesCommands;
-import fr.communaywen.core.commands.spawn.jump.JumpCommand;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -50,6 +48,7 @@ import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
+import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsCommand;
@@ -221,55 +220,54 @@ public final class AywenCraftPlugin extends JavaPlugin {
             }
 
             assert player != null;
-            if(args.isEmpty()) {
+            if(!command.equals("renamehome")) {
+                if(args.isEmpty()) {
+                    if(player.hasPermission("ayw.home.teleport.others")) {
+                        suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                                .map(OfflinePlayer::getName)
+                                .map(name -> name + ":")
+                                .toList());
+
+                    }
+                    suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
+                } else {
+                    String arg = args.getFirst();
+
+                    if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
+                        String[] parts = arg.split(":", 2);
+                        Player target = Bukkit.getPlayer(parts[0]);
+
+                        if(target != null) {
+                            String prefix = parts[0] + ":";
+                            suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
+                                    .stream()
+                                    .map(home -> prefix + home)
+                                    .toList());
+                        }
+                    } else {
+                        if (player.hasPermission("ayw.home.teleport.others")) {
+                            suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                                    .map(OfflinePlayer::getName)
+                                    .filter(name -> name.toLowerCase().startsWith(arg.toLowerCase()))
+                                    .map(name -> name + ":")
+                                    .toList());
+                        }
+
+                        suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
+                                .stream()
+                                .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
+                                .toList());
+                    }
+
+                    return suggestions;
+                }
+
                 if(player.hasPermission("ayw.home.teleport.others")) {
                     suggestions.addAll(Bukkit.getOnlinePlayers().stream()
                             .map(OfflinePlayer::getName)
                             .map(name -> name + ":")
                             .toList());
-
                 }
-                suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
-            } else {
-                String arg = args.getFirst();
-
-                if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
-                    String[] parts = arg.split(":", 2);
-                    Player target = Bukkit.getPlayer(parts[0]);
-
-                    if(target != null) {
-                        String prefix = parts[0] + ":";
-                        suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
-                                .stream()
-                                .map(home -> prefix + home)
-                                .toList());
-                    }
-                } else {
-                    if (player.hasPermission("ayw.home.teleport.others")) {
-                        suggestions.addAll(Bukkit.getOnlinePlayers().stream()
-                                .map(OfflinePlayer::getName)
-                                .filter(name -> name.toLowerCase().startsWith(arg.toLowerCase()))
-                                .map(name -> name + ":")
-                                .toList());
-                    }
-
-                    suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
-                            .stream()
-                            .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
-                            .toList());
-                }
-
-                return suggestions;
-            }
-
-            if(player.hasPermission("ayw.home.teleport.others")) {
-
-                System.out.println("args: " + args);
-
-                suggestions.addAll(Bukkit.getOnlinePlayers().stream()
-                        .map(OfflinePlayer::getName)
-                        .map(name -> name + ":")
-                        .toList());
             }
 
             suggestions.addAll(HomesManagers.homes.stream()
@@ -284,6 +282,21 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
         this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+        this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
+            DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
+
+            List<String> disabledWorlds = disabledWorldHome.getDisabledWorlds();
+            List<String> allWorlds = new ArrayList<>(Bukkit.getWorlds().stream().map(World::getName).toList());
+            allWorlds.removeAll(disabledWorlds);
+            List<String> suggestions = new ArrayList<>(allWorlds);
+
+            return suggestions;
+        });
+        this.handler.getAutoCompleter().registerSuggestion("homeWorldsRemove", (args, sender, command) -> {
+            DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
+
+            return (List<String>) new ArrayList<String>(disabledWorldHome.getDisabledWorlds());
+        });
 
         this.handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
             OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
@@ -300,8 +313,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
-                new JumpCommand(this),
-                new HeadCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
@@ -352,7 +363,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new HomesCommands(managers.getHomeUpgradeManager(), managers.getHomesManagers()),
                 new SethomesCommands(managers.getHomesManagers()),
                 new DelhomesCommands(managers.getHomesManagers()),
-                new RenameHomeCommands(managers.getHomesManagers())
+                new RenameHomeCommands(managers.getHomesManagers()),
+                new HomeDisabledWorldCommand(managers.getDisabledWorldHome())
         );
 
         /*  --------  */
@@ -373,9 +385,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
-                new JumpListener(this),
-                new HeadListener(this),
-                new LeaderboardListener(this),
+                //new LeaderboardListener(this),
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),
@@ -438,48 +448,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
 
-        // BETTER SPAWN
-        // - Leaderboard
-        LeaderboardManager.createLeaderboardBalTop();
-        LeaderboardManager.updateLeaderboardBalTop();
-        LeaderboardManager.createLeaderboardTeamTop();
-        LeaderboardManager.updateLeaderboardTeamTop();
-        JumpManager.createDisplayJumpStart();
-        JumpManager.createDisplayJumpEnd();
-        LeaderboardManager.createLeaderboardContribution();
-        try {
-            LeaderboardManager.updateLeaderboardContribution();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        // - Particle
-        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 50, 130);
-        if (ContestManager.getPhaseCache() != 1) {
-            String camp1Color = ContestManager.getColor1Cache();
-            String camp2Color = ContestManager.getColor2Cache();
-            ChatColor color1 = ChatColor.valueOf(camp1Color);
-            ChatColor color2 = ChatColor.valueOf(camp2Color);
-
-            int[] rgb1 = ColorConvertor.getRGBFromChatColor(color1);
-            int[] rgb2 = ColorConvertor.getRGBFromChatColor(color2);
-
-            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
-            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
-
-        }
+        //LeaderboardManager.createLeaderboard();
     }
 
     @SneakyThrows
     @Override
     public void onDisable() {
-        // Remove Leaderboard
-        LeaderboardManager.removeLeaderboardBalTop();
-        LeaderboardManager.removeLeaderboardTeamTop();
-        LeaderboardManager.removeLeaderboardContribution();
-
-        JumpManager.removeDisplayJumpStart();
-        JumpManager.removeDisplayJumpEnd();
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress

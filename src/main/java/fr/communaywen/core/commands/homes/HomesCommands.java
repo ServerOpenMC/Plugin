@@ -39,13 +39,13 @@ public class HomesCommands {
     @AutoComplete("@homes *")
     public void homes(Player player, @Default("~") @Named("homes") String name) {
 
-        if(!player.getWorld().equals(AywenCraftPlugin.getInstance().getServer().getWorlds().get(0))) {
-            MessageManager.sendMessageType(player, "§cTu ne peux te téléporter à un home que dans le monde principal.", Prefix.HOME, MessageType.ERROR, true);
+        if(AywenCraftPlugin.frozenPlayers.contains(player)) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas te téléporter à un home car tu es gelé.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
 
-        if(AywenCraftPlugin.frozenPlayers.contains(player)) {
-            MessageManager.sendMessageType(player, "§cTu ne peux pas te téléporter à un home car tu es gelé.", Prefix.HOME, MessageType.ERROR, true);
+        if(AywenCraftPlugin.getInstance().getManagers().getDisabledWorldHome().isDisabledWorld(player.getWorld())) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas te téléporter à un home dans ce monde.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
 

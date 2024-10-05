@@ -115,7 +115,7 @@ public class BossManager implements Listener {
 
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
-        if (new Random().nextDouble() <= 0.075) {
+        if (new Random().nextDouble() <= 0.1) {
             player.getServer().broadcast(Component.text(player.getName()+" a commencé un combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
             player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 20);
             player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
@@ -286,21 +286,27 @@ public class BossManager implements Listener {
     }
 
     private @NotNull ItemStack getHelmet() {
-        ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");;
+        try {
+            ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");
+            ;
 
-        ItemMeta meta = helmet.getItemMeta();
-        meta.displayName(Component.text("§r§dTête du Dévorêve"));
-        meta.setEnchantmentGlintOverride(false);
-        meta.setFireResistant(true);
-        helmet.setItemMeta(meta);
+            ItemMeta meta = helmet.getItemMeta();
+            meta.displayName(Component.text("§r§dTête du Dévorêve"));
+            meta.setEnchantmentGlintOverride(false);
+            meta.setFireResistant(true);
+            helmet.setItemMeta(meta);
 
-        helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
+            helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
 
-        helmet.lore(List.of(
-                Component.text("§8Wazzup?")
-        ));
+            helmet.lore(List.of(
+                    Component.text("§8Wazzup?")
+            ));
 
-        return helmet;
+            return helmet;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ItemStack(Material.NETHERITE_HELMET);
+        }
     }
 
     private @NotNull ItemStack getChestplate() {
