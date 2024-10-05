@@ -38,14 +38,24 @@ public class HeadListener implements Listener {
         plugin = plugins;
     }
 
+    private static long lastCooldown = 0;
+    private static final long cooldownDuration = 120000;
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        long currentTime = System.currentTimeMillis();
+        if (!((currentTime - lastCooldown) > cooldownDuration)) {
+            return;
+        } else {
+            lastCooldown = currentTime;
+        }
+
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-        if (isPlayerInRegion(config.getString("head.region"), Bukkit.getWorld(config.getString("head.world"))) && (event.getClickedBlock().getType() == Material.PLAYER_HEAD || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD)) {
+        if (isPlayerInRegion(config.getString("head.region"), Bukkit.getWorld(config.getString("head.world")))) {
             if(event.getClickedBlock().getType() == Material.PLAYER_HEAD || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD) {
                     Location clickedBlockLocation = event.getClickedBlock().getLocation();
 
@@ -60,6 +70,7 @@ public class HeadListener implements Listener {
                         if (headLocation.equals(clickedBlockLocation)) {
 
                             if (!HeadManager.hasFoundHead(event.getPlayer(), String.valueOf(headId))) {
+                                HeadManager.initPlayerDataCache(event.getPlayer());
                                 HeadManager.saveFoundHead(event.getPlayer(), String.valueOf(headId));
                                 MessageManager.sendMessageType(event.getPlayer(), "§7Vous avez trouvé une tête! (§d" + HeadManager.getNumberHeads(event.getPlayer()) + "§8/§d" + HeadManager.getMaxHeads() + "§7)", Prefix.HEAD, MessageType.SUCCESS, true);
                             } else {

@@ -446,7 +446,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             throw new RuntimeException(e);
         }
         // - Particle
-        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 75, 150);
+        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 50, 130);
         if (ContestManager.getPhaseCache() != 1) {
             String camp1Color = ContestManager.getColor1Cache();
             String camp2Color = ContestManager.getColor2Cache();
