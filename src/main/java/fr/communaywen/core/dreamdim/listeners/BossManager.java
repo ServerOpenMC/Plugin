@@ -286,21 +286,27 @@ public class BossManager implements Listener {
     }
 
     private @NotNull ItemStack getHelmet() {
-        ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");;
+        try {
+            ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");
+            ;
 
-        ItemMeta meta = helmet.getItemMeta();
-        meta.displayName(Component.text("§r§dTête du Dévorêve"));
-        meta.setEnchantmentGlintOverride(false);
-        meta.setFireResistant(true);
-        helmet.setItemMeta(meta);
+            ItemMeta meta = helmet.getItemMeta();
+            meta.displayName(Component.text("§r§dTête du Dévorêve"));
+            meta.setEnchantmentGlintOverride(false);
+            meta.setFireResistant(true);
+            helmet.setItemMeta(meta);
 
-        helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
+            helmet.addEnchant(Enchantment.RESPIRATION, 1, true);
 
-        helmet.lore(List.of(
-                Component.text("§8Wazzup?")
-        ));
+            helmet.lore(List.of(
+                    Component.text("§8Wazzup?")
+            ));
 
-        return helmet;
+            return helmet;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ItemStack(Material.NETHERITE_HELMET);
+        }
     }
 
     private @NotNull ItemStack getChestplate() {
