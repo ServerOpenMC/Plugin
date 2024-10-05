@@ -51,6 +51,7 @@ import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
+import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsCommand;
@@ -64,12 +65,10 @@ import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
-import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
-import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
@@ -86,10 +85,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -113,7 +109,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -223,55 +218,54 @@ public final class AywenCraftPlugin extends JavaPlugin {
             }
 
             assert player != null;
-            if(args.isEmpty()) {
+            if(!command.equals("renamehome")) {
+                if(args.isEmpty()) {
+                    if(player.hasPermission("ayw.home.teleport.others")) {
+                        suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                                .map(OfflinePlayer::getName)
+                                .map(name -> name + ":")
+                                .toList());
+
+                    }
+                    suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
+                } else {
+                    String arg = args.getFirst();
+
+                    if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
+                        String[] parts = arg.split(":", 2);
+                        Player target = Bukkit.getPlayer(parts[0]);
+
+                        if(target != null) {
+                            String prefix = parts[0] + ":";
+                            suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
+                                    .stream()
+                                    .map(home -> prefix + home)
+                                    .toList());
+                        }
+                    } else {
+                        if (player.hasPermission("ayw.home.teleport.others")) {
+                            suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                                    .map(OfflinePlayer::getName)
+                                    .filter(name -> name.toLowerCase().startsWith(arg.toLowerCase()))
+                                    .map(name -> name + ":")
+                                    .toList());
+                        }
+
+                        suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
+                                .stream()
+                                .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
+                                .toList());
+                    }
+
+                    return suggestions;
+                }
+
                 if(player.hasPermission("ayw.home.teleport.others")) {
                     suggestions.addAll(Bukkit.getOnlinePlayers().stream()
                             .map(OfflinePlayer::getName)
                             .map(name -> name + ":")
                             .toList());
-
                 }
-                suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
-            } else {
-                String arg = args.getFirst();
-
-                if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
-                    String[] parts = arg.split(":", 2);
-                    Player target = Bukkit.getPlayer(parts[0]);
-
-                    if(target != null) {
-                        String prefix = parts[0] + ":";
-                        suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
-                                .stream()
-                                .map(home -> prefix + home)
-                                .toList());
-                    }
-                } else {
-                    if (player.hasPermission("ayw.home.teleport.others")) {
-                        suggestions.addAll(Bukkit.getOnlinePlayers().stream()
-                                .map(OfflinePlayer::getName)
-                                .filter(name -> name.toLowerCase().startsWith(arg.toLowerCase()))
-                                .map(name -> name + ":")
-                                .toList());
-                    }
-
-                    suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
-                            .stream()
-                            .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
-                            .toList());
-                }
-
-                return suggestions;
-            }
-
-            if(player.hasPermission("ayw.home.teleport.others")) {
-
-                System.out.println("args: " + args);
-
-                suggestions.addAll(Bukkit.getOnlinePlayers().stream()
-                        .map(OfflinePlayer::getName)
-                        .map(name -> name + ":")
-                        .toList());
             }
 
             suggestions.addAll(HomesManagers.homes.stream()
@@ -286,6 +280,21 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
         this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+        this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
+            DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
+
+            List<String> disabledWorlds = disabledWorldHome.getDisabledWorlds();
+            List<String> allWorlds = new ArrayList<>(Bukkit.getWorlds().stream().map(World::getName).toList());
+            allWorlds.removeAll(disabledWorlds);
+            List<String> suggestions = new ArrayList<>(allWorlds);
+
+            return suggestions;
+        });
+        this.handler.getAutoCompleter().registerSuggestion("homeWorldsRemove", (args, sender, command) -> {
+            DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
+
+            return (List<String>) new ArrayList<String>(disabledWorldHome.getDisabledWorlds());
+        });
 
         this.handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
             OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
@@ -352,7 +361,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new HomesCommands(managers.getHomeUpgradeManager(), managers.getHomesManagers()),
                 new SethomesCommands(managers.getHomesManagers()),
                 new DelhomesCommands(managers.getHomesManagers()),
-                new RenameHomeCommands(managers.getHomesManagers())
+                new RenameHomeCommands(managers.getHomesManagers()),
+                new HomeDisabledWorldCommand(managers.getDisabledWorldHome())
         );
 
         /*  --------  */

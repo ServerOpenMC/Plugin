@@ -44,6 +44,11 @@ public class HomesCommands {
             return;
         }
 
+        if(AywenCraftPlugin.getInstance().getManagers().getDisabledWorldHome().isDisabledWorld(player.getWorld())) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas te téléporter à un home dans ce monde.", Prefix.HOME, MessageType.ERROR, true);
+            return;
+        }
+
         if (name.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
             String[] parts = name.split(":");
             OfflinePlayer target = Bukkit.getOfflinePlayer(parts[0]);
