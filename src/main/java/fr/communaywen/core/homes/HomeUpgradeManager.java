@@ -17,6 +17,15 @@ public class HomeUpgradeManager {
         this.plugin = plugin;
     }
 
+    public HomeUpgrade getCurrentUpgrade(Player player) {
+        for (HomeUpgrade upgrade : HomeUpgrade.values()) {
+            if (homesManagers.getCurrentHomesLimit(player.getUniqueId()) == upgrade.getHomes()) {
+                return upgrade;
+            }
+        }
+        return null;
+    }
+
     public HomeUpgrade getNextUpgrade(int currentHomes) {
         for (HomeUpgrade upgrade : HomeUpgrade.values()) {
             if (currentHomes < upgrade.getHomes()) {
