@@ -1,14 +1,13 @@
 package fr.communaywen.core.dreamdim.listeners;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.DreamUtils;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -26,13 +25,18 @@ public class MobListener implements Listener {
     }
 
     @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent e) {
+    public void onEntitySpawn(CreatureSpawnEvent e) {
         Entity entity = e.getEntity();
         World world = entity.getWorld();
         if (!entity.getWorld().getName().equals("dreamworld")) {
             return;
         }
+
         if ((entity instanceof Player)) {
+            return;
+        }
+
+        if (e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BUILD_WITHER)) {
             return;
         }
 
