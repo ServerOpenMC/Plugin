@@ -5,6 +5,7 @@ api-version: '1.21.1'
 depend:
   - ProtocolLib
   - ItemsAdder
+  - UltimateAdvancementAPI
 
 permissions:
   ayw.command.taille:
