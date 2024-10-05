@@ -1,8 +1,10 @@
 package fr.communaywen.core.dreamdim;
 
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 public class DreamUtils {
@@ -15,6 +17,11 @@ public class DreamUtils {
 
         meta.getPersistentDataContainer().set(fromdream_ns, PersistentDataType.BOOLEAN, true);
         itemStack.setItemMeta(meta);
+    }
+
+    public static boolean isBoss(Entity entity) {
+        PersistentDataContainer dataContainer = entity.getPersistentDataContainer();
+        return Boolean.TRUE.equals(dataContainer.get(NamespacedKey.minecraft("dream_boss"), PersistentDataType.BOOLEAN));
     }
 
     public static boolean isFromDream(ItemStack itemStack) {

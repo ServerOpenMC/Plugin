@@ -68,6 +68,8 @@ import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
+import fr.communaywen.core.space.moon.MoonListener;
+import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
@@ -381,6 +383,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* LISTENERS */
         registerEvents(
                 //new LeaderboardListener(this),
+                new RocketListener(),
+                new MoonListener(),
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),

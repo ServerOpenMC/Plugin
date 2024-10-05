@@ -12,6 +12,7 @@ import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.homes.world.DisabledWorldHome;
+import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsDataManager;
@@ -49,6 +50,7 @@ public class Managers {
     private MoonDimensionManager moonDimManager;
     private HomeManager homeManager;
     private TeamManager teamManager;
+    private GuidelineManager guidelineManager;
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
     private CorpseManager corpseManager;
@@ -118,6 +120,7 @@ public class Managers {
        // leaderboardManager = new LeaderboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
+        guidelineManager = new GuidelineManager(plugin);
         contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
