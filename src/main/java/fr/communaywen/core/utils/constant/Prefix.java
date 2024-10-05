@@ -21,6 +21,7 @@ public enum Prefix {
     CONTEST("§6§lCONTEST!"),
     SPACE("§x§3§3§0§8§F§B§l@§x§3§6§0§D§F§B§lᴀ§x§3§A§1§1§F§C§lѕ§x§3§D§1§6§F§C§lᴛ§x§4§0§1§B§F§D§lʀ§x§4§4§2§0§F§D§lᴏ§x§4§7§2§4§F§D§lɴ§x§4§A§2§9§F§E§lᴏ§x§4§D§2§E§F§E§lᴍ§x§5§1§3§2§F§F§lɪ§x§5§4§3§7§F§F§lᴇ"),
     HEAD("§dHeads"),
+    JUMP("§2Jump"),
 
     // Lucky Block's prefixes
     LUCKYBLOCK("§x§F§C§4§5§8§2L§x§F§C§5§C§9§2u§x§F§D§7§4§A§1c§x§F§D§8§B§B§1k§x§F§E§A§2§C§1y§x§F§E§B§9§D§0B§x§F§E§D§1§E§0l§x§F§F§E§8§E§Fo§x§F§F§F§F§F§Fc§x§F§F§F§F§F§Fk"),

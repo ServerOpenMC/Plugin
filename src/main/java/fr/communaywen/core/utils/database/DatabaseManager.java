@@ -130,6 +130,9 @@ public class DatabaseManager {
         //Table pour stocker le nombre de head qu'a trouver le joueur
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_head (uuid VARCHAR(36), heads JSON)").executeUpdate();
 
+        //Table pour le systeme de jump
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_jump (uuid VARCHAR(36), best_time DOUBLE)").executeUpdate();
+
         System.out.println("Les tables ont été créer si besoin");
 
     }

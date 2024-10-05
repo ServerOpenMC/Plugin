@@ -44,6 +44,16 @@ head:
   world: "world"
   region: "spawn"
   list:
+jump:
+  world: "world"
+  start:
+    posX: 100
+    posY: 65
+    posZ: -200
+  end:
+    posX: 150
+    posY: 80
+    posZ: -250
 contest:
   config:
     worldName: "world"

@@ -24,11 +24,12 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
-import fr.communaywen.core.commands.head.HeadCommand;
+import fr.communaywen.core.commands.spawn.head.HeadCommand;
 import fr.communaywen.core.commands.homes.DelhomesCommands;
 import fr.communaywen.core.commands.homes.HomesCommands;
 import fr.communaywen.core.commands.homes.RenameHomeCommands;
 import fr.communaywen.core.commands.homes.SethomesCommands;
+import fr.communaywen.core.commands.spawn.jump.JumpCommand;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -73,6 +74,8 @@ import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.space.moon.MoonListener;
 import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.spawn.head.HeadListener;
+import fr.communaywen.core.spawn.jump.JumpListener;
+import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
@@ -297,6 +300,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
+                new JumpCommand(this),
                 new HeadCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
@@ -369,6 +373,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new JumpListener(this),
                 new HeadListener(this),
                 new LeaderboardListener(this),
                 new RocketListener(),
@@ -439,6 +444,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LeaderboardManager.updateLeaderboardBalTop();
         LeaderboardManager.createLeaderboardTeamTop();
         LeaderboardManager.updateLeaderboardTeamTop();
+        JumpManager.createDisplayJumpStart();
+        JumpManager.createDisplayJumpEnd();
         LeaderboardManager.createLeaderboardContribution();
         try {
             LeaderboardManager.updateLeaderboardContribution();
@@ -469,6 +476,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LeaderboardManager.removeLeaderboardBalTop();
         LeaderboardManager.removeLeaderboardTeamTop();
         LeaderboardManager.removeLeaderboardContribution();
+
+        JumpManager.removeDisplayJumpStart();
+        JumpManager.removeDisplayJumpEnd();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {

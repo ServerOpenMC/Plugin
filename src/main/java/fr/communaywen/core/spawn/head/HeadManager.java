@@ -1,10 +1,7 @@
 package fr.communaywen.core.spawn.head;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.ContestPlayerCache;
 import fr.communaywen.core.utils.database.DatabaseConnector;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.json.JSONArray;

@@ -1,0 +1,86 @@
+package fr.communaywen.core.commands.spawn.jump;
+
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.spawn.head.HeadManager;
+import fr.communaywen.core.spawn.jump.JumpManager;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import revxrsal.commands.annotation.*;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@Feature("Jump")
+@Credit("iambibi_")
+@Command("jump")
+@Description("Permet de vous donner vos statistiques par rapport au jump")
+public class JumpCommand {
+    private final AywenCraftPlugin plugin;
+
+    public JumpCommand(AywenCraftPlugin plugins) {
+        plugin = plugins;
+    }
+
+    @Cooldown(4)
+    @DefaultFor("~")
+    public void defaultCommand(Player player) {
+        MessageManager.sendMessageType(player, "§7Vous avez trouvé §d" + HeadManager.getNumberHeads(player) + "§8tête(s) sur §d" + HeadManager.getMaxHeads() + "§8têtes", Prefix.HEAD, MessageType.SUCCESS, true);
+    }
+
+    @Subcommand("move start")
+    @Description("Déplace le démarrage du jump")
+    @CommandPermission("ayw.command.jump.move.start")
+    public void movestart(Player player) {
+        if (player.getTargetBlock(null, 100).getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+            Location blockLocation = player.getTargetBlock(null, 100).getLocation();
+            double posX = blockLocation.getX();
+            double posY = blockLocation.getY();
+            double posZ = blockLocation.getZ();
+            String world = blockLocation.getWorld().getName();
+
+            plugin.getConfig().set("jump.world", world);
+            plugin.getConfig().set("jump.start.posX", posX);
+            plugin.getConfig().set("jump.start.posY", posY);
+            plugin.getConfig().set("jump.start.posZ", posZ);
+            plugin.saveConfig();
+            JumpManager.removeDisplayJumpStart();
+            JumpManager.createDisplayJumpStart();
+            MessageManager.sendMessageType(player, "§7Commencement du jump déplacé X=" + posX + " Y=" + posY + " Z=" + posZ + " WORLD = " + world, Prefix.JUMP, MessageType.SUCCESS, true);
+        } else {
+            MessageManager.sendMessageType(player, "§cVous devez viser plaque de pression de fer", Prefix.JUMP, MessageType.ERROR, true);
+        }
+    }
+
+    @Subcommand("move end")
+    @Description("Déplace la fin du jump")
+    @CommandPermission("ayw.command.jump.move.end")
+    public void moveend(Player player) {
+        if (player.getTargetBlock(null, 100).getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+            Location blockLocation = player.getTargetBlock(null, 100).getLocation();
+            double posX = blockLocation.getX();
+            double posY = blockLocation.getY();
+            double posZ = blockLocation.getZ();
+            String world = blockLocation.getWorld().getName();
+
+            plugin.getConfig().set("jump.world", world);
+            plugin.getConfig().set("jump.end.posX", posX);
+            plugin.getConfig().set("jump.end.posY", posY);
+            plugin.getConfig().set("jump.end.posZ", posZ);
+            plugin.saveConfig();
+            JumpManager.removeDisplayJumpEnd();
+            JumpManager.createDisplayJumpEnd();
+            MessageManager.sendMessageType(player, "§7Fin du jump déplacé X=" + posX + " Y=" + posY + " Z=" + posZ + " WORLD = " + world, Prefix.JUMP, MessageType.SUCCESS, true);
+        } else {
+            MessageManager.sendMessageType(player, "§cVous devez viser plaque de pression de fer", Prefix.JUMP, MessageType.ERROR, true);
+        }
+    }
+}

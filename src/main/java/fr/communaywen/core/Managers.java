@@ -23,6 +23,7 @@ import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.spawn.head.HeadManager;
+import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
@@ -44,6 +45,7 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private JumpManager jumpManager;
     private HeadManager headManager;
     private ParticleRegionManager particleRegionManager;
     private ContestManager contestManager;
@@ -117,6 +119,7 @@ public class Managers {
         }
         // Database
 
+        jumpManager = new JumpManager(plugin);
         headManager = new HeadManager(plugin);
         particleRegionManager = new ParticleRegionManager(plugin);
         leaderboardManager = new LeaderboardManager(plugin);
