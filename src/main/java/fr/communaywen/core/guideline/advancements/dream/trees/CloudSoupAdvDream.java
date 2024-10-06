@@ -1,24 +1,24 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream.trees;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import org.bukkit.Material;
+import dev.lone.itemsadder.api.CustomStack;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class CloudSoupAdvDream extends BaseAdvancement {
+    public CloudSoupAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "cloudsoup",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
+                        CustomStack.getInstance("aywen:cloud_soup").getItemStack(),
+                        "Voler",
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        3F,4.5F,
+                        "Vous volez dans les airs comme un nuage"
                 ),
                 parent
         );

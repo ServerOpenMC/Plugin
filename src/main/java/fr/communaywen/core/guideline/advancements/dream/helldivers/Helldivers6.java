@@ -1,4 +1,4 @@
-package fr.communaywen.core.guideline.advancements.dream;
+package fr.communaywen.core.guideline.advancements.dream.helldivers;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
@@ -8,24 +8,20 @@ import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class BedSweetBed extends BaseAdvancement {
-    public BedSweetBed(@NotNull Advancement parent) {
+public class Helldivers6 extends BaseAdvancement {
+    public Helldivers6(@NotNull Advancement parent) {
         super(
-                "bedsweetbed",
+                "helldivers/six",
                 new AdvancementDisplay(
-                        Material.SCULK,
-                        "Votre premier rêve",
-                        AdvancementFrameType.TASK,
+                        Material.NETHERITE_SWORD,
+                        "Helldivers VI",
+                        AdvancementFrameType.CHALLENGE,
                         true,
                         false,
-                        -2.25F,0,
-                        "Vous avez fini votre premier rêve sans encombre"
+                        6F,10,
+                        "Pour la démocratie!!!!"
                 ),
                 parent
-        );
-
-        AywenCraftPlugin.getInstance().registerEvents(
-                new fr.communaywen.core.guideline.listeners.dream.BedSweetBed()
         );
     }
 }

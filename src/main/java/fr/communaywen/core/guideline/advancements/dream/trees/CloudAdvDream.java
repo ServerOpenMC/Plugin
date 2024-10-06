@@ -1,24 +1,24 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream.trees;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import org.bukkit.Material;
+import dev.lone.itemsadder.api.CustomStack;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class CloudAdvDream extends BaseAdvancement {
+    public CloudAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "cloud",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
+                        CustomStack.getInstance("aywen:cloud").getItemStack(),
+                        "Gash-pilleur",
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        1F,4.5F,
+                        "Vous avez coupé un nuage"
                 ),
                 parent
         );

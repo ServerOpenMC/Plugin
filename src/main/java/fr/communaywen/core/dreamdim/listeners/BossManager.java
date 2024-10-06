@@ -264,7 +264,7 @@ public class BossManager implements Listener {
         }
     }
 
-    private @NotNull ItemStack getWeapon() {
+    public static @NotNull ItemStack getWeapon() {
         ItemStack weapon = new ItemStack(Material.NETHERITE_HOE);
         weapon.addEnchant(Enchantment.SHARPNESS, 3, true);
 
@@ -285,7 +285,7 @@ public class BossManager implements Listener {
         return weapon;
     }
 
-    private @NotNull ItemStack getHelmet() {
+    public static @NotNull ItemStack getHelmet() {
         try {
             ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");
             ;
@@ -309,7 +309,7 @@ public class BossManager implements Listener {
         }
     }
 
-    private @NotNull ItemStack getChestplate() {
+    public static @NotNull ItemStack getChestplate() {
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta) chestplate.getItemMeta();
         meta.setColor(Color.fromRGB(32,32,32));

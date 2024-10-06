@@ -1,4 +1,4 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream.devoreve;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
@@ -7,18 +7,19 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class BossAdvDream extends BaseAdvancement {
+
+    public BossAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "dreameater",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
-                        AdvancementFrameType.TASK,
+                        Material.WITHER_SKELETON_SKULL,
+                        "Terraseur de rêve",
+                        AdvancementFrameType.CHALLENGE,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        2.5F,7.5F,
+                        "Vous avez tuez le dévorêve"
                 ),
                 parent
         );

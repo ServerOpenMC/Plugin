@@ -4,21 +4,22 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import fr.communaywen.core.AywenCraftPlugin;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class Helldivers5 extends BaseAdvancement {
+    public Helldivers5(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "helldivers/fifth",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
-                        AdvancementFrameType.TASK,
+                        Material.DIAMOND_SWORD,
+                        "Helldivers V",
+                        AdvancementFrameType.GOAL,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        5F,10,
+                        "Pour la démocratie!!!"
                 ),
                 parent
         );

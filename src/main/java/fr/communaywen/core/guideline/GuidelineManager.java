@@ -7,8 +7,8 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.guideline.advancements.dream.BedSweetBed;
-import fr.communaywen.core.guideline.advancements.dream.FirstDream;
+import fr.communaywen.core.guideline.advancements.dream.helldivers.*;
+import fr.communaywen.core.guideline.advancements.dream.*;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
@@ -40,18 +40,9 @@ public class GuidelineManager implements Listener {
 
         root = new RootAdvancement(tab, "root", rootDisplay, "textures/block/pink_concrete_powder.png");
 
-        register(); // Enregistre tout les advancements et listeners
-    }
+        DreamTabManager.init();
 
-    private void register() {
-        BaseAdvancement firstDream = new FirstDream();
-        BaseAdvancement bedsweetbed = new BedSweetBed(firstDream);
-
-        tab.registerAdvancements(root,
-                firstDream,
-                bedsweetbed
-        );
-
-        plugin.registerEvents(new GrantRoot());
+        tab.registerAdvancements(root);
+        tab.automaticallyGrantRootAdvancement();
     }
 }

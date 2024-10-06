@@ -1,24 +1,25 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream.fishing;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import org.bukkit.Material;
+import dev.lone.itemsadder.api.CustomStack;
+import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class DockerAdvDream extends BaseAdvancement {
+    public DockerAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "dockerfish",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
+                        CustomStack.getInstance("aywen:dockerfish").getItemStack(),
+                        "Poisson Docker",
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        2F,12.5F,
+                        "Vous sentez l'odeur de la blague ? "+ FontImageWrapper.replaceFontImages(":nerd:")
                 ),
                 parent
         );

@@ -1,24 +1,26 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream.devoreve;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import fr.communaywen.core.dreamdim.listeners.BossManager;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class BossSkullAdvDream extends BaseAdvancement {
+
+    public BossSkullAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "devoreve/skull",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
-                        AdvancementFrameType.TASK,
+                        BossManager.getHelmet(),
+                        "Tête du Dévorêve",
+                        AdvancementFrameType.GOAL,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        3.5F,6.5F,
+                        "Vous avez récupérér la tête du Dévorêve"
                 ),
                 parent
         );

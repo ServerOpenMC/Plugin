@@ -1,24 +1,24 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream.fishing;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import org.bukkit.Material;
+import dev.lone.itemsadder.api.CustomStack;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class MoonFishAdvDream extends BaseAdvancement {
+    public MoonFishAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "moonfish",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
+                        CustomStack.getInstance("aywen:moon_fish").getItemStack(),
+                        "Poisson-lune",
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        2F,13.5F,
+                        "Il porte bien son nom"
                 ),
                 parent
         );

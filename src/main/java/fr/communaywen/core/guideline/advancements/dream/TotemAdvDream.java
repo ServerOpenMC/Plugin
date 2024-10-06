@@ -1,24 +1,24 @@
-package fr.communaywen.core.guideline.advancements.dream.helldivers;
+package fr.communaywen.core.guideline.advancements.dream;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
-import org.bukkit.Material;
+import dev.lone.itemsadder.api.CustomStack;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
-    public Helldivers1(@NotNull Advancement parent) {
+public class TotemAdvDream extends BaseAdvancement {
+    public TotemAdvDream(@NotNull Advancement parent) {
         super(
-                "helldivers/one",
+                "totem",
                 new AdvancementDisplay(
-                        Material.WOODEN_SWORD,
-                        "Helldivers I",
+                        CustomStack.getInstance("aywen:totem_of_undreaming").getItemStack(),
+                        "Tromper le cauchemar",
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,10F,
-                        "Pour la démocratie"
+                        2F,6.5F,
+                        "Vous avez utilisé un totem de réveil pour vous réveiller"
                 ),
                 parent
         );
