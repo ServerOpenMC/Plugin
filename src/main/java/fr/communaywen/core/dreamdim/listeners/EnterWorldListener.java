@@ -22,6 +22,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,7 +44,7 @@ public class EnterWorldListener implements Listener {
         dreamworld = Bukkit.getWorld("dreamworld");
     }
 
-    public void teleportBack(Player p) {
+    public void teleportBack(Player p, PlayerTeleportEvent.TeleportCause cause) {
         p.sendMessage("C'était juste un mauvais rêve");
         BossBar bossBar = bossbars.get(p);
         if (bossBar != null) {
@@ -55,7 +56,7 @@ public class EnterWorldListener implements Listener {
         p.teleport(Objects.requireNonNullElse(
                 p.getRespawnLocation(),
                 Bukkit.getWorld("world").getSpawnLocation()
-        ));
+        ), cause);
     }
 
     public void death(Player p) {
@@ -130,7 +131,7 @@ public class EnterWorldListener implements Listener {
         //Même chose que quand le joueur meurt
         if (e.getPlayer().getWorld().getName().equals("dreamworld")) {
             death(e.getPlayer());
-            teleportBack(e.getPlayer());
+            teleportBack(e.getPlayer(), PlayerTeleportEvent.TeleportCause.EXIT_BED);
         }
     }
 
@@ -143,7 +144,7 @@ public class EnterWorldListener implements Listener {
             register.grantAdvancement(p, "aywen:nightmare");
             death(e.getPlayer());
             p.setHealth(2);
-            teleportBack(p);
+            teleportBack(p, PlayerTeleportEvent.TeleportCause.EXIT_BED);
             e.setCancelled(true);
         }
     }
@@ -173,8 +174,7 @@ public class EnterWorldListener implements Listener {
                 if (!bossbars.containsKey(player)) { this.cancel(); }
 
                 if (timeElapsed[0] == totalTime){
-                    register.grantAdvancement(player, "aywen:bed_sweet_bed");
-                    teleportBack(player);
+                    teleportBack(player, PlayerTeleportEvent.TeleportCause.COMMAND);
                     this.cancel();
                 }
 
