@@ -11,6 +11,7 @@ import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
+import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
@@ -67,6 +68,7 @@ public class Managers {
     private LBPlayerManager lbPlayerManager;
     private HomesManagers homesManagers;
     private HomeUpgradeManager homeUpgradeManager;
+    private DisabledWorldHome disabledWorldHome;
 
     private FileConfiguration bookConfig;
     private FileConfiguration wikiConfig;
@@ -139,6 +141,7 @@ public class Managers {
         lbPlayerManager = new LBPlayerManager();
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
+        disabledWorldHome = new DisabledWorldHome(plugin);
 
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
@@ -148,6 +151,7 @@ public class Managers {
         homeManager.init();
         moonDimManager.init();
         homesManagers.loadHomes();
+        disabledWorldHome.loadConfig();
     }
 
     public void cleanup() {
@@ -161,6 +165,7 @@ public class Managers {
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
+        disabledWorldHome.saveConfig();
 
     }
 }

@@ -6,8 +6,6 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import org.bukkit.Material;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 public enum BlocksItems implements BaseItems {
     WHITE_CONCRETE_POWDER(12, 2, ShopType.WHITE_CONCRETE_POWDER, "§7Béton en poudre"),
     WHITE_WOOL(13, 2, ShopType.WHITE_WOOL, "§7Laine"),

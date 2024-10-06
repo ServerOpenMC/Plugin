@@ -33,8 +33,8 @@ public class DelhomesCommands {
     @AutoComplete("@homes *")
     public void delhome(Player player, @Named("homes") String name) {
 
-        if(!player.getWorld().equals(AywenCraftPlugin.getInstance().getServer().getWorlds().get(0))) {
-            MessageManager.sendMessageType(player, "§cTu ne peux supprimer un home que dans le monde principal.", Prefix.HOME, MessageType.ERROR, true);
+        if(AywenCraftPlugin.getInstance().getManagers().getDisabledWorldHome().isDisabledWorld(player.getWorld())) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas supprimer un home dans ce monde.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
 
