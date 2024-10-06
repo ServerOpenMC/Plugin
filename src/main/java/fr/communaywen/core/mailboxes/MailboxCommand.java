@@ -14,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
-import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.sql.SQLException;

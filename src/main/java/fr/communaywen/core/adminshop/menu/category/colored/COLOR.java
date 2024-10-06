@@ -61,7 +61,7 @@ public enum COLOR implements BaseItems {
 
     @Override
     public int getMaxStack() {
-        Material material = Material.getMaterial(this.named());;
+        Material material = Material.getMaterial(this.named());
         return material == null ? 64 : material.getMaxStackSize();
     }
 }

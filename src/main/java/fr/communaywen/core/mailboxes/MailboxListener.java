@@ -11,7 +11,6 @@ import fr.communaywen.core.mailboxes.menu.letter.SendingLetter;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
 import fr.communaywen.core.mailboxes.utils.PaginatedMailbox;
 import fr.communaywen.core.utils.database.DatabaseConnector;
-import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;

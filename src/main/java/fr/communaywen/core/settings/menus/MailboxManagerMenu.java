@@ -3,8 +3,8 @@ package fr.communaywen.core.settings.menus;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.settings.SettingsMenu;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class MailboxManagerMenu extends Menu {
 	
 	@Override
 	public @NotNull String getName() {
-		return "Notifications mailbox";
+		return PlaceholderAPI.setPlaceholders(player, "§r§f%img_offset_-8%%img_mailbox_settings%");
 	}
 	
 	@Override

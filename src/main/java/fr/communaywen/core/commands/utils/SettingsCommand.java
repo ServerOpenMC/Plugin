@@ -6,11 +6,9 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.settings.SettingsManager;
 import fr.communaywen.core.settings.SettingsMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.sql.SQLException;

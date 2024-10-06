@@ -7,6 +7,7 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.settings.menus.MailboxManagerMenu;
 import lombok.Getter;
 import lombok.Setter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class SettingsMenu extends Menu {
 	
 	@Override
 	public @NotNull String getName() {
-		return "Parametres (en developpement)";
+		return PlaceholderAPI.setPlaceholders(owner, "§r§f%img_offset_-8%%img_player_settings%");
 	}
 	
 	@Override
@@ -66,6 +67,7 @@ public class SettingsMenu extends Menu {
 		}).setCloseButton());
 		map.put(53, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
+			itemMeta.setCustomModelData(5000);
 		}).setOnClick(inventoryClickEvent -> {
 			try {
 				if (plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(owner) == null) {

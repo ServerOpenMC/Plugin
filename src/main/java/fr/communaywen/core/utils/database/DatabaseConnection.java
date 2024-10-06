@@ -1,7 +1,6 @@
 package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import org.bukkit.ChatColor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
