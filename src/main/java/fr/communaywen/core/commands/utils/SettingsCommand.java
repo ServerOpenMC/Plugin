@@ -13,6 +13,8 @@ import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+import java.sql.SQLException;
+
 @Feature("Settings")
 @Credit("gab400")
 public class SettingsCommand {
@@ -26,7 +28,7 @@ public class SettingsCommand {
 	@Command("settings")
 	@Description("Affiche la profile de la personne selectionnée")
 	@CommandPermission("ayw.command.settings")
-	public void onCommand(Player player) {
+	public void onCommand(Player player) throws SQLException {
 		SettingsMenu menu = new SettingsMenu(plugin, player, new SettingsManager(plugin));
 		menu.open();
 	}

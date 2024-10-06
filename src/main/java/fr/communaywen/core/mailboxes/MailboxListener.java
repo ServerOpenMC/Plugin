@@ -192,7 +192,7 @@ public class MailboxListener extends DatabaseConnector implements Listener {
             runTask(player::closeInventory);
             return;
         } else if (item != null && item.getType() == Material.CHEST && slot == 45) {
-            runTask(() -> HomeMailbox.openHomeMailbox(player));
+            runTask(() -> HomeMailbox.openHomeMailbox(player, plugin));
             return;
         } else if (holder instanceof PaginatedMailbox<? extends ItemStack> menu) {
             if (nextPageBtn(item)) {
@@ -239,7 +239,7 @@ public class MailboxListener extends DatabaseConnector implements Listener {
                 if (receiver == null) return;
                 runTask(() -> {
 	                try {
-		                HomeMailbox.openSendingMailbox(player, receiver);
+		                HomeMailbox.openSendingMailbox(player, receiver, AywenCraftPlugin.getInstance());
 	                } catch (SQLException e) {
 		                e.printStackTrace();
 	                }

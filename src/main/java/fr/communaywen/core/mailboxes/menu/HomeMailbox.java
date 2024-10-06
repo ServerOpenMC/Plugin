@@ -23,8 +23,9 @@ public class HomeMailbox extends MailboxInv {
     
     static AywenCraftPlugin plugin;
     
-    public HomeMailbox(Player player) {
+    public HomeMailbox(Player player, AywenCraftPlugin plugin) {
         super(player);
+        HomeMailbox.plugin = plugin;
         this.inventory = Bukkit.createInventory(this, 9, MailboxMenuManager.getInvTitle(INV_NAME));
         inventory.setItem(3, getCustomItem(Component.text("En attente", NamedTextColor.DARK_AQUA, TextDecoration.BOLD), 2006));
         inventory.setItem(4, getHead(player, Component.text("Ma boite aux lettres", NamedTextColor.GOLD, TextDecoration.BOLD)));
@@ -37,7 +38,7 @@ public class HomeMailbox extends MailboxInv {
         playersList.openInventory();
     }
 
-    public static void openSendingMailbox(Player player, OfflinePlayer receiver) throws SQLException {
+    public static void openSendingMailbox(Player player, OfflinePlayer receiver, AywenCraftPlugin plugin) throws SQLException {
         SendingLetter sendingLetter = new SendingLetter(player, receiver, plugin);
         sendingLetter.openInventory();
     }
@@ -55,8 +56,8 @@ public class HomeMailbox extends MailboxInv {
     public static void openSettings(Player player) {
     }
 
-    public static void openHomeMailbox(Player player) {
-        HomeMailbox homeMailbox = new HomeMailbox(player);
+    public static void openHomeMailbox(Player player, AywenCraftPlugin plugin) {
+        HomeMailbox homeMailbox = new HomeMailbox(player, plugin);
         homeMailbox.openInventory();
     }
 

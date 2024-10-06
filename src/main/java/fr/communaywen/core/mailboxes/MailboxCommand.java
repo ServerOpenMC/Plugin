@@ -36,7 +36,7 @@ public class MailboxCommand {
     @Subcommand("home")
     @Description("Ouvrir la page d'accueil de la boite aux lettres")
     public void homeMailbox(Player player) {
-        HomeMailbox homeMailbox = new HomeMailbox(player);
+        HomeMailbox homeMailbox = new HomeMailbox(player, this.plugin);
         homeMailbox.openInventory();
     }
 

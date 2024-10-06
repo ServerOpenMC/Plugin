@@ -134,7 +134,7 @@ public class DatabaseManager {
         
         this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
 
-        System.out.println("Les tables ont été créer si besoin");
+        AywenCraftPlugin.getInstance().getLogger().info("\u001B[36m" + "Les tables ont été créées si besoin" + "\u001B[0m");
 
     }
 

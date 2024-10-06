@@ -38,10 +38,10 @@ public class SettingsManager extends DatabaseConnector {
 		
 		String sql = "INSERT INTO settings ( player, mail_accept, trade_accept, tpa_accept ) VALUES (?, ?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setString(1, settings.getUuid());
-		statement.setInt(2, settings.getMail_accept());
-		statement.setInt(3, settings.getTrade_accept());
-		statement.setInt(4, settings.getTpa_accept());
+		statement.setString(1, settings.uuid());
+		statement.setInt(2, settings.mail_accept());
+		statement.setInt(3, settings.trade_accept());
+		statement.setInt(4, settings.tpa_accept());
 		
 		statement.executeUpdate();
 		statement.close();
@@ -51,10 +51,10 @@ public class SettingsManager extends DatabaseConnector {
 		
 		String sql = "UPDATE settings SET mail_accept = ?, trade_accept = ?, tpa_accept = ? WHERE player = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, settings.getMail_accept());
-		statement.setInt(2, settings.getTrade_accept());
-		statement.setInt(3, settings.getTpa_accept());
-		statement.setString(4, settings.getUuid());
+		statement.setInt(1, settings.mail_accept());
+		statement.setInt(2, settings.trade_accept());
+		statement.setInt(3, settings.tpa_accept());
+		statement.setString(4, settings.uuid());
 		
 		statement.executeUpdate();
 		statement.close();

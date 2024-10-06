@@ -23,17 +23,19 @@ public class SettingsMenu extends Menu {
 	AywenCraftPlugin plugin;
 	Player owner;
 	SettingsManager manager;
-	PlayerSettings settings;
 	
 	@Getter
 	@Setter
-	private int mail_accept = 3, trade_accept = 3, tpa_accept = 3;
+	private int mail_accept, trade_accept, tpa_accept;
 	
-	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) {
+	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) throws SQLException {
 		super(owner);
 		this.plugin = plugin;
 		this.owner = owner;
 		this.manager = manager;
+		this.mail_accept = manager.findPlayerSettingsByUUID(owner).mail_accept();
+		this.trade_accept = manager.findPlayerSettingsByUUID(owner).trade_accept();
+		this.tpa_accept = manager.findPlayerSettingsByUUID(owner).tpa_accept();
 	}
 	
 	@Override
@@ -60,9 +62,10 @@ public class SettingsMenu extends Menu {
 		}).setNextMenu(new MailboxManagerMenu(owner, this)));
 		map.put(45, new ItemBuilder(this, Material.BARRIER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Fermer");
+			itemMeta.setCustomModelData(2000);
 		}).setCloseButton());
 		map.put(53, new ItemBuilder(this, Material.PAPER, itemMeta -> {
-			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvarder et fermer");
+			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
 		}).setOnClick(inventoryClickEvent -> {
 			try {
 				if (plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(owner) == null) {
