@@ -35,16 +35,13 @@ public class SethomesCommands {
     public void sethome(Player player, @Named("nom") String name) {
         Location location = player.getLocation();
 
-        // Check if the player set home in the worldguard region
-
-
-        if (isRegionConflict(player, location)) {
-            MessageManager.sendMessageType(player, "§cTu ne peux définir un home dans une région protégée.", Prefix.HOME, MessageType.ERROR, true);
+        if(AywenCraftPlugin.getInstance().getManagers().getDisabledWorldHome().isDisabledWorld(player.getWorld())) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas ajouter un home dans ce monde.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
 
-        if(!location.getWorld().equals(AywenCraftPlugin.getInstance().getServer().getWorlds().get(0))) {
-            MessageManager.sendMessageType(player, "§cTu ne peux définir un home que dans le monde principal.", Prefix.HOME, MessageType.ERROR, true);
+        if (isRegionConflict(player, location)) {
+            MessageManager.sendMessageType(player, "§cTu ne peux définir un home dans une région protégée.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
 
@@ -82,11 +79,6 @@ public class SethomesCommands {
                 .toList();
 
         for (Home home : homes) {
-            if (home.getLocation().distance(location) < 1) {
-                MessageManager.sendMessageType(player, "§cTu as un home à cette endroit: §6" + home.getName(), Prefix.HOME, MessageType.ERROR, true);
-                return;
-            }
-
             if (home.getName().equalsIgnoreCase(name)) {
                 MessageManager.sendMessageType(player, "§cTu as déjà un home avec ce nom.", Prefix.HOME, MessageType.ERROR, true);
                 return;

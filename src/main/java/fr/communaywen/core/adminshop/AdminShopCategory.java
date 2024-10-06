@@ -13,8 +13,6 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 @Getter
 public enum AdminShopCategory {
     BLOCKS(Material.GRASS_BLOCK, "§a§lBlocks", BlocksItems.values()),

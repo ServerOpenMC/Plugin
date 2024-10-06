@@ -105,13 +105,18 @@ public class HomesManagers extends DatabaseConnector {
 
             if (rs.next()) {
                 return rs.getInt("homes_limit");
+            } else {
+                statement = connection.prepareStatement("INSERT INTO players (player, homes_limit) VALUES (?, ?)");
+                statement.setString(1, playerId.toString());
+                statement.setInt(2, AywenCraftPlugin.getInstance().getConfig().getInt("homes.default_limit"));
+                statement.executeUpdate();
             }
 
         } catch(SQLException e) {
             e.printStackTrace();
         }
 
-        return 3;
+        return 1;
     }
 
     public void upgradeHomesLimit(UUID playerId, int newLimit) {

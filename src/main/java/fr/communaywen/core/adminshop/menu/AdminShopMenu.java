@@ -16,8 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-@Credit("Axeno")
-@Feature("AdminShop")
+
 public class AdminShopMenu extends Menu {
 
     public AdminShopMenu(Player player) {

@@ -25,10 +25,11 @@ public class RenameHomeCommands {
     @AutoComplete("@homes *")
     public void renamehome(Player player, String home, String newName)  {
 
-        if(!player.getWorld().equals(AywenCraftPlugin.getInstance().getServer().getWorlds().get(0))) {
-            MessageManager.sendMessageType(player, "§cTu ne peux renommer un home que dans le monde principal.", Prefix.HOME, MessageType.ERROR, true);
+        if(AywenCraftPlugin.getInstance().getManagers().getDisabledWorldHome().isDisabledWorld(player.getWorld())) {
+            MessageManager.sendMessageType(player, "§cTu ne peux pas renommer un home dans ce monde.", Prefix.HOME, MessageType.ERROR, true);
             return;
         }
+
         if (newName.length() < 3) {
             MessageManager.sendMessageType(player, "§cLe nom de ton home doit contenir au moins 3 caractères.", Prefix.HOME, MessageType.ERROR, true);
             return;

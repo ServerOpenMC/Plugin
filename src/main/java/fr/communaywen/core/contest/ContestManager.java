@@ -194,76 +194,84 @@ public class ContestManager extends DatabaseConnector {
     public static void initPhase3(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
-        ContestManager.updateColumnInt("contest", "phase", 4); //tempo mettre sql qui delete lai ligne
+        ContestManager.updateColumnInt("contest", "phase", 4);
 
+        // GET GLOBAL CONTEST INFORMATION
+        String camp1Color = ContestManager.getColor1Cache();
+        String camp2Color = ContestManager.getColor2Cache();
+        ChatColor color1 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp1Color));
+        ChatColor color2 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp2Color));
+        String camp1Name = ContestManager.getCamp1Cache();
+        String camp2Name = ContestManager.getCamp2Cache();
+
+        //CREATE PART OF BOOK
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta bookMeta = (BookMeta) book.getItemMeta();
+        bookMeta.setTitle("Les Résultats du Contest");
+        bookMeta.setAuthor("Les Contest");
+
+        List<String> lore = new ArrayList<String>();
+        lore.add(color1 + camp1Name + " §7VS " + color2 + camp2Name);
+        lore.add("§e§lOuvrez ce livre pour en savoir plus!");
+        bookMeta.setLore(lore);
+
+        // GET VOTE AND POINT TAUX
+        int points1 = ContestManager.getInt("contest", "points1");
+        int points2 = ContestManager.getInt("contest", "points2");
+        int totalpoint = points1 + points2;
+        int points1Taux = (int) (((double) points1 / totalpoint) * 100);
+        DecimalFormat df = new DecimalFormat("#.#");
+        points1Taux = Integer.valueOf(df.format(points1Taux));
+        int points2Taux = (int) (((double) points2 / totalpoint) * 100);
+        points2Taux = Integer.valueOf(df.format(points2Taux));
+        int vote1 = ContestManager.getVoteTaux(1);
+        int vote2 = ContestManager.getVoteTaux(2);
+        int totalvote = vote1 + vote2;
+        int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
+        int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
+
+        //PRINT ON BOOK
+        if (points1 > points2) {
+            bookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n" + "§0Perdant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
+        }
+        if (points2 > points1) {
+            bookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n" + "§0Perdant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
+        }
+
+        //PRINT LEADERBOARD
+        String leaderboard = "§8§lLe Classement du Contest (Jusqu'au 10eme)";
+        int rankInt = 0;
+
+        ResultSet rs2 = ContestManager.getAllPlayerOrdered();
+        try {
+            while (rs2.next()) {
+                OfflinePlayer player2 = Bukkit.getOfflinePlayer(rs2.getString("name"));
+                ChatColor playerCampColor2 = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player2));
+                if (rankInt >= 10) {
+                    break;
+                }
+                String rankStr = "\n§0#" + (rankInt+1) + " " + playerCampColor2 + rs2.getString("name") + " §8- §b" + rs2.getString("point_dep");
+                leaderboard = leaderboard + rankStr;
+                rankInt++;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        bookMeta.addPage(leaderboard);
+
+        //PRINT FOR EACH PLAYER
         ResultSet rs1 = ContestManager.getAllPlayer();
         try {
             while(rs1.next()) {
-                OfflinePlayer player = Bukkit.getOfflinePlayer(rs1.getString("name"));
+                String playerName = rs1.getString("name");
+                OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
                 String playerCampName = ContestManager.getOfflinePlayerCampName(player);
                 ChatColor playerCampColor = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
-                String camp1Color = ContestManager.getColor1Cache();
-                String camp2Color = ContestManager.getColor2Cache();
-                ChatColor color1 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp1Color));
-                ChatColor color2 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp2Color));
-                String camp1Name = ContestManager.getCamp1Cache();
-                String camp2Name = ContestManager.getCamp2Cache();
 
-                ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-                BookMeta bookMeta = (BookMeta) book.getItemMeta();
-                bookMeta.setTitle("Les Résultats du Contest");
-                bookMeta.setAuthor("Les Contest");
-
-                List<String> lore = new ArrayList<String>();
-                lore.add(color1 + camp1Name + " §7VS " + color2 + camp2Name);
-                lore.add("§e§lOuvrez ce livre pour en savoir plus!");
-                bookMeta.setLore(lore);
-                int points1 = ContestManager.getInt("contest", "points1");
-                int points2 = ContestManager.getInt("contest", "points2");
-                int totalpoint = points1 + points2;
-                int points1Taux = (int) (((double) points1 / totalpoint) * 100);
-                DecimalFormat df = new DecimalFormat("#.#");
-                points1Taux = Integer.valueOf(df.format(points1Taux));
-                int points2Taux = (int) (((double) points2 / totalpoint) * 100);
-                points2Taux = Integer.valueOf(df.format(points2Taux));
-                int vote1 = ContestManager.getVoteTaux(1);
-                int vote2 = ContestManager.getVoteTaux(2);
-                int totalvote = vote1 + vote2;
-                int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
-                int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
-
-
-                if (points1 > points2) {
-                    bookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n" + "§0Perdant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
-                }
-                if (points2 > points1) {
-                    bookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n" + "§0Perdant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
-                }
-
-                String leaderboard = "§8§lLe Classement du Contest (Jusqu'au 10eme)";
-                int rankInt = 0;
-
-                ResultSet rs2 = ContestManager.getAllPlayerOrdered();
-                try {
-                    while (rs2.next()) {
-                        OfflinePlayer player2 = Bukkit.getOfflinePlayer(rs2.getString("name"));
-                        ChatColor playerCampColor2 = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player2));
-                        if (rankInt >= 10) {
-                            break;
-                        }
-                        String rankStr = "\n§0#" + (rankInt+1) + " " + playerCampColor2 + rs2.getString("name") + " §8- §b" + rs2.getString("point_dep");
-                        leaderboard = leaderboard + rankStr;
-                        rankInt++;
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                bookMeta.addPage(leaderboard);
                 bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + ContestManager.getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + ContestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
 
                 int money = 0;
                 int lucky = 0;
-                int key = 0;
                 ItemStack luckyblock = LBUtils.getLuckyBlockItem();
                 if(ContestManager.hasWinInCampForOfflinePlayer(player)) {
                     int moneyMin = 12000;
@@ -307,11 +315,9 @@ public class ContestManager extends DatabaseConnector {
                     EconomyManager.addBalanceOffline(player, money);
                 }
                 bookMeta.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player)) +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player)) + ")");
-
-                ContestManager.hasWinInCampForOfflinePlayer(player);
+                book.setItemMeta(bookMeta);
 
                 luckyblock.setAmount(lucky);
-                book.setItemMeta(bookMeta);
 
                 List<ItemStack> itemlist = new ArrayList<>();
                 itemlist.add(book);
@@ -323,14 +329,15 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         ContestManager.addOneToLastContest(ContestManager.getCamp1Cache());
         ContestManager.deleteTableContest("contest");
         ContestManager.deleteTableContest("camps");
         ContestManager.selectRandomlyContest();
 
+        //REMOVE MULTIPLICATEUR CONTEST
         FileConfiguration config = plugin.getConfig();
         ConfigurationSection boostEvents = config.getConfigurationSection("contest.boost_event");
-
         if  (boostEvents != null) {
             for (String event : boostEvents.getKeys(false)) {
                 ConfigurationSection eventInfo = boostEvents.getConfigurationSection(event);
@@ -345,8 +352,8 @@ public class ContestManager extends DatabaseConnector {
                     double currentProba = Double.parseDouble(eventConfig.get(probaCode).toString());
                     double removeboost = (double) boost / 100;
                     double newProba = currentProba - removeboost;
-                    DecimalFormat df = new DecimalFormat("#.#");
-                    newProba = Double.parseDouble(df.format(newProba).replace(",", "."));
+                    DecimalFormat df1 = new DecimalFormat("#.#");
+                    newProba = Double.parseDouble(df1.format(newProba).replace(",", "."));
                     eventConfig.set(eventInfo.getString("probaCode"), newProba);
                     try {
                         eventConfig.save(new File(plugin.getDataFolder(), "events.yml"));
@@ -709,7 +716,7 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return -1;
+        return 0;
     }
 
     public static Integer getVoteTaux(Integer camps) {
@@ -1048,7 +1055,8 @@ public class ContestManager extends DatabaseConnector {
             states2.setString(3, (String) contest.get("camp2"));
             states2.setString(4, (String) contest.get("color2"));
             states2.setString(5, "ven.");
-            states2.executeUpdate();
+            states2.addBatch();
+            states2.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -1057,7 +1065,8 @@ public class ContestManager extends DatabaseConnector {
     public static void deleteTableContest(String table) {
         String sql = "DELETE FROM " + table;
         try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.executeUpdate();
+            states.addBatch();
+            states.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
