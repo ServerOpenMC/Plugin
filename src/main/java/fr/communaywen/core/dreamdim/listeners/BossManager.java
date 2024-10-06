@@ -115,7 +115,7 @@ public class BossManager implements Listener {
 
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
-        if (new Random().nextDouble() <= 0.1) {
+        if (new Random().nextDouble() <= 0.01) {
             player.getServer().broadcast(Component.text(player.getName()+" a commencé un combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
             player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 20);
             player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
