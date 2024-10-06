@@ -261,6 +261,7 @@ public class ContestManager extends DatabaseConnector {
 
         //PRINT FOR EACH PLAYER
         ResultSet rs1 = ContestManager.getAllPlayer();
+        Map<OfflinePlayer, ItemStack[]> playerItemsMap = new HashMap<>();
         try {
             while(rs1.next()) {
                 String playerName = rs1.getString("name");
@@ -324,7 +325,7 @@ public class ContestManager extends DatabaseConnector {
                 itemlist.add(luckyblock);
 
                 ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
-                MailboxManager.sendItemsToAOfflinePlayer(player, items);
+                playerItemsMap.put(player, items);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -370,6 +371,9 @@ public class ContestManager extends DatabaseConnector {
                 }
             }
         }
+
+        //envoyer tout les lettres en une requete
+        MailboxManager.sendItemsToAOfflinePlayerBatch(playerItemsMap);
 
         Bukkit.broadcastMessage(
 

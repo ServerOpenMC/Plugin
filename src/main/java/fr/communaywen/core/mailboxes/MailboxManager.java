@@ -21,10 +21,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 
@@ -70,33 +75,40 @@ public class MailboxManager extends DatabaseConnector {
         }
     }
 
-    public static void sendItemsToAOfflinePlayer(OfflinePlayer player, ItemStack[] items) {
-        String receiverUUID = player.getUniqueId().toString();
-        int itemsCount = Arrays.stream(items).mapToInt(ItemStack::getAmount).sum();
-        String senderUUID = player.getUniqueId().toString();
+    public static void sendItemsToAOfflinePlayerBatch(Map<OfflinePlayer, ItemStack[]> playerItemsMap) {
+        String insertQuery = "INSERT INTO `mailbox_items` (sender_id, receiver_id, items, items_count) VALUES (?, ?, ?, ?);";
 
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO `mailbox_items` (sender_id, receiver_id, items, items_count) VALUES (?, ?, ?, ?);", PreparedStatement.RETURN_GENERATED_KEYS)) {
-            byte[] itemsBytes = BukkitSerializer.serializeItemStacks(items);
-            statement.setString(1, senderUUID);
-            statement.setString(2, receiverUUID);
-            statement.setBytes(3, itemsBytes);
-            statement.setInt(4, itemsCount);
-            if (statement.executeUpdate() == 0) return;
-            try (ResultSet result = statement.getGeneratedKeys()) {
-                if (result.next()) {
-                    int id = result.getInt(1);
-                    Player receiverPlayer = player.getPlayer();
-                    if (receiverPlayer != null) {
-                        if (MailboxMenuManager.playerInventories.get(receiverPlayer) instanceof PlayerMailbox receiverMailbox) {
-                            LetterHead letterHead = new LetterHead(player, id, itemsCount, result.getTimestamp(1).toLocalDateTime());
-                            receiverMailbox.addLetter(letterHead);
-                        }
-                    }
+        try (PreparedStatement statement = connection.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            for (Map.Entry<OfflinePlayer, ItemStack[]> entry : playerItemsMap.entrySet()) {
+                OfflinePlayer player = entry.getKey();
+                ItemStack[] items = entry.getValue();
+
+                String receiverUUID = player.getUniqueId().toString();
+                int itemsCount = Arrays.stream(items).mapToInt(ItemStack::getAmount).sum();
+                String senderUUID = player.getUniqueId().toString();
+
+                byte[] itemsBytes = BukkitSerializer.serializeItemStacks(items);
+
+                statement.setString(1, senderUUID);
+                statement.setString(2, receiverUUID);
+                statement.setBytes(3, itemsBytes);
+                statement.setInt(4, itemsCount);
+
+                statement.addBatch();
+            }
+
+            int[] results = statement.executeBatch();
+
+            for (int result : results) {
+                if (result == PreparedStatement.EXECUTE_FAILED) {
+                    System.out.println("Une des insertions a échoué.");
                 }
             }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException sqlEx) {
+            Logger.getLogger(MailboxManager.class.getName()).log(Level.SEVERE, "Erreur lors de l'envoi des items batch à des joueurs hors ligne", sqlEx);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
