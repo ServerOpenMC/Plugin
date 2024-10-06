@@ -589,7 +589,7 @@ public class ContestManager extends DatabaseConnector {
             if (cache!=null) {
                 return cache.getCamp();
             }
-            return 0;
+            return -1;
         }
     }
     public static ChatColor getPlayerColorCache(Player player) {

@@ -55,7 +55,7 @@ public class VoteMenu extends Menu {
         List<String> lore2 = new ArrayList<String>();
         boolean ench1;
         boolean ench2;
-        if(ContestManager.getPlayerCampsCache(getOwner()) == 0) {
+        if(ContestManager.getPlayerCampsCache(getOwner()) <= 0) {
             ench1 = false;
             ench2 = false;
             lore1.add("§7Votez pour la Team " + color1 + camp1Name);
@@ -100,7 +100,7 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore1);
                     itemMeta.setEnchantmentGlintOverride(ench1);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (ContestManager.getPlayerCampsCache(getOwner()) == 0) {
+                    if (ContestManager.getPlayerCampsCache(getOwner()) <= 0) {
                         ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp1", "color1");
                         menu.open();
                     }
@@ -111,7 +111,7 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore2);
                     itemMeta.setEnchantmentGlintOverride(ench2);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (ContestManager.getPlayerCampsCache(getOwner()) == 0) {
+                    if (ContestManager.getPlayerCampsCache(getOwner()) <= 0) {
                         ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp2", "color2");
                         menu.open();
                     }

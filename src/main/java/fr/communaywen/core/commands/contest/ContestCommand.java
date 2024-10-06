@@ -38,7 +38,7 @@ public class ContestCommand {
         if (phase==2) {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
-        } else if (phase==3 && camp == 0) {
+        } else if (phase==3 && camp <= 0) {
             VoteMenu menu = new VoteMenu(player);
             menu.open();
         } else if (phase==3) {
