@@ -190,11 +190,20 @@ public class ContestManager extends DatabaseConnector {
         }
         System.out.println("[CONTEST] Ouverture des trades");
     }
+
+    public class UnCamp {
+        public int numero;
+        public ChatColor couleur;
+        public String nom;
+    }
+    
     //PHASE 3
     public static void initPhase3(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
         ContestManager.updateColumnInt("contest", "phase", 4);
+
+        ContestManager UnManagerContest = new ContestManager()
 
         // GET GLOBAL CONTEST INFORMATION
         String camp1Color = ContestManager.getColor1Cache();
@@ -261,31 +270,62 @@ public class ContestManager extends DatabaseConnector {
 
         //PRINT FOR EACH PLAYER
         ResultSet rs1 = ContestManager.getAllPlayer();
+
+        List<UnJoueur> LesJoueurs = ContestManager.getAllPlayerList();
+        Dictionary<int, UnCamp> LesCampsContest = new Dictionary<int, UnCamp>;
+
+        // On remplit un dictionnaire des camps du contest pour limiter les appels à la base
+        for (int campintColor : LesJoueurs.Select(k => k.camp).distinct().ToList()) {
+            // ToDo : Remplacer la récupération des camps pour éviter de faire plusieurs appels à la base de données
+            LesCampsContest.put(campintColor, new UnCamp {numero = campintColor, couleur = ChatColor.valueOf(ContestManager.getString("contest","color" + campintColor)), nom = ContestManager.getString("contest","camp" + campintColor)});
+        }
+
+        String playerName = null;
+        OfflinePlayer player = null;
+        String playerCampName = null;
+        ChatColor playerCampColor = null;
+        int money = 0;
+        int lucky = 0;
+        ItemStack luckyblock = null;
+        int moneyMin = 0;
+        int moneyMax = 0;
+        double multi = 0;
+        int luckyMin = 0;
+        int luckyMax = 0;
+        double multi2 = 0;
+        List<ItemStack> itemlist = null;
+        ItemStack[] items = null;
+        
         try {
-            while(rs1.next()) {
-                String playerName = rs1.getString("name");
-                OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
-                String playerCampName = ContestManager.getOfflinePlayerCampName(player);
-                ChatColor playerCampColor = ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
+            for (UnJoueur LeJoueur : LesJoueurs) {
+            //while(rs1.next()) {
+                playerName = UnJoueur.name;
+                player = Bukkit.getOfflinePlayer(playerName);
+                playerCampName = LesCampsContest(LeJoueur.camp).nom; //ContestManager.getOfflinePlayerCampName(player);
+                playerCampColor = LesCampsContest(LeJoueur.camp).couleur; //ColorConvertor.getReadableColor(ContestManager.getOfflinePlayerCampChatColor(player));
 
                 bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + ContestManager.getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + ContestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
 
-                int money = 0;
-                int lucky = 0;
-                ItemStack luckyblock = LBUtils.getLuckyBlockItem();
+                money = 0;
+                lucky = 0;
+                luckyblock = LBUtils.getLuckyBlockItem();
+
+                // ToDo : Revoir la fonction car on doit toujours faire appel à la base de données pour chaque joueur
                 if(ContestManager.hasWinInCampForOfflinePlayer(player)) {
-                    int moneyMin = 12000;
-                    int moneyMax = 14000;
-                    double multi = ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                    moneyMin = 12000;
+                    moneyMax = 14000;
+                    // ToDo : Revoir la fonction car on doit toujours faire appel à la base de données pour chaque joueur
+                    multi = ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player));
                     moneyMin = (int) (moneyMin * multi);
                     moneyMax = (int) (moneyMax * multi);
 
                     money = ContestManager.giveRandomly(moneyMin, moneyMax);
                     EconomyManager.addBalanceOffline(player, money);
 
-                    int luckyMin = 3;
-                    int luckyMax = 6;
-                    double multi2 = ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                    luckyMin = 3;
+                    luckyMax = 6;
+                    // ToDo : Revoir la fonction car on doit toujours faire appel à la base de données pour chaque joueur
+                    multi2 = ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player));
 
                     luckyMin = (int) (luckyMin * multi2);
                     luckyMax = (int) (luckyMax * multi2);
@@ -293,18 +333,20 @@ public class ContestManager extends DatabaseConnector {
                     lucky = ContestManager.giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
                 } else {
-                    int moneyMin = 4000;
-                    int moneyMax = 6000;
-                    double multi = ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                    moneyMin = 4000;
+                    moneyMax = 6000;
+                    // ToDo : Revoir la fonction car on doit toujours faire appel à la base de données pour chaque joueur
+                    multi = ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player));
                     moneyMin = (int) (moneyMin * multi);
                     moneyMax = (int) (moneyMax * multi);
 
                     money = ContestManager.giveRandomly(moneyMin, moneyMax);
                     EconomyManager.addBalanceOffline(player, money);
 
-                    int luckyMin = 1;
-                    int luckyMax = 3;
-                    double multi2 = ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player));
+                    luckyMin = 1;
+                    luckyMax = 3;
+                    // ToDo : Revoir la fonction car on doit toujours faire appel à la base de données pour chaque joueur
+                    multi2 = ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player));
 
                     luckyMin = (int) (luckyMin * multi2);
                     luckyMax = (int) (luckyMax * multi2);
@@ -314,16 +356,18 @@ public class ContestManager extends DatabaseConnector {
 
                     EconomyManager.addBalanceOffline(player, money);
                 }
-                bookMeta.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ ContestManager.getMultiMoneyFromRang(ContestManager.getRankContestFromOfflineInt(player)) +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ ContestManager.getMultiLuckyFromRang(ContestManager.getRankContestFromOfflineInt(player)) + ")");
+
+                // Pas la peine de réévaluer les multi car on les détermine juste au dessus
+                bookMeta.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ multi +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ multi2 + ")");
                 book.setItemMeta(bookMeta);
 
                 luckyblock.setAmount(lucky);
 
-                List<ItemStack> itemlist = new ArrayList<>();
+                itemlist = new ArrayList<>();
                 itemlist.add(book);
                 itemlist.add(luckyblock);
 
-                ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
+                items = itemlist.toArray(new ItemStack[itemlist.size()]);
                 MailboxManager.sendItemsToAOfflinePlayer(player, items);
             }
         } catch (SQLException e) {
@@ -338,21 +382,30 @@ public class ContestManager extends DatabaseConnector {
         //REMOVE MULTIPLICATEUR CONTEST
         FileConfiguration config = plugin.getConfig();
         ConfigurationSection boostEvents = config.getConfigurationSection("contest.boost_event");
+
+        ConfigurationSection eventInfo = null;
+        String probaCode = null;
+        int boost = 0;
+        double currentProba = 0;
+        double removeboost = 0;
+        double newProba = 0;
+        DecimalFormat df1 = new DecimalFormat("#.#");
+        
         if  (boostEvents != null) {
             for (String event : boostEvents.getKeys(false)) {
-                ConfigurationSection eventInfo = boostEvents.getConfigurationSection(event);
+                eventInfo = boostEvents.getConfigurationSection(event);
                 // reset
-                String probaCode = null;
+                probaCode = null;
+                
                 if (eventInfo != null) {
                     probaCode = eventInfo.getString("probaCode");
                 }
 
                 if (probaCode != null) {
-                    int boost = Integer.parseInt(plugin.getConfig().get("contest.boost_event."+event+".boost").toString());
-                    double currentProba = Double.parseDouble(eventConfig.get(probaCode).toString());
-                    double removeboost = (double) boost / 100;
-                    double newProba = currentProba - removeboost;
-                    DecimalFormat df1 = new DecimalFormat("#.#");
+                    boost = Integer.parseInt(plugin.getConfig().get("contest.boost_event."+event+".boost").toString());
+                    currentProba = Double.parseDouble(eventConfig.get(probaCode).toString());
+                    removeboost = (double) boost / 100;
+                    newProba = currentProba - removeboost;
                     newProba = Double.parseDouble(df1.format(newProba).replace(",", "."));
                     eventConfig.set(eventInfo.getString("probaCode"), newProba);
                     try {
@@ -698,6 +751,50 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // A conserver en partagé pour la partager entre plusieurs instances ?
+    public static List<UnJoueur> LesJoueurs;
+
+    // On remet la liste des joueurs récupérés à vide pour l'initialisation des contests
+    // Enlever le static pour utiliser un manager disposable
+    public static void razAllPlayerList() {
+        LesJoueurs = null;
+    }
+
+    // On récupère une liste des joueurs avec l'ensemble des informations pour la traiter lors de la fin du contest
+    // Enlever le static pour utiliser un manager disposable
+    public static List<UnJoueur> getAllPlayerList() {
+        if (LesJoueurs == null) {
+            LesJoueurs = new List<UnJoueur>;
+
+            // Il faudra reprendre cette appel pour intégrer directement la liaison avec le contest actuelle pour récupérer les teams
+            ResultSet result = getAllPlayer();
+            UnJoueur LeJoueur = null;
+
+            // Il y a sans doute plus opti si on a une liaison XRM avec la base de données
+            while(result.next()) {
+                LeJoueur = new UnJoueur();
+                
+                LeJoueur.uuid = result.getString("minecraft_uuid");
+                LeJoueur.name = result.getString("name");
+                LeJoueur.camp = result.getString("camp");
+                LeJoueur.nbPoint = result.getString("point_dep");
+
+                LesJoueurs.add(LeJoueur);
+            }
+        }
+
+        return LesJoueurs;
+    }
+
+    public class UnJoueur {
+        public String uuid; // UUID du joueur sur Minecraft
+        public String name; // Nom du joueur
+        public int camp; // Camp dans la base
+        public String campName; // Nom du camp
+        public ChatColor campColor; // Couleur du camp associé
+        public int nbPoint; // Nombre de point du joueur
     }
 
     public static String getPlayerCampName(Player player) {
