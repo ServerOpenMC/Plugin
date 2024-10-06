@@ -79,11 +79,6 @@ public class SethomesCommands {
                 .toList();
 
         for (Home home : homes) {
-            if (home.getLocation().distance(location) < 1) {
-                MessageManager.sendMessageType(player, "§cTu as un home à cette endroit: §6" + home.getName(), Prefix.HOME, MessageType.ERROR, true);
-                return;
-            }
-
             if (home.getName().equalsIgnoreCase(name)) {
                 MessageManager.sendMessageType(player, "§cTu as déjà un home avec ce nom.", Prefix.HOME, MessageType.ERROR, true);
                 return;
