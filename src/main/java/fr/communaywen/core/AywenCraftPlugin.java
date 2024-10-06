@@ -287,7 +287,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
-        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+        //this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
 
         this.handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
             OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
@@ -307,7 +307,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new SettingsCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
-                new ContestCommand(this, loadEventsManager()),
+                //new ContestCommand(this, loadEventsManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -337,7 +337,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new GithubCommand(this),
                 new TradeCommand(this),
                 new TradeAcceptCommand(this),
-                new QuestsCommands(),
+                //new QuestsCommands(),
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
                 new MineCommand(),
@@ -381,8 +381,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MoonListener(),
                 new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
-                new ContestListener(this, loadEventsManager()),
-                new ContestIntractEvents(),
+                //new ContestListener(this, loadEventsManager()),
+                //new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
                 new AntiTrampling(),
@@ -393,7 +393,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
-                new Dream(this),
+                //new Dream(this),
                 new VpnListener(this),
                 new ThorHammer(this),
                 new FriendsListener(managers.getFriendsManager()),
@@ -401,7 +401,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LevelsListeners(managers.getLevelsManager()),
                 new CorpseListener(managers.getCorpseManager(), this),
                 new TradeListener(),
-                new QuestsListener(),
+                //new QuestsListener(),
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
@@ -430,14 +430,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         createFarineRecipe();
         createCrazyPotion();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        /*for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
             QuestsManager.loadPlayerData(player);
         }
 
         QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.processStoredClaimData();
-        new BandageRecipe();
+        new BandageRecipe();*/
 
         //LeaderboardManager.createLeaderboard();
     }
@@ -445,13 +445,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onDisable() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        /*for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
                 QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
                 player.closeInventory(); // Close inventory
             }
-        }
+        }*/
         try {
             this.getConfig().save(new File(this.getDataFolder(), "config.yml"));
             loadEventsManager().save(new File(this.getDataFolder(), "events.yml"));

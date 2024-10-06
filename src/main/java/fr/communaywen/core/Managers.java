@@ -116,12 +116,12 @@ public class Managers {
         // Database
 
        // leaderboardManager = new LeaderboardManager(plugin);          // desactivé de base
-        dreamdimManager = new DimensionManager(plugin);
+        //dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
-        contestManager = new ContestManager(plugin);
+        //contestManager = new ContestManager(plugin);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
-        dreamdimManager = new DimensionManager(plugin);
+        //dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
@@ -143,7 +143,7 @@ public class Managers {
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
-        dreamdimManager.init();
+        //dreamdimManager.init();
         homeManager.init();
         moonDimManager.init();
         homesManagers.loadHomes();
@@ -151,7 +151,7 @@ public class Managers {
 
     public void cleanup() {
         /* Besoin de la db */
-        dreamdimManager.close();
+        //dreamdimManager.close();
         reportManager.saveReports();
 
         /* Plus besoin de la db */

@@ -58,8 +58,9 @@ public class SettingsMenu extends Menu {
 	public @NotNull Map<Integer, ItemStack> getContent() {
 		Map<Integer, ItemStack> map = new HashMap<>();
 		
-		map.put(31, new ItemBuilder(this, Material.PAPER, itemMeta -> {
+		map.put(22, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GOLD + "Mailbox");
+			itemMeta.setCustomModelData(5001);
 		}).setNextMenu(new MailboxManagerMenu(owner, this)));
 		map.put(45, new ItemBuilder(this, Material.BARRIER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Fermer");
