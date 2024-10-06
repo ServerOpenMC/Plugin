@@ -1,66 +1,50 @@
 plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = 'fr.communaywen'
-version = '1.0-SNAPSHOT'
+version = "GIT-"+System.getenv("GITHUB_SHA") ?: "unknown"
 
 repositories {
     mavenCentral()
-    mavenLocal()
-    maven {
-        url "https://repo.purpurmc.org/snapshots"
-    }
-    maven {
-        name = "gyro-repository-releases"
-        url = "https://mvn.coolcraft.ovh/releases"
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
-    maven {
-        name = "minecraft-repo"
-        url = "https://libraries.minecraft.net"
-    }
-    maven {
-        url = 'https://maven.enginehub.org/repo/'
-    }
+    maven { url = "https://nexus.frengor.com/repository/public/" }
+    maven { url = "https://repo.purpurmc.org/snapshots" }
+    maven { url = "https://mvn.coolcraft.ovh/releases" }
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+    maven { url = "https://maven.enginehub.org/repo/" }
     maven { url = "https://repo.onarandombox.com/content/groups/public/" }
+    maven { url = "https://jitpack.io" }
 }
 
 dependencies {
     compileOnly "org.purpurmc.purpur:purpur-api:1.21.1-R0.1-SNAPSHOT"
-    implementation("com.flowpowered:flow-nbt:1.0.0")
-    implementation 'dev.xernas:menulib:1.1.0'
-    // Jetbrains annotations (@NotNull, @Nullable)
-    implementation 'org.jetbrains:annotations:24.1.0'
-    compileOnly 'net.luckperms:api:5.4'
-    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14'
-    compileOnly 'me.clip:placeholderapi:2.11.6'
-    compileOnly 'com.github.dmulloy2:ProtocolLib:-SNAPSHOT'
-    compileOnly 'commons-codec:commons-codec:1.16.1'
-    implementation 'org.json:json:20231013'
-    implementation 'com.github.Revxrsal.Lamp:common:3.2.1'
-    implementation 'com.github.Revxrsal.Lamp:bukkit:3.2.1'
-
-    implementation 'org.reflections:reflections:0.9.12'
-
-    implementation 'net.kyori:adventure-api:4.17.0'
-    implementation 'net.kyori:adventure-platform-bukkit:4.3.3'
-
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
-    testCompileOnly 'org.projectlombok:lombok:1.18.34'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+    compileOnly "com.frengor:ultimateadvancementapi:2.4.1"
     
-    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7+' // WorldEdit
-    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.10' // WorldGuard
+    implementation "com.flowpowered:flow-nbt:1.0.0"
+    implementation "dev.xernas:menulib:1.1.0"
+    implementation "org.jetbrains:annotations:24.1.0" // Jetbrains annotations (@NotNull, @Nullable)
+    implementation "com.github.Revxrsal.Lamp:common:3.2.1"
+    implementation "com.github.Revxrsal.Lamp:bukkit:3.2.1"
+    implementation "org.reflections:reflections:0.9.12"
+    implementation "net.kyori:adventure-api:4.17.0"
+    implementation "net.kyori:adventure-platform-bukkit:4.3.3"
+    implementation "org.json:json:20231013"
 
-    compileOnly 'com.onarandombox.multiversecore:Multiverse-Core:4.3.+'
+    compileOnly "net.luckperms:api:5.4" // LuckPerms
+    compileOnly "com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14" // ItemsAdder
+    compileOnly "me.clip:placeholderapi:2.11.6" // PlaceholderAPI
+    compileOnly "com.github.dmulloy2:ProtocolLib:-SNAPSHOT" // ProtocolLib
+    compileOnly "commons-codec:commons-codec:1.16.1"
+    compileOnly "com.onarandombox.multiversecore:Multiverse-Core:4.3.+" // Multiverse Core
+    compileOnly "com.sk89q.worldedit:worldedit-bukkit:7+" // WorldEdit
+    compileOnly "com.sk89q.worldguard:worldguard-bukkit:7.0.10" // WorldGuard
+
+    // lombok
+    compileOnly "org.projectlombok:lombok:1.18.34"
+    annotationProcessor "org.projectlombok:lombok:1.18.34"
+    testCompileOnly "org.projectlombok:lombok:1.18.34"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
 }
 
 def targetJavaVersion = 21
@@ -74,7 +58,7 @@ java {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+    options.encoding = "UTF-8"
 
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
@@ -84,8 +68,8 @@ tasks.withType(JavaCompile).configureEach {
 processResources {
     def props = [version: version]
     inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
+    filteringCharset "UTF-8"
+    filesMatching("plugin.yml") {
         expand props
     }
 }
@@ -105,4 +89,4 @@ shadowJar {
     archiveFileName = "AywenCraft.jar"
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "com.github.johnrengelman.shadow"

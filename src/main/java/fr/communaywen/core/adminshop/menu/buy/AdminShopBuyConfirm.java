@@ -109,9 +109,7 @@ public class AdminShopBuyConfirm extends Menu {
 
         content.put(6, new ItemBuilder(this, Material.RED_STAINED_GLASS_PANE, itemMeta -> {
             itemMeta.setDisplayName("§cAnnuler");
-        }).setOnClick(event -> {
-            getOwner().closeInventory();
-        }));
+        }).setBackButton());
 
         return content;
     }
