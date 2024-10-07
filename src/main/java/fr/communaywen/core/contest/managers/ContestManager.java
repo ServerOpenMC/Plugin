@@ -44,12 +44,9 @@ import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 public class ContestManager extends DatabaseConnector {
     FileConfiguration config;
     AywenCraftPlugin plugins;
-    private final ContestManager contestManager;
 
     private final ArrayList<String> colorContest = new ArrayList<>();
-    public ContestManager(AywenCraftPlugin plugin, ContestManager manager) {
-        this.contestManager = manager;
-
+    public ContestManager(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
         colorContest.add("WHITE");
@@ -75,7 +72,7 @@ public class ContestManager extends DatabaseConnector {
     public void initPhase1() {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
-        contestManager.updateColumnInt("contest", "phase", 2);
+        updateColumnInt("contest", "phase", 2);
         Bukkit.broadcastMessage(
 
                 "§8§m                                                     §r\n" +
@@ -116,12 +113,12 @@ public class ContestManager extends DatabaseConnector {
 
         List<Map<String, Object>> selectedTrades = getTradeSelected(true);
         for (Map<String, Object> trade : selectedTrades) {
-            contestManager.updateColumnBooleanFromRandomTrades(false, (String) trade.get("ress"));
+            updateColumnBooleanFromRandomTrades(false, (String) trade.get("ress"));
         }
 
         List<Map<String, Object>> unselectedTrades = getTradeSelected(false);
         for (Map<String, Object> trade : unselectedTrades) {
-            contestManager.updateColumnBooleanFromRandomTrades(true, (String) trade.get("ress"));
+            updateColumnBooleanFromRandomTrades(true, (String) trade.get("ress"));
         }
 
         FileConfiguration config = plugin.getConfig();
@@ -164,7 +161,7 @@ public class ContestManager extends DatabaseConnector {
             }
         }
 
-        contestManager.updateColumnInt("contest", "phase", 3);
+        updateColumnInt("contest", "phase", 3);
         Bukkit.broadcastMessage(
 
                 "§8§m                                                     §r\n" +
@@ -201,7 +198,7 @@ public class ContestManager extends DatabaseConnector {
     public void initPhase3(JavaPlugin plugin, FileConfiguration eventConfig) {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
-        contestManager.updateColumnInt("contest", "phase", 4);
+        updateColumnInt("contest", "phase", 4);
 
         // GET GLOBAL CONTEST INFORMATION
         String camp1Color = ContestCache.getColor1Cache();
@@ -223,16 +220,16 @@ public class ContestManager extends DatabaseConnector {
         bookMeta.setLore(lore);
 
         // GET VOTE AND POINT TAUX
-        int points1 = contestManager.getInt("contest", "points1");
-        int points2 = contestManager.getInt("contest", "points2");
+        int points1 = getInt("contest", "points1");
+        int points2 = getInt("contest", "points2");
         int totalpoint = points1 + points2;
         int points1Taux = (int) (((double) points1 / totalpoint) * 100);
         DecimalFormat df = new DecimalFormat("#.#");
         points1Taux = Integer.valueOf(df.format(points1Taux));
         int points2Taux = (int) (((double) points2 / totalpoint) * 100);
         points2Taux = Integer.valueOf(df.format(points2Taux));
-        int vote1 = contestManager.getVoteTaux(1);
-        int vote2 = contestManager.getVoteTaux(2);
+        int vote1 = getVoteTaux(1);
+        int vote2 = getVoteTaux(2);
         int totalvote = vote1 + vote2;
         int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
         int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
@@ -249,11 +246,11 @@ public class ContestManager extends DatabaseConnector {
         String leaderboard = "§8§lLe Classement du Contest (Jusqu'au 10eme)";
         int rankInt = 0;
 
-        ResultSet rs2 = contestManager.getAllPlayerOrdered();
+        ResultSet rs2 = getAllPlayerOrdered();
         try {
             while (rs2.next()) {
                 OfflinePlayer player2 = Bukkit.getOfflinePlayer(rs2.getString("name"));
-                ChatColor playerCampColor2 = ColorConvertor.getReadableColor(contestManager.getOfflinePlayerCampChatColor(player2));
+                ChatColor playerCampColor2 = ColorConvertor.getReadableColor(getOfflinePlayerCampChatColor(player2));
                 if (rankInt >= 10) {
                     break;
                 }
@@ -267,63 +264,66 @@ public class ContestManager extends DatabaseConnector {
         bookMeta.addPage(leaderboard);
 
         //PRINT FOR EACH PLAYER
-        ResultSet rs1 = contestManager.getAllPlayer();
+        ResultSet rs1 = getAllPlayer();
         Map<OfflinePlayer, ItemStack[]> playerItemsMap = new HashMap<>();
         try {
             while(rs1.next()) {
+                BookMeta bookMetaPlayer = bookMeta;
+
+
                 String playerName = rs1.getString("name");
                 OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
-                String playerCampName = contestManager.getOfflinePlayerCampName(player);
-                ChatColor playerCampColor = ColorConvertor.getReadableColor(contestManager.getOfflinePlayerCampChatColor(player));
+                String playerCampName = getOfflinePlayerCampName(player);
+                ChatColor playerCampColor = ColorConvertor.getReadableColor(getOfflinePlayerCampChatColor(player));
 
-                bookMeta.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + contestManager.getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + contestManager.getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
+                bookMetaPlayer.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
 
                 int money = 0;
                 int lucky = 0;
                 ItemStack luckyblock = LBUtils.getLuckyBlockItem();
-                if(contestManager.hasWinInCampForOfflinePlayer(player)) {
+                if(hasWinInCampForOfflinePlayer(player)) {
                     int moneyMin = 12000;
                     int moneyMax = 14000;
-                    double multi = contestManager.getMultiMoneyFromRang(contestManager.getRankContestFromOfflineInt(player));
+                    double multi = getMultiMoneyFromRang(getRankContestFromOfflineInt(player));
                     moneyMin = (int) (moneyMin * multi);
                     moneyMax = (int) (moneyMax * multi);
 
-                    money = contestManager.giveRandomly(moneyMin, moneyMax);
+                    money = giveRandomly(moneyMin, moneyMax);
                     EconomyManager.addBalanceOffline(player, money);
 
                     int luckyMin = 3;
                     int luckyMax = 6;
-                    double multi2 = contestManager.getMultiLuckyFromRang(contestManager.getRankContestFromOfflineInt(player));
+                    double multi2 = getMultiLuckyFromRang(getRankContestFromOfflineInt(player));
 
                     luckyMin = (int) (luckyMin * multi2);
                     luckyMax = (int) (luckyMax * multi2);
 
-                    lucky = contestManager.giveRandomly(luckyMin, luckyMax);
+                    lucky = giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
                 } else {
                     int moneyMin = 4000;
                     int moneyMax = 6000;
-                    double multi = contestManager.getMultiMoneyFromRang(contestManager.getRankContestFromOfflineInt(player));
+                    double multi = getMultiMoneyFromRang(getRankContestFromOfflineInt(player));
                     moneyMin = (int) (moneyMin * multi);
                     moneyMax = (int) (moneyMax * multi);
 
-                    money = contestManager.giveRandomly(moneyMin, moneyMax);
+                    money = giveRandomly(moneyMin, moneyMax);
                     EconomyManager.addBalanceOffline(player, money);
 
                     int luckyMin = 1;
                     int luckyMax = 3;
-                    double multi2 = contestManager.getMultiLuckyFromRang(contestManager.getRankContestFromOfflineInt(player));
+                    double multi2 = getMultiLuckyFromRang(getRankContestFromOfflineInt(player));
 
                     luckyMin = (int) (luckyMin * multi2);
                     luckyMax = (int) (luckyMax * multi2);
 
-                    lucky = contestManager.giveRandomly(luckyMin, luckyMax);
+                    lucky = giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
 
                     EconomyManager.addBalanceOffline(player, money);
                 }
-                bookMeta.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ contestManager.getMultiMoneyFromRang(contestManager.getRankContestFromOfflineInt(player)) +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ contestManager.getMultiLuckyFromRang(contestManager.getRankContestFromOfflineInt(player)) + ")");
-                book.setItemMeta(bookMeta);
+                bookMetaPlayer.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ getMultiMoneyFromRang(getRankContestFromOfflineInt(player)) +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ getMultiLuckyFromRang(getRankContestFromOfflineInt(player)) + ")");
+                book.setItemMeta(bookMetaPlayer);
 
                 luckyblock.setAmount(lucky);
 
@@ -338,10 +338,10 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        contestManager.addOneToLastContest(ContestCache.getCamp1Cache());
-        contestManager.deleteTableContest("contest");
-        contestManager.deleteTableContest("camps");
-        contestManager.selectRandomlyContest();
+        addOneToLastContest(ContestCache.getCamp1Cache());
+        deleteTableContest("contest");
+        deleteTableContest("camps");
+        selectRandomlyContest();
 
         //REMOVE MULTIPLICATEUR CONTEST
         FileConfiguration config = plugin.getConfig();
@@ -425,6 +425,35 @@ public class ContestManager extends DatabaseConnector {
         System.out.println("[CONTEST] Fermeture du Contest");
     }
 
+    public String getString(String table, String column) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getString(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
+    public int getInt(String table, String column) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 999;
+    }
+
+
+    // PLAYER CACHE
+    // TODO : in ContestCache
     private final Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
     private final long cacheDuration = 120000;
 
@@ -438,7 +467,7 @@ public class ContestManager extends DatabaseConnector {
             if (result.next()) {
                 int points = result.getInt("point_dep");
                 int camp = result.getInt("camps");
-                String color = contestManager.getString("contest","color" + camp);
+                String color = getString("contest","color" + camp);
                 ChatColor campColor = ChatColor.valueOf(color);
 
                 playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
@@ -461,24 +490,6 @@ public class ContestManager extends DatabaseConnector {
             }
             return 0;
         }
-    }
-
-    public int getPlayerPoints(Player player) {
-        UUID playerUUID = player.getUniqueId();
-
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, playerUUID.toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                int points = result.getInt("point_dep");
-
-                return points;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
     }
 
     public int getPlayerCampsCache(Player player) {
@@ -510,19 +521,36 @@ public class ContestManager extends DatabaseConnector {
         }
     }
 
-    public int getInt(String table, String column) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(column);
+    public int getPlayerPoints(Player player) {
+        UUID playerUUID = player.getUniqueId();
+
+        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setString(1, playerUUID.toString());
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                int points = result.getInt("point_dep");
+
+                return points;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return 999;
+        return 0;
     }
 
+
+    public void updateColumnInt(String table, String column, int value) {
+        String sql = "UPDATE " + table + " SET " + column + " = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, value);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // TRADE METHODE
     public List<Map<String, Object>> getTradeSelected(boolean bool) {
         List<Map<?, ?>> contestTrades = config.getMapList("contest.contestTrades");
 
@@ -533,29 +561,6 @@ public class ContestManager extends DatabaseConnector {
         Collections.shuffle(filteredTrades);
 
         return filteredTrades.stream().limit(12).collect(Collectors.toList());
-    }
-
-    public String getString(String table, String column) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getString(column);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return "";
-    }
-
-    public void updateColumnInt(String table, String column, int value) {
-        String sql = "UPDATE " + table + " SET " + column + " = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, value);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void updateColumnBooleanFromRandomTrades(Boolean bool, String ress) {
@@ -593,6 +598,23 @@ public class ContestManager extends DatabaseConnector {
         return DayOfWeek.from(formatter.parse(currentDayString));
     }
 
+
+    public Integer getVoteTaux(Integer camps) {
+        String sql = "SELECT COUNT(*) FROM camps WHERE camps = ?";
+        try (PreparedStatement states = connection.prepareStatement(sql)) {
+            states.setInt(1, camps);
+            ResultSet result = states.executeQuery();
+            if (result.next()) {
+                return result.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    // PLAYER METHODE
+    // TODO: Make a File PlayerRequest
     public ResultSet getAllPlayer() {
         try {
             PreparedStatement query = connection.prepareStatement("SELECT * FROM camps");
@@ -604,8 +626,8 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getPlayerCampName(Player player) {
-        Integer campInteger = contestManager.getPlayerCampsCache(player);
-        String campName = contestManager.getString("contest","camp" + campInteger);
+        Integer campInteger = getPlayerCampsCache(player);
+        String campName = getString("contest","camp" + campInteger);
         return campName;
     }
     public Integer getOfflinePlayerCamp(OfflinePlayer player) {
@@ -622,28 +644,14 @@ public class ContestManager extends DatabaseConnector {
         return 0;
     }
 
-    public Integer getVoteTaux(Integer camps) {
-        String sql = "SELECT COUNT(*) FROM camps WHERE camps = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setInt(1, camps);
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                return result.getInt(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
     public String getOfflinePlayerCampName(OfflinePlayer player) {
-        Integer campInteger = contestManager.getOfflinePlayerCamp(player);
-        String campName = contestManager.getString("contest","camp" + campInteger);
+        Integer campInteger = getOfflinePlayerCamp(player);
+        String campName = getString("contest","camp" + campInteger);
         return campName;
     }
     public ChatColor getOfflinePlayerCampChatColor(OfflinePlayer player) {
-        Integer campInteger = contestManager.getOfflinePlayerCamp(player);
-        String color = contestManager.getString("contest","color" + campInteger);
+        Integer campInteger = getOfflinePlayerCamp(player);
+        String color = getString("contest","color" + campInteger);
         ChatColor campColor = ChatColor.valueOf(color);
         return campColor;
     }
@@ -894,6 +902,8 @@ public class ContestManager extends DatabaseConnector {
 
         return 0;
     }
+
+    //END CONTEST METHODE
 
     private void updateSelected(String camp) {
         List<Map<?, ?>> contestList = config.getMapList("contest.contestList");
