@@ -4,12 +4,13 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.multiParents.MultiParentsAdvancement;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.HiddenVisibility;
 import fr.communaywen.core.economy.EconomyManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class BedAdvDream extends MultiParentsAdvancement {
+public class BedAdvDream extends MultiParentsAdvancement implements HiddenVisibility {
     public BedAdvDream(@NotNull BaseAdvancement... parents) {
         super(
                 "bed",
@@ -19,7 +20,7 @@ public class BedAdvDream extends MultiParentsAdvancement {
                         AdvancementFrameType.GOAL,
                         true,
                         false,
-                        2F,5F,
+                        2F,4.5F,
                         "Vous dormez sur un nuage"
                 ),
                 parents

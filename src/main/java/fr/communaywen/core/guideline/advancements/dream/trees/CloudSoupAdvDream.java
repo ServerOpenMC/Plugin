@@ -19,7 +19,7 @@ public class CloudSoupAdvDream extends BaseAdvancement {
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        3F,4.5F,
+                        3F,4F,
                         "Vous volez dans les airs comme un nuage"
                 ),
                 parent

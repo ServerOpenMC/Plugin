@@ -4,13 +4,14 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import fr.communaywen.core.economy.EconomyManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class DockerAdvDream extends BaseAdvancement {
+public class DockerAdvDream extends BaseAdvancement implements VanillaVisibility {
     public DockerAdvDream(@NotNull Advancement parent) {
         super(
                 "dockerfish",

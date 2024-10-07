@@ -17,7 +17,7 @@ public class WoodAdvDream extends BaseAdvancement {
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,5.5F,
+                        1F,5F,
                         "Vous avez abattu un arbre de rêve"
                 ),
                 parent

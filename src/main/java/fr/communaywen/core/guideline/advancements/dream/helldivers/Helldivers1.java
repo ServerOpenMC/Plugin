@@ -4,12 +4,13 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import fr.communaywen.core.economy.EconomyManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers1 extends BaseAdvancement {
+public class Helldivers1 extends BaseAdvancement implements VanillaVisibility {
     public Helldivers1(@NotNull Advancement parent) {
         super(
                 "helldivers/one",

@@ -4,6 +4,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.guideline.GuidelineManager;
@@ -11,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class Helldivers2 extends BaseAdvancement {
+public class Helldivers2 extends BaseAdvancement implements VanillaVisibility {
     public Helldivers2(@NotNull Advancement parent) {
         super(
                 "helldivers/two",

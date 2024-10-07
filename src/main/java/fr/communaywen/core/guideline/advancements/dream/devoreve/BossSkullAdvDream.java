@@ -4,11 +4,12 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import fr.communaywen.core.dreamdim.listeners.BossManager;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class BossSkullAdvDream extends BaseAdvancement {
+public class BossSkullAdvDream extends BaseAdvancement implements VanillaVisibility {
 
     public BossSkullAdvDream(@NotNull Advancement parent) {
         super(

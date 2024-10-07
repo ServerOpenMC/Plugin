@@ -17,7 +17,7 @@ public class CloudAdvDream extends BaseAdvancement {
                         AdvancementFrameType.TASK,
                         true,
                         false,
-                        1F,4.5F,
+                        1F,4F,
                         "Vous avez coupé un nuage"
                 ),
                 parent
