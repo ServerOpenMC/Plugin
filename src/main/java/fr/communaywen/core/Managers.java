@@ -18,7 +18,6 @@ import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
-import fr.communaywen.core.managers.RegionManager;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.Home;
 import fr.communaywen.core.personalhome.HomeManager;
@@ -130,7 +129,7 @@ public class Managers {
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
-        quizManager = new QuizManager(plugin, quizzesConfig);
+        quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
         corpseManager = new CorpseManager();
