@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.guideline.GuidelineManager;
 
 import fr.communaywen.core.guideline.advancements.dream.devoreve.*;
@@ -13,10 +14,14 @@ import fr.communaywen.core.guideline.advancements.dream.fishing.*;
 import fr.communaywen.core.guideline.advancements.dream.helldivers.*;
 import fr.communaywen.core.guideline.advancements.dream.trees.*;
 
+import fr.communaywen.core.guideline.listeners.dream.FishingDream;
+import fr.communaywen.core.guideline.listeners.dream.RootDream;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class DreamTabManager {
+public class DreamTabManager implements Listener {
     @Getter static RootAdvancement root;
 
     public static void init() {
@@ -72,6 +77,9 @@ public class DreamTabManager {
                 wood,planks,cloud,bed,cloudSoup // Trees
         );
 
-        tab.automaticallyShowToPlayers();
+        AywenCraftPlugin.getInstance().registerEvents(
+                new RootDream(),
+                new FishingDream()
+        );
     }
 }
