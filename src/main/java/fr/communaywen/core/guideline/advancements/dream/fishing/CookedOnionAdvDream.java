@@ -6,6 +6,8 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
+import fr.communaywen.core.economy.EconomyManager;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CookedOnionAdvDream extends BaseAdvancement {
@@ -23,5 +25,10 @@ public class CookedOnionAdvDream extends BaseAdvancement {
                 ),
                 parent
         );
+    }
+
+    @Override
+    public void giveReward(@NotNull Player player) {
+        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
     }
 }

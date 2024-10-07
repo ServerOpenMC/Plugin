@@ -5,6 +5,8 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.economy.EconomyManager;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class BookAdvDream extends BaseAdvancement {
@@ -22,5 +24,10 @@ public class BookAdvDream extends BaseAdvancement {
                 ),
                 parent
         );
+    }
+
+    @Override
+    public void giveReward(@NotNull Player player) {
+        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
     }
 }

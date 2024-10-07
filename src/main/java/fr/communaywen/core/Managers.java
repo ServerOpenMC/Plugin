@@ -6,7 +6,6 @@ import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
@@ -111,7 +110,6 @@ public class Managers {
                     Home.class,
                     Team.class,
                     TransactionsManager.class,
-                    AdvancementRegister.class,
                     RandomEventsData.class
             );
         }

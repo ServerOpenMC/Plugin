@@ -3,7 +3,6 @@ package fr.communaywen.core.dreamdim.listeners;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DreamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -36,11 +35,9 @@ public class EnterWorldListener implements Listener {
     World dreamworld;
     AywenCraftPlugin plugin;
     HashMap<Player, BossBar> bossbars = new HashMap<>();
-    AdvancementRegister register;
 
-    public EnterWorldListener(AywenCraftPlugin plugin, AdvancementRegister register) {
+    public EnterWorldListener(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        this.register = register;
         dreamworld = Bukkit.getWorld("dreamworld");
     }
 
@@ -73,8 +70,6 @@ public class EnterWorldListener implements Listener {
                 } else {
                     itemStack.setAmount(amount - 1);
                 }
-
-                register.grantAdvancement(p, "aywen:cheatdeath");
 
                 ItemsAdder.playTotemAnimation(p, "aywen:totem_of_undreaming");
                 return;
@@ -141,7 +136,6 @@ public class EnterWorldListener implements Listener {
         World world = p.getWorld();
 
         if (world.getName().equals("dreamworld")) {
-            register.grantAdvancement(p, "aywen:nightmare");
             death(e.getPlayer());
             p.setHealth(2);
             teleportBack(p, PlayerTeleportEvent.TeleportCause.EXIT_BED);

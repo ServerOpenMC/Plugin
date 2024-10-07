@@ -18,7 +18,6 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.BossFight;
 import fr.communaywen.core.dreamdim.DreamUtils;
-import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
 import fr.communaywen.core.utils.Skull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -110,8 +109,6 @@ public class BossManager implements Listener {
         DreamUtils.setFromDream(essence);
 
         player.getWorld().dropItemNaturally(block.getLocation(), essence);
-
-        SimpleAdvancementRegister.grantAdvancement(player, "aywen:dreamrush");
 
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
@@ -226,7 +223,6 @@ public class BossManager implements Listener {
         player.getServer().broadcast(Component.text(player.getName()+" a gagné son combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
 
         event.setDroppedExp(2500);
-        SimpleAdvancementRegister.grantAdvancement(player, "aywen:dreameater");
 
         List<ItemStack> drops = event.getDrops();
         drops.clear();
@@ -240,14 +236,12 @@ public class BossManager implements Listener {
             ItemStack chestplate = getChestplate();
 
             drops.add(chestplate);
-            SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/chestplate");
         }
 
         if (random.nextDouble() <= 0.3) {
             ItemStack head = getHelmet();
 
             drops.add(head);
-            SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/skull");
         }
 
         if (random.nextDouble() <= 0.1) {
@@ -260,7 +254,6 @@ public class BossManager implements Listener {
             hoe.setItemMeta(meta);
 
             drops.add(hoe);
-            SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/weapon");
         }
     }
 
