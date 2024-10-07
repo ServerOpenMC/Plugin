@@ -1,4 +1,4 @@
-package fr.communaywen.core.contest;
+package fr.communaywen.core.contest.cache;
 
 import org.bukkit.ChatColor;
 

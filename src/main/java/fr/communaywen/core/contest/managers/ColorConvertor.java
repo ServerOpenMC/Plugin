@@ -1,4 +1,4 @@
-package fr.communaywen.core.contest;
+package fr.communaywen.core.contest.managers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class ColorConvertor {
 
     private static final Map<ChatColor, ChatColor> colorToReadable = new HashMap<>();
-    static {
+    {
         colorToReadable.put(ChatColor.BLACK, ChatColor.BLACK);
         colorToReadable.put(ChatColor.DARK_BLUE, ChatColor.DARK_BLUE);
         colorToReadable.put(ChatColor.DARK_GREEN, ChatColor.DARK_GREEN);
@@ -29,13 +29,12 @@ public class ColorConvertor {
         colorToReadable.put(ChatColor.WHITE, ChatColor.GRAY);
     }
 
-
     public static ChatColor getReadableColor(ChatColor c) {
         return colorToReadable.getOrDefault(c, null);
     }
 
     private static final Map<ChatColor, Material> colorToMaterial = new HashMap<>();
-    static {
+    {
         colorToMaterial.put(ChatColor.BLACK, Material.BLACK_WOOL);
         colorToMaterial.put(ChatColor.DARK_BLUE, Material.BLUE_WOOL);
         colorToMaterial.put(ChatColor.DARK_GREEN, Material.GREEN_WOOL);
@@ -59,7 +58,7 @@ public class ColorConvertor {
     }
 
     private static final Map<ChatColor, Color> firerocketColorFromChatColor = new HashMap<>();
-    static {
+    {
         firerocketColorFromChatColor.put(ChatColor.BLACK, Color.BLACK);
         firerocketColorFromChatColor.put(ChatColor.DARK_BLUE, Color.BLUE);
         firerocketColorFromChatColor.put(ChatColor.DARK_GREEN, Color.GREEN);

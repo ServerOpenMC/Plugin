@@ -2,7 +2,8 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -17,6 +18,7 @@ import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.managers.RegionManager;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.Home;
 import fr.communaywen.core.personalhome.HomeManager;
@@ -45,6 +47,7 @@ public class Managers {
 
     private AywenCraftPlugin plugin;
     private ContestManager contestManager;
+    private ContestCache contestCache;
     private LeaderboardManager leaderboardManager;
     private DimensionManager dreamdimManager;
     private MoonDimensionManager moonDimManager;
@@ -121,7 +124,8 @@ public class Managers {
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);
-        contestManager = new ContestManager(plugin);
+        contestCache = new ContestCache(contestManager);
+        contestManager = new ContestManager(plugin, contestManager);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
@@ -137,7 +141,7 @@ public class Managers {
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
-        luckyBlockManager = new LuckyBlockManager();
+        luckyBlockManager = new LuckyBlockManager(contestManager);
         lbPlayerManager = new LBPlayerManager();
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
