@@ -18,6 +18,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.BossFight;
 import fr.communaywen.core.dreamdim.DreamUtils;
+import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.utils.Skull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -107,6 +108,8 @@ public class BossManager implements Listener {
 
         ItemStack essence = CustomStack.getInstance("aywen:dream_essence").getItemStack();
         DreamUtils.setFromDream(essence);
+
+        GuidelineManager.getAPI().getAdvancement("dream:essence").grant(player);
 
         player.getWorld().dropItemNaturally(block.getLocation(), essence);
 
@@ -233,19 +236,23 @@ public class BossManager implements Listener {
         DreamUtils.setFromDream(essence);
         drops.add(essence);
 
+        GuidelineManager.getAPI().getAdvancement("dream:dreameater").grant(player);
         if (random.nextDouble() <= 0.3) {
+            GuidelineManager.getAPI().getAdvancement("dream:devoreve/chestplate").grant(player);
             ItemStack chestplate = getChestplate();
 
             drops.add(chestplate);
         }
 
         if (random.nextDouble() <= 0.3) {
+            GuidelineManager.getAPI().getAdvancement("dream:devoreve/skull").grant(player);
             ItemStack head = getHelmet();
 
             drops.add(head);
         }
 
         if (random.nextDouble() <= 0.1) {
+            GuidelineManager.getAPI().getAdvancement("dream:devoreve/weapon").grant(player);
             ItemStack hoe = getWeapon();
             hoe.removeEnchantments();
             hoe.addEnchant(Enchantment.UNBREAKING, 5, true);

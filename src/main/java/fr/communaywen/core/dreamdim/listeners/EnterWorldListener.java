@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.DreamUtils;
+import fr.communaywen.core.guideline.GuidelineManager;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -63,6 +64,7 @@ public class EnterWorldListener implements Listener {
             CustomStack customStack = CustomStack.byItemStack(itemStack);
             if (customStack == null) { continue; }
             if (customStack.getNamespacedID().equals("aywen:totem_of_undreaming")) {
+                GuidelineManager.getAPI().getAdvancement("dream:totem").grant(p);
                 int amount = itemStack.getAmount();
 
                 if (amount == 1) {

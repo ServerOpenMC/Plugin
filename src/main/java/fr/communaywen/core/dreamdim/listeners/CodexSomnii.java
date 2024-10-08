@@ -2,6 +2,7 @@ package fr.communaywen.core.dreamdim.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
+import fr.communaywen.core.guideline.GuidelineManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Material;
@@ -25,6 +26,8 @@ public class CodexSomnii implements Listener {
         if (!action.isRightClick()) { return; }
         if (customStack == null) { return; }
         if (!customStack.getNamespacedID().equals("aywen:codex_somnii")) { return; }
+
+        GuidelineManager.getAPI().getAdvancement("dream:codex").grant(player);
 
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) new ItemStack(Material.WRITTEN_BOOK).getItemMeta();
