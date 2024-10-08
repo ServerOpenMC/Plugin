@@ -230,6 +230,7 @@ public class BossManager implements Listener {
 
         ItemStack essence = CustomStack.getInstance("aywen:dream_essence").getItemStack();
         essence.setAmount(random.nextInt(4)+1);
+        DreamUtils.setFromDream(essence);
         drops.add(essence);
 
         if (random.nextDouble() <= 0.3) {
