@@ -1,5 +1,6 @@
 package fr.communaywen.core.mailboxes;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.mailboxes.letter.LetterHead;
 import fr.communaywen.core.mailboxes.menu.HomeMailbox;
@@ -13,8 +14,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
-import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+
+import java.sql.SQLException;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendFailureMessage;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendWarningMessage;
@@ -23,18 +25,24 @@ import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendWarningMessag
 @CommandPermission("ayw.command.mailbox")
 @Credit("Gexary")
 public class MailboxCommand {
-
+    
+    private AywenCraftPlugin plugin;
+    
+    public MailboxCommand(AywenCraftPlugin plugin) {
+        this.plugin = plugin;
+    }
+    
     @Subcommand("home")
     @Description("Ouvrir la page d'accueil de la boite aux lettres")
     public void homeMailbox(Player player) {
-        HomeMailbox homeMailbox = new HomeMailbox(player);
+        HomeMailbox homeMailbox = new HomeMailbox(player, this.plugin);
         homeMailbox.openInventory();
     }
 
     @Subcommand("send")
     @Description("Envoyer une lettre à un joueur")
     @AutoComplete("@players")
-    public void sendMailbox(Player player, @Named("player") String receiver) {
+    public void sendMailbox(Player player, @Named("player") String receiver) throws SQLException {
         OfflinePlayer receiverPlayer = Bukkit.getPlayerExact(receiver);
         if (receiverPlayer == null) receiverPlayer = Bukkit.getOfflinePlayerIfCached(receiver);
         if (receiverPlayer == null || !(receiverPlayer.hasPlayedBefore() || receiverPlayer.isOnline())) {
@@ -45,7 +53,7 @@ public class MailboxCommand {
         } else if (receiverPlayer.getPlayer() == player) {
             sendWarningMessage(player, "Vous ne pouvez pas vous envoyer à vous-même !");
         } else if (MailboxManager.canSend(player, receiverPlayer)) {
-            SendingLetter sendingLetter = new SendingLetter(player, receiverPlayer);
+            SendingLetter sendingLetter = new SendingLetter(player, receiverPlayer, plugin);
             sendingLetter.openInventory();
         } else {
             sendFailureMessage(player, "Vous n'avez pas les droits pour envoyer à cette personne !");

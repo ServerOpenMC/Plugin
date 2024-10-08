@@ -123,6 +123,7 @@ public class PlayerDetailsMenu extends Menu {
         if (getOwner().hasPermission("openmc.staff.players")) return true;
 
         getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas la permission de faire cela");
+        getOwner().closeInventory();
         return false;
     }
 }

@@ -75,3 +75,6 @@ permissions:
   ayw.command.luckyblock.admin:
     description: 'luckyblock admin'
     default: false
+  ayw.command.settings:
+    description: "Settings"
+    default: true
