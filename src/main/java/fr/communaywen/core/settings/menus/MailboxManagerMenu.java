@@ -52,20 +52,20 @@ public class MailboxManagerMenu extends Menu {
 			settingsMenu.setMail_accept(0);
 			back();
 		}));
-		map.put(3, new ItemBuilder(this, Material.ORANGE_WOOL, itemMeta -> {
-			itemMeta.setDisplayName(ChatColor.GOLD + "Amis seulement");
-			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 1);
-		}).setOnClick(inventoryClickEvent -> {
-			settingsMenu.setMail_accept(1);
-			back();
-		}));
-		map.put(5, new ItemBuilder(this, Material.YELLOW_WOOL, itemMeta -> {
-			itemMeta.setDisplayName(ChatColor.YELLOW + "Team seulement");
-			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 2);
-		}).setOnClick(inventoryClickEvent -> {
-			settingsMenu.setMail_accept(2);
-			back();
-		}));
+//		map.put(3, new ItemBuilder(this, Material.ORANGE_WOOL, itemMeta -> {
+//			itemMeta.setDisplayName(ChatColor.GOLD + "Amis seulement");
+//			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 1);
+//		}).setOnClick(inventoryClickEvent -> {
+//			settingsMenu.setMail_accept(1);
+//			back();
+//		}));
+//		map.put(5, new ItemBuilder(this, Material.YELLOW_WOOL, itemMeta -> {
+//			itemMeta.setDisplayName(ChatColor.YELLOW + "Team seulement");
+//			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 2);
+//		}).setOnClick(inventoryClickEvent -> {
+//			settingsMenu.setMail_accept(2);
+//			back();
+//		}));
 		map.put(7, new ItemBuilder(this, Material.GREEN_WOOL, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Tout le monde");
 			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 3);
