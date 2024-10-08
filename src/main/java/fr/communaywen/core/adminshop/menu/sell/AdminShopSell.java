@@ -21,8 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-@Credit("Axeno")
-@Feature("AdminShop")
+
 public class AdminShopSell extends Menu {
     BaseItems items;
     private final AtomicInteger number;

@@ -1,12 +1,14 @@
 package fr.communaywen.core.adminshop.shopinterfaces;
 
 import dev.xernas.menulib.Menu;
+import dev.xernas.menulib.MenuLib;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.adminshop.menu.buy.AdminShopBuy;
 import fr.communaywen.core.adminshop.menu.category.colored.AdminColoredShop;
 import fr.communaywen.core.adminshop.menu.category.colored.BlockType;
 import fr.communaywen.core.adminshop.menu.sell.AdminShopSell;
+import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,6 +23,7 @@ public abstract class BaseShop extends Menu {
     @NonNull
     private final String name;
     private final BaseItems[] items;
+
     public BaseShop(Player player, String name, BaseItems[] items) {
         super(player);
         this.name = name;
@@ -54,10 +57,6 @@ public abstract class BaseShop extends Menu {
         }
 
         for(BaseItems item : items) {
-
-            AdminShopBuy buy = new AdminShopBuy(getOwner(), item);
-            AdminShopSell sell = new AdminShopSell(getOwner(), item);
-
             content.put(item.getSlots(), new ItemBuilder(this, Objects.requireNonNull(Material.getMaterial(item.named())), itemMeta ->  {
                         itemMeta.setDisplayName(item.getName());
 
@@ -66,6 +65,11 @@ public abstract class BaseShop extends Menu {
                     }).setOnClick(event -> getClicks(event, item, getOwner()))
             );
         }
+
+        ArrayList<ItemBuilder> navBtns = CustomItemsUtils.getNavigationButtons(this);
+
+        content.put(45, navBtns.getFirst().setBackButton());
+        content.put(53, navBtns.get(1).setCloseButton());
 
         return content;
     }
@@ -80,6 +84,8 @@ public abstract class BaseShop extends Menu {
 
         boolean isRightClick = click.isRightClick();
         boolean isLeftClick = click.isLeftClick();
+
+        MenuLib.setLastMenu(getOwner(), this);
 
         switch (item.getType()) {
             case SELL_BUY -> {

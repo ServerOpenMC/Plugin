@@ -5,6 +5,7 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.adminshop.menu.buy.AdminShopBuy;
 import fr.communaywen.core.adminshop.menu.category.colored.COLOR;
+import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -14,9 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class ColoredShop extends Menu {
+
     private final String name;
     private final String materialType;
     private final String materialName;
+
     public ColoredShop(Player player, String name, String materialType, String materialName) {
         super(player);
         this.name = name;
@@ -60,6 +63,11 @@ public class ColoredShop extends Menu {
                 }).setNextMenu(buy)
             );
         }
+
+        ArrayList<ItemBuilder> navBtns = CustomItemsUtils.getNavigationButtons(this);
+
+        content.put(45, navBtns.getFirst().setBackButton());
+        content.put(53, navBtns.get(1).setCloseButton());
 
         return content;
     }

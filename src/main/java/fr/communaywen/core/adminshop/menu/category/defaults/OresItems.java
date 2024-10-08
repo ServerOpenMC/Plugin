@@ -7,8 +7,6 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import org.bukkit.Material;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 public enum OresItems implements BaseItems {
     COAL(13, 3, ShopType.SELL_BUY, "§7Charbon"),
     COPPER_INGOT(20, 4, ShopType.SELL_BUY, "§7Lingot de cuivre"),
