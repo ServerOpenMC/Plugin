@@ -20,7 +20,7 @@ public class CloudSoupAdvDream extends BaseAdvancement {
                         true,
                         false,
                         3F,4F,
-                        "Vous volez dans les airs comme un nuage"
+                        "Fly me to the mooon..."
                 ),
                 parent
         );
