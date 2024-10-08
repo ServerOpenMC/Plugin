@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SettingsMenu extends Menu {
@@ -60,15 +61,16 @@ public class SettingsMenu extends Menu {
 		
 		map.put(22, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GOLD + "Mailbox");
-			itemMeta.setCustomModelData(5001);
+			itemMeta.setCustomModelData(8000);
+			itemMeta.setLore(List.of(SettingsUtils.getMailStatus(this.mail_accept)));A
 		}).setNextMenu(new MailboxManagerMenu(owner, this)));
 		map.put(45, new ItemBuilder(this, Material.BARRIER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Fermer");
-			itemMeta.setCustomModelData(2000);
+			itemMeta.setCustomModelData(8100);
 		}).setCloseButton());
 		map.put(53, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
-			itemMeta.setCustomModelData(5000);
+			itemMeta.setCustomModelData(8001);
 		}).setOnClick(inventoryClickEvent -> {
 			try {
 				if (plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(owner) == null) {

@@ -15,6 +15,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -225,7 +226,14 @@ public class MailboxListener extends DatabaseConnector implements Listener {
             } else if (slot == 5) {
                 runTask(() -> HomeMailbox.openPlayersList(player));
             } else if (slot == 8) {
-                runTask(() -> HomeMailbox.openSettings(player));
+                runTask(() -> {
+	                try {
+		                HomeMailbox.openSettings(player);
+	                } catch (SQLException e) {
+		                e.printStackTrace();
+                        player.sendMessage(ChatColor.DARK_RED + "Impossible d'ouvrir le menu");
+	                }
+                });
             }
         } else if (holder instanceof PendingMailbox pendingMailbox) {
             if (item != null && item.getType() == Material.PLAYER_HEAD) {

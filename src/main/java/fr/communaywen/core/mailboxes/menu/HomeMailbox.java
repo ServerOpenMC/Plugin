@@ -4,6 +4,9 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
 import fr.communaywen.core.mailboxes.menu.letter.SendingLetter;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
+import fr.communaywen.core.settings.SettingsManager;
+import fr.communaywen.core.settings.SettingsMenu;
+import fr.communaywen.core.settings.menus.MailboxManagerMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -53,7 +56,9 @@ public class HomeMailbox extends MailboxInv {
         pendingMailbox.openInventory();
     }
 
-    public static void openSettings(Player player) {
+    public static void openSettings(Player player) throws SQLException {
+        MailboxManagerMenu menu = new MailboxManagerMenu(player, new SettingsMenu(plugin, player, new SettingsManager(plugin)));
+        menu.open();
     }
 
     public static void openHomeMailbox(Player player, AywenCraftPlugin plugin) {
