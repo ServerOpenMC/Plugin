@@ -316,7 +316,7 @@ public class ContestManager extends DatabaseConnector {
                     lucky = giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
                 }
-                
+
                 bookMetaPlayer.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x" + getMultiMoneyFromRang(getRankContestFromOfflineInt(player)) + ")\n§0+ " + lucky + " §6Lucky Block§b (x" + getMultiLuckyFromRang(getRankContestFromOfflineInt(player)) + ")");
 
                 bookPlayer.setItemMeta(bookMetaPlayer);
