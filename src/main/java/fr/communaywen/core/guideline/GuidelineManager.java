@@ -2,12 +2,10 @@ package fr.communaywen.core.guideline;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
-import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.guideline.advancements.dream.helldivers.*;
 import fr.communaywen.core.guideline.advancements.dream.*;
 import lombok.Getter;
 import org.bukkit.Material;

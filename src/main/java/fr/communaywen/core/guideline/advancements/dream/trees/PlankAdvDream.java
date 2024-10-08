@@ -8,7 +8,7 @@ import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import org.jetbrains.annotations.NotNull;
 
-public class PlankAdvDream extends BaseAdvancement {
+public class PlankAdvDream extends BaseAdvancement implements VanillaVisibility {
     public PlankAdvDream(@NotNull Advancement parent) {
         super(
                 "planks",

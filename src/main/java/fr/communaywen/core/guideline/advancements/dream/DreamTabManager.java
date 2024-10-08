@@ -14,8 +14,7 @@ import fr.communaywen.core.guideline.advancements.dream.fishing.*;
 import fr.communaywen.core.guideline.advancements.dream.helldivers.*;
 import fr.communaywen.core.guideline.advancements.dream.trees.*;
 
-import fr.communaywen.core.guideline.listeners.dream.FishingDream;
-import fr.communaywen.core.guideline.listeners.dream.RootDream;
+import fr.communaywen.core.guideline.listeners.dream.*;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -77,9 +76,13 @@ public class DreamTabManager implements Listener {
                 wood,planks,cloud,bed,cloudSoup // Trees
         );
 
+        tab.automaticallyShowToPlayers();
+
         AywenCraftPlugin.getInstance().registerEvents(
-                new RootDream(),
-                new FishingDream()
+                new FishingDream(),
+                new CookedDreamFish(),
+                new TreeBreakAdvancement(),
+                new TreeCraftAdvancements()
         );
     }
 }

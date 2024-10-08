@@ -6,12 +6,13 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.IVisibility;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.ParentGrantedVisibility;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.economy.EconomyManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class BookAdvDream extends BaseAdvancement implements ParentGrantedVisibility {
+public class BookAdvDream extends BaseAdvancement implements VanillaVisibility {
     public BookAdvDream(@NotNull Advancement parent) {
         super(
                 "codex",
