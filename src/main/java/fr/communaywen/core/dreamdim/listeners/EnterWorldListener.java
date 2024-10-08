@@ -150,6 +150,8 @@ public class EnterWorldListener implements Listener {
         Player player = event.getPlayer();
         if (!player.getWorld().equals(dreamworld)){ return; }
 
+        GuidelineManager.getAPI().getAdvancement("dream:root").grant(player);
+
         BossBar timer = Bukkit.createBossBar(
                 "Rêve",
                 BarColor.WHITE,
