@@ -209,15 +209,15 @@ public class ContestManager extends DatabaseConnector {
         String camp2Name = ContestCache.getCamp2Cache();
 
         //CREATE PART OF BOOK
-        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-        BookMeta bookMeta = (BookMeta) book.getItemMeta();
-        bookMeta.setTitle("Les Résultats du Contest");
-        bookMeta.setAuthor("Les Contest");
+        ItemStack baseBook = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta baseBookMeta = (BookMeta) baseBook.getItemMeta();
+        baseBookMeta.setTitle("Les Résultats du Contest");
+        baseBookMeta.setAuthor("Les Contest");
 
         List<String> lore = new ArrayList<String>();
         lore.add(color1 + camp1Name + " §7VS " + color2 + camp2Name);
         lore.add("§e§lOuvrez ce livre pour en savoir plus!");
-        bookMeta.setLore(lore);
+        baseBookMeta.setLore(lore);
 
         // GET VOTE AND POINT TAUX
         int points1 = getInt("contest", "points1");
@@ -234,15 +234,12 @@ public class ContestManager extends DatabaseConnector {
         int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
         int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
 
-        //PRINT ON BOOK
         if (points1 > points2) {
-            bookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n" + "§0Perdant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
-        }
-        if (points2 > points1) {
-            bookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n" + "§0Perdant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
+            baseBookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n" + "§0Perdant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
+        } else {
+            baseBookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n" + "§0Perdant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
         }
 
-        //PRINT LEADERBOARD
         String leaderboard = "§8§lLe Classement du Contest (Jusqu'au 10eme)";
         int rankInt = 0;
 
@@ -261,22 +258,21 @@ public class ContestManager extends DatabaseConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        bookMeta.addPage(leaderboard);
+        baseBookMeta.addPage(leaderboard);
 
-        //PRINT FOR EACH PLAYER
         ResultSet rs1 = getAllPlayer();
         Map<OfflinePlayer, ItemStack[]> playerItemsMap = new HashMap<>();
         try {
             while(rs1.next()) {
-                BookMeta bookMetaPlayer = bookMeta;
-
+                ItemStack bookPlayer = new ItemStack(Material.WRITTEN_BOOK);
+                BookMeta bookMetaPlayer = baseBookMeta.clone();
 
                 String playerName = rs1.getString("name");
                 OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
                 String playerCampName = getOfflinePlayerCampName(player);
                 ChatColor playerCampColor = ColorConvertor.getReadableColor(getOfflinePlayerCampChatColor(player));
 
-                bookMetaPlayer.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor+ playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + getRankPlayerInContest(player)+ "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
+                bookMetaPlayer.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor + playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + getRankPlayerInContest(player) + "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
 
                 int money = 0;
                 int lucky = 0;
@@ -319,16 +315,16 @@ public class ContestManager extends DatabaseConnector {
 
                     lucky = giveRandomly(luckyMin, luckyMax);
                     lucky = Math.round(lucky);
-
-                    EconomyManager.addBalanceOffline(player, money);
                 }
-                bookMetaPlayer.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x"+ getMultiMoneyFromRang(getRankContestFromOfflineInt(player)) +")\n§0+ " + lucky + " §6Lucky Block§b (x"+ getMultiLuckyFromRang(getRankContestFromOfflineInt(player)) + ")");
-                book.setItemMeta(bookMetaPlayer);
+                
+                bookMetaPlayer.addPage("§8§lRécompenses\n§0+ " + money + "$ §b(x" + getMultiMoneyFromRang(getRankContestFromOfflineInt(player)) + ")\n§0+ " + lucky + " §6Lucky Block§b (x" + getMultiLuckyFromRang(getRankContestFromOfflineInt(player)) + ")");
+
+                bookPlayer.setItemMeta(bookMetaPlayer);
 
                 luckyblock.setAmount(lucky);
 
                 List<ItemStack> itemlist = new ArrayList<>();
-                itemlist.add(book);
+                itemlist.add(bookPlayer);
                 itemlist.add(luckyblock);
 
                 ItemStack[] items = itemlist.toArray(new ItemStack[itemlist.size()]);
