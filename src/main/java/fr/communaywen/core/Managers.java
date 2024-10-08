@@ -124,6 +124,7 @@ public class Managers {
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);
         contestManager = new ContestManager(plugin);
+        System.out.println("in manager" + contestManager);
         contestCache = new ContestCache(contestManager);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);

@@ -1,10 +1,11 @@
 package fr.communaywen.core.contest.cache;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.managers.ContestManager;
 
 public class ContestCache {
 
-    private static ContestManager contestManager = null;
+    private static ContestManager contestManager;
     public ContestCache(ContestManager manager) {
         contestManager = manager;
     }
