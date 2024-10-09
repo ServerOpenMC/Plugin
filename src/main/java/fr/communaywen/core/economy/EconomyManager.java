@@ -66,7 +66,7 @@ public class EconomyManager {
 
         saveBalances(player);
         for(QUESTS quests : QUESTS.values()) {
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
+            PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
                     QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
