@@ -2,7 +2,11 @@ package fr.communaywen.core.quests;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
+import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.Transaction;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.md_5.bungee.api.ChatMessageType;
@@ -47,35 +51,70 @@ public class QuestsManager extends DatabaseConnector {
             }
         }
 
+        pq.calculateAllTiers();
+
         playerQuests.put(playerId, pq);
-    }
-
-    public static PlayerQuests getPlayerQuests(Player player) {
-        return playerQuests.get(player.getUniqueId());
-    }
-
-    public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
-        PlayerQuests pq = getPlayerQuests(player);
-
-        if (!pq.isQuestCompleted(quest)) {
-            pq.addProgress(quest, amount);
-            sendActionBar(player, quest, pq.getProgress(quest), actionBar);
-
-            if (pq.isQuestCompleted(quest)) {
-                completeQuest(player, quest);
+        for (QUESTS quest : QUESTS.values()) {
+            int progress = pq.getProgress(quest);
+            int tier = pq.getCurrentTier(quest);
+            StringBuilder tierInfo = new StringBuilder();
+            for (int i = 0; i < quest.getQtTiers().length; i++) {
+                tierInfo.append("Tier ").append(i).append(": ").append(quest.getQt(i)).append(", ");
             }
         }
     }
 
-    public static void savePlayerQuestProgress(Player player, QUESTS quest, int progress) throws SQLException {
-        String sql = "UPDATE " + TABLE_NAME + " SET " + quest.name() + " = ? WHERE " + PLAYER_COLUMN + " = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, progress);
-            stmt.setString(2, player.getUniqueId().toString());
-            stmt.addBatch();
-            stmt.executeBatch();
+    public static PlayerQuests getPlayerQuests(UUID player) {
+        return playerQuests.get(player);
+    }
+
+    public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
+        PlayerQuests pq = getPlayerQuests(player.getUniqueId());
+        int currentTier = pq.getCurrentTier(quest);
+
+        if (pq.isQuestCompleted(quest)) { return; }
+
+        if (currentTier < 0 || currentTier >= quest.getQtTiers().length) {
+            return;
+        }
+
+        pq.addProgress(quest, amount);
+        sendActionBar(player, quest, pq.getProgress(quest), currentTier, actionBar);
+
+        if (pq.getProgress(quest) >= quest.getQt(currentTier)) {
+            if (currentTier + 1 < quest.getQtTiers().length) {
+                pq.setCurrentTier(quest, currentTier + 1);
+                MessageManager.sendMessageType(player, MessageManager.textToSmall("§6Quête tier §e" + (currentTier + 1) + " §6complétée: §e" + quest.getName()), Prefix.QUESTS, MessageType.SUCCESS, true);
+                grantReward(player, quest, currentTier);
+            } else {
+                completeQuestTier(player, quest, currentTier);
+            }
         }
     }
+
+    public static void savePlayerQuestProgress(Player player, PlayerQuests pq) throws SQLException {
+        StringBuilder sql = new StringBuilder("UPDATE " + TABLE_NAME + " SET ");
+        List<Object> params = new ArrayList<>();
+
+        for (QUESTS quest : QUESTS.values()) {
+            sql.append(quest.name()).append(" = ?, ");
+            params.add(pq.getProgress(quest));
+        }
+
+        sql.delete(sql.length() - 2, sql.length());
+        sql.append(" WHERE ").append(PLAYER_COLUMN).append(" = ?");
+        params.add(player.getUniqueId().toString());
+
+        // Debugging Output
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+            stmt.executeUpdate();
+        }
+    }
+
 
     private static boolean tableExists() throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
@@ -108,9 +147,25 @@ public class QuestsManager extends DatabaseConnector {
     }
 
     private static void insertNewPlayer(UUID playerId) throws SQLException {
-        String sql = "INSERT INTO " + TABLE_NAME + " (" + PLAYER_COLUMN + ") VALUES (?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        StringBuilder sql = new StringBuilder("INSERT INTO " + TABLE_NAME + " (" + PLAYER_COLUMN);
+
+        for(QUESTS quest : QUESTS.values()) {
+            sql.append(", ").append(quest.name());
+        }
+
+        sql.append(") VALUES (?");
+
+        for (int i = 0; i < QUESTS.values().length; i++) {
+            sql.append(", ?");
+        }
+
+        sql.append(")");
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
             stmt.setString(1, playerId.toString());
+            for (int i = 0; i < QUESTS.values().length; i++) {
+                stmt.setInt(i + 2, 0);
+            }
             stmt.executeUpdate();
         }
     }
@@ -129,34 +184,65 @@ public class QuestsManager extends DatabaseConnector {
         }
     }
 
-    private static void sendActionBar(Player player, QUESTS quest, int progress, String actionBar) {
+    private static void sendActionBar(Player player, QUESTS quest, int progress, int currentTier, String actionBar) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                new TextComponent("» §7[§9§lQuêtes§7] §6" + progress + "§l/§6" + quest.getQt() + " " + actionBar));
+                new TextComponent(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6" + progress + "§l/§6" + quest.getQt(currentTier) + " " + actionBar)));
     }
 
-    private static void completeQuest(Player player, QUESTS quest) {
+    private static void completeQuestTier(Player player, QUESTS quest, int completedTier) {
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 10, 10);
-        player.sendTitle("§6QUETE COMPLETE", "§e" + quest.getName());
-        player.sendMessage("» §7[§9§lQuêtes§7] §6Quête complétée: §e" + quest.getName());
+        player.sendTitle("§6QUETE ENTIEREMENT COMPLETEE", "§e" + quest.getName());
+        player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall("§7» §6Quête entièrement complétée: §e" + quest.getName()));
 
         switch (quest.getReward()) {
             case ITEMS:
-                player.getInventory().addItem(new ItemStack(quest.getRewardsMaterial().getType(), quest.getRewardsQt()));
-                player.sendMessage("» §7[§9§lQuêtes§7] §6+ " + quest.getRewardsQt() + " " + quest.getRewardsMaterial().getType().name());
+                player.getInventory().addItem(new ItemStack(quest.getRewardsMaterial().getType(), quest.getRewardsQt(completedTier)));
+                player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(completedTier) + " " + ItemUtils.getDefaultItemName(player, quest.getRewardsMaterial())));
                 break;
             case MONEY:
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt());
-
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt(completedTier));
 
                 new TransactionsManager().addTransaction(new Transaction(
                         player.getUniqueId().toString(),
                         "CONSOLE",
-                        quest.getRewardsQt(),
-                        "Quest"
+                        quest.getRewardsQt(completedTier),
+                        "Quest Tier " + (completedTier + 1)
                 ));
 
-                player.sendMessage("» §7[§9§lQuêtes§7] §6+ " + quest.getRewardsQt() + "$");
+                player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(completedTier) + "$"));
                 break;
         }
     }
+
+    private static int calculateTier(QUESTS quest, int progress) {
+        int tier = 0;
+        for (int i = 0; i < quest.getQtTiers().length; i++) {
+            if (progress >= quest.getQt(i)) {
+                tier = i + 1;
+            } else {
+                break;
+            }
+        }
+        return tier;
+    }
+
+    private static void grantReward(Player player, QUESTS quest, int tier) {
+        switch (quest.getReward()) {
+            case ITEMS:
+                player.getInventory().addItem(new ItemStack(quest.getRewardsMaterial().getType(), quest.getRewardsQt(tier)));
+                player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(tier) + " " + quest.getRewardsMaterial().getType().name()));
+                break;
+            case MONEY:
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt(tier));
+                new TransactionsManager().addTransaction(new Transaction(
+                        player.getUniqueId().toString(),
+                        "CONSOLE",
+                        quest.getRewardsQt(tier),
+                        "Quest Reward"
+                ));
+                player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(tier) + "$"));
+                break;
+        }
+    }
+
 }
