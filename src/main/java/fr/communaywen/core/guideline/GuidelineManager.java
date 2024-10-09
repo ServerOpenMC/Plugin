@@ -32,8 +32,8 @@ public class GuidelineManager implements Listener {
                 AdvancementFrameType.CHALLENGE,
                 false,
                 false,
-                0,
-                0,
+                100,
+                100,
                 "Votre aventure commence ici");
 
         root = new RootAdvancement(tab, "root", rootDisplay, "textures/block/pink_concrete_powder.png");
