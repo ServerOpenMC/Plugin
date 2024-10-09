@@ -28,6 +28,9 @@ import fr.communaywen.core.commands.homes.DelhomesCommands;
 import fr.communaywen.core.commands.homes.HomesCommands;
 import fr.communaywen.core.commands.homes.RenameHomeCommands;
 import fr.communaywen.core.commands.homes.SethomesCommands;
+import fr.communaywen.core.commands.homes.HomeDisabledWorldCommand;
+import fr.communaywen.core.commands.spawn.head.HeadCommand;
+import fr.communaywen.core.commands.spawn.jump.JumpCommand;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -40,10 +43,12 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.listeners.ContestIntractEvents;
 import fr.communaywen.core.contest.listeners.ContestListener;
 import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
-import fr.communaywen.core.contest.*;
+import fr.communaywen.core.contest.managers.ColorConvertor;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -121,6 +126,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private static AywenCraftPlugin instance;
     @Getter
     private final Managers managers = new Managers();
+    private ContestManager contestManager;
+    private JumpManager jumpManager;
     public EventsManager eventsManager; // TODO: include to Managers.java
     public LuckPerms api;
     public List<RegionManager> regions;
@@ -178,6 +185,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+        jumpManager = managers.getJumpManager();
+        contestManager = managers.getContestManager();
         ClaimConfigDataBase.loadAllClaimsData();
 
         eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
@@ -313,9 +322,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.register(
                 new SettingsCommand(this),
+                new HeadCommand(this),
+                new JumpCommand(this,jumpManager),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
-                new ContestCommand(this, loadEventsManager(), managers.getContestManager()),
+                new ContestCommand(this, loadEventsManager(), contestManager),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -386,11 +397,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* LISTENERS */
         registerEvents(
                 // new LeaderboardListener(this),       // Desactivé de base
+                new HeadListener(this),
+                new JumpListener(this, jumpManager),
+                new LeaderboardListener(this),
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),
-                new FirerocketSpawnListener(this, managers.getContestManager()),
-                new ContestListener(this, loadEventsManager(), managers.getContestManager()),
+                new FirerocketSpawnListener(this, contestManager),
+                new ContestListener(this, loadEventsManager(), contestManager),
                 new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
@@ -448,12 +462,48 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
 
-        //LeaderboardManager.createLeaderboard();
+        // BETTER SPAWN
+        // - Leaderboard
+        LeaderboardManager.createLeaderboardBalTop();
+        LeaderboardManager.updateLeaderboardBalTop();
+        LeaderboardManager.createLeaderboardTeamTop();
+        LeaderboardManager.updateLeaderboardTeamTop();
+        jumpManager.createDisplayJumpStart();
+        jumpManager.createDisplayJumpEnd();
+        LeaderboardManager.createLeaderboardContribution();
+        try {
+            LeaderboardManager.updateLeaderboardContribution();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        // - Particle
+        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 50, 130);
+        if (ContestCache.getPhaseCache() != 1) {
+            String camp1Color = ContestCache.getColor1Cache();
+            String camp2Color = ContestCache.getColor2Cache();
+            ChatColor color1 = ChatColor.valueOf(camp1Color);
+            ChatColor color2 = ChatColor.valueOf(camp2Color);
+
+            int[] rgb1 = ColorConvertor.getRGBFromChatColor(color1);
+            int[] rgb2 = ColorConvertor.getRGBFromChatColor(color2);
+
+            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
+            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
+
+        }
     }
 
     @SneakyThrows
     @Override
     public void onDisable() {
+        // Remove Leaderboard
+        LeaderboardManager.removeLeaderboardBalTop();
+        LeaderboardManager.removeLeaderboardTeamTop();
+        LeaderboardManager.removeLeaderboardContribution();
+
+        jumpManager.removeDisplayJumpStart();
+        jumpManager.removeDisplayJumpEnd();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
             QuestsManager.savePlayerQuestProgress(player, pq); // Save quest progress

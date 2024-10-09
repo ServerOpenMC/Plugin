@@ -1,10 +1,8 @@
 package fr.communaywen.core.scoreboard;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.FirerocketSpawnListener;
-import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.dreamdim.listeners.CloudSoup;
+import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.spawn.head.HeadManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
@@ -100,20 +98,14 @@ public class ScoreboardManager {
         objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(7);
         objective.getScore("   ").setScore(6);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(5);
-        if (FirerocketSpawnListener.isPlayerInRegion("spawn", Bukkit.getWorld("world"))) {
+        if (RegionsManager.isPlayerInRegion("spawn", Bukkit.getWorld("world"))) {
             int heads = HeadManager.getHeadFoundIntCache(player);
             int maxHeads = HeadManager.getMaxHeads();
 
             objective.getScore("   ").setScore(5);
             objective.getScore("§8• §fHeads§7: §d" + heads + "§8/§d"+ maxHeads).setScore(4);
         }
-        /**
-        if(phase != 1) {
-            objective.getScore(" ").setScore(4);
-            objective.getScore("§8• §6§lCONTEST!").setScore(3);
-            objective.getScore(ChatColor.valueOf(ContestManager.getColor1Cache()) + ContestManager.getCamp1Cache() + " §8VS " + ChatColor.valueOf(ContestManager.getColor2Cache())  + ContestManager.getCamp2Cache()).setScore(2);
-        }
-        **/
+
         objective.getScore("§d§m                         §r").setScore(1);
         objective.getScore("§d    " + ipStr).setScore(0);
 

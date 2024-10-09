@@ -25,9 +25,11 @@ import java.util.Map;
 @Description("Permet de vous donner vos statistiques par rapport au jump")
 public class JumpCommand {
     private final AywenCraftPlugin plugin;
+    private JumpManager jumpManager;
 
-    public JumpCommand(AywenCraftPlugin plugins) {
+    public JumpCommand(AywenCraftPlugin plugins, JumpManager manager) {
         plugin = plugins;
+        jumpManager = manager;
     }
 
     @Cooldown(4)
@@ -52,8 +54,8 @@ public class JumpCommand {
             plugin.getConfig().set("jump.start.posY", posY);
             plugin.getConfig().set("jump.start.posZ", posZ);
             plugin.saveConfig();
-            JumpManager.removeDisplayJumpStart();
-            JumpManager.createDisplayJumpStart();
+            jumpManager.removeDisplayJumpStart();
+            jumpManager.createDisplayJumpStart();
             MessageManager.sendMessageType(player, "§7Commencement du jump déplacé X=" + posX + " Y=" + posY + " Z=" + posZ + " WORLD = " + world, Prefix.JUMP, MessageType.SUCCESS, true);
         } else {
             MessageManager.sendMessageType(player, "§cVous devez viser plaque de pression de fer", Prefix.JUMP, MessageType.ERROR, true);
@@ -76,8 +78,8 @@ public class JumpCommand {
             plugin.getConfig().set("jump.end.posY", posY);
             plugin.getConfig().set("jump.end.posZ", posZ);
             plugin.saveConfig();
-            JumpManager.removeDisplayJumpEnd();
-            JumpManager.createDisplayJumpEnd();
+            jumpManager.removeDisplayJumpEnd();
+            jumpManager.createDisplayJumpEnd();
             MessageManager.sendMessageType(player, "§7Fin du jump déplacé X=" + posX + " Y=" + posY + " Z=" + posZ + " WORLD = " + world, Prefix.JUMP, MessageType.SUCCESS, true);
         } else {
             MessageManager.sendMessageType(player, "§cVous devez viser plaque de pression de fer", Prefix.JUMP, MessageType.ERROR, true);

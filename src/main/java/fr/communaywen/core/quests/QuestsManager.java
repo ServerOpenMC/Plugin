@@ -3,6 +3,7 @@ package fr.communaywen.core.quests;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.utils.ItemUtils;
+import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -185,8 +186,10 @@ public class QuestsManager extends DatabaseConnector {
     }
 
     private static void sendActionBar(Player player, QUESTS quest, int progress, int currentTier, String actionBar) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                new TextComponent(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6" + progress + "§l/§6" + quest.getQt(currentTier) + " " + actionBar)));
+        if (!JumpManager.isJumping(player)) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                    new TextComponent(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6" + progress + "§l/§6" + quest.getQt(currentTier) + " " + actionBar)));
+        }
     }
 
     private static void completeQuestTier(Player player, QUESTS quest, int completedTier) {
