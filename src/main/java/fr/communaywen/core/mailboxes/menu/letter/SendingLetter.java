@@ -1,15 +1,20 @@
 package fr.communaywen.core.mailboxes.menu.letter;
 
+import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
+import fr.communaywen.core.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxMenuManager.*;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getHead;
@@ -18,10 +23,20 @@ import static fr.communaywen.core.mailboxes.utils.MailboxUtils.sendFailureMessag
 public class SendingLetter extends MailboxInv {
     private final static String INV_NAME = "\uF990\uE003";
     private final OfflinePlayer receiver;
+    private final AywenCraftPlugin plugin;
+    private final TeamManager teamManager;
+	private final List<String> playerFriends;
+    
+    int mail_accept;
 
-    public SendingLetter(Player player, OfflinePlayer receiver) {
+    public SendingLetter(Player player, OfflinePlayer receiver, AywenCraftPlugin plugin) throws SQLException {
         super(player);
         this.receiver = receiver;
+        this.plugin = plugin;
+        this.teamManager = plugin.getManagers().getTeamManager();
+	    FriendsManager friendsManager = new FriendsManager(plugin.getManagers().getDatabaseManager(), this.plugin);
+        this.playerFriends = friendsManager.getFriends(player.getName());
+        this.mail_accept = plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(Objects.requireNonNull(receiver.getPlayer())).mail_accept();
         inventory = Bukkit.createInventory(this, 54, MailboxMenuManager.getInvTitle(INV_NAME));
         inventory.setItem(49, getHead(receiver));
         inventory.setItem(45, homeBtn());
@@ -51,7 +66,38 @@ public class SendingLetter extends MailboxInv {
         player.closeInventory();
         if (items.length == 0) {
             sendFailureMessage(player, "Vous ne pouvez pas envoyer de lettre vide");
-        } else if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
+            return;
+        }
+        plugin.getLogger().info("Mail Accept" + mail_accept);
+        switch (mail_accept) {
+            case 0:
+                sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
+                break;
+                
+            case 1:
+                if (!playerFriends.contains(receiver.getName())) {
+                    sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
+                } else {
+                    if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
+                }
+                break;
+            
+            case 2:
+                String playerTeamName = teamManager.getTeamByPlayer(player.getUniqueId()).getName();
+                String receiverTeamName = teamManager.getTeamByPlayer(receiver.getUniqueId()).getName();
+                plugin.getLogger().info("Player team name : " + playerTeamName);
+                plugin.getLogger().info("Player receiver name : " + receiverTeamName);
+                if (!playerTeamName.equals(receiverTeamName)) {
+                    sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
+                } else {
+                    if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
+                }
+                break;
+            
+            default:
+                if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
+                break;
+        }
     }
 
     public void giveItems() {

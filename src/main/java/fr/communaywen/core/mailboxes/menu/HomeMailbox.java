@@ -1,8 +1,12 @@
 package fr.communaywen.core.mailboxes.menu;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
 import fr.communaywen.core.mailboxes.menu.letter.SendingLetter;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
+import fr.communaywen.core.settings.SettingsManager;
+import fr.communaywen.core.settings.SettingsMenu;
+import fr.communaywen.core.settings.menus.MailboxManagerMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -11,15 +15,20 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
+
 import static fr.communaywen.core.mailboxes.utils.MailboxMenuManager.getCustomItem;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getHead;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getItem;
 
 public class HomeMailbox extends MailboxInv {
     private static final String INV_NAME = "\uF990\uE004";
-
-    public HomeMailbox(Player player) {
+    
+    static AywenCraftPlugin plugin;
+    
+    public HomeMailbox(Player player, AywenCraftPlugin plugin) {
         super(player);
+        HomeMailbox.plugin = plugin;
         this.inventory = Bukkit.createInventory(this, 9, MailboxMenuManager.getInvTitle(INV_NAME));
         inventory.setItem(3, getCustomItem(Component.text("En attente", NamedTextColor.DARK_AQUA, TextDecoration.BOLD), 2006));
         inventory.setItem(4, getHead(player, Component.text("Ma boite aux lettres", NamedTextColor.GOLD, TextDecoration.BOLD)));
@@ -32,8 +41,8 @@ public class HomeMailbox extends MailboxInv {
         playersList.openInventory();
     }
 
-    public static void openSendingMailbox(Player player, OfflinePlayer receiver) {
-        SendingLetter sendingLetter = new SendingLetter(player, receiver);
+    public static void openSendingMailbox(Player player, OfflinePlayer receiver, AywenCraftPlugin plugin) throws SQLException {
+        SendingLetter sendingLetter = new SendingLetter(player, receiver, plugin);
         sendingLetter.openInventory();
     }
 
@@ -47,11 +56,13 @@ public class HomeMailbox extends MailboxInv {
         pendingMailbox.openInventory();
     }
 
-    public static void openSettings(Player player) {
+    public static void openSettings(Player player) throws SQLException {
+        MailboxManagerMenu menu = new MailboxManagerMenu(player, new SettingsMenu(plugin, player, new SettingsManager(plugin)));
+        menu.open();
     }
 
-    public static void openHomeMailbox(Player player) {
-        HomeMailbox homeMailbox = new HomeMailbox(player);
+    public static void openHomeMailbox(Player player, AywenCraftPlugin plugin) {
+        HomeMailbox homeMailbox = new HomeMailbox(player, plugin);
         homeMailbox.openInventory();
     }
 
