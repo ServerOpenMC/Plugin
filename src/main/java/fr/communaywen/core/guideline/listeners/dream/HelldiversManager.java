@@ -81,7 +81,6 @@ public class HelldiversManager extends DatabaseConnector implements Listener {
     private void saveAdvancementData(HashMap<UUID, Integer> advancements, String advancementType) {
         AywenCraftPlugin.getInstance().getLogger().warning("Saving " + advancementType + " advancements");
         for (UUID player : advancements.keySet()) {
-            System.out.println(player+": "+advancements.get(player));
             try {
                 PreparedStatement statement = connection.prepareStatement(
                         "INSERT INTO advancements (player, advancement, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value = ?");
