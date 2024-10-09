@@ -6,8 +6,6 @@ import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import org.bukkit.Material;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 public enum MiscItems implements BaseItems {
 
     GLOWSTONE_DUST(13, 3, ShopType.SELL_BUY, "§7Poudre lumineuse"),

@@ -18,7 +18,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.dreamdim.BossFight;
 import fr.communaywen.core.dreamdim.DreamUtils;
-import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
+import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.utils.Skull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -109,13 +109,13 @@ public class BossManager implements Listener {
         ItemStack essence = CustomStack.getInstance("aywen:dream_essence").getItemStack();
         DreamUtils.setFromDream(essence);
 
-        player.getWorld().dropItemNaturally(block.getLocation(), essence);
+        GuidelineManager.getAPI().getAdvancement("dream:essence").grant(player);
 
-        SimpleAdvancementRegister.grantAdvancement(player, "aywen:dreamrush");
+        player.getWorld().dropItemNaturally(block.getLocation(), essence);
 
         if (bosses.containsKey(player)) { return; } // Le joueur est déjà en bossfight *comment ??* donc on passe
 
-        if (new Random().nextDouble() <= 0.1) {
+        if (new Random().nextDouble() <= 0.01) {
             player.getServer().broadcast(Component.text(player.getName()+" a commencé un combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
             player.sendTitle("§5Le Dévorêve", "Tu as fais apparaître un boss",0, 3*20, 20);
             player.playSound(player.getEyeLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.AMBIENT, 1, 1);
@@ -226,7 +226,6 @@ public class BossManager implements Listener {
         player.getServer().broadcast(Component.text(player.getName()+" a gagné son combat contre le ").append(Component.text("Dévorêve").color(TextColor.color(16733695))));
 
         event.setDroppedExp(2500);
-        SimpleAdvancementRegister.grantAdvancement(player, "aywen:dreameater");
 
         List<ItemStack> drops = event.getDrops();
         drops.clear();
@@ -234,23 +233,26 @@ public class BossManager implements Listener {
 
         ItemStack essence = CustomStack.getInstance("aywen:dream_essence").getItemStack();
         essence.setAmount(random.nextInt(4)+1);
+        DreamUtils.setFromDream(essence);
         drops.add(essence);
 
+        GuidelineManager.getAPI().getAdvancement("dream:dreameater").grant(player);
         if (random.nextDouble() <= 0.3) {
+            GuidelineManager.getAPI().getAdvancement("dream:devoreve/chestplate").grant(player);
             ItemStack chestplate = getChestplate();
 
             drops.add(chestplate);
-            SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/chestplate");
         }
 
         if (random.nextDouble() <= 0.3) {
+            GuidelineManager.getAPI().getAdvancement("dream:devoreve/skull").grant(player);
             ItemStack head = getHelmet();
 
             drops.add(head);
-            SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/skull");
         }
 
         if (random.nextDouble() <= 0.1) {
+            GuidelineManager.getAPI().getAdvancement("dream:devoreve/weapon").grant(player);
             ItemStack hoe = getWeapon();
             hoe.removeEnchantments();
             hoe.addEnchant(Enchantment.UNBREAKING, 5, true);
@@ -260,11 +262,10 @@ public class BossManager implements Listener {
             hoe.setItemMeta(meta);
 
             drops.add(hoe);
-            SimpleAdvancementRegister.grantAdvancement(player, "aywen:dream_eater/weapon");
         }
     }
 
-    private @NotNull ItemStack getWeapon() {
+    public static @NotNull ItemStack getWeapon() {
         ItemStack weapon = new ItemStack(Material.NETHERITE_HOE);
         weapon.addEnchant(Enchantment.SHARPNESS, 3, true);
 
@@ -285,7 +286,7 @@ public class BossManager implements Listener {
         return weapon;
     }
 
-    private @NotNull ItemStack getHelmet() {
+    public static @NotNull ItemStack getHelmet() {
         try {
             ItemStack helmet = Skull.getCustomSkull("http://textures.minecraft.net/texture/3553c0fba71df9f4d613edee5529ca5a2199a52a017e5ff1dcba76af203f36ab");
             ;
@@ -309,7 +310,7 @@ public class BossManager implements Listener {
         }
     }
 
-    private @NotNull ItemStack getChestplate() {
+    public static @NotNull ItemStack getChestplate() {
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta) chestplate.getItemMeta();
         meta.setColor(Color.fromRGB(32,32,32));

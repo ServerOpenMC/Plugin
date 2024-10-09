@@ -7,11 +7,11 @@ import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
+import fr.communaywen.core.guideline.advancements.dream.DreamTabManager;
 import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
@@ -24,6 +24,7 @@ import fr.communaywen.core.personalhome.HomeManager;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
+import fr.communaywen.core.settings.SettingsManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
@@ -70,6 +71,7 @@ public class Managers {
     private LBPlayerManager lbPlayerManager;
     private HomesManagers homesManagers;
     private HomeUpgradeManager homeUpgradeManager;
+    private SettingsManager settingsManager;
     private DisabledWorldHome disabledWorldHome;
 
     private FileConfiguration bookConfig;
@@ -113,13 +115,12 @@ public class Managers {
                     Home.class,
                     Team.class,
                     TransactionsManager.class,
-                    AdvancementRegister.class,
                     RandomEventsData.class
             );
         }
         // Database
 
-       // leaderboardManager = new LeaderboardManager(plugin);
+       // leaderboardManager = new LeaderboardManager(plugin);          // desactivé de base
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);
@@ -145,8 +146,8 @@ public class Managers {
         lbPlayerManager = new LBPlayerManager();
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
+        settingsManager = new SettingsManager(plugin);
         disabledWorldHome = new DisabledWorldHome(plugin);
-
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
@@ -160,12 +161,13 @@ public class Managers {
 
     public void cleanup() {
         /* Besoin de la db */
-        dreamdimManager.close();
         reportManager.saveReports();
+        DreamTabManager.close();
 
         /* Plus besoin de la db */
         databaseManager.close();
 
+        dreamdimManager.close();
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();

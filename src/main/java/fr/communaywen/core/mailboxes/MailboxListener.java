@@ -15,6 +15,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -31,6 +32,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -160,7 +162,7 @@ public class MailboxListener extends DatabaseConnector implements Listener {
     private void runTask(Runnable runnable) {
         plugin.getServer().getScheduler().runTask(plugin, runnable);
     }
-
+    
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inv = event.getView().getTopInventory();
@@ -190,7 +192,7 @@ public class MailboxListener extends DatabaseConnector implements Listener {
             runTask(player::closeInventory);
             return;
         } else if (item != null && item.getType() == Material.CHEST && slot == 45) {
-            runTask(() -> HomeMailbox.openHomeMailbox(player));
+            runTask(() -> HomeMailbox.openHomeMailbox(player, plugin));
             return;
         } else if (holder instanceof PaginatedMailbox<? extends ItemStack> menu) {
             if (nextPageBtn(item)) {
@@ -224,7 +226,14 @@ public class MailboxListener extends DatabaseConnector implements Listener {
             } else if (slot == 5) {
                 runTask(() -> HomeMailbox.openPlayersList(player));
             } else if (slot == 8) {
-                runTask(() -> HomeMailbox.openSettings(player));
+                runTask(() -> {
+	                try {
+		                HomeMailbox.openSettings(player);
+	                } catch (SQLException e) {
+		                e.printStackTrace();
+                        player.sendMessage(ChatColor.DARK_RED + "Impossible d'ouvrir le menu");
+	                }
+                });
             }
         } else if (holder instanceof PendingMailbox pendingMailbox) {
             if (item != null && item.getType() == Material.PLAYER_HEAD) {
@@ -235,7 +244,13 @@ public class MailboxListener extends DatabaseConnector implements Listener {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
                 OfflinePlayer receiver = meta.getOwningPlayer();
                 if (receiver == null) return;
-                runTask(() -> HomeMailbox.openSendingMailbox(player, receiver));
+                runTask(() -> {
+	                try {
+		                HomeMailbox.openSendingMailbox(player, receiver, AywenCraftPlugin.getInstance());
+	                } catch (SQLException e) {
+		                e.printStackTrace();
+	                }
+                });
             }
         }
     }

@@ -10,9 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -41,16 +44,23 @@ public class FreezeListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        if (plugin.frozenPlayers.contains(player)) {
+        if (AywenCraftPlugin.frozenPlayers.contains(player)) {
             e.setTo(e.getFrom());
-            player.sendMessage(FreezeUtils.prefix + ChatColor.DARK_RED + "Vous êtes freeze !");
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         Entity entity = e.getEntity();
-        if (entity instanceof Player && plugin.frozenPlayers.contains(entity)) {
+        if (entity instanceof Player && AywenCraftPlugin.frozenPlayers.contains(entity)) {
+            e.setCancelled(true);
+        }
+    }
+    
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        Player player = e.getPlayer();
+        if (AywenCraftPlugin.frozenPlayers.contains(player)) {
             e.setCancelled(true);
         }
     }
