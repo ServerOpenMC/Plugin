@@ -86,8 +86,10 @@ public class HeadManager extends DatabaseConnector  {
         HeadPlayerCache cache = playerCache.get(playerUUID);
 
         if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            System.out.println("Le Cache n'est pas Null");
             return cache.getHeadsFound();
         } else {
+            System.out.println("Le Cache est pas Null ou expiré");
             initPlayerDataCache(player);
             if (cache!=null) {
                 return cache.getHeadsFound();
@@ -137,6 +139,9 @@ public class HeadManager extends DatabaseConnector  {
 
     public static boolean hasFoundHead(Player player, String headId) {
         List<String> foundHeads = getFoundHeadsCache(player);
+        if (foundHeads == null) {
+            return false;
+        }
         return foundHeads.contains(headId);
     }
 }

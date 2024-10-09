@@ -1,6 +1,7 @@
 package fr.communaywen.core.spawn.head;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -18,8 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.List;
 import java.util.Map;
 
-import static fr.communaywen.core.contest.FirerocketSpawnListener.isPlayerInRegion;
-
 public class HeadListener implements Listener {
     static JavaPlugin plugin;
     static FileConfiguration config;
@@ -36,7 +35,7 @@ public class HeadListener implements Listener {
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-        if (isPlayerInRegion(config.getString("head.region"), Bukkit.getWorld(config.getString("head.world")))) {
+        if (RegionsManager.isPlayerInRegion(config.getString("head.region"), Bukkit.getWorld(config.getString("head.world")))) {
             if(event.getClickedBlock().getType() == Material.PLAYER_HEAD || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD) {
                     Location clickedBlockLocation = event.getClickedBlock().getLocation();
 
@@ -49,7 +48,6 @@ public class HeadListener implements Listener {
 
                         Location headLocation = new Location(clickedBlockLocation.getWorld(), posX, posY, posZ);
                         if (headLocation.equals(clickedBlockLocation)) {
-
                             if (!HeadManager.hasFoundHead(event.getPlayer(), String.valueOf(headId))) {
                                 HeadManager.initPlayerDataCache(event.getPlayer());
                                 HeadManager.saveFoundHead(event.getPlayer(), String.valueOf(headId));
