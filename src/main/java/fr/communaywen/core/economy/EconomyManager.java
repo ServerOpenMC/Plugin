@@ -1,12 +1,13 @@
 package fr.communaywen.core.economy;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.quests.qenum.TYPE;
+import fr.communaywen.core.utils.Transaction;
+import fr.communaywen.core.utils.database.TransactionsManager;
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -21,8 +22,11 @@ public class EconomyManager {
     @Getter
     private static Map<UUID, Double> balances = Map.of();
 
+    @Getter static EconomyManager instance;
+
     public EconomyManager(File dataFolder) {
-        this.balances = EconomyData.loadBalances();
+        balances = EconomyData.loadBalances();
+        instance = this;
     }
 
     public double getBalance(Player player) {
@@ -41,6 +45,28 @@ public class EconomyManager {
         saveBalances(player);
         for(QUESTS quests : QUESTS.values()) {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
+            if(quests.getType() == TYPE.MONEY) {
+                if(!pq.isQuestCompleted(quests)) {
+                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+                }
+            }
+        }
+    }
+
+    public void addBalance(Player player, double amount, String reason) {
+        UUID uuid = player.getUniqueId();
+        balances.put(uuid, getBalance(player) + amount);
+
+        new TransactionsManager().addTransaction(new Transaction(
+                player.getUniqueId().toString(),
+                "CONSOLE",
+                amount,
+                reason
+        ));
+
+        saveBalances(player);
+        for(QUESTS quests : QUESTS.values()) {
+            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
                     QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");

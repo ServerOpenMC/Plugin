@@ -23,7 +23,6 @@ public class DimensionManager implements Listener {
 
     AywenCraftPlugin plugin;
     Server server;
-    AdvancementRegister register;
     CloudSoup cloudSoup;
 
     public DimensionManager(AywenCraftPlugin Plugin) {
@@ -33,9 +32,8 @@ public class DimensionManager implements Listener {
 
     public void init() {
         createDimension();
-        this.register = new AdvancementRegister(plugin);
 
-        this.cloudSoup = new CloudSoup(plugin, register);
+        this.cloudSoup = new CloudSoup(plugin);
 
         plugin.registerEvents(
                 new DreamSlayer(),
@@ -43,13 +41,13 @@ public class DimensionManager implements Listener {
                 new HoeListener(),
                 new StripWood(),
                 new FishingListener(plugin),
-                new CodexSomnii(register),
+                new CodexSomnii(),
                 cloudSoup,
                 new BossManager(),
                 new MilkListener(),
-                new BlockPlacement(register),
+                new BlockPlacement(),
                 new EatListener(plugin),
-                new EnterWorldListener(plugin, register),
+                new EnterWorldListener(plugin),
                 new DisableSculk(),
                 new MobListener(),
                 new TreePlacer()
@@ -88,7 +86,6 @@ public class DimensionManager implements Listener {
                 ));
             }
         }
-        register.saveAll();
         this.cloudSoup.close();
     }
 }

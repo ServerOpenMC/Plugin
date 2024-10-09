@@ -6,11 +6,11 @@ import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
+import fr.communaywen.core.guideline.advancements.dream.DreamTabManager;
 import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
@@ -113,7 +113,6 @@ public class Managers {
                     Home.class,
                     Team.class,
                     TransactionsManager.class,
-                    AdvancementRegister.class,
                     RandomEventsData.class
             );
         }
@@ -158,12 +157,13 @@ public class Managers {
 
     public void cleanup() {
         /* Besoin de la db */
-        dreamdimManager.close();
         reportManager.saveReports();
+        DreamTabManager.close();
 
         /* Plus besoin de la db */
         databaseManager.close();
 
+        dreamdimManager.close();
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();

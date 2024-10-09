@@ -1,7 +1,6 @@
 package fr.communaywen.core.dreamdim.fishing;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -26,7 +25,6 @@ public class FishingListener implements Listener {
         if (!(player.getWorld().getName().equals("dreamworld"))) { return; }
 
         if (!(event.getState().equals(PlayerFishEvent.State.CAUGHT_FISH))) { return; }
-        SimpleAdvancementRegister.grantAdvancement(player, "aywen:fishing/root");
 
         /* Picking a random category */
         LootCategory category = null;

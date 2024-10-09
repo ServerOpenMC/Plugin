@@ -2,12 +2,11 @@ package fr.communaywen.core.guideline;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
-import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.guideline.advancements.dream.FirstDream;
+import fr.communaywen.core.guideline.advancements.dream.*;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
@@ -33,22 +32,15 @@ public class GuidelineManager implements Listener {
                 AdvancementFrameType.CHALLENGE,
                 false,
                 false,
-                0,
-                0,
+                100,
+                100,
                 "Votre aventure commence ici");
 
         root = new RootAdvancement(tab, "root", rootDisplay, "textures/block/pink_concrete_powder.png");
 
-        register(); // Enregistre tout les advancements et listeners
-    }
+        DreamTabManager.init();
 
-    private void register() {
-        BaseAdvancement firstDream = new FirstDream();
-
-        tab.registerAdvancements(root,
-                firstDream
-        );
-
-        plugin.registerEvents(new GrantRoot());
+        tab.registerAdvancements(root);
+        tab.automaticallyGrantRootAdvancement();
     }
 }
