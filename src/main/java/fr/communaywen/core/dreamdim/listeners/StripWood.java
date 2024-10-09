@@ -1,6 +1,7 @@
 package fr.communaywen.core.dreamdim.listeners;
 
 import dev.lone.itemsadder.api.CustomBlock;
+import fr.communaywen.core.guideline.GuidelineManager;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

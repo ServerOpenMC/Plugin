@@ -1,8 +1,8 @@
 package fr.communaywen.core.dreamdim.fishing.loot_table.fish;
 
 import dev.lone.itemsadder.api.CustomStack;
-import fr.communaywen.core.dreamdim.SimpleAdvancementRegister;
 import fr.communaywen.core.dreamdim.fishing.LootStack;
+import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.utils.ContainerNameGenerator;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.FishHook;
@@ -40,6 +40,6 @@ public class DockerFish extends LootStack {
 
     @Override
     public void onCatched(@NotNull Player player, @NotNull FishHook fishHook) {
-        SimpleAdvancementRegister.grantAdvancement(player, "aywen:fishing/dockerfish");
+        GuidelineManager.getAPI().getAdvancement("dream:dockerfish").grant(player);
     }
 }

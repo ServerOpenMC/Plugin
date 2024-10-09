@@ -29,8 +29,6 @@ import java.sql.SQLException;
 
 
 public class QuestsListener implements Listener {
-    // TODO : set jump location
-    private final Location NINJA_JUMP_END = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
@@ -44,9 +42,8 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
-        PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer());
-        for(QUESTS quests : QUESTS.values())
-            QuestsManager.savePlayerQuestProgress(event.getPlayer(), quests, pq.getProgress(quests));
+        PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer().getUniqueId());
+        QuestsManager.savePlayerQuestProgress(event.getPlayer(), pq);
     }
 
     @EventHandler
@@ -82,9 +79,7 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player killer = event.getEntity().getKiller();
-        if(killer == null) return;
-        if(killer instanceof Player) {
+        if(event.getEntity().getKiller() instanceof Player killer) {
             QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
         }
     }
@@ -110,19 +105,19 @@ public class QuestsListener implements Listener {
         Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
-        assert to != null;
+
+        if(player.isFlying()) return;
 
         int blockX = to.getBlockX();
         int blockY = to.getBlockY();
         int blockZ = to.getBlockZ();
 
-        if (blockX != from.getBlockX() || blockZ != from.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
-        }
 
-        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
-        }
+        if (blockX != from.getBlockX() || blockZ != from.getBlockZ())
+            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+
+//        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ())
+//            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
     }
 
     @EventHandler
@@ -166,9 +161,9 @@ public class QuestsListener implements Listener {
     public void onPlayerFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
         Item caught = (Item) event.getCaught();
-        
+
         if (caught == null) { return; }
-        
+
         ItemStack fishedItem = caught.getItemStack();
 
         if (fishedItem.getType() == Material.BREAD && fishedItem.getCustomModelData() == 42) {

@@ -1,7 +1,8 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.DraftAPI;
 import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
@@ -70,7 +71,7 @@ public class OnPlayers implements Listener {
                 player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
             }
 
-            if(ContestManager.getPhaseCache() == 2) {
+            if(ContestCache.getPhaseCache() == 2) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -82,7 +83,7 @@ public class OnPlayers implements Listener {
                 );
                 return;
             }
-            if(ContestManager.getPhaseCache() == 3) {
+            if(ContestCache.getPhaseCache() == 3) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +

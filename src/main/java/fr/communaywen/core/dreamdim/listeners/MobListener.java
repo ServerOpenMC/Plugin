@@ -10,7 +10,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -18,10 +17,6 @@ public class MobListener implements Listener {
 
     public boolean cantLive() {
         return !(new Random().nextDouble() <= 0.5);
-    }
-
-    public boolean hasReachCap(Entity entity) {
-        return Arrays.stream(entity.getLocation().getChunk().getEntities()).findAny().isPresent();
     }
 
     @EventHandler
@@ -47,11 +42,6 @@ public class MobListener implements Listener {
         }else if (List.of(EntityType.CREEPER, EntityType.WITCH, EntityType.ZOMBIE_VILLAGER).contains(entity.getType())) {
             e.setCancelled(true);
         } else if (List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.ENDERMAN).contains(entity.getType())) {
-            if (hasReachCap(entity)) {
-                e.setCancelled(true);
-                return;
-            }
-
             if (cantLive()) {
                 e.setCancelled(true);
                 return;

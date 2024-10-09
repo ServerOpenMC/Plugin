@@ -3,6 +3,7 @@ package fr.communaywen.core.scoreboard;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.dreamdim.listeners.CloudSoup;
 import fr.communaywen.core.spawn.head.HeadManager;
 import fr.communaywen.core.teams.Team;

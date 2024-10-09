@@ -2,7 +2,6 @@ package fr.communaywen.core.dreamdim.listeners;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,15 +16,13 @@ import java.util.UUID;
 public class CloudSoup implements Listener {
     HashMap<UUID, Integer> cooldown = new HashMap<>();
     AywenCraftPlugin plugin;
-    AdvancementRegister register;
 
     @Getter
     private static CloudSoup instance;
 
-    public CloudSoup(AywenCraftPlugin plugin, AdvancementRegister register) {
+    public CloudSoup(AywenCraftPlugin plugin) {
         instance = this;
         this.plugin = plugin;
-        this.register = register;
     }
 
     @EventHandler
@@ -53,8 +50,6 @@ public class CloudSoup implements Listener {
 
         if (customStack == null) { return; }
         if (customStack.getNamespacedID().equals("aywen:cloud_soup")) {
-            register.grantAdvancement(player, "aywen:leave_earth");
-
             if (cooldown.containsKey(player.getUniqueId())) {
                 cooldown.put(playeruuid, cooldown.get(playeruuid) + 300);
                 int minutes_timeleft = cooldown.get(playeruuid) / 60;

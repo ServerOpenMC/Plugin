@@ -1,5 +1,7 @@
 package fr.communaywen.core.utils.database;
 
+import fr.communaywen.core.AywenCraftPlugin;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,7 +26,9 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.connection = DriverManager.getConnection(this.url, this.user, this.password);
+            AywenCraftPlugin.getInstance().getLogger().info("\u001B[32m" + "Connexion à la base de données réussie");
         } catch (SQLException | ClassNotFoundException e) {
+            AywenCraftPlugin.getInstance().getLogger().warning("\u001B[31m" + "Connexion à la base de données échouée");
             throw new RuntimeException(e);
         }
     }

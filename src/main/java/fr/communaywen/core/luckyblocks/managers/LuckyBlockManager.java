@@ -1,5 +1,6 @@
 package fr.communaywen.core.luckyblocks.managers;
 
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.events.bonus.*;
@@ -29,8 +30,8 @@ public class LuckyBlockManager {
     @Getter
     private final ArrayList<LuckyBlockEvent> lbEvents = new ArrayList<>();
 
-    public LuckyBlockManager() {
-        lbEvents.add(new LBLeakContest());
+    public LuckyBlockManager(ContestManager contestManager) {
+        lbEvents.add(new LBLeakContest(contestManager));
         lbEvents.add(new LBSpawnShulker());
         lbEvents.add(new LBMoonGravity());
         lbEvents.add(new LBSolarGravity());
