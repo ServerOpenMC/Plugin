@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class Helldivers2 extends BaseAdvancement implements VanillaVisibility {
     public Helldivers2(@NotNull Advancement parent) {
         super(
-                "helldivers/two",
+                "helldivers/2",
                 new AdvancementDisplay(
                         Material.STONE_SWORD,
                         "Helldivers II",

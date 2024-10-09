@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 
 public class DreamTabManager implements Listener {
     @Getter static RootAdvancement root;
+    static HelldiversManager helldiversManager;
 
     public static void init() {
         UltimateAdvancementAPI api = GuidelineManager.getAPI();
@@ -68,6 +69,8 @@ public class DreamTabManager implements Listener {
         BaseAdvancement cloudSoup = new CloudSoupAdvDream(cloud);
         BaseAdvancement planks = new PlankAdvDream(wood);
 
+        helldiversManager = new HelldiversManager();
+
         tab.registerAdvancements(root,
                 hd1,hd2,hd3,hd4,hd5,hd6, // HellDivers
                 fish,docker,poissonion,cookedpoissonion,moonfish,sunfish, // Fishing
@@ -82,7 +85,12 @@ public class DreamTabManager implements Listener {
                 new FishingDream(),
                 new CookedDreamFish(),
                 new TreeBreakAdvancement(),
-                new TreeCraftAdvancements()
+                new TreeCraftAdvancements(),
+                helldiversManager
         );
+    }
+
+    public static void close() {
+        helldiversManager.close();
     }
 }

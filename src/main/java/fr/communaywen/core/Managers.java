@@ -10,6 +10,7 @@ import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
+import fr.communaywen.core.guideline.advancements.dream.DreamTabManager;
 import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
@@ -154,12 +155,13 @@ public class Managers {
 
     public void cleanup() {
         /* Besoin de la db */
-        dreamdimManager.close();
         reportManager.saveReports();
+        DreamTabManager.close();
 
         /* Plus besoin de la db */
         databaseManager.close();
 
+        dreamdimManager.close();
         quizManager.close();
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
