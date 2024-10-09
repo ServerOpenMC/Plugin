@@ -1,4 +1,4 @@
-package fr.communaywen.core.contest;
+package fr.communaywen.core.contest.managers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -28,7 +28,6 @@ public class ColorConvertor {
         colorToReadable.put(ChatColor.YELLOW, ChatColor.GOLD);
         colorToReadable.put(ChatColor.WHITE, ChatColor.GRAY);
     }
-
 
     public static ChatColor getReadableColor(ChatColor c) {
         return colorToReadable.getOrDefault(c, null);

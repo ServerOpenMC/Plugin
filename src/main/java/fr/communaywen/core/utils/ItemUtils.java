@@ -1,9 +1,12 @@
 package fr.communaywen.core.utils;
 
+
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,6 +64,40 @@ public class ItemUtils {
         return slot;
     }
 
+
+    // IMPORT FROM AXENO
+    public static boolean hasEnoughItems(Player player, Material item, int amount) {
+        int totalItems = 0;
+        ItemStack[] contents = player.getInventory().getContents();
+
+        for (ItemStack is : contents) {
+            if (is != null && is.getType() == item) {
+                totalItems += is.getAmount();
+            }
+        }
+
+        if (amount == 0) return false;
+        return totalItems >= amount;
+    }
+
+    public static void removeItemsFromInventory(Player player, Material item, int quantity) {
+        ItemStack[] contents = player.getInventory().getContents();
+        int remaining = quantity;
+
+        for (int i = 0; i < contents.length && remaining > 0; i++) {
+            ItemStack stack = contents[i];
+            if (stack != null && stack.getType() == item) {
+                int stackAmount = stack.getAmount();
+                if (stackAmount <= remaining) {
+                    player.getInventory().setItem(i, null);
+                    remaining -= stackAmount;
+                } else {
+                    stack.setAmount(stackAmount - remaining);
+                    remaining = 0;
+                }
+            }
+        }
+    }
     public static String getDefaultItemName(Player localPlayer, ItemStack itemStack) {
         Material material = itemStack.getType();
         String translationKey = material.getTranslationKey();
@@ -70,5 +107,6 @@ public class ItemUtils {
         Component translated = GlobalTranslator.render(translatable, Locale.of(localPlayer.getLocale()));
 
         return PlainTextComponentSerializer.plainText().serialize(translated);
+
     }
 }

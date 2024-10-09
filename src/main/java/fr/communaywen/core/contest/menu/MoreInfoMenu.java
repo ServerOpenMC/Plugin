@@ -2,7 +2,8 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import dev.xernas.menulib.Menu;
@@ -13,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class MoreInfoMenu extends Menu {
+    private final ContestManager contestManager;
 
-    public MoreInfoMenu(Player owner) {
+    public MoreInfoMenu(Player owner, ContestManager manager) {
         super(owner);
+        this.contestManager = manager;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class MoreInfoMenu extends Menu {
         lore2.add("§7Sera élu. Et des récompenses sont attribué");
         lore2.add("§7A chacun.");
 
-        int phase = ContestManager.getPhaseCache();
+        int phase = ContestCache.getPhaseCache();
 
         boolean ench0;
         boolean ench1;

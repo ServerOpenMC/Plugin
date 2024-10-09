@@ -2,7 +2,7 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -20,9 +20,11 @@ import java.util.*;
 public class ConfirmMenu extends Menu {
     private final String getCampName;
     private final String getColor;
+    private final ContestManager contestManager;
 
-    public ConfirmMenu(Player owner, String camp, String color) {
+    public ConfirmMenu(Player owner, String camp, String color, ContestManager manager) {
         super(owner);
+        this.contestManager = manager;
         this.getCampName = camp;
         this.getColor = color;
     }
@@ -44,8 +46,8 @@ public class ConfirmMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String campNameFinal = ContestManager.getString("contest", getCampName);
-        String campColor = ContestManager.getString("contest", getColor);
+        String campNameFinal = contestManager.getString("contest", getCampName);
+        String campColor = contestManager.getString("contest", getColor);
         ChatColor colorFinal = ChatColor.valueOf(campColor);
 
         List<String> lore1 = new ArrayList<String>();
@@ -59,7 +61,7 @@ public class ConfirmMenu extends Menu {
                     itemMeta.setDisplayName("§r§cAnnuler");
                     itemMeta.setLore(lore0);
                 }).setOnClick(inventoryClickEvent -> {
-                    VoteMenu menu = new VoteMenu(getOwner());
+                    VoteMenu menu = new VoteMenu(getOwner(), contestManager);
                     menu.open();
                 }));
                 inventory.put(15, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> {
@@ -67,9 +69,9 @@ public class ConfirmMenu extends Menu {
                     itemMeta.setLore(lore1);
                 }).setOnClick(inventoryClickEvent -> {
                     String substring = this.getCampName.substring(this.getCampName.length() - 1);
-                    ContestManager.insertChoicePlayer(getOwner(), Integer.valueOf(substring));
+                    contestManager.insertChoicePlayer(getOwner(), Integer.valueOf(substring));
                     getOwner().playSound(getOwner().getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1.0F, 0.2F);
-                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + ContestManager.getString("contest", getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
+                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + contestManager.getString("contest", getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
         }

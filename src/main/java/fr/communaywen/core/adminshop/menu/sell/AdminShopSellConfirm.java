@@ -9,6 +9,7 @@ import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -55,7 +56,7 @@ public class AdminShopSellConfirm extends Menu {
         content.put(2, new ItemBuilder(this, Material.GREEN_STAINED_GLASS_PANE, itemMeta -> {
             itemMeta.setDisplayName("§aConfirmer la vente");
         }).setOnClick(event -> {
-            if (!hasEnoughItems(getOwner(), Material.getMaterial(items.named()), quantity)) {
+            if (!ItemUtils.hasEnoughItems(getOwner(), Material.getMaterial(items.named()), quantity)) {
                 getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'items dans votre inventaire !");
                 return;
             }
@@ -65,7 +66,7 @@ public class AdminShopSellConfirm extends Menu {
             if(items.getType() == ShopType.SELL_BUY) totalAmount = (items.getPrize() / 2) * quantity;
             else totalAmount = items.getPrize() * quantity;
 
-            removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
+            ItemUtils.removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
             economy.addBalance(getOwner(), totalAmount);
             getOwner().sendMessage("§aVente confirmée !");
             getOwner().sendMessage("  §4- §c" + quantity + " " + items.getName() + " §7pour §a" + String.format("%.2f", totalAmount) + "$");
@@ -92,37 +93,5 @@ public class AdminShopSellConfirm extends Menu {
         }));
 
         return content;
-    }
-
-    private boolean hasEnoughItems(Player player, Material item, int amount) {
-        int totalItems = 0;
-        ItemStack[] contents = player.getInventory().getContents();
-
-        for (ItemStack is : contents) {
-            if (is != null && is.getType() == item) {
-                totalItems += is.getAmount();
-            }
-        }
-
-        return totalItems >= amount;
-    }
-
-    private void removeItemsFromInventory(Player player, Material item, int quantity) {
-        ItemStack[] contents = player.getInventory().getContents();
-        int remaining = quantity;
-
-        for (int i = 0; i < contents.length && remaining > 0; i++) {
-            ItemStack stack = contents[i];
-            if (stack != null && stack.getType() == item) {
-                int stackAmount = stack.getAmount();
-                if (stackAmount <= remaining) {
-                    player.getInventory().setItem(i, null);
-                    remaining -= stackAmount;
-                } else {
-                    stack.setAmount(stackAmount - remaining);
-                    remaining = 0;
-                }
-            }
-        }
     }
 }

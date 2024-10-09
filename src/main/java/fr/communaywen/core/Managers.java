@@ -2,7 +2,8 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
@@ -46,6 +47,7 @@ public class Managers {
 
     private AywenCraftPlugin plugin;
     private ContestManager contestManager;
+    private ContestCache contestCache;
     private LeaderboardManager leaderboardManager;
     private DimensionManager dreamdimManager;
     private MoonDimensionManager moonDimManager;
@@ -123,11 +125,13 @@ public class Managers {
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);
         contestManager = new ContestManager(plugin);
+        System.out.println("in manager" + contestManager);
+        contestCache = new ContestCache(contestManager);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
-        quizManager = new QuizManager(plugin, quizzesConfig);
+        quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
         economyManager = new EconomyManager(plugin.getDataFolder());
         friendsManager = new FriendsManager(databaseManager, plugin);
         corpseManager = new CorpseManager();
@@ -138,7 +142,7 @@ public class Managers {
         chatChannel = new PlayerChatChannel();
         reportManager = new ReportManager();
         reportManager.loadReports();
-        luckyBlockManager = new LuckyBlockManager();
+        luckyBlockManager = new LuckyBlockManager(contestManager);
         lbPlayerManager = new LBPlayerManager();
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);

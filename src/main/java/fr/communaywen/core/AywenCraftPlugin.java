@@ -37,10 +37,9 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.contest.ContestIntractEvents;
-import fr.communaywen.core.contest.ContestListener;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.FirerocketSpawnListener;
+import fr.communaywen.core.contest.listeners.ContestIntractEvents;
+import fr.communaywen.core.contest.listeners.ContestListener;
+import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -278,7 +277,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
-        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(managers.getContestManager().getColorContestList()));
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
 
             List<String> allWorlds = new ArrayList<>(Bukkit.getWorlds().stream().map(World::getName).toList());
@@ -310,7 +309,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new SettingsCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
-                new ContestCommand(this, loadEventsManager()),
+                new ContestCommand(this, loadEventsManager(), managers.getContestManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -384,8 +383,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),
-                new FirerocketSpawnListener(this),
-                new ContestListener(this, loadEventsManager()),
+                new FirerocketSpawnListener(this, managers.getContestManager()),
+                new ContestListener(this, loadEventsManager(), managers.getContestManager()),
                 new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
