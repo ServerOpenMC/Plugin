@@ -20,10 +20,6 @@ public class MobListener implements Listener {
         return !(new Random().nextDouble() <= 0.5);
     }
 
-    public boolean hasReachCap(Entity entity) {
-        return Arrays.stream(entity.getLocation().getChunk().getEntities()).findAny().isPresent();
-    }
-
     @EventHandler
     public void onEntitySpawn(CreatureSpawnEvent e) {
         Entity entity = e.getEntity();
@@ -47,11 +43,6 @@ public class MobListener implements Listener {
         }else if (List.of(EntityType.CREEPER, EntityType.WITCH, EntityType.ZOMBIE_VILLAGER).contains(entity.getType())) {
             e.setCancelled(true);
         } else if (List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.ENDERMAN).contains(entity.getType())) {
-            if (hasReachCap(entity)) {
-                e.setCancelled(true);
-                return;
-            }
-
             if (cantLive()) {
                 e.setCancelled(true);
                 return;
