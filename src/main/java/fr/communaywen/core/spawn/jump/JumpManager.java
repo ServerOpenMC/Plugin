@@ -13,6 +13,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +58,33 @@ public class JumpManager extends DatabaseConnector {
 
         return elapsedSeconds;
     }
+
+    public double getBestTime(Player player) {
+        double bestTime = -1;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT best_time FROM spawn_jump WHERE uuid = ?");
+            statement.setString(1, player.getUniqueId().toString());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                bestTime = resultSet.getDouble("best_time");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bestTime;
+    }
+
+    public void setBestTime(Player player, double bestTime) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("REPLACE INTO spawn_jump (uuid, best_time) VALUES (?, ?)");
+            statement.setString(1, player.getUniqueId().toString());
+            statement.setDouble(2, bestTime);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void updateActionBar(Player player, double time) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,

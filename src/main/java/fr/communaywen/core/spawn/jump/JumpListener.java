@@ -68,6 +68,11 @@ public class JumpListener implements Listener {
                     double jumpTime = jumpManager.endJump(player);
                     MessageManager.sendMessageType(player, "§aBravo ! Vous avez terminé le jump en §e" + jumpTime + " secondes!", Prefix.JUMP, MessageType.SUCCESS, true);
 
+                    double bestTime = jumpManager.getBestTime(player);
+                    if (bestTime == -1 || jumpTime < bestTime) {
+                        jumpManager.setBestTime(player, jumpTime);
+                        MessageManager.sendMessageType(player, "§6§lBEST RECORD! §aNouveau record personnel avec §e" + jumpTime + " secondes!", Prefix.JUMP, MessageType.SUCCESS, true);
+                    }
 
                     if (System.currentTimeMillis() - jumpRewardsCooldown.getOrDefault(player.getUniqueId(), 0L) > jumpCooldownRewards) {
                         ItemStack luckyblock = LBUtils.getLuckyBlockItem();
@@ -79,7 +84,6 @@ public class JumpListener implements Listener {
                     }
 
                     jumpRewardsCooldown.put(player.getUniqueId(), System.currentTimeMillis());
-                    //BEST RECORD
                 }
             }
         }
