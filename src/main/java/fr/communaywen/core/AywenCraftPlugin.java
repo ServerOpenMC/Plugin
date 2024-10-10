@@ -67,6 +67,7 @@ import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
+import fr.communaywen.core.settings.SettingsListener;
 import fr.communaywen.core.space.moon.MoonListener;
 import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.tab.TabList;
@@ -379,6 +380,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new SettingsListener(this),
                 // new LeaderboardListener(this),       // Desactivé de base
                 new RocketListener(),
                 new MoonListener(),

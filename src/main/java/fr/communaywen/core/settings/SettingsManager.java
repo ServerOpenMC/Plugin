@@ -34,6 +34,23 @@ public class SettingsManager extends DatabaseConnector {
 		return null;
 	}
 	
+	public PlayerSettings findPlayerSettingsByUUID(String uuid) throws SQLException {
+		String sql = "SELECT * FROM settings WHERE player = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, uuid);
+		ResultSet results = statement.executeQuery();
+		if (results.next()) {
+			int mail_accept = results.getInt("mail_accept");
+			int trade_accept = results.getInt("trade_accept");
+			int tpa_accept = results.getInt("tpa_accept");
+			PlayerSettings playerSettings = new PlayerSettings(uuid, mail_accept, trade_accept, tpa_accept);
+			statement.close();
+			return playerSettings;
+		}
+		statement.close();
+		return null;
+	}
+	
 	public void createPlayerSettings(PlayerSettings settings) throws SQLException {
 		
 		String sql = "INSERT INTO settings ( player, mail_accept, trade_accept, tpa_accept ) VALUES (?, ?, ?, ?)";
