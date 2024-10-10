@@ -1,6 +1,7 @@
 package fr.communaywen.core.spawn.head;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -49,9 +51,14 @@ public class HeadListener implements Listener {
                         Location headLocation = new Location(clickedBlockLocation.getWorld(), posX, posY, posZ);
                         if (headLocation.equals(clickedBlockLocation)) {
                             if (!HeadManager.hasFoundHead(event.getPlayer(), String.valueOf(headId))) {
-                                HeadManager.initPlayerDataCache(event.getPlayer());
                                 HeadManager.saveFoundHead(event.getPlayer(), String.valueOf(headId));
+                                HeadManager.initPlayerDataCache(event.getPlayer());
                                 MessageManager.sendMessageType(event.getPlayer(), "§7Vous avez trouvé une tête! (§d" + HeadManager.getNumberHeads(event.getPlayer()) + "§8/§d" + HeadManager.getMaxHeads() + "§7)", Prefix.HEAD, MessageType.SUCCESS, true);
+                                MessageManager.sendMessageType(event.getPlayer(), "§aVous avez collécté §62 LuckyBlock", Prefix.HEAD, MessageType.SUCCESS, true);
+
+                                ItemStack luckyblock = LBUtils.getLuckyBlockItem();
+                                luckyblock.setAmount(2);
+                                event.getPlayer().getInventory().addItem(luckyblock);
                             } else {
                                 MessageManager.sendMessageType(event.getPlayer(), "§cVous avez déjà collecté cette tête", Prefix.HEAD, MessageType.ERROR, true);
                             }
