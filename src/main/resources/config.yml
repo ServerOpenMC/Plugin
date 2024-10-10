@@ -40,6 +40,16 @@ leaderboard:
     posY: 75
     posZ: 165
     world: world
+  playtime:
+    posX: 295
+    posY: 75
+    posZ: 165
+    world: world
+  jump_record:
+    posX: 295
+    posY: 75
+    posZ: 175
+    world: world
 head:
   world: "world"
   region: "spawn"

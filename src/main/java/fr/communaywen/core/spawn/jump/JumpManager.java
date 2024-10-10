@@ -1,9 +1,11 @@
 package fr.communaywen.core.spawn.jump;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.commands.economy.BaltopCommand;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -16,12 +18,17 @@ import org.bukkit.entity.TextDisplay;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static fr.communaywen.core.commands.economy.BaltopCommand.getColor;
 
 public class JumpManager extends DatabaseConnector {
     AywenCraftPlugin plugin;
-    FileConfiguration config;
+    static FileConfiguration config;
 
     public JumpManager(AywenCraftPlugin plugins) {
         config = plugins.getConfig();
@@ -77,8 +84,10 @@ public class JumpManager extends DatabaseConnector {
     public void setBestTime(Player player, double bestTime) {
         try {
             PreparedStatement statement = connection.prepareStatement("REPLACE INTO spawn_jump (uuid, best_time) VALUES (?, ?)");
+
             statement.setString(1, player.getUniqueId().toString());
             statement.setDouble(2, bestTime);
+
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -115,7 +124,15 @@ public class JumpManager extends DatabaseConnector {
         textDisplayJumpStart.setText(Component.text("§dDébut §f- §dJump").content());
     }
 
+    public void removeDisplayJumpStart() {
+        if ((textDisplayJumpStart != null) && !textDisplayJumpStart.isDead()) {
+            textDisplayJumpStart.remove();
+            textDisplayJumpStart = null;
+        }
+    }
+
     private TextDisplay textDisplayJumpEnd;
+
     public void createDisplayJumpEnd() {
         World world = Bukkit.getWorld((String) config.get("jump.world"));
         if (world == null) return;
@@ -134,12 +151,6 @@ public class JumpManager extends DatabaseConnector {
         textDisplayJumpEnd.setText(Component.text("§dFin §f- §dJump").content());
     }
 
-    public void removeDisplayJumpStart() {
-        if ((textDisplayJumpStart != null) && !textDisplayJumpStart.isDead()) {
-            textDisplayJumpStart.remove();
-            textDisplayJumpStart = null;
-        }
-    }
     public void removeDisplayJumpEnd() {
         if ((textDisplayJumpEnd != null) && !textDisplayJumpEnd.isDead()) {
             textDisplayJumpEnd.remove();
@@ -147,5 +158,61 @@ public class JumpManager extends DatabaseConnector {
         }
     }
 
+    private static TextDisplay textDisplayLeaderboardRecord;
+
+    public static void createLeaderboardLeaderboardRecord() {
+        World world = Bukkit.getWorld((String) config.get("leaderboard.jump_record.world"));
+        if (world == null) return;
+
+        Location location = new Location(world, config.getDouble("leaderboard.jump_record.posX"), config.getDouble("leaderboard.jump_record.posY"), config.getDouble("leaderboard.jump_record.posZ"));
+
+        textDisplayLeaderboardRecord = (TextDisplay) world.spawn(location, TextDisplay.class);
+
+        textDisplayLeaderboardRecord.setBillboard(TextDisplay.Billboard.CENTER);
+        textDisplayLeaderboardRecord.setViewRange(100.0F);
+        textDisplayLeaderboardRecord.setDefaultBackground(false);
+        textDisplayLeaderboardRecord.setAlignment(TextDisplay.TextAlignment.CENTER);
+
+        textDisplayLeaderboardRecord.setCustomNameVisible(false);
+        textDisplayLeaderboardRecord.setCustomName("jump_record");
+    }
+
+    public static void updateLeaderboardLeaderboardRecord() {
+        if (textDisplayLeaderboardRecord == null) return;
+        List<BaltopCommand.PlayerBalance> balances = BaltopCommand.getBalances();
+        balances.sort((a, b) -> a.balance.intValue() - b.balance.intValue());
+
+        balances = balances.reversed();
+
+        if (balances.size() > 10) {
+            balances = balances.subList(0, 10);
+        }
+
+        List<String> lines = new ArrayList<>();
+        lines.add("§dLes §f10 §dJoueurs les plus rapides sur le jump");
+
+        int index = 1;
+        for (BaltopCommand.PlayerBalance playerBalance : balances) {
+            String playerName = playerBalance.playerId.toString();
+            if (Bukkit.getPlayer(playerBalance.playerId) != null) {
+                playerName = Bukkit.getOfflinePlayer(playerBalance.playerId).getName();
+            } else if (Bukkit.getOfflinePlayer(playerBalance.playerId) != null) {
+                playerName = Bukkit.getOfflinePlayer(playerBalance.playerId).getName();
+            }
+            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + playerName, ChatColor.DARK_PURPLE + playerBalance.balance.toString()));
+
+            index++;
+        }
+
+        String leaderboardText = String.join("\n", lines);
+        textDisplayLeaderboardRecord.setText(Component.text(leaderboardText).content());
+    }
+
+    public static void removeLeaderboardLeaderboardRecord() {
+        if (textDisplayLeaderboardRecord != null && !textDisplayLeaderboardRecord.isDead()) {
+            textDisplayLeaderboardRecord.remove();
+            textDisplayLeaderboardRecord = null;
+        }
+    }
 
 }
