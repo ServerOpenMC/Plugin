@@ -86,10 +86,8 @@ public class HeadManager extends DatabaseConnector  {
         HeadPlayerCache cache = playerCache.get(playerUUID);
 
         if (cache != null && !cache.isCacheNull(cacheDuration)) {
-            System.out.println("Le Cache n'est pas Null");
             return cache.getHeadsFound();
         } else {
-            System.out.println("Le Cache est pas Null ou expiré");
             initPlayerDataCache(player);
             if (cache!=null) {
                 return cache.getHeadsFound();

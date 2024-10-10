@@ -21,13 +21,11 @@ public class CorpseManager implements Listener {
     private static Map<CorpseBlock, CorpseMenu> corpses = new HashMap<>();
 
     public void addCorpse(Player p, Inventory inv, Location deathLocation) {
-        System.out.println("mort tombe creation");
         CorpseMenu corpseMenu = new CorpseMenu(p, inv);
 
         CustomBlock block = CustomBlock.getInstance("omc_blocks:grave");
 
         if (block != null) {
-            System.out.println("block?");
             block.place(deathLocation);
 
             CorpseBlock corpseBlock = new CorpseBlock(block, deathLocation, p.getUniqueId());
