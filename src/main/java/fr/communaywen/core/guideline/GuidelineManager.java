@@ -14,7 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
 @Feature("Guideline")
-@Credit("Gyro")
+@Credit("Gyro3630")
 public class GuidelineManager implements Listener {
     AywenCraftPlugin plugin;
 

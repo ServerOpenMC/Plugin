@@ -13,7 +13,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.List;
 
-
 @Feature("Rules")
 @Credit("Gyro3630")
 public class RulesCommand {
@@ -40,5 +39,4 @@ public class RulesCommand {
         book.setItemMeta(meta);
         player.openBook(book);
     }
-
 }
