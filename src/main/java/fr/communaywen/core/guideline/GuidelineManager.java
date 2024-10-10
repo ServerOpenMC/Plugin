@@ -6,11 +6,15 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.guideline.advancements.dream.*;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
+@Feature("Guideline")
+@Credit("Gyro")
 public class GuidelineManager implements Listener {
     AywenCraftPlugin plugin;
 
