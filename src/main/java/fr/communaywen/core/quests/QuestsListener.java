@@ -1,6 +1,7 @@
 package fr.communaywen.core.quests;
 
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
 
 import org.bukkit.Bukkit;
@@ -24,15 +25,25 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 
 
 public class QuestsListener implements Listener {
-
+    private JavaPlugin plugin;
+    public QuestsListener(AywenCraftPlugin plugins) {
+        plugin = plugins;
+    }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
-        QuestsManager.loadPlayerData(event.getPlayer());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                QuestsManager.loadPlayerData(event.getPlayer());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @EventHandler
@@ -42,8 +53,14 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
-        PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer().getUniqueId());
-        QuestsManager.savePlayerQuestProgress(event.getPlayer(), pq);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer().getUniqueId());
+            try {
+                QuestsManager.savePlayerQuestProgress(event.getPlayer(), pq);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @EventHandler
