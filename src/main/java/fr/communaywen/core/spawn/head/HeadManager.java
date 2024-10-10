@@ -2,6 +2,7 @@ package fr.communaywen.core.spawn.head;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.database.DatabaseConnector;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.json.JSONArray;
@@ -60,25 +61,29 @@ public class HeadManager extends DatabaseConnector  {
     }
 
     private static final Map<UUID, HeadPlayerCache> playerCache = new HashMap<>();
-    private static final long cacheDuration = 60000;
+    private static final long cacheDuration = 300000;
 
     public static void initPlayerDataCache(Player player) {
         UUID playerUUID = player.getUniqueId();
 
-        String sql = "SELECT heads FROM spawn_head WHERE uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, playerUUID.toString());
-            ResultSet rs = states.executeQuery();
-            if (rs.next()) {
-                String heads = rs.getString("heads");
-                JSONArray headsArray = new JSONArray(heads);
-                List<String> headFound = headsArray.toList().stream().map(Object::toString).toList();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            String sql = "SELECT heads FROM spawn_head WHERE uuid = ?";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, playerUUID.toString());
+                ResultSet rs = states.executeQuery();
+                if (rs.next()) {
+                    String heads = rs.getString("heads");
+                    JSONArray headsArray = new JSONArray(heads);
+                    List<String> headFound = headsArray.toList().stream().map(Object::toString).toList();
 
-                playerCache.put(playerUUID, new HeadPlayerCache(headFound, headFound.size()));
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        playerCache.put(playerUUID, new HeadPlayerCache(headFound, headFound.size()));
+                    });
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     public static List<String> getFoundHeadsCache(Player player) {
