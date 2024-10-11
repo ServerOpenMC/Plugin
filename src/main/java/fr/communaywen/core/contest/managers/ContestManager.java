@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 
 import net.kyori.adventure.text.Component;
@@ -34,8 +37,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -452,6 +458,88 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
         return 999;
+    }
+
+    public static String getTimeUntilNextMonday() {
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime nextMonday = now.with(TemporalAdjusters.next(DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
+
+        Duration duration = Duration.between(now, nextMonday);
+
+        long days = duration.toDays();
+        long hours = duration.toHours() % 24;
+        long minutes = duration.toMinutes() % 60;
+
+        return String.format("%dd %dh %dm", days, hours, minutes);
+    }
+
+    private static Date parseContestDate(String dayAbbreviation) throws ParseException {
+        String dateStr = "";
+        switch (dayAbbreviation.toLowerCase(Locale.FRANCE)) {
+            case "lun.":
+                dateStr = "Monday";
+                break;
+            case "mar.":
+                dateStr = "Tuesday";
+                break;
+            case "mer.":
+                dateStr = "Wednesday";
+                break;
+            case "jeu.":
+                dateStr = "Thursday";
+                break;
+            case "ven.":
+                dateStr = "Friday";
+                break;
+            case "sam.":
+                dateStr = "Saturday";
+                break;
+            case "dim.":
+                dateStr = "Sunday";
+                break;
+            default:
+                throw new ParseException("Jour non valide", 0);
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE HH:mm:ss", Locale.FRANCE);
+        return dateFormat.parse(dateStr + " 08:00:00");
+    }
+
+    private static Date getNextMondayMidnight() {
+        Calendar calendar = Calendar.getInstance();
+
+        int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+        int daysUntilMonday = (Calendar.MONDAY - currentDay + 7) % 7;
+        if (daysUntilMonday == 0) {
+            daysUntilMonday = 7;
+        }
+        calendar.add(Calendar.DAY_OF_WEEK, daysUntilMonday);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
+    }
+
+    private static String formatTimeDifference(long timeDiffMillis) {
+        long seconds = timeDiffMillis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        hours = hours % 24;
+        minutes = minutes % 60;
+
+        if (days > 0) {
+            return days + "d " + hours + "h";
+        } else if (hours > 0) {
+            return hours + "h " + minutes + "m";
+        } else {
+            return minutes + "m";
+        }
     }
 
     public int getPlayerPoints(Player player) {
