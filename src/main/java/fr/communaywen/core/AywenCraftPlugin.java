@@ -31,6 +31,7 @@ import fr.communaywen.core.commands.homes.SethomesCommands;
 import fr.communaywen.core.commands.homes.HomeDisabledWorldCommand;
 import fr.communaywen.core.commands.spawn.head.HeadCommand;
 import fr.communaywen.core.commands.spawn.jump.JumpCommand;
+import fr.communaywen.core.commands.spawn.leaderboard.LeaderboardCommand;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -293,6 +294,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
         this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(managers.getContestManager().getColorContestList()));
+        this.handler.getAutoCompleter().registerSuggestion("listLeaderboard", SuggestionProvider.of(managers.getLeaderboardManager().getLbList()));
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
 
             List<String> allWorlds = new ArrayList<>(Bukkit.getWorlds().stream().map(World::getName).toList());
@@ -321,6 +323,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }));
 
         this.handler.register(
+                new LeaderboardCommand(this, jumpManager),
                 new SettingsCommand(this),
                 new HeadCommand(this),
                 new JumpCommand(this,jumpManager),
@@ -396,10 +399,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
-                // new LeaderboardListener(this),       // Desactivé de base
                 new HeadListener(this),
                 new JumpListener(this, jumpManager),
-                new LeaderboardListener(this),
+                new LeaderboardListener(this, jumpManager),
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),
@@ -470,6 +472,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LeaderboardManager.updateLeaderboardTeamTop();
         jumpManager.createDisplayJumpStart();
         jumpManager.createDisplayJumpEnd();
+        jumpManager.createLeaderboardLeaderboardRecord();
+        jumpManager.updateLeaderboardLeaderboardRecord();
+        jumpManager.createDisplayJumpEnd();
         LeaderboardManager.createLeaderboardContribution();
         try {
             LeaderboardManager.updateLeaderboardContribution();
@@ -499,6 +504,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         // Remove Leaderboard
         LeaderboardManager.removeLeaderboardBalTop();
         LeaderboardManager.removeLeaderboardTeamTop();
+        jumpManager.removeLeaderboardLeaderboardRecord();
         LeaderboardManager.removeLeaderboardContribution();
 
         jumpManager.removeDisplayJumpStart();

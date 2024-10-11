@@ -27,10 +27,25 @@ import static fr.communaywen.core.commands.economy.BaltopCommand.getColor;
 public class LeaderboardManager {
     static FileConfiguration config;
     static AywenCraftPlugin plugins;
+    private static final ArrayList<String> listLb = new ArrayList<>();
     public LeaderboardManager(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
+
+
+        listLb.add("baltop");
+        listLb.add("teamtop");
+        listLb.add("contribution");
+        listLb.add("jump_record");
     }
+    public static List<String> getLbList() {
+        List<String> lbs = new ArrayList<>();
+        for (String lbName : listLb) {
+            lbs.add(lbName);
+        }
+        return lbs;
+    }
+
     private static TextDisplay textDisplayBalTop;
 
     public static void createLeaderboardBalTop() {

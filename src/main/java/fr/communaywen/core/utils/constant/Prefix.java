@@ -24,6 +24,7 @@ public enum Prefix {
     QUESTS("§x§2§4§A§0§F§9§lǫ§x§2§4§9§6§F§9§lᴜ§x§2§4§8§C§F§9§lᴇ§x§2§4§8§3§F§9§lѕ§x§2§4§7§9§F§9§lᴛ§x§2§4§6§F§F§9§lѕ"),
     HEAD("§dHeads"),
     JUMP("§2Jump"),
+    STAFF("§cStaff"),
 
     // Lucky Block's prefixes
     LUCKYBLOCK("§x§F§C§4§5§8§2L§x§F§C§5§C§9§2u§x§F§D§7§4§A§1c§x§F§D§8§B§B§1k§x§F§E§A§2§C§1y§x§F§E§B§9§D§0B§x§F§E§D§1§E§0l§x§F§F§E§8§E§Fo§x§F§F§F§F§F§Fc§x§F§F§F§F§F§Fk"),
