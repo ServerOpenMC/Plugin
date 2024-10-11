@@ -126,7 +126,7 @@ public class Managers {
         guidelineManager = new GuidelineManager(plugin);
         contestManager = new ContestManager(plugin);
         System.out.println("in manager" + contestManager);
-        contestCache = new ContestCache(contestManager);
+        contestCache = new ContestCache(plugin, contestManager);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);

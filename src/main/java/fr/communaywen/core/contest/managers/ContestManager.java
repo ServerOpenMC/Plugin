@@ -334,10 +334,15 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        addOneToLastContest(ContestCache.getCamp1Cache());
-        deleteTableContest("contest");
-        deleteTableContest("camps");
-        selectRandomlyContest();
+        //EXECUTER LES REQUETES SQL DANS UN AUTRE THREAD
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    addOneToLastContest(ContestCache.getCamp1Cache());
+                    deleteTableContest("contest");
+                    deleteTableContest("camps");
+                    selectRandomlyContest();
+
+                    MailboxManager.sendItemsToAOfflinePlayerBatch(playerItemsMap);
+                });
 
         //REMOVE MULTIPLICATEUR CONTEST
         FileConfiguration config = plugin.getConfig();
@@ -374,9 +379,6 @@ public class ContestManager extends DatabaseConnector {
                 }
             }
         }
-
-        //envoyer tout les lettres en une requete
-        MailboxManager.sendItemsToAOfflinePlayerBatch(playerItemsMap);
 
         Bukkit.broadcastMessage(
 
@@ -422,15 +424,15 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getString(String table, String column) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getString(column);
+            try {
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    return rs.getString(column);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         return "";
     }
 
@@ -455,22 +457,25 @@ public class ContestManager extends DatabaseConnector {
 
     public void initPlayerDataCache(Player player) {
         UUID playerUUID = player.getUniqueId();
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, playerUUID.toString());
+                ResultSet result = states.executeQuery();
+                if (result.next()) {
+                    int points = result.getInt("point_dep");
+                    int camp = result.getInt("camps");
+                    String color = getString("contest","color" + camp);
+                    ChatColor campColor = ChatColor.valueOf(color);
 
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, playerUUID.toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                int points = result.getInt("point_dep");
-                int camp = result.getInt("camps");
-                String color = getString("contest","color" + camp);
-                ChatColor campColor = ChatColor.valueOf(color);
-
-                playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
+                    Bukkit.getScheduler().runTask(plugins, () -> {
+                        playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
+                    });
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     public int getPlayerPointsCache(Player player) {

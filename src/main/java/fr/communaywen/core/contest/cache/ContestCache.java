@@ -2,12 +2,17 @@ package fr.communaywen.core.contest.cache;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.managers.ContestManager;
+import fr.communaywen.core.utils.database.DatabaseConnector;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class ContestCache {
+public class ContestCache extends DatabaseConnector {
 
     private static ContestManager contestManager;
-    public ContestCache(ContestManager manager) {
+    private static JavaPlugin plugin;
+    public ContestCache(AywenCraftPlugin plug, ContestManager manager) {
         contestManager = manager;
+        plugin = plug;
     }
 
     private static String camp1Cache = null;
@@ -25,13 +30,17 @@ public class ContestCache {
     private static final long cacheDuration = 120000;
 
     public static String getCamp1Cache() {
-        long currentTime = System.currentTimeMillis();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            long currentTime = System.currentTimeMillis();
 
-        if (camp1Cache == null || (currentTime - lastCamp1Update) > cacheDuration) {
-            camp1Cache = contestManager.getString("contest", "camp1");
-            lastCamp1Update = currentTime;
-        }
+            if (camp1Cache == null || (currentTime - lastCamp1Update) > cacheDuration) {
+                camp1Cache = contestManager.getString("contest", "camp1");
+                lastCamp1Update = currentTime;
+            }
 
+            System.out.println("1 " + camp1Cache);
+        });
+        System.out.println("2 " + camp1Cache);
         return camp1Cache;
     }
 

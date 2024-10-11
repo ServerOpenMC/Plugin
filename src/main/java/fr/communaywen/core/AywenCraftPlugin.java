@@ -380,6 +380,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         /* LISTENERS */
         registerEvents(
                 // new LeaderboardListener(this),       // Desactivé de base
+                new QuestsListener(this),
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),
@@ -404,7 +405,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LevelsListeners(managers.getLevelsManager()),
                 new CorpseListener(managers.getCorpseManager(), this),
                 new TradeListener(),
-                new QuestsListener(),
+                new QuestsListener(this),
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
