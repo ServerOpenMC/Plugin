@@ -37,6 +37,7 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.listeners.ContestIntractEvents;
 import fr.communaywen.core.contest.listeners.ContestListener;
 import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;

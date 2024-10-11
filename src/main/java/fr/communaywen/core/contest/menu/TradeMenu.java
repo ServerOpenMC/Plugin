@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import fr.communaywen.core.utils.ItemUtils;
@@ -51,7 +52,7 @@ public class TradeMenu extends Menu {
             Map<Integer, ItemStack> inventory = new HashMap<>();
             if (getOwner().getOpenInventory().getTitle()!="Le Contest - Les Trades") {
                 String campName = contestManager.getPlayerCampName(getOwner());
-                ChatColor campColor = contestManager.getPlayerColorCache(getOwner());
+                ChatColor campColor = ContestCache.getPlayerColorCache(getOwner());
                 Material shell_contest = CustomStack.getInstance("contest:contest_shell").getItemStack().getType();
 
                 List<String> loreinfo = new ArrayList<String>();

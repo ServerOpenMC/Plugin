@@ -4,7 +4,16 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ContestCache extends DatabaseConnector {
 
@@ -15,83 +24,186 @@ public class ContestCache extends DatabaseConnector {
         plugin = plug;
     }
 
-    private static String camp1Cache = null;
-    private static long lastCamp1Update = 0;
-    private static String camp2Cache = null;
-    private static long lastCamp2Update = 0;
-    private static String color1Cache = null;
-    private static long lastColor1Update = 0;
-    private static String color2Cache = null;
-    private static long lastColor2Update = 0;
-    private static String startDateCache = null;
-    private static long lastStartDateUpdate = 0;
-    private static Integer phaseCache = null;
-    private static long lastPhaseUpdate = 0;
     private static final long cacheDuration = 120000;
 
-    public static String getCamp1Cache() {
+    // CONTEST DATA
+    private static ContestDataCache contestCache = null;
+
+
+    public static void initContestDataCache() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            long currentTime = System.currentTimeMillis();
+            String sql = "SELECT * FROM contest WHERE 1";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                ResultSet result = states.executeQuery();
+                if (result.next()) {
+                    String camp1 = result.getString("camp1");
+                    String camp2 = result.getString("camp2");
+                    String color1 = result.getString("color1");
+                    String color2 = result.getString("color2");
+                    int phase = result.getInt("phase");
+                    String startdate = result.getString("startdate");
 
-            if (camp1Cache == null || (currentTime - lastCamp1Update) > cacheDuration) {
-                camp1Cache = contestManager.getString("contest", "camp1");
-                lastCamp1Update = currentTime;
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        contestCache = new ContestDataCache(camp1, camp2, color1, color2, phase, startdate);
+                    });
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-
-            System.out.println("1 " + camp1Cache);
         });
-        System.out.println("2 " + camp1Cache);
-        return camp1Cache;
+    }
+
+    public static String getCamp1Cache() {
+        ContestDataCache cache = contestCache;
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getCamp1();
+        } else {
+            initContestDataCache();
+            if (cache!=null) {
+                return cache.getCamp1();
+            }
+            return null;
+        }
     }
 
     public static String getCamp2Cache() {
-        long currentTime = System.currentTimeMillis();
+        ContestDataCache cache = contestCache;
 
-        if (camp2Cache == null || (currentTime - lastCamp2Update) > cacheDuration) {
-            camp2Cache = contestManager.getString("contest", "camp2");
-            lastCamp2Update = currentTime;
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getCamp2();
+        } else {
+            initContestDataCache();
+            if (cache!=null) {
+                return cache.getCamp2();
+            }
+            return null;
         }
-
-        return camp2Cache;
     }
 
     public static String getColor1Cache() {
-        long currentTime = System.currentTimeMillis();
+        ContestDataCache cache = contestCache;
 
-        if (color1Cache == null || (currentTime - lastColor1Update) > cacheDuration) {
-            color1Cache = contestManager.getString("contest", "color1");
-            lastColor1Update = currentTime;
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getColor1();
+        } else {
+            initContestDataCache();
+            if (cache!=null) {
+                return cache.getColor1();
+            }
+            return null;
         }
-
-        return color1Cache;
     }
 
     public static String getColor2Cache() {
-        long currentTime = System.currentTimeMillis();
+        ContestDataCache cache = contestCache;
 
-        if (color2Cache == null || (currentTime - lastColor2Update) > cacheDuration) {
-            color2Cache = contestManager.getString("contest", "color2");
-            lastColor2Update = currentTime;
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getColor2();
+        } else {
+            initContestDataCache();
+            if (cache!=null) {
+                return cache.getColor2();
+            }
+            return null;
         }
-
-        return color2Cache;
     }
+
     public static int getPhaseCache() {
-        long currentTime = System.currentTimeMillis();
-        if (phaseCache == null || (currentTime - lastPhaseUpdate) > cacheDuration) {
-            phaseCache = contestManager.getInt("contest", "phase");
-            lastPhaseUpdate = currentTime;
+        ContestDataCache cache = contestCache;
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getPhase();
+        } else {
+            initContestDataCache();
+            if (cache!=null) {
+                return cache.getPhase();
+            }
+            return -1;
         }
-        return phaseCache;
     }
+
     public static String getStartDateCache() {
-        long currentTime = System.currentTimeMillis();
+        ContestDataCache cache = contestCache;
 
-        if (startDateCache == null || (currentTime - lastStartDateUpdate) > cacheDuration) {
-            startDateCache = contestManager.getString("contest", "startdate");
-            lastStartDateUpdate = currentTime;
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getStartDate();
+        } else {
+            initContestDataCache();
+            if (cache!=null) {
+                return cache.getStartDate();
+            }
+            return null;
         }
+    }
 
-        return startDateCache;
+    // CONTEST PLAYER DATA
+    private static final Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
+
+    public static void initPlayerDataCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, playerUUID.toString());
+                ResultSet result = states.executeQuery();
+                if (result.next()) {
+                    int points = result.getInt("point_dep");
+                    int camp = result.getInt("camps");
+                    String color = ContestManager.getString("contest","color" + camp);
+                    ChatColor campColor = ChatColor.valueOf(color);
+
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
+                    });
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public static int getPlayerPointsCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        ContestPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getPoints();
+        } else {
+            initPlayerDataCache(player);
+            if (cache!=null) {
+                return cache.getPoints();
+            }
+            return 0;
+        }
+    }
+
+    public static int getPlayerCampsCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        ContestPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getCamp();
+        } else {
+            initPlayerDataCache(player);
+            if (cache!=null) {
+                return cache.getCamp();
+            }
+            return -1;
+        }
+    }
+    public static ChatColor getPlayerColorCache(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        ContestPlayerCache cache = playerCache.get(playerUUID);
+
+        if (cache != null && !cache.isCacheNull(cacheDuration)) {
+            return cache.getColor();
+        } else {
+            initPlayerDataCache(player);
+            if (cache!=null) {
+                return cache.getColor();
+            }
+            return null;
+        }
     }
 }

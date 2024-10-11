@@ -100,7 +100,8 @@ public class ScoreboardManager {
         objective.getScore("   ").setScore(6);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(5);
 
-        if(ContestCache.getPhaseCache() != 1) {
+        int phase = ContestCache.getPhaseCache();
+        if(phase != 1) {
             objective.getScore(" ").setScore(4);
             objective.getScore("§8• §6§lCONTEST!").setScore(3);
             objective.getScore(ChatColor.valueOf(ContestCache.getColor1Cache()) + ContestCache.getCamp1Cache() + " §8VS " + ChatColor.valueOf(ContestCache.getColor2Cache())  + ContestCache.getCamp2Cache()).setScore(2);
