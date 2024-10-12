@@ -135,9 +135,9 @@ public class Managers {
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);
         contestManager = new ContestManager(plugin);
-        contestCache = new ContestCache(contestManager);
+        contestCache = new ContestCache(plugin, contestManager);
         this.teamManager = new TeamManager(plugin);
-        scoreboardManager = new ScoreboardManager(plugin);
+        scoreboardManager = new ScoreboardManager(plugin, contestManager);
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig, contestManager);

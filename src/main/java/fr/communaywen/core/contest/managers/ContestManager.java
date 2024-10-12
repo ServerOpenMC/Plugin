@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 
 import net.kyori.adventure.text.Component;
@@ -34,8 +37,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -104,6 +110,8 @@ public class ContestManager extends DatabaseConnector {
         } catch (StorageException e) {
             throw new RuntimeException(e);
         }
+
+        ContestCache.initContestDataCache();
         System.out.println("[CONTEST] Ouverture des votes");
     }
     //PHASE 2
@@ -192,6 +200,8 @@ public class ContestManager extends DatabaseConnector {
         } catch (StorageException e) {
             throw new RuntimeException(e);
         }
+
+        ContestCache.initContestDataCache();
         System.out.println("[CONTEST] Ouverture des trades");
     }
     //PHASE 3
@@ -334,10 +344,15 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        addOneToLastContest(ContestCache.getCamp1Cache());
-        deleteTableContest("contest");
-        deleteTableContest("camps");
-        selectRandomlyContest();
+        //EXECUTER LES REQUETES SQL DANS UN AUTRE THREAD
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    addOneToLastContest(ContestCache.getCamp1Cache());
+                    deleteTableContest("contest");
+                    deleteTableContest("camps");
+                    selectRandomlyContest();
+
+                    MailboxManager.sendItemsToAOfflinePlayerBatch(playerItemsMap);
+                });
 
         //REMOVE MULTIPLICATEUR CONTEST
         FileConfiguration config = plugin.getConfig();
@@ -375,9 +390,6 @@ public class ContestManager extends DatabaseConnector {
             }
         }
 
-        //envoyer tout les lettres en une requete
-        MailboxManager.sendItemsToAOfflinePlayerBatch(playerItemsMap);
-
         Bukkit.broadcastMessage(
 
                 "§8§m                                                     §r\n" +
@@ -398,7 +410,7 @@ public class ContestManager extends DatabaseConnector {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
-            initPlayerDataCache(player);
+            ContestCache.initPlayerDataCache(player);
         }
 
         World world = Bukkit.getWorld(worldsName);
@@ -418,23 +430,24 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
+        ContestCache.initContestDataCache();
         System.out.println("[CONTEST] Fermeture du Contest");
     }
 
-    public String getString(String table, String column) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getString(column);
+    public static String getString(String table, String column) {
+            try {
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    return rs.getString(column);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         return "";
     }
 
-    public int getInt(String table, String column) {
+    public static int getInt(String table, String column) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
             ResultSet rs = statement.executeQuery();
@@ -447,73 +460,85 @@ public class ContestManager extends DatabaseConnector {
         return 999;
     }
 
+    public static String getTimeUntilNextMonday() {
+        LocalDateTime now = LocalDateTime.now();
 
-    // PLAYER CACHE
-    // TODO : in ContestCache
-    private final Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
-    private final long cacheDuration = 120000;
+        LocalDateTime nextMonday = now.with(TemporalAdjusters.next(DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
 
-    public void initPlayerDataCache(Player player) {
-        UUID playerUUID = player.getUniqueId();
+        Duration duration = Duration.between(now, nextMonday);
 
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, playerUUID.toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                int points = result.getInt("point_dep");
-                int camp = result.getInt("camps");
-                String color = getString("contest","color" + camp);
-                ChatColor campColor = ChatColor.valueOf(color);
+        long days = duration.toDays();
+        long hours = duration.toHours() % 24;
+        long minutes = duration.toMinutes() % 60;
 
-                playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return String.format("%dd %dh %dm", days, hours, minutes);
     }
 
-    public int getPlayerPointsCache(Player player) {
-        UUID playerUUID = player.getUniqueId();
-        ContestPlayerCache cache = playerCache.get(playerUUID);
-
-        if (cache != null && !cache.isCacheNull(cacheDuration)) {
-            return cache.getPoints();
-        } else {
-            initPlayerDataCache(player);
-            if (cache!=null) {
-                return cache.getPoints();
-            }
-            return 0;
+    private static Date parseContestDate(String dayAbbreviation) throws ParseException {
+        String dateStr = "";
+        switch (dayAbbreviation.toLowerCase(Locale.FRANCE)) {
+            case "lun.":
+                dateStr = "Monday";
+                break;
+            case "mar.":
+                dateStr = "Tuesday";
+                break;
+            case "mer.":
+                dateStr = "Wednesday";
+                break;
+            case "jeu.":
+                dateStr = "Thursday";
+                break;
+            case "ven.":
+                dateStr = "Friday";
+                break;
+            case "sam.":
+                dateStr = "Saturday";
+                break;
+            case "dim.":
+                dateStr = "Sunday";
+                break;
+            default:
+                throw new ParseException("Jour non valide", 0);
         }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE HH:mm:ss", Locale.FRANCE);
+        return dateFormat.parse(dateStr + " 08:00:00");
     }
 
-    public int getPlayerCampsCache(Player player) {
-        UUID playerUUID = player.getUniqueId();
-        ContestPlayerCache cache = playerCache.get(playerUUID);
+    private static Date getNextMondayMidnight() {
+        Calendar calendar = Calendar.getInstance();
 
-        if (cache != null && !cache.isCacheNull(cacheDuration)) {
-            return cache.getCamp();
-        } else {
-            initPlayerDataCache(player);
-            if (cache!=null) {
-                return cache.getCamp();
-            }
-            return -1;
+        int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+        int daysUntilMonday = (Calendar.MONDAY - currentDay + 7) % 7;
+        if (daysUntilMonday == 0) {
+            daysUntilMonday = 7;
         }
-    }
-    public ChatColor getPlayerColorCache(Player player) {
-        UUID playerUUID = player.getUniqueId();
-        ContestPlayerCache cache = playerCache.get(playerUUID);
+        calendar.add(Calendar.DAY_OF_WEEK, daysUntilMonday);
 
-        if (cache != null && !cache.isCacheNull(cacheDuration)) {
-            return cache.getColor();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
+    }
+
+    private static String formatTimeDifference(long timeDiffMillis) {
+        long seconds = timeDiffMillis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        hours = hours % 24;
+        minutes = minutes % 60;
+
+        if (days > 0) {
+            return days + "d " + hours + "h";
+        } else if (hours > 0) {
+            return hours + "h " + minutes + "m";
         } else {
-            initPlayerDataCache(player);
-            if (cache!=null) {
-                return cache.getColor();
-            }
-            return null;
+            return minutes + "m";
         }
     }
 
@@ -622,7 +647,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getPlayerCampName(Player player) {
-        Integer campInteger = getPlayerCampsCache(player);
+        Integer campInteger = ContestCache.getPlayerCampsCache(player);
         String campName = getString("contest","camp" + campInteger);
         return campName;
     }
@@ -677,7 +702,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getRankContest(Player player) {
-        int points = getPlayerPointsCache(player);
+        int points = ContestCache.getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return "Dictateur en  ";
@@ -705,7 +730,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public int getRepPointsToRank(Player player) {
-        int points = getPlayerPointsCache(player);
+        int points = ContestCache.getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return 0;

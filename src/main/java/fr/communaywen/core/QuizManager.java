@@ -100,8 +100,9 @@ public class QuizManager {
                             "§8§m                                                     §r"
             );
 
-            contestManager.updateColumnInt("camps", "point_dep", points + contestManager.getPlayerPointsCache(event.getPlayer()));
-            String playerCamp = "points" + contestManager.getPlayerCampsCache(event.getPlayer());
+
+            contestManager.addPointPlayer(points + contestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
+            String playerCamp = "points" + ContestCache.getPlayerCampsCache(event.getPlayer());
             contestManager.updateColumnInt("contest", playerCamp, points + contestManager.getInt("contest", playerCamp));
           
         } else {

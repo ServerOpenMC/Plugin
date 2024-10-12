@@ -24,14 +24,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
-import fr.communaywen.core.commands.homes.DelhomesCommands;
-import fr.communaywen.core.commands.homes.HomesCommands;
-import fr.communaywen.core.commands.homes.RenameHomeCommands;
-import fr.communaywen.core.commands.homes.SethomesCommands;
-import fr.communaywen.core.commands.homes.HomeDisabledWorldCommand;
-import fr.communaywen.core.commands.spawn.head.HeadCommand;
-import fr.communaywen.core.commands.spawn.jump.JumpCommand;
-import fr.communaywen.core.commands.spawn.leaderboard.LeaderboardCommand;
+import fr.communaywen.core.commands.homes.*;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -426,7 +419,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LevelsListeners(managers.getLevelsManager()),
                 new CorpseListener(managers.getCorpseManager(), this),
                 new TradeListener(),
-                new QuestsListener(),
+                new QuestsListener(this),
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),

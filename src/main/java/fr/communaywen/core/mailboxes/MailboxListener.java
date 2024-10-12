@@ -97,43 +97,45 @@ public class MailboxListener extends DatabaseConnector implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS affected_rows, sender_id, items_count, id FROM mailbox_items WHERE receiver_id = ? AND refused = false;")) {
-            statement.setString(1, player.getUniqueId().toString());
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
-                    Component message = null;
-                    int affectedRows = result.getInt("affected_rows");
-                    if (affectedRows > 1) {
-                        message = Component.text("Vous avez reçu ", NamedTextColor.DARK_GREEN)
-                                           .append(Component.text(affectedRows, NamedTextColor.GREEN))
-                                           .append(Component.text(" lettres.", NamedTextColor.DARK_GREEN))
-                                           .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
-                                           .clickEvent(ClickEvent.runCommand("/mailbox"))
-                                           .hoverEvent(getHoverEvent("Ouvrir ma boîte aux lettres"))
-                                           .append(Component.text(" pour ouvrir les lettres", NamedTextColor.GOLD));
-                    } else if (affectedRows == 1) {
-                        int itemsCount = result.getInt("items_count");
-                        int letterId = result.getInt("id");
-                        UUID senderUUID = UUID.fromString(result.getString("sender_id"));
-                        OfflinePlayer sender = Bukkit.getOfflinePlayer(senderUUID);
-                        String senderName = sender.getName();
-                        message = Component.text("Vous avez reçu ", NamedTextColor.DARK_GREEN)
-                                           .append(Component.text(itemsCount, NamedTextColor.GREEN))
-                                           .append(Component.text(" " + getItemCount(itemsCount) + " de la part de ", NamedTextColor.DARK_GREEN))
-                                           .append(Component.text(senderName == null ? "Unknown" : senderName, NamedTextColor.GREEN))
-                                           .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
-                                           .clickEvent(getRunCommand("open " + letterId))
-                                           .hoverEvent(getHoverEvent("Ouvrir la lettre #" + letterId))
-                                           .append(Component.text(" pour ouvrir la lettre", NamedTextColor.GOLD));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Player player = event.getPlayer();
+            try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS affected_rows, sender_id, items_count, id FROM mailbox_items WHERE receiver_id = ? AND refused = false;")) {
+                statement.setString(1, player.getUniqueId().toString());
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        Component message = null;
+                        int affectedRows = result.getInt("affected_rows");
+                        if (affectedRows > 1) {
+                                message = Component.text("Vous avez reçu ", NamedTextColor.DARK_GREEN)
+                                        .append(Component.text(affectedRows, NamedTextColor.GREEN))
+                                        .append(Component.text(" lettres.", NamedTextColor.DARK_GREEN))
+                                        .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
+                                        .clickEvent(ClickEvent.runCommand("/mailbox"))
+                                        .hoverEvent(getHoverEvent("Ouvrir ma boîte aux lettres"))
+                                        .append(Component.text(" pour ouvrir les lettres", NamedTextColor.GOLD));
+                        } else if (affectedRows == 1) {
+                            int itemsCount = result.getInt("items_count");
+                            int letterId = result.getInt("id");
+                            UUID senderUUID = UUID.fromString(result.getString("sender_id"));
+                            OfflinePlayer sender = Bukkit.getOfflinePlayer(senderUUID);
+                            String senderName = sender.getName();
+                            message = Component.text("Vous avez reçu ", NamedTextColor.DARK_GREEN)
+                                    .append(Component.text(itemsCount, NamedTextColor.GREEN))
+                                    .append(Component.text(" " + getItemCount(itemsCount) + " de la part de ", NamedTextColor.DARK_GREEN))
+                                    .append(Component.text(senderName == null ? "Unknown" : senderName, NamedTextColor.GREEN))
+                                    .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
+                                    .clickEvent(getRunCommand("open " + letterId))
+                                    .hoverEvent(getHoverEvent("Ouvrir la lettre #" + letterId))
+                                    .append(Component.text(" pour ouvrir la lettre", NamedTextColor.GOLD));
+                        }
+                        if (message != null) sendSuccessMessage(player, message);
                     }
-                    if (message != null) sendSuccessMessage(player, message);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                sendFailureMessage(event.getPlayer(), "Une erreur est survenue.");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            sendFailureMessage(event.getPlayer(), "Une erreur est survenue.");
-        }
+        });
     }
 
     @EventHandler

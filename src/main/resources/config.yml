@@ -166,10 +166,10 @@ contest:
       selected: false
     - ress: RABBIT_STEW
       amount: 2
-      amount_shell: 4
+      amount_shell: 3
       selected: false
     - ress: SHROOMLIGHT
-      amount: 3
+      amount: 2
       amount_shell: 1
       selected: false
     - ress: ROOTED_DIRT
@@ -178,31 +178,31 @@ contest:
       selected: false
     - ress: SEA_LANTERN
       amount: 2
-      amount_shell: 3
+      amount_shell: 1
       selected: false
     - ress: ENCHANTED_GOLDEN_APPLE
       amount: 1
       amount_shell: 8
       selected: false
     - ress: MANGROVE_LOG
-      amount: 6
+      amount: 7
       amount_shell: 1
       selected: false
     - ress: BEE_NEST
       amount: 1
-      amount_shell: 4
+      amount_shell: 2
       selected: false
     - ress: GOAT_HORN
       amount: 1
-      amount_shell: 9
+      amount_shell: 6
       selected: false
     - ress: PACKED_MUD
-      amount: 3
+      amount: 2
       amount_shell: 1
       selected: false
     - ress: POPPED_CHORUS_FRUIT
-      amount: 5
-      amount_shell: 2
+      amount: 3
+      amount_shell: 1
       selected: false
     - ress: HEAVY_CORE
       amount: 1
@@ -229,7 +229,7 @@ contest:
       amount_shell: 1
       selected: false
     - ress: MUDDY_MANGROVE_ROOTS
-      amount: 5
+      amount: 2
       amount_shell: 3
       selected: false
     - ress: TORCHFLOWER
@@ -241,16 +241,16 @@ contest:
       amount_shell: 2
       selected: false
     - ress: MAGENTA_GLAZED_TERRACOTTA
-      amount: 2
-      amount_shell: 5
+      amount: 3
+      amount_shell: 2
       selected: false
     - ress: VERDANT_FROGLIGHT
       amount: 1
-      amount_shell: 3
+      amount_shell: 2
       selected: false
     - ress: HONEYCOMB
       amount: 2
-      amount_shell: 3
+      amount_shell: 1
       selected: false
       
 rewards:
