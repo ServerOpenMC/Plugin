@@ -123,7 +123,6 @@ public class JumpManager extends DatabaseConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return jumpRecords;
     }
 
