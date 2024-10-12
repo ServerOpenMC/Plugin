@@ -38,6 +38,17 @@ public class JumpCommand {
         MessageManager.sendMessageType(player, "§7Vous avez trouvé §d" + HeadManager.getNumberHeads(player) + "§8tête(s) sur §d" + HeadManager.getMaxHeads() + "§8têtes", Prefix.HEAD, MessageType.SUCCESS, true);
     }
 
+    @Subcommand("end")
+    @Description("Arrete le jump que vous etes entrain de faire")
+    public void end(Player player) {
+        if (jumpManager.isJumping(player)) {
+            jumpManager.endJump(player);
+            MessageManager.sendMessageType(player, "§7Vous avez §carreter votre jump", Prefix.JUMP, MessageType.SUCCESS, true);
+        } else {
+            MessageManager.sendMessageType(player, "§cVous devez etre entrain de jump pour faire cela!", Prefix.JUMP, MessageType.ERROR, true);
+        }
+    }
+
     @Subcommand("move start")
     @Description("Déplace le démarrage du jump")
     @CommandPermission("ayw.command.jump.move.start")

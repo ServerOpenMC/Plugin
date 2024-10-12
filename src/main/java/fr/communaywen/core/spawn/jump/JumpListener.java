@@ -1,5 +1,6 @@
 package fr.communaywen.core.spawn.jump;
 
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.luckyblocks.utils.LBUtils;
@@ -7,6 +8,9 @@ import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +26,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.UUID;
+
+import static fr.communaywen.core.mailboxes.utils.MailboxUtils.getHoverEvent;
 
 public class JumpListener implements Listener {
     private JavaPlugin plugin;
@@ -49,15 +55,24 @@ public class JumpListener implements Listener {
                 Location startLocation = new Location(Bukkit.getWorld(config.getString("jump.world")), config.getDouble("jump.start.posX"), config.getDouble("jump.start.posY"), config.getDouble("jump.start.posZ"));
                 Location endLocation = new Location(Bukkit.getWorld(config.getString("jump.world")), config.getDouble("jump.end.posX"), config.getDouble("jump.end.posY"), config.getDouble("jump.end.posZ"));
 
-                if (blockLocation.equals(startLocation) && !jumpManager.isJumping(event.getPlayer())) {
+                if (blockLocation.equals(startLocation) && !JumpManager.isJumping(event.getPlayer())) {
                     jumpManager.startJump(player);
                     MessageManager.sendMessageType(player, "§aVous avez commencé le jump", Prefix.JUMP, MessageType.SUCCESS, true);
+                    Component message = Component.text("Pour finir le jump,", NamedTextColor.GREEN)
+                            .append(Component.text(" Cliquez-ici", NamedTextColor.YELLOW))
+                            .clickEvent(ClickEvent.runCommand("/jump end"))
+                            .hoverEvent(getHoverEvent("Arreter le Jump"));
+                    event.getPlayer().sendMessage(message);
 
                     eventRunnable = new BukkitRunnable() {
                         @Override
                         public void run() {
                             if (jumpManager.isJumping(player)) {
                                 jumpManager.updateActionBar(player, jumpManager.getElapsedSeconds(player));
+                                if (!RegionsManager.isSpecifiedPlayerInRegion(player, "spawn")) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez quitter le Spawn", Prefix.JUMP, MessageType.ERROR, true);
+                                }
                             }
                         }
                     };
