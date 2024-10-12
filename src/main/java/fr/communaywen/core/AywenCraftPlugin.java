@@ -25,6 +25,9 @@ import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
 import fr.communaywen.core.commands.homes.*;
+import fr.communaywen.core.commands.spawn.head.HeadCommand;
+import fr.communaywen.core.commands.spawn.jump.JumpCommand;
+import fr.communaywen.core.commands.spawn.leaderboard.LeaderboardCommand;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -38,6 +41,7 @@ import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.cache.ContestDataCache;
 import fr.communaywen.core.contest.listeners.ContestIntractEvents;
 import fr.communaywen.core.contest.listeners.ContestListener;
 import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
@@ -457,12 +461,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
 
+
         // BETTER SPAWN
         // - Leaderboard
         LeaderboardManager.createLeaderboardBalTop();
         LeaderboardManager.updateLeaderboardBalTop();
         LeaderboardManager.createLeaderboardTeamTop();
         LeaderboardManager.updateLeaderboardTeamTop();
+        LeaderboardManager.createLeaderboardPlayTime();
+        LeaderboardManager.updateLeaderboardPlayTime();
         jumpManager.createDisplayJumpStart();
         jumpManager.createDisplayJumpEnd();
         jumpManager.createLeaderboardLeaderboardRecord();
@@ -476,9 +483,19 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
         // - Particle
         ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 50, 130);
+        ContestCache.initContestDataCache();
         if (ContestCache.getPhaseCache() != 1) {
             String camp1Color = ContestCache.getColor1Cache();
             String camp2Color = ContestCache.getColor2Cache();
+
+            if (camp1Color == null || camp1Color.isEmpty()) {
+                camp1Color = "WHITE";
+            }
+
+            if (camp2Color == null || camp2Color.isEmpty()) {
+                camp2Color = "BLACK";
+            }
+
             ChatColor color1 = ChatColor.valueOf(camp1Color);
             ChatColor color2 = ChatColor.valueOf(camp2Color);
 
@@ -499,6 +516,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         LeaderboardManager.removeLeaderboardTeamTop();
         jumpManager.removeLeaderboardLeaderboardRecord();
         LeaderboardManager.removeLeaderboardContribution();
+        LeaderboardManager.removeLeaderboardPlayTime();
 
         jumpManager.removeDisplayJumpStart();
         jumpManager.removeDisplayJumpEnd();
