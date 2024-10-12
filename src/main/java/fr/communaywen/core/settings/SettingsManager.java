@@ -63,4 +63,17 @@ public class SettingsManager extends DatabaseConnector {
 		statement.executeUpdate();
 		statement.close();
 	}
+	
+	public void createPlayerSettings(PlayerSettings settings) throws SQLException {
+		
+		String sql = "INSERT INTO settings (player, mail_accept, trade_accept, tpa_accept) VALUES (?, ?, ?, ?)";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, settings.uuid());
+		statement.setInt(2, settings.mail_accept());
+		statement.setInt(3, settings.trade_accept());
+		statement.setInt(4, settings.tpa_accept());
+		
+		statement.executeUpdate();
+		statement.close();
+	}
 }

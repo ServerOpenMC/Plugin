@@ -31,7 +31,10 @@ public class SettingsListener implements Listener {
 	public void onQuit(PlayerQuitEvent e) throws SQLException {
 		String uuid = e.getPlayer().getUniqueId().toString();
 		
-		this.plugin.getManagers().getSettingsManager().updatePlayerSettings(SettingsCache.settingsMap.get(uuid));
+		if (SettingsCache.settingsMap.put(uuid, this.plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(uuid)) == null)
+			this.plugin.getManagers().getSettingsManager().createPlayerSettings(SettingsCache.settingsMap.get(uuid));
+		else
+			this.plugin.getManagers().getSettingsManager().updatePlayerSettings(SettingsCache.settingsMap.get(uuid));
 		
 		SettingsCache.settingsMap.remove(uuid);
 	}
