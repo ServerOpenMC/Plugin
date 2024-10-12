@@ -15,7 +15,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +29,14 @@ public class SettingsMenu extends Menu {
 	@Setter
 	private int mail_accept, trade_accept, tpa_accept;
 	
-	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) throws SQLException {
+	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) {
 		super(owner);
 		this.plugin = plugin;
 		this.owner = owner;
 		this.manager = manager;
-		this.mail_accept = manager.findPlayerSettingsByUUID(owner).mail_accept();
-		this.trade_accept = manager.findPlayerSettingsByUUID(owner).trade_accept();
-		this.tpa_accept = manager.findPlayerSettingsByUUID(owner).tpa_accept();
+		this.mail_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).mail_accept();
+		this.trade_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).trade_accept();
+		this.tpa_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).tpa_accept();
 	}
 	
 	@Override
@@ -71,17 +70,8 @@ public class SettingsMenu extends Menu {
 		map.put(53, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
 			itemMeta.setCustomModelData(8001);
-		}).setOnClick(inventoryClickEvent -> {
-			try {
-				if (plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(owner) == null) {
-					manager.createPlayerSettings(new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
-				} else {
-					manager.updatePlayerSettings(new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}));
+		}).setOnClick(inventoryClickEvent ->
+				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept))));
 		
 		return map;
 	}
