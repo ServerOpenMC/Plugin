@@ -62,6 +62,10 @@ public class LeaderboardCommand {
                 LeaderboardManager.createLeaderboardContribution();
                 LeaderboardManager.updateLeaderboardContribution();
 
+                LeaderboardManager.removeLeaderboardPlayTime();
+                LeaderboardManager.createLeaderboardPlayTime();
+                LeaderboardManager.updateLeaderboardPlayTime();
+
                 jumpManager.removeLeaderboardLeaderboardRecord();
                 jumpManager.createLeaderboardLeaderboardRecord();
                 jumpManager.updateLeaderboardLeaderboardRecord();

@@ -6,6 +6,7 @@ import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.GitHubAPI;
+import fr.communaywen.core.utils.database.DatabaseConnector;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -13,31 +14,36 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static fr.communaywen.core.commands.economy.BaltopCommand.getColor;
 
-public class LeaderboardManager {
+public class LeaderboardManager extends DatabaseConnector {
     static FileConfiguration config;
     static AywenCraftPlugin plugins;
     private static final ArrayList<String> listLb = new ArrayList<>();
+
     public LeaderboardManager(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
 
-
+        listLb.add("playtime");
         listLb.add("baltop");
         listLb.add("teamtop");
         listLb.add("contribution");
         listLb.add("jump_record");
     }
+
     public static List<String> getLbList() {
         List<String> lbs = new ArrayList<>();
         for (String lbName : listLb) {
@@ -206,5 +212,122 @@ public class LeaderboardManager {
             textDisplayContribution.remove();
             textDisplayContribution = null;
         }
+    }
+
+    private static TextDisplay textDisplayPlayTime;
+
+    public static void createLeaderboardPlayTime() {
+        World world = Bukkit.getWorld((String) config.get("leaderboard.playtime.world"));
+        if (world == null) return;
+
+        Location location = new Location(world, config.getDouble("leaderboard.playtime.posX"), config.getDouble("leaderboard.playtime.posY"), config.getDouble("leaderboard.playtime.posZ"));
+
+        textDisplayPlayTime = (TextDisplay) world.spawn(location, TextDisplay.class);
+
+        textDisplayPlayTime.setBillboard(TextDisplay.Billboard.CENTER);
+        textDisplayPlayTime.setViewRange(100.0F);
+        textDisplayPlayTime.setDefaultBackground(false);
+        textDisplayPlayTime.setAlignment(TextDisplay.TextAlignment.CENTER);
+
+        textDisplayPlayTime.setCustomNameVisible(false);
+        textDisplayPlayTime.setCustomName("playtime");
+    }
+
+    public static void updateLeaderboardPlayTime() {
+        if (textDisplayPlayTime == null) return;
+
+        List<Map.Entry<UUID, Long>> topPlayTime = getTopPlayTime(10);
+
+        List<String> lines = new ArrayList<>();
+        lines.add("§dLes §f10 §dMeilleurs Temps de Jeu des Joueurs");
+
+        int index = 1;
+        for (Map.Entry<UUID, Long> entry : topPlayTime) {
+            UUID playerUUID = entry.getKey();
+            long time = entry.getValue();
+
+            String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
+
+            lines.add(MessageFormat.format("{0}# {1}: {2}",
+                    getColor(index) + index,
+                    ChatColor.GRAY + playerName,
+                    ChatColor.DARK_PURPLE + convertTime(time)));
+
+            index++;
+        }
+
+        String leaderboardText = String.join("\n", lines);
+
+        textDisplayPlayTime.setText(Component.text(leaderboardText).content());
+    }
+
+    public static void removeLeaderboardPlayTime() {
+        if (textDisplayPlayTime != null && !textDisplayPlayTime.isDead()) {
+            textDisplayPlayTime.remove();
+            textDisplayPlayTime = null;
+        }
+    }
+
+    public static void setTimePlayed(Player player, long time) {
+        try {
+            String sql = "UPDATE playtime SET time = ? WHERE uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, time);
+            statement.setString(2, player.getUniqueId().toString());
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                insertTimePlayed(player, time);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void insertTimePlayed(Player player, long time) {
+        try {
+            String sql = "INSERT INTO playtime (uuid, time) VALUES (?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, player.getUniqueId().toString());
+            statement.setLong(2, time);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Map.Entry<UUID, Long>> getTopPlayTime(int limit) {
+        List<Map.Entry<UUID, Long>> playTime = new ArrayList<>();
+        String sql = "SELECT uuid, time FROM playtime ORDER BY time DESC LIMIT ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, limit);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                UUID playerUUID = UUID.fromString(rs.getString("uuid"));
+                long time = rs.getLong("time");
+
+                playTime.add(new AbstractMap.SimpleEntry<>(playerUUID, time));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return playTime;
+    }
+
+    public static String convertTime(long ticks) {
+        long millis = ticks * 50;
+
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        seconds = seconds % 60;
+        minutes = minutes % 60;
+        hours = hours % 24;
+
+        return String.format("%dj %dh %dm %ds", days, hours, minutes, seconds);
     }
 }
