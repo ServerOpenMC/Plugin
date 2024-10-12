@@ -5,6 +5,7 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ColorConvertor;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.ItemUtils;
@@ -52,7 +53,7 @@ public class ContributionMenu extends Menu {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
         String campName = contestManager.getPlayerCampName(getOwner());
-        ChatColor campColor = contestManager.getPlayerColorCache(getOwner());
+        ChatColor campColor = ContestCache.getPlayerColorCache(getOwner());
         Material m = ColorConvertor.getMaterialFromColor(campColor);
 
         List<String> loreinfo = new ArrayList<String>();
@@ -90,7 +91,7 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
         lore_rang.add(campColor + contestManager.getRankContest(getOwner()) + campName);
-        lore_rang.add("§7Progression §8: " + campColor + contestManager.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
+        lore_rang.add("§7Progression §8: " + campColor + ContestCache.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
         lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
 
         for(int i = 0; i < getInventorySize().getSize(); i++) {
@@ -122,7 +123,7 @@ public class ContributionMenu extends Menu {
                         if (ItemUtils.hasEnoughItems(getOwner(), shell_contest, shell)) {
                             ItemUtils.removeItemsFromInventory(getOwner(), shell_contest, shell);
                             contestManager.addPointPlayer(shell + contestManager.getPlayerPoints(getOwner()), getOwner());
-                            contestManager.updateColumnInt("contest", "points" + contestManager.getPlayerCampsCache(getOwner()), shell + contestManager.getInt("contest", "points" + contestManager.getPlayerCampsCache(getOwner())));
+                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), shell + contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner())));
                             MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
                         } else {
                             MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
