@@ -3,8 +3,8 @@ package fr.communaywen.core.dreamdim.listeners;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DreamUtils;
+import fr.communaywen.core.guideline.GuidelineManager;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -22,6 +22,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -35,15 +36,13 @@ public class EnterWorldListener implements Listener {
     World dreamworld;
     AywenCraftPlugin plugin;
     HashMap<Player, BossBar> bossbars = new HashMap<>();
-    AdvancementRegister register;
 
-    public EnterWorldListener(AywenCraftPlugin plugin, AdvancementRegister register) {
+    public EnterWorldListener(AywenCraftPlugin plugin) {
         this.plugin = plugin;
-        this.register = register;
         dreamworld = Bukkit.getWorld("dreamworld");
     }
 
-    public void teleportBack(Player p) {
+    public void teleportBack(Player p, PlayerTeleportEvent.TeleportCause cause) {
         p.sendMessage("C'était juste un mauvais rêve");
         BossBar bossBar = bossbars.get(p);
         if (bossBar != null) {
@@ -55,7 +54,7 @@ public class EnterWorldListener implements Listener {
         p.teleport(Objects.requireNonNullElse(
                 p.getRespawnLocation(),
                 Bukkit.getWorld("world").getSpawnLocation()
-        ));
+        ), cause);
     }
 
     public void death(Player p) {
@@ -65,6 +64,7 @@ public class EnterWorldListener implements Listener {
             CustomStack customStack = CustomStack.byItemStack(itemStack);
             if (customStack == null) { continue; }
             if (customStack.getNamespacedID().equals("aywen:totem_of_undreaming")) {
+                GuidelineManager.getAPI().getAdvancement("dream:totem").grant(p);
                 int amount = itemStack.getAmount();
 
                 if (amount == 1) {
@@ -72,8 +72,6 @@ public class EnterWorldListener implements Listener {
                 } else {
                     itemStack.setAmount(amount - 1);
                 }
-
-                register.grantAdvancement(p, "aywen:cheatdeath");
 
                 ItemsAdder.playTotemAnimation(p, "aywen:totem_of_undreaming");
                 return;
@@ -130,7 +128,7 @@ public class EnterWorldListener implements Listener {
         //Même chose que quand le joueur meurt
         if (e.getPlayer().getWorld().getName().equals("dreamworld")) {
             death(e.getPlayer());
-            teleportBack(e.getPlayer());
+            teleportBack(e.getPlayer(), PlayerTeleportEvent.TeleportCause.EXIT_BED);
         }
     }
 
@@ -140,10 +138,9 @@ public class EnterWorldListener implements Listener {
         World world = p.getWorld();
 
         if (world.getName().equals("dreamworld")) {
-            register.grantAdvancement(p, "aywen:nightmare");
             death(e.getPlayer());
             p.setHealth(2);
-            teleportBack(p);
+            teleportBack(p, PlayerTeleportEvent.TeleportCause.EXIT_BED);
             e.setCancelled(true);
         }
     }
@@ -152,6 +149,8 @@ public class EnterWorldListener implements Listener {
     public void onChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         if (!player.getWorld().equals(dreamworld)){ return; }
+
+        GuidelineManager.getAPI().getAdvancement("dream:root").grant(player);
 
         BossBar timer = Bukkit.createBossBar(
                 "Rêve",
@@ -173,8 +172,7 @@ public class EnterWorldListener implements Listener {
                 if (!bossbars.containsKey(player)) { this.cancel(); }
 
                 if (timeElapsed[0] == totalTime){
-                    register.grantAdvancement(player, "aywen:bed_sweet_bed");
-                    teleportBack(player);
+                    teleportBack(player, PlayerTeleportEvent.TeleportCause.COMMAND);
                     this.cancel();
                 }
 

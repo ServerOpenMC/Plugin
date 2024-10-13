@@ -1,6 +1,7 @@
 package fr.communaywen.core;
 
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
@@ -25,8 +26,10 @@ public class QuizManager {
     private final List<Quiz> quizzes;
     public FileConfiguration config;
     private final AywenCraftPlugin plugin;
+    private final ContestManager contestManager;
 
-    public QuizManager(AywenCraftPlugin plugin, FileConfiguration config) {
+    public QuizManager(AywenCraftPlugin plugin, FileConfiguration config, ContestManager manager) {
+        this.contestManager = manager;
         this.plugin = plugin;
         this.config = config;
         this.quizzes = new ArrayList<>();
@@ -86,7 +89,7 @@ public class QuizManager {
         int points = 10;
         // make a config file
 
-        if (ContestManager.getPhaseCache() == 3) {
+        if (ContestCache.getPhaseCache() == 3) {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +
                             "§7\n" +
@@ -97,9 +100,10 @@ public class QuizManager {
                             "§8§m                                                     §r"
             );
 
-            ContestManager.updateColumnInt("camps", "point_dep", points + ContestManager.getPlayerPointsCache(event.getPlayer()));
-            String playerCamp = "points" + ContestManager.getPlayerCampsCache(event.getPlayer());
-            ContestManager.updateColumnInt("contest", playerCamp, points + ContestManager.getInt("contest", playerCamp));
+
+            contestManager.addPointPlayer(points + contestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
+            String playerCamp = "points" + ContestCache.getPlayerCampsCache(event.getPlayer());
+            contestManager.updateColumnInt("contest", playerCamp, points + contestManager.getInt("contest", playerCamp));
           
         } else {
             Bukkit.broadcastMessage(

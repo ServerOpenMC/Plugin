@@ -2,8 +2,9 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
-import fr.communaywen.core.contest.ColorConvertor;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ColorConvertor;
+import fr.communaywen.core.contest.managers.ContestManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,8 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class VoteMenu extends Menu {
-    public VoteMenu(Player owner) {
+    private final ContestManager contestManager;
+    public VoteMenu(Player owner, ContestManager manager) {
         super(owner);
+        this.contestManager = manager;
     }
 
     @Override
@@ -37,11 +40,11 @@ public class VoteMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String camp1Name = ContestManager.getCamp1Cache();
-        String camp2Name = ContestManager.getCamp2Cache();
+        String camp1Name = ContestCache.getCamp1Cache();
+        String camp2Name = ContestCache.getCamp2Cache();
 
-        String camp1Color = ContestManager.getColor1Cache();
-        String camp2Color = ContestManager.getColor2Cache();
+        String camp1Color = ContestCache.getColor1Cache();
+        String camp2Color = ContestCache.getColor2Cache();
 
         ChatColor color1 = ChatColor.valueOf(camp1Color);
         ChatColor color2 = ChatColor.valueOf(camp2Color);
@@ -55,7 +58,7 @@ public class VoteMenu extends Menu {
         List<String> lore2 = new ArrayList<String>();
         boolean ench1;
         boolean ench2;
-        if(ContestManager.getPlayerCampsCache(getOwner()) == 0) {
+        if(ContestCache.getPlayerCampsCache(getOwner()) <= 0) {
             ench1 = false;
             ench2 = false;
             lore1.add("§7Votez pour la Team " + color1 + camp1Name);
@@ -66,7 +69,7 @@ public class VoteMenu extends Menu {
             lore2.add("§7Faites la gagner en déposant le plus de points");
             lore2.add("§c§lATTENTION! Le choix est définitif!");
 
-        } else if(ContestManager.getPlayerCampsCache(getOwner()) == 1) {
+        } else if(ContestCache.getPlayerCampsCache(getOwner()) == 1) {
             lore1.add("§7Vous avez votez pour la Team " + color1 + camp1Name);
             lore1.add("§7Faites la gagner en déposant le plus de points!");
             ench1 = true;
@@ -74,7 +77,7 @@ public class VoteMenu extends Menu {
             lore2.add("§7Faites perdre la Team " + color2 + camp2Name);
             lore2.add("§7En Apportant le plus de points que vous pouvez!");
             ench2 = false;
-        } else if(ContestManager.getPlayerCampsCache(getOwner()) == 2) {
+        } else if(ContestCache.getPlayerCampsCache(getOwner()) == 2) {
             lore1.add("§7Faites perdre la Team " + color1 + camp1Name);
             lore1.add("§7En Apportant le plus de points que vous pouvez!");
             ench1 = false;
@@ -100,8 +103,8 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore1);
                     itemMeta.setEnchantmentGlintOverride(ench1);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (ContestManager.getPlayerCampsCache(getOwner()) == 0) {
-                        ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp1", "color1");
+                    if (ContestCache.getPlayerCampsCache(getOwner()) <= 0) {
+                        ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp1", "color1", contestManager);
                         menu.open();
                     }
                 }));
@@ -111,8 +114,8 @@ public class VoteMenu extends Menu {
                     itemMeta.setLore(lore2);
                     itemMeta.setEnchantmentGlintOverride(ench2);
                 }).setOnClick(inventoryClickEvent -> {
-                    if (ContestManager.getPlayerCampsCache(getOwner()) == 0) {
-                        ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp2", "color2");
+                    if (ContestCache.getPlayerCampsCache(getOwner()) <= 0) {
+                        ConfirmMenu menu = new ConfirmMenu(getOwner(), "camp2", "color2", contestManager);
                         menu.open();
                     }
                 }));
@@ -120,7 +123,7 @@ public class VoteMenu extends Menu {
                 inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
                     itemMeta.setLore(loreinfo);
-                }).setNextMenu(new MoreInfoMenu(getOwner())));
+                }).setNextMenu(new MoreInfoMenu(getOwner(), contestManager)));
             } else {
                 inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
             }

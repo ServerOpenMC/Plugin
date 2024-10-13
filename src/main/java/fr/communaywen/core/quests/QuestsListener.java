@@ -1,6 +1,7 @@
 package fr.communaywen.core.quests;
 
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.quests.qenum.QUESTS;
 
 import org.bukkit.Bukkit;
@@ -24,17 +25,25 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 
 
 public class QuestsListener implements Listener {
-    // TODO : set jump location
-    private final Location NINJA_JUMP_END = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
-
+    private JavaPlugin plugin;
+    public QuestsListener(AywenCraftPlugin plugins) {
+        plugin = plugins;
+    }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
-        QuestsManager.loadPlayerData(event.getPlayer());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                QuestsManager.loadPlayerData(event.getPlayer());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @EventHandler
@@ -44,9 +53,14 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
-        PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer());
-        for(QUESTS quests : QUESTS.values())
-            QuestsManager.savePlayerQuestProgress(event.getPlayer(), quests, pq.getProgress(quests));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer().getUniqueId());
+            try {
+                QuestsManager.savePlayerQuestProgress(event.getPlayer(), pq);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @EventHandler
@@ -82,9 +96,7 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player killer = event.getEntity().getKiller();
-        if(killer == null) return;
-        if(killer instanceof Player) {
+        if(event.getEntity().getKiller() instanceof Player killer) {
             QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
         }
     }
@@ -110,19 +122,19 @@ public class QuestsListener implements Listener {
         Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
-        assert to != null;
+
+        if(player.isFlying()) return;
 
         int blockX = to.getBlockX();
         int blockY = to.getBlockY();
         int blockZ = to.getBlockZ();
 
-        if (blockX != from.getBlockX() || blockZ != from.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
-        }
 
-        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
-        }
+        if (blockX != from.getBlockX() || blockZ != from.getBlockZ())
+            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+
+//        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ())
+//            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
     }
 
     @EventHandler
@@ -166,9 +178,9 @@ public class QuestsListener implements Listener {
     public void onPlayerFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
         Item caught = (Item) event.getCaught();
-        
+
         if (caught == null) { return; }
-        
+
         ItemStack fishedItem = caught.getItemStack();
 
         if (fishedItem.getType() == Material.BREAD && fishedItem.getCustomModelData() == 42) {

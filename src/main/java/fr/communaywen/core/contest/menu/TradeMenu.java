@@ -4,8 +4,10 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
+import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -19,13 +21,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static fr.communaywen.core.contest.ContestManager.getTradeSelected;
-import static fr.communaywen.core.utils.ItemUtils.*;
+import static fr.communaywen.core.utils.ItemUtils.getSlotNull;
+import static fr.communaywen.core.utils.ItemUtils.getNumberItemToStack;
+import static fr.communaywen.core.utils.ItemUtils.splitAmountIntoStack;
+
 
 public class TradeMenu extends Menu {
-
-        public TradeMenu(Player owner) {
+    private final ContestManager contestManager;
+        public TradeMenu(Player owner, ContestManager manager) {
             super(owner);
+            this.contestManager = manager;
         }
 
         @Override
@@ -46,8 +51,8 @@ public class TradeMenu extends Menu {
         public @NotNull Map<Integer, ItemStack> getContent() {
             Map<Integer, ItemStack> inventory = new HashMap<>();
             if (getOwner().getOpenInventory().getTitle()!="Le Contest - Les Trades") {
-                String campName = ContestManager.getPlayerCampName(getOwner());
-                ChatColor campColor = ContestManager.getPlayerColorCache(getOwner());
+                String campName = contestManager.getPlayerCampName(getOwner());
+                ChatColor campColor = ContestCache.getPlayerColorCache(getOwner());
                 Material shell_contest = CustomStack.getInstance("contest:contest_shell").getItemStack().getType();
 
                 List<String> loreinfo = new ArrayList<String>();
@@ -66,7 +71,7 @@ public class TradeMenu extends Menu {
                     itemMeta.setLore(lore_trade);
                     itemMeta.setCustomModelData(10000);
                 }));
-                List<Map<String, Object>> selectedTrades = getTradeSelected(true);
+                List<Map<String, Object>> selectedTrades = contestManager.getTradeSelected(true);
 
                 List<Integer> slot_trade = new ArrayList<Integer>();
                 slot_trade.add(10);
@@ -110,10 +115,10 @@ public class TradeMenu extends Menu {
                                  }
                              }
 
-                             if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
+                             if (ItemUtils.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
                                            int amount_shell2 = (items / amount) * amount_shell;
                                            int items1 = (amount_shell2 / amount_shell) * amount;
-                                           ContestManager.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), items1);
+                                            ItemUtils.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), items1);
                                                int slot_empty = getSlotNull(getOwner());
                                                int stack_available = slot_empty * 64;
                                                int additem = Math.min(amount_shell2, stack_available);
@@ -154,7 +159,7 @@ public class TradeMenu extends Menu {
                                            MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas assez de cette ressource pour pouvoir l'échanger!", Prefix.CONTEST, MessageType.ERROR, true);
                                        }
                                    } else if (inventoryClickEvent.isLeftClick()) {
-                                       if (ContestManager.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
+                                       if (ItemUtils.hasEnoughItems(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount)) {
 
                                            //mettre dans l'inv ou boite mail?
                                            if (Arrays.asList(getOwner().getInventory().getStorageContents()).contains(null)) {
@@ -168,7 +173,7 @@ public class TradeMenu extends Menu {
                                                MailboxManager.sendItems(getOwner(), getOwner(), shell_contest_array);
                                            }
 
-                                           ContestManager.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount);
+                                           ItemUtils.removeItemsFromInventory(getOwner(), inventoryClickEvent.getCurrentItem().getType(), amount);
                                            MessageManager.sendMessageType(getOwner(), "§7Vous avez échangé §e" + amount + " " + m1 + " §7contre§b " + amount_shell + " Coquillages(s) de Contest", Prefix.CONTEST, MessageType.SUCCESS, true);
                                        } else {
                                            MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas assez de cette ressource pour pouvoir l'échanger!", Prefix.CONTEST, MessageType.ERROR, true);
@@ -187,7 +192,7 @@ public class TradeMenu extends Menu {
                    inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                        itemMeta.setDisplayName("§r§aPlus d'info !");
                        itemMeta.setLore(loreinfo);
-                   }).setNextMenu(new MoreInfoMenu(getOwner())));
+                   }).setNextMenu(new MoreInfoMenu(getOwner(), contestManager)));
 
                    return inventory;
                }

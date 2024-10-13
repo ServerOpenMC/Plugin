@@ -37,10 +37,10 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.contest.ContestIntractEvents;
-import fr.communaywen.core.contest.ContestListener;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.FirerocketSpawnListener;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.listeners.ContestIntractEvents;
+import fr.communaywen.core.contest.listeners.ContestListener;
+import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -66,7 +66,6 @@ import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
-import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.settings.SettingsListener;
@@ -280,16 +279,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
-        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(managers.getContestManager().getColorContestList()));
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
-            DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
 
-            List<String> disabledWorlds = disabledWorldHome.getDisabledWorlds();
             List<String> allWorlds = new ArrayList<>(Bukkit.getWorlds().stream().map(World::getName).toList());
-            allWorlds.removeAll(disabledWorlds);
-            List<String> suggestions = new ArrayList<>(allWorlds);
+            allWorlds.removeAll(managers.getDisabledWorldHome().getDisabledWorlds());
 
-            return suggestions;
+            return allWorlds;
         });
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsRemove", (args, sender, command) -> {
             DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
@@ -315,13 +311,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new SettingsCommand(this),
                 new CorpseCommand(this),
                 new HSCommand(getManagers().getHomeManager()),
-                new ContestCommand(this, loadEventsManager()),
+                new ContestCommand(this, loadEventsManager(), managers.getContestManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
                 new TeamCommand(),
                 new MoneyCommand(this),
                 new ScoreboardCommand(),
+                new Patchlogs(),
                 new ProutCommand(),
                 new TPACommand(this),
                 new TpacceptCommand(this),
@@ -387,11 +384,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         registerEvents(
                 new SettingsListener(this),
                 // new LeaderboardListener(this),       // Desactivé de base
+                new QuestsListener(this),
                 new RocketListener(),
                 new MoonListener(),
                 new CustomFlagsEvents(this),
-                new FirerocketSpawnListener(this),
-                new ContestListener(this, loadEventsManager()),
+                new FirerocketSpawnListener(this, managers.getContestManager()),
+                new ContestListener(this, loadEventsManager(), managers.getContestManager()),
                 new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
@@ -411,7 +409,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LevelsListeners(managers.getLevelsManager()),
                 new CorpseListener(managers.getCorpseManager(), this),
                 new TradeListener(),
-                new QuestsListener(),
+                new QuestsListener(this),
                 new PasFraisListener(this),
                 new ClaimListener(),
                 new FarineListener(),
@@ -456,11 +454,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            for (QUESTS quests : QUESTS.values()) {
-                PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
-                QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
-                player.closeInventory(); // Close inventory
-            }
+            PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
+            QuestsManager.savePlayerQuestProgress(player, pq); // Save quest progress
+            player.closeInventory(); // Close inventory
         }
         try {
             this.getConfig().save(new File(this.getDataFolder(), "config.yml"));
