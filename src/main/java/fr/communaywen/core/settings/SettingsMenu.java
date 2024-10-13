@@ -5,6 +5,9 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.settings.menus.MailboxManagerMenu;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -70,9 +73,10 @@ public class SettingsMenu extends Menu {
 		map.put(53, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
 			itemMeta.setCustomModelData(8001);
-		}).setOnClick(inventoryClickEvent ->
-				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept))));
-		
+		}).setOnClick(inventoryClickEvent -> {
+				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
+			MessageManager.sendMessageType(owner, "Settings enregistrés", Prefix.SETTINGS, MessageType.INFO, false);
+		}));
 		return map;
 	}
 }
