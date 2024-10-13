@@ -333,6 +333,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new TeamCommand(),
                 new MoneyCommand(this),
                 new ScoreboardCommand(),
+                new Patchlogs(),
                 new ProutCommand(),
                 new TPACommand(this),
                 new TpacceptCommand(this),
