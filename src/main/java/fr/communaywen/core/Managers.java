@@ -26,11 +26,14 @@ import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.settings.SettingsManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
+import fr.communaywen.core.spawn.head.HeadManager;
+import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.staff.report.ReportManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import fr.communaywen.core.utils.ConfigUtils;
 import fr.communaywen.core.utils.FallingBlocksExplosionManager;
+import fr.communaywen.core.utils.ParticleRegionManager;
 import fr.communaywen.core.utils.chatchannel.PlayerChatChannel;
 import fr.communaywen.core.utils.database.Blacklist;
 import fr.communaywen.core.utils.database.DatabaseManager;
@@ -46,6 +49,9 @@ import java.sql.SQLException;
 public class Managers {
 
     private AywenCraftPlugin plugin;
+    private JumpManager jumpManager;
+    private HeadManager headManager;
+    private ParticleRegionManager particleRegionManager;
     private ContestManager contestManager;
     private ContestCache contestCache;
     private LeaderboardManager leaderboardManager;
@@ -121,6 +127,10 @@ public class Managers {
         // Database
 
        // leaderboardManager = new LeaderboardManager(plugin);          // desactivé de base
+        jumpManager = new JumpManager(plugin);
+        headManager = new HeadManager(plugin);
+        particleRegionManager = new ParticleRegionManager(plugin);
+        leaderboardManager = new LeaderboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);

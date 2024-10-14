@@ -4,6 +4,8 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.dreamdim.listeners.CloudSoup;
+import fr.communaywen.core.managers.RegionsManager;
+import fr.communaywen.core.spawn.head.HeadManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -88,26 +90,34 @@ public class ScoreboardManager {
         String flytime = CloudSoup.getInstance().getFlyTime(player);
         String ipStr = "ᴘʟᴀʏ.ᴏᴘᴇɴᴍᴄ.ꜰʀ";
 
-        objective.getScore(" ").setScore(14);
-        objective.getScore("§d§m                        ").setScore(13);
-        objective.getScore("§8• §fPseudo§7: §b" + player.getName()).setScore(12);
-        objective.getScore("  ").setScore(11);
+        objective.getScore(" ").setScore(16);
+        objective.getScore("§d§m                        ").setScore(15);
+        objective.getScore("§8• §fPseudo§7: §b" + player.getName()).setScore(14);
+        objective.getScore("  ").setScore(13);
 
         if (flytime != null) {
-            objective.getScore("§8• §fVol§7: §a" + flytime).setScore(10);
+            objective.getScore("§8• §fVol§7: §a" + flytime).setScore(12);
         }
 
-        objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(9);
-        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(8);
-        objective.getScore("   ").setScore(7);
-        objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(6);
+        objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(11);
+        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(10);
+        objective.getScore("   ").setScore(9);
+        objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(8);
+
+        if (RegionsManager.isPlayerInRegion("spawn", Bukkit.getWorld("world"))) {
+            int heads = HeadManager.getHeadFoundIntCache(player);
+            int maxHeads = HeadManager.getMaxHeads();
+
+            objective.getScore("   ").setScore(7);
+            objective.getScore("§8• §fHeads§7: §d" + heads + "§8/§d"+ maxHeads).setScore(6);
+        }
 
         int phase = ContestCache.getPhaseCache();
         if(phase != 1) {
             objective.getScore(" ").setScore(5);
             objective.getScore("§8• §6§lCONTEST!").setScore(4);
             objective.getScore(ChatColor.valueOf(ContestCache.getColor1Cache()) + ContestCache.getCamp1Cache() + " §8VS " + ChatColor.valueOf(ContestCache.getColor2Cache())  + ContestCache.getCamp2Cache()).setScore(3);
-            objective.getScore("§cFin dans " + contestManager.getTimeUntilNextMonday()).setScore(3);
+            objective.getScore("§cFin dans " + contestManager.getTimeUntilNextMonday()).setScore(2);
         }
 
         objective.getScore("§d§m                         §r").setScore(1);
