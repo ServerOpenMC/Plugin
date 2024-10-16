@@ -156,6 +156,7 @@ public class Managers {
         moonDimManager.init();
         homesManagers.loadHomes();
         disabledWorldHome.loadConfig();
+        settingsManager.init();
     }
 
     public void cleanup() {
@@ -171,6 +172,6 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
         disabledWorldHome.saveConfig();
-
+        settingsManager.saveSettings();
     }
 }

@@ -20,6 +20,36 @@ public class SettingsManager extends DatabaseConnector {
 		this.plugin = plugin;
 	}
 	
+	public void init() {
+		try {
+			String sql = "SELECT * FROM settings";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet results = statement.executeQuery();
+			while (results.next()) {
+				PlayerSettings playerSettings = new PlayerSettings(
+						results.getString("player"),
+						results.getInt("mail_accept"),
+						results.getInt("trade_accept"),
+						results.getInt("tpa_accept"));
+				SettingsCache.settingsMap.put(playerSettings.uuid(), playerSettings);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveSettings() {
+		try {
+			PreparedStatement clearAllStatement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("DELETE FROM settings");
+			clearAllStatement.executeUpdate();
+			for (PlayerSettings settings : SettingsCache.settingsMap.values()) {
+				createPlayerSettings(settings);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public PlayerSettings findPlayerSettingsByUUID(Player player) {
 		try {
 			String sql = "SELECT * FROM settings WHERE player = ?";
@@ -40,22 +70,6 @@ public class SettingsManager extends DatabaseConnector {
 			MessageManager.sendMessageType(player, "Impossible de charger les settings", Prefix.SETTINGS, MessageType.ERROR, false);
 		}
 		return null;
-	}
-	
-	public void updatePlayerSettings(PlayerSettings settings) {
-		try {
-			String sql = "UPDATE settings SET mail_accept = ?, trade_accept = ?, tpa_accept = ? WHERE player = ?";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setInt(1, settings.mail_accept());
-			statement.setInt(2, settings.trade_accept());
-			statement.setInt(3, settings.tpa_accept());
-			statement.setString(4, settings.uuid());
-			
-			statement.executeUpdate();
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void createPlayerSettings(PlayerSettings settings) {
