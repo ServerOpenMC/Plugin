@@ -23,12 +23,12 @@ public class EconomieTeam extends DatabaseConnector {
 
         while (rs.next()) {
             String teamName = rs.getString("teamName");
-            double balance = rs.getDouble("balance");
+            Double balance = rs.getDouble("balance");
             teamBalances.put(teamName, balance);
         }
     }
 
-    public static double getTeamBalances(String teamName) {
+    public static Double getTeamBalances(String teamName) {
         return teamBalances.getOrDefault(teamName, 0.0);
     }
 

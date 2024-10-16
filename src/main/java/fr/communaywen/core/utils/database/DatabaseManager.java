@@ -124,15 +124,24 @@ public class DatabaseManager {
                 "player VARCHAR(36) NOT NULL PRIMARY KEY," +
                 "homes_limit INT NOT NULL DEFAULT 1" +
                 ")").executeUpdate();
-        
+
         // Paramètres
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS settings ( player varchar(36) NOT NULL PRIMARY KEY, " +
                 "mail_accept int NOT NULL DEFAULT 3, " +
                 "trade_accept int NOT NULL DEFAULT 3, " +
                 "tpa_accept int NOT NULL DEFAULT 3" +
                 ")").executeUpdate();
-        
+
         this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
+
+        //Table pour stocker le nombre de head qu'a trouver le joueur
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_head (uuid VARCHAR(36), heads JSON)").executeUpdate();
+
+        //Table pour le systeme de jump
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_jump (uuid VARCHAR(36), best_time DOUBLE)").executeUpdate();
+
+        //Table pour le playtime
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS playtime (uuid VARCHAR(36), time LONG)").executeUpdate();
 
         AywenCraftPlugin.getInstance().getLogger().info("\u001B[36m" + "Les tables ont été créées si besoin" + "\u001B[0m");
 
