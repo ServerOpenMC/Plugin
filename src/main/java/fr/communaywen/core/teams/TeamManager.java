@@ -69,7 +69,7 @@ public class TeamManager extends DatabaseConnector {
     }
 
     @Getter
-    private final List<Team> teams = new ArrayList<>();
+    private static final List<Team> teams = new ArrayList<>();
     private final Queue<UUID, Team> pendingInvites = new Queue<>(20);
 
     public Team createTeam(UUID owner, String name) {
@@ -137,6 +137,10 @@ public class TeamManager extends DatabaseConnector {
             }
         }
         return null;
+    }
+
+    public static List<Team> getTeams() {
+        return teams;
     }
 
     public boolean invite(UUID player, Team team) {
