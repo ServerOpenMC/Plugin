@@ -40,9 +40,9 @@ import java.util.List;
 @Credit("Gyro3630")
 public class Patchlogs {
     private Component getIndex() {
-        return Component.text("- Patchlogs").clickEvent(ClickEvent.changePage(2));
+        return Component.text("- Patchlogs").clickEvent(ClickEvent.changePage(2)).append(Component.text("\n- Spawn").clickEvent(ClickEvent.changePage(3)));
 
-        // Example
+        // Examples
         // Component.text("- Feature cool").clickEvent(ClickEvent.changePage(1));
     }
 
@@ -57,7 +57,9 @@ public class Patchlogs {
         book = meta.pages(List.of(
                 getHeadPage(),
                 // Ajouter les pages en dessous
-                buildPage("Patchlogs", NamedTextColor.AQUA,"Gyro3630",  "Les patchlogs permettent d'avoir un aperçu des dernières nouveautés du serveur\nElles sont écrites par les joueurs pour les joueurs")
+                buildPage("Patchlogs", NamedTextColor.AQUA,"Gyro3630",  "Les patchlogs permettent d'avoir un aperçu des dernières nouveautés du serveur\nElles sont écrites par les joueurs pour les joueurs"),
+                buildPage("Le Spawn", NamedTextColor.LIGHT_PURPLE,"iambibi_",  "La Mise A Jour du Spawn !\nJ'ai donc rajouté des fonctionnalités autour du Spawn :\n- Des particules lors d'un Contest et par défaut.\n- Un Jump, Les Leaderboard, Les Tetes à Trouver")
+
         ));
     }
 
