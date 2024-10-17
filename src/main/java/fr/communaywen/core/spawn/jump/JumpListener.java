@@ -3,6 +3,7 @@ package fr.communaywen.core.spawn.jump;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.constant.MessageManager;
@@ -96,6 +97,12 @@ public class JumpListener implements Listener {
 
                         player.getInventory().addItem(luckyblock);
                         EconomyManager.addBalanceOffline(player, 1000);
+                    }
+
+                    GuidelineManager.getAPI().getAdvancement("openmc:spawn/jump/firstjump").grant(event.getPlayer());
+
+                    if (jumpManager.isPlayerInTop10(player)) {
+                        GuidelineManager.getAPI().getAdvancement("openmc:spawn/jump/top10jump").grant(event.getPlayer());
                     }
 
                     jumpRewardsCooldown.put(player.getUniqueId(), System.currentTimeMillis());
