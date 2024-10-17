@@ -99,6 +99,9 @@ public class JumpListener implements Listener {
                     }
 
                     jumpRewardsCooldown.put(player.getUniqueId(), System.currentTimeMillis());
+
+                    Location spawn = new Location(player.getServer().getWorld(plugin.getConfig().getString("spawn.world")), plugin.getConfig().getDouble("spawn.x"), plugin.getConfig().getDouble("spawn.y"), plugin.getConfig().getDouble("spawn.z"), 0, 0);
+                    player.teleport(spawn);
                 }
             }
         }
