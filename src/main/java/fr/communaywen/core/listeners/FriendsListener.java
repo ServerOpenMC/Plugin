@@ -20,29 +20,39 @@ public class FriendsListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) throws SQLException {
+    public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        for (String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())) {
-            Player friends = Bukkit.getPlayer(UUID.fromString(friends_uuid));
+        friendsManager.getFriendsAsync(p.getUniqueId().toString()).thenAccept(friendsUUIDs -> {
+            for (String friendUUID : friendsUUIDs) {
+                Player friend = Bukkit.getPlayer(UUID.fromString(friendUUID));
 
-            if (friends != null && friends.isOnline()) {
-                friends.sendMessage("§aVotre ami §e" + p.getName() + " §as'est connecté(e) !");
+                if (friend != null && friend.isOnline()) {
+                    friend.sendMessage("§aVotre ami §e" + p.getName() + " §as'est connecté(e) !");
+                }
             }
-        }
+        }).exceptionally(ex -> {
+            System.out.println("Erreur lors de la récupération des amis : " + ex.getMessage());
+            return null;
+        });
     }
 
     @EventHandler
-    public void onLeave(PlayerQuitEvent e) throws SQLException {
+    public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
 
-        for (String friends_uuid : friendsManager.getFriends(p.getUniqueId().toString())) {
-            Player friends = Bukkit.getPlayer(UUID.fromString(friends_uuid));
+        friendsManager.getFriendsAsync(p.getUniqueId().toString()).thenAccept(friendsUUIDs -> {
+            for (String friendUUID : friendsUUIDs) {
+                Player friend = Bukkit.getPlayer(UUID.fromString(friendUUID));
 
-            if (friends != null && friends.isOnline()) {
-                friends.sendMessage("§cVotre ami §e" + p.getName() + " §cs'est déconnecté(e) !");
+                if (friend != null && friend.isOnline()) {
+                    friend.sendMessage("§cVotre ami §e" + p.getName() + " §cs'est déconnecté(e) !");
+                }
             }
-        }
+        }).exceptionally(ex -> {
+            System.out.println("Erreur lors de la récupération des amis : " + ex.getMessage());
+            return null;
+        });
     }
 
 }
