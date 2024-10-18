@@ -2,8 +2,6 @@ package fr.communaywen.core.luckyblocks.events.neutrals;
 
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.utils.constant.MessageManager;
@@ -15,8 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBLeakContest extends LuckyBlockEvent {
     private final ContestManager contestManager;
     public LBLeakContest(ContestManager contestManager) {
