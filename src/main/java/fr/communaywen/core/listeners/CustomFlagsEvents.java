@@ -7,6 +7,9 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import fr.communaywen.core.AywenCraftPlugin;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryOptions;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +19,7 @@ public class CustomFlagsEvents implements Listener {
     static AywenCraftPlugin plugin;
     public CustomFlagsEvents(AywenCraftPlugin plugins) {
         plugin = plugins;
+
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -25,6 +29,11 @@ public class CustomFlagsEvents implements Listener {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getPlayer().getLocation()));
+
+        if(event.getPlayer().hasPermission("essentials.fly")) {
+            event.setCancelled(false);
+            return;
+        }
 
         if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-fly"))) {
             event.setCancelled(false);
