@@ -5,6 +5,7 @@ import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
 import fr.communaywen.core.mailboxes.utils.MailboxInv;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
+import fr.communaywen.core.settings.SettingsCache;
 import fr.communaywen.core.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -36,7 +37,7 @@ public class SendingLetter extends MailboxInv {
         this.teamManager = plugin.getManagers().getTeamManager();
 	    FriendsManager friendsManager = new FriendsManager(plugin.getManagers().getDatabaseManager(), this.plugin);
         this.playerFriends = friendsManager.getFriends(player.getName());
-        this.mail_accept = plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(Objects.requireNonNull(receiver.getPlayer())).mail_accept();
+        this.mail_accept = SettingsCache.settingsMap.get(receiver.getUniqueId()).mail_accept();
         inventory = Bukkit.createInventory(this, 54, MailboxMenuManager.getInvTitle(INV_NAME));
         inventory.setItem(49, getHead(receiver));
         inventory.setItem(45, homeBtn());
