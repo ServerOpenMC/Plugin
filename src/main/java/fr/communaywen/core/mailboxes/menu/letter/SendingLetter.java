@@ -35,7 +35,7 @@ public class SendingLetter extends MailboxInv {
         this.receiver = receiver;
         this.plugin = plugin;
         this.teamManager = plugin.getManagers().getTeamManager();
-	    FriendsManager friendsManager = new FriendsManager(plugin.getManagers().getDatabaseManager(), this.plugin);
+	    FriendsManager friendsManager = plugin.getManagers().getFriendsManager();
         this.playerFriends = friendsManager.getFriends(player.getName());
         this.mail_accept = SettingsCache.settingsMap.get(receiver.getUniqueId()).mail_accept();
         inventory = Bukkit.createInventory(this, 54, MailboxMenuManager.getInvTitle(INV_NAME));
