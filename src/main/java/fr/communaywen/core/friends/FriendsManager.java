@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Feature("Amis")
 @Credit("Martinouxx")
@@ -29,8 +30,8 @@ public class FriendsManager {
         this.plugin = plugin;
     }
 
-    public List<String> getFriends(String playerUUID) throws SQLException {
-        return FriendsUtils.getAllFriends(dbManager, playerUUID);
+    public CompletableFuture<List<String>> getFriendsAsync(String playerUUID) {
+        return FriendsUtils.getAllFriendsAsync(dbManager, playerUUID);
     }
 
     public void addFriend(String firstUUID, String secondUUID) throws SQLException {

@@ -87,24 +87,30 @@ public class FriendsCommand {
     @Subcommand("list")
     @Description("Affiche tous vos amis.")
     public void listFriends(Player player) {
-        try {
-            List<String> friends = friendsManager.getFriends(player.getUniqueId().toString());
-
+        friendsManager.getFriendsAsync(player.getUniqueId().toString()).thenAccept(friends -> {
             player.sendMessage("§eVos amis:");
 
             for (String friendUUID : friends) {
                 OfflinePlayer friend = Bukkit.getOfflinePlayer(UUID.fromString(friendUUID));
 
-                TextComponent friendComponent = Component.text("- §e" + friend.getName() + " §7depuis le: §e" + getFormattedDate(friendsManager.getTimestamp(player.getUniqueId().toString(), friendUUID)))
-                        .hoverEvent(HoverEvent.showText(Component.text("§7[§cCliquez pour supprimer§7]")))
-                        .clickEvent(ClickEvent.runCommand("/friends remove " + friend.getName()));
+                try {
+                    String formattedDate = getFormattedDate(friendsManager.getTimestamp(player.getUniqueId().toString(), friendUUID));
 
-                audiences.sender(player).sendMessage(friendComponent);
+                    TextComponent friendComponent = Component.text("- §e" + friend.getName() + " §7depuis le: §e" + formattedDate)
+                            .hoverEvent(HoverEvent.showText(Component.text("§7[§cCliquez pour supprimer§7]")))
+                            .clickEvent(ClickEvent.runCommand("/friends remove " + friend.getName()));
+
+                    audiences.sender(player).sendMessage(friendComponent);
+                } catch (SQLException e) {
+                    player.sendMessage("§cErreur lors de la récupération des informations de l'ami: " + friend.getName());
+                    e.printStackTrace();
+                }
             }
-        } catch (SQLException e) {
+        }).exceptionally(ex -> {
             player.sendMessage("§cUne erreur s'est produite lors de la récupération de votre liste d'amis.");
-            e.printStackTrace();
-        }
+            ex.printStackTrace();
+            return null;
+        });
     }
 
     @Subcommand("accept")
