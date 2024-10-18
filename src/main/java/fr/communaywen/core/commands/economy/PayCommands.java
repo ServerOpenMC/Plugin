@@ -12,7 +12,7 @@ import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Named;
 
 @Feature("Money")
-@Credit({"Axeno", "Koneiii", "TheR0001"})
+@Credit({"Axeno", "Koneiii", "TheR0001", "Gyro3630"})
 public class PayCommands {
     @Command("pay")
     @Description("Transfère de l'argent d'un joueur à un autre.")

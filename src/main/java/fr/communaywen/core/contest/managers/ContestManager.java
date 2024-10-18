@@ -36,6 +36,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
 
 public class ContestManager extends DatabaseConnector {
+    private static final Logger log = LoggerFactory.getLogger(ContestManager.class);
     FileConfiguration config;
     AywenCraftPlugin plugins;
 
@@ -230,24 +233,34 @@ public class ContestManager extends DatabaseConnector {
         baseBookMeta.setLore(lore);
 
         // GET VOTE AND POINT TAUX
-        int points1 = getInt("contest", "points1");
-        int points2 = getInt("contest", "points2");
-        int totalpoint = points1 + points2;
-        int points1Taux = (int) (((double) points1 / totalpoint) * 100);
         DecimalFormat df = new DecimalFormat("#.#");
-        points1Taux = Integer.valueOf(df.format(points1Taux));
-        int points2Taux = (int) (((double) points2 / totalpoint) * 100);
-        points2Taux = Integer.valueOf(df.format(points2Taux));
         int vote1 = getVoteTaux(1);
         int vote2 = getVoteTaux(2);
         int totalvote = vote1 + vote2;
         int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
         int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
+        int points1 = getInt("contest", "points1");
+        int points2 = getInt("contest", "points2");
+
+        int multiplicateurPoint = Math.abs(vote1Taux - vote2Taux)/16;
+        multiplicateurPoint=Integer.valueOf(df.format(multiplicateurPoint));
+
+        if (vote1Taux > vote2Taux) {
+            points2*=multiplicateurPoint;
+        } else if (vote1Taux < vote2Taux) {
+            points1*=multiplicateurPoint;
+        }
+
+        int totalpoint = points1 + points2;
+        int points1Taux = (int) (((double) points1 / totalpoint) * 100);
+        points1Taux = Integer.valueOf(df.format(points1Taux));
+        int points2Taux = (int) (((double) points2 / totalpoint) * 100);
+        points2Taux = Integer.valueOf(df.format(points2Taux));
 
         if (points1 > points2) {
-            baseBookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n" + "§0Perdant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
+            baseBookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n" + "§0Perdant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "% §0Multiplicateur d'Infériorité : §bx"+  multiplicateurPoint +"\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
         } else {
-            baseBookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n" + "§0Perdant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "%\n\n\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
+            baseBookMeta.addPage("§8§lStatistiques Globales \n§0Gagnant : " + color2 + camp2Name+ "\n§0Taux de vote : §8" + vote2Taux + "%\n§0Taux de Points : §8" + points2Taux + "%\n\n" + "§0Perdant : " + color1 + camp1Name+ "\n§0Taux de vote : §8" + vote1Taux + "%\n§0Taux de Points : §8" + points1Taux + "% §0Multiplicateur d'Infériorité : §bx"+  multiplicateurPoint +"\n§8§oProchaine page : Classement des 10 Meilleurs Contributeur");
         }
 
         String leaderboard = "§8§lLe Classement du Contest (Jusqu'au 10eme)";
@@ -472,74 +485,6 @@ public class ContestManager extends DatabaseConnector {
         long minutes = duration.toMinutes() % 60;
 
         return String.format("%dd %dh %dm", days, hours, minutes);
-    }
-
-    private static Date parseContestDate(String dayAbbreviation) throws ParseException {
-        String dateStr = "";
-        switch (dayAbbreviation.toLowerCase(Locale.FRANCE)) {
-            case "lun.":
-                dateStr = "Monday";
-                break;
-            case "mar.":
-                dateStr = "Tuesday";
-                break;
-            case "mer.":
-                dateStr = "Wednesday";
-                break;
-            case "jeu.":
-                dateStr = "Thursday";
-                break;
-            case "ven.":
-                dateStr = "Friday";
-                break;
-            case "sam.":
-                dateStr = "Saturday";
-                break;
-            case "dim.":
-                dateStr = "Sunday";
-                break;
-            default:
-                throw new ParseException("Jour non valide", 0);
-        }
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE HH:mm:ss", Locale.FRANCE);
-        return dateFormat.parse(dateStr + " 08:00:00");
-    }
-
-    private static Date getNextMondayMidnight() {
-        Calendar calendar = Calendar.getInstance();
-
-        int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
-        int daysUntilMonday = (Calendar.MONDAY - currentDay + 7) % 7;
-        if (daysUntilMonday == 0) {
-            daysUntilMonday = 7;
-        }
-        calendar.add(Calendar.DAY_OF_WEEK, daysUntilMonday);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTime();
-    }
-
-    private static String formatTimeDifference(long timeDiffMillis) {
-        long seconds = timeDiffMillis / 1000;
-        long minutes = seconds / 60;
-        long hours = minutes / 60;
-        long days = hours / 24;
-
-        hours = hours % 24;
-        minutes = minutes % 60;
-
-        if (days > 0) {
-            return days + "d " + hours + "h";
-        } else if (hours > 0) {
-            return hours + "h " + minutes + "m";
-        } else {
-            return minutes + "m";
-        }
     }
 
     public int getPlayerPoints(Player player) {
@@ -857,6 +802,19 @@ public class ContestManager extends DatabaseConnector {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+
+        int vote1 = getVoteTaux(1);
+        int vote2 = getVoteTaux(2);
+        int totalvote = vote1 + vote2;
+        int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
+        int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
+        int multiplicateurPoint = Math.abs(vote1Taux - vote2Taux)/16;
+
+        if (vote1Taux > vote2Taux) {
+            points2*=multiplicateurPoint;
+        } else if (vote1Taux < vote2Taux) {
+            points1*=multiplicateurPoint;
         }
 
         if (points1 > points2 && playerCamp == 1) {
