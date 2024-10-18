@@ -3,6 +3,8 @@ package fr.communaywen.core.listeners;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
+import fr.communaywen.core.managers.LeaderboardManager;
+import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.DraftAPI;
 import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
@@ -10,6 +12,9 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Statistic;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,7 +56,21 @@ public class OnPlayers implements Listener {
 
         event.setJoinMessage("§8[§a+§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
 
+        String regionId = AywenCraftPlugin.getInstance().getConfig().getString("spawn.region");
+        if (RegionsManager.isSpecifiedPlayerInRegion(player, regionId)) {
+            double x = AywenCraftPlugin.getInstance().getConfig().getDouble("spawn.x");
+            double y = AywenCraftPlugin.getInstance().getConfig().getInt("spawn.y");
+            double z = AywenCraftPlugin.getInstance().getConfig().getInt("spawn.z");
+            String WORLD = AywenCraftPlugin.getInstance().getConfig().getString("spawn.world");
+
+            Location spawn = new Location(player.getServer().getWorld(WORLD), x, y, z, 0, 0);
+            player.teleport(spawn);
+        }
+
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            LeaderboardManager.setTimePlayed(player, timePlayed);
+
             DraftAPI draftAPI = new DraftAPI();
 
             JSONObject data = null;
@@ -131,9 +150,15 @@ public class OnPlayers implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
-        QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+        Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            LeaderboardManager.setTimePlayed(player, timePlayed);
 
-        event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
+            User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
+            QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+
+            event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
+        });
     }
+
 }

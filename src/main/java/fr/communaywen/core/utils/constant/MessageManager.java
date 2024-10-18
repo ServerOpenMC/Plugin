@@ -1,13 +1,8 @@
 package fr.communaywen.core.utils.constant;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-
-@Feature("beautiful-message")
-@Credit("Axeno")
 public class MessageManager {
 
 

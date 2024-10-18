@@ -16,6 +16,7 @@ spawn:
   y: 65.0
   z: 1226.5
   world: world
+  region: "spawn"
 deco_freeze_nombre_de_jours_ban: 30
 discord:
   webhookURL: https://discord.com/api/webhooks/1258553652868677802/u17NMB93chQrYf6V0MnbKPMbjoY6B_jN9e2nhK__uU8poc-d8a-aqaT_C0_ur4TSFMy_
@@ -27,8 +28,42 @@ leaderboard:
   baltop:
     posX: 285
     posY: 80
+    posZ: 170
+    world: world
+  teamtop:
+    posX: 285
+    posY: 80
     posZ: 160
-    world: "world"
+    world: world
+  contribution:
+    posX: 285
+    posY: 75
+    posZ: 165
+    world: world
+  playtime:
+    posX: 295
+    posY: 75
+    posZ: 165
+    world: world
+  jump_record:
+    posX: 295
+    posY: 75
+    posZ: 175
+    world: world
+head:
+  world: "world"
+  region: "spawn"
+  list:
+jump:
+  world: "world"
+  start:
+    posX: 100
+    posY: 65
+    posZ: -200
+  end:
+    posX: 150
+    posY: 80
+    posZ: -250
 contest:
   config:
     worldName: "world"
@@ -120,103 +155,103 @@ contest:
       camp2: "Campagne"
       color2: "DARK_GREEN"
       selected: 0
-  contestTrades:
-    - ress: PRISMARINE
-      amount: 2
-      amount_shell: 1
-      selected: false
-    - ress: LARGE_AMETHYST_BUD
-      amount: 1
-      amount_shell: 2
-      selected: false
-    - ress: RABBIT_STEW
-      amount: 2
-      amount_shell: 3
-      selected: false
-    - ress: SHROOMLIGHT
-      amount: 2
-      amount_shell: 1
-      selected: false
-    - ress: ROOTED_DIRT
-      amount: 2
-      amount_shell: 1
-      selected: false
-    - ress: SEA_LANTERN
-      amount: 2
-      amount_shell: 1
-      selected: false
-    - ress: ENCHANTED_GOLDEN_APPLE
-      amount: 1
-      amount_shell: 8
-      selected: false
-    - ress: MANGROVE_LOG
-      amount: 7
-      amount_shell: 1
-      selected: false
-    - ress: BEE_NEST
-      amount: 1
-      amount_shell: 2
-      selected: false
-    - ress: GOAT_HORN
-      amount: 1
-      amount_shell: 6
-      selected: false
-    - ress: PACKED_MUD
-      amount: 2
-      amount_shell: 1
-      selected: false
-    - ress: POPPED_CHORUS_FRUIT
-      amount: 3
-      amount_shell: 1
-      selected: false
-    - ress: HEAVY_CORE
-      amount: 1
-      amount_shell: 18
-      selected: false
-    - ress: END_CRYSTAL
-      amount: 2
-      amount_shell: 5
-      selected: false
-    - ress: TINTED_GLASS
-      amount: 3
-      amount_shell: 1
-      selected: false
-    - ress: CONDUIT
-      amount: 1
-      amount_shell: 15
-      selected: false
-    - ress: DECORATED_POT
-      amount: 2
-      amount_shell: 1
-      selected: false
-    - ress: CALIBRATED_SCULK_SENSOR
-      amount: 4
-      amount_shell: 1
-      selected: false
-    - ress: MUDDY_MANGROVE_ROOTS
-      amount: 2
-      amount_shell: 3
-      selected: false
-    - ress: TORCHFLOWER
-      amount: 2
-      amount_shell: 3
-      selected: false
-    - ress: SPONGE
-      amount: 1
-      amount_shell: 2
-      selected: false
-    - ress: MAGENTA_GLAZED_TERRACOTTA
-      amount: 3
-      amount_shell: 2
-      selected: false
-    - ress: VERDANT_FROGLIGHT
-      amount: 1
-      amount_shell: 2
-      selected: false
-    - ress: HONEYCOMB
-      amount: 2
-      amount_shell: 1
-      selected: false
+contestTrades:
+  - ress: PRISMARINE
+    amount: 2
+    amount_shell: 1
+    selected: false
+  - ress: LARGE_AMETHYST_BUD
+    amount: 1
+    amount_shell: 2
+    selected: false
+  - ress: RABBIT_STEW
+    amount: 2
+    amount_shell: 3
+    selected: false
+  - ress: SHROOMLIGHT
+    amount: 2
+    amount_shell: 1
+    selected: false
+  - ress: ROOTED_DIRT
+    amount: 2
+    amount_shell: 1
+    selected: false
+  - ress: SEA_LANTERN
+    amount: 2
+    amount_shell: 1
+    selected: false
+  - ress: ENCHANTED_GOLDEN_APPLE
+    amount: 1
+    amount_shell: 8
+    selected: false
+  - ress: MANGROVE_LOG
+    amount: 7
+    amount_shell: 1
+    selected: false
+  - ress: BEE_NEST
+    amount: 1
+    amount_shell: 2
+    selected: false
+  - ress: GOAT_HORN
+    amount: 1
+    amount_shell: 6
+    selected: false
+  - ress: PACKED_MUD
+    amount: 2
+    amount_shell: 1
+    selected: false
+  - ress: POPPED_CHORUS_FRUIT
+    amount: 3
+    amount_shell: 1
+    selected: false
+  - ress: HEAVY_CORE
+    amount: 1
+    amount_shell: 18
+    selected: false
+  - ress: END_CRYSTAL
+    amount: 2
+    amount_shell: 5
+    selected: false
+  - ress: TINTED_GLASS
+    amount: 3
+    amount_shell: 1
+    selected: false
+  - ress: CONDUIT
+    amount: 1
+    amount_shell: 15
+    selected: false
+  - ress: DECORATED_POT
+    amount: 2
+    amount_shell: 1
+    selected: false
+  - ress: CALIBRATED_SCULK_SENSOR
+    amount: 4
+    amount_shell: 1
+    selected: false
+  - ress: MUDDY_MANGROVE_ROOTS
+    amount: 2
+    amount_shell: 3
+    selected: false
+  - ress: TORCHFLOWER
+    amount: 2
+    amount_shell: 3
+    selected: false
+  - ress: SPONGE
+    amount: 1
+    amount_shell: 2
+    selected: false
+  - ress: MAGENTA_GLAZED_TERRACOTTA
+    amount: 3
+    amount_shell: 1
+    selected: false
+  - ress: VERDANT_FROGLIGHT
+    amount: 1
+    amount_shell: 2
+    selected: false
+  - ress: HONEYCOMB
+    amount: 2
+    amount_shell: 1
+    selected: false
       
 rewards:
   peluche_aywen: #Example à laisser

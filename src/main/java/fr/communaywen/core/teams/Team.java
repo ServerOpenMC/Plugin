@@ -34,6 +34,8 @@ public class Team implements Listener {
     @Getter
     private final List<UUID> players = new ArrayList<>();
     @Getter
+    private Double teamBalance = 0.0;
+    @Getter
     private final Inventory inventory;
 
     private final AywenCraftPlugin plugin;
@@ -45,6 +47,7 @@ public class Team implements Listener {
         this.name = name;
         this.cacheManager = cacheManager;
         this.inventory = Bukkit.createInventory(null, 27, name + " - Inventory");
+        this.teamBalance = EconomieTeam.getTeamBalances(name);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         this.players.addAll(cacheManager.getTeamPlayers(name));
@@ -183,5 +186,9 @@ public class Team implements Listener {
             }
         }
         return result;
+    }
+
+    public Double getBalance() {
+        return teamBalance;
     }
 }

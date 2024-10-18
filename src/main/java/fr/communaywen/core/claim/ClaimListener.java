@@ -3,6 +3,12 @@ package fr.communaywen.core.claim;
 import java.sql.SQLException;
 import java.util.*;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -18,10 +24,7 @@ import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -41,6 +44,9 @@ import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
 import org.bukkit.material.RedstoneTorch;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import static org.bukkit.event.EventPriority.HIGH;
+import static org.bukkit.event.EventPriority.LOWEST;
 
 public class ClaimListener implements Listener {
     public static final Map<UUID, ClaimParticleTask> activeParticleTasks = new HashMap<>();
@@ -366,6 +372,18 @@ public class ClaimListener implements Listener {
                     gp.setPos1(null);
                     gp.setPos2(null);
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getMaterial() == CustomStack.getInstance("thor:hammer").getItemStack().getType()) {
+                if (!player.isSneaking()) return;
+
+                checkRegion(player, event.getClickedBlock(), event);
             }
         }
     }

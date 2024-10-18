@@ -27,8 +27,7 @@ public class ContestCache extends DatabaseConnector {
     private static final long cacheDuration = 120000;
 
     // CONTEST DATA
-    private static ContestDataCache contestCache = null;
-
+    private static ContestDataCache contestCache;
 
     public static void initContestDataCache() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {

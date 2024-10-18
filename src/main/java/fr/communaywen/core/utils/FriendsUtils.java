@@ -1,10 +1,13 @@
 package fr.communaywen.core.utils;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.database.DatabaseManager;
+import org.bukkit.Bukkit;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class FriendsUtils {
 
@@ -90,28 +93,30 @@ public class FriendsUtils {
         return null;
     }
 
-    public static List<String> getAllFriends(DatabaseManager dbManager, String uuid) throws SQLException {
-        List<String> friends = new ArrayList<>();
+    public static CompletableFuture<List<String>> getAllFriendsAsync(DatabaseManager dbManager, String uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<String> friends = new ArrayList<>();
 
-        try {
-            Connection connection = dbManager.getConnection();
+            try {
+                Connection connection = dbManager.getConnection();
 
-            String sql = "SELECT * FROM " + TABLE_NAME + " WHERE firstPlayer_uuid = ? OR secondPlayer_uuid = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, uuid);
-            statement.setString(2, uuid);
+                String sql = "SELECT * FROM " + TABLE_NAME + " WHERE firstPlayer_uuid = ? OR secondPlayer_uuid = ?";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setString(1, uuid);
+                statement.setString(2, uuid);
 
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String friendUUID = resultSet.getString("firstPlayer_uuid").equals(uuid) ? resultSet.getString("secondPlayer_uuid") : resultSet.getString("firstPlayer_uuid");
-                friends.add(friendUUID);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    String friendUUID = resultSet.getString("firstPlayer_uuid").equals(uuid) ? resultSet.getString("secondPlayer_uuid") : resultSet.getString("firstPlayer_uuid");
+                    friends.add(friendUUID);
+                }
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
 
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-
-        return friends;
+            return friends;
+        });
     }
 
 }
