@@ -19,7 +19,7 @@ public class HomeUpgradeManager {
 
     public HomeUpgrade getCurrentUpgrade(Player player) {
         for (HomeUpgrade upgrade : HomeUpgrade.values()) {
-            if (homesManagers.getCurrentHomesLimit(player.getUniqueId()) == upgrade.getHomes()) {
+            if(HomesManagers.homeLimits.stream().anyMatch(homeLimit -> homeLimit.getPlayerUUID().equals(player.getUniqueId()) && homeLimit.getLimit() == upgrade.getHomes())) {
                 return upgrade;
             }
         }
@@ -37,7 +37,7 @@ public class HomeUpgradeManager {
 
     public void upgradeHomes(Player player) {
         int currentHomes = homesManagers.getHomeNamesByPlayer(player.getUniqueId()).size();
-        int currentUpgrade = homesManagers.getCurrentHomesLimit(player.getUniqueId());
+        int currentUpgrade = homesManagers.getHomeLimit(player.getUniqueId());
         HomeUpgrade nextUpgrade = getNextUpgrade(currentHomes);
     
         if (nextUpgrade != null) {
@@ -53,9 +53,9 @@ public class HomeUpgradeManager {
             if (balance >= price) {
                 plugin.getManagers().getEconomyManager().withdrawBalance(player, price);
                 int newHomesLimit = nextUpgrade.getHomes();
-                homesManagers.upgradeHomesLimit(player.getUniqueId(), newHomesLimit);
+                homesManagers.updateHomeLimit(player.getUniqueId(), newHomesLimit);
     
-                int updatedHomesLimit = homesManagers.getCurrentHomesLimit(player.getUniqueId());
+                int updatedHomesLimit = homesManagers.getHomeLimit(player.getUniqueId());
 
                 MessageManager.sendMessageType(player, "§aVous avez amélioré votre limite de homes à " + updatedHomesLimit + " pour " + nextUpgrade.getPrice() + "$.", Prefix.HOME, MessageType.SUCCESS, true);
             } else {
