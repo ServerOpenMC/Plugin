@@ -155,6 +155,7 @@ public class Managers {
         homeManager.init();
         moonDimManager.init();
         homesManagers.loadHomes();
+        homesManagers.loadHomeLimits();
         disabledWorldHome.loadConfig();
     }
 
