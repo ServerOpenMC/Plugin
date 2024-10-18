@@ -5,6 +5,9 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.settings.menus.MailboxManagerMenu;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -15,7 +18,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +32,14 @@ public class SettingsMenu extends Menu {
 	@Setter
 	private int mail_accept, trade_accept, tpa_accept;
 	
-	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) throws SQLException {
+	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) {
 		super(owner);
 		this.plugin = plugin;
 		this.owner = owner;
 		this.manager = manager;
-		this.mail_accept = manager.findPlayerSettingsByUUID(owner).mail_accept();
-		this.trade_accept = manager.findPlayerSettingsByUUID(owner).trade_accept();
-		this.tpa_accept = manager.findPlayerSettingsByUUID(owner).tpa_accept();
+		this.mail_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).mail_accept();
+		this.trade_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).trade_accept();
+		this.tpa_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).tpa_accept();
 	}
 	
 	@Override
@@ -62,7 +64,7 @@ public class SettingsMenu extends Menu {
 		map.put(22, new ItemBuilder(this, Material.PAPER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GOLD + "Mailbox");
 			itemMeta.setCustomModelData(8000);
-			// itemMeta.setLore(List.of(SettingsUtils.getMailStatus(this.mail_accept)));
+			itemMeta.setLore(List.of(SettingsUtils.getMailStatus(this.mail_accept)));
 		}).setNextMenu(new MailboxManagerMenu(owner, this)));
 		map.put(45, new ItemBuilder(this, Material.BARRIER, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Fermer");
@@ -72,17 +74,9 @@ public class SettingsMenu extends Menu {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
 			itemMeta.setCustomModelData(8001);
 		}).setOnClick(inventoryClickEvent -> {
-			try {
-				if (plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(owner) == null) {
-					manager.createPlayerSettings(new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
-				} else {
-					manager.updatePlayerSettings(new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
+			MessageManager.sendMessageType(owner, "Settings enregistrés", Prefix.SETTINGS, MessageType.INFO, false);
 		}));
-		
 		return map;
 	}
 }
