@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import io.sentry.protocol.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -91,7 +92,7 @@ public class HomesCommands {
                     return;
                 }
 
-                HomesMenu menu = new HomesMenu(player, homes, target.getName());
+                HomesMenu menu = new HomesMenu(player, homes, upgradeManager, homesManagers, true);
                 menu.open();
 
                 MessageManager.sendMessage(player, "§aHome de §e" + target.getName() + "§a: " + homes.stream().map(Home::getName).collect(Collectors.joining(", ")), Prefix.HOME, MessageType.INFO);
@@ -107,7 +108,7 @@ public class HomesCommands {
                     return;
                 }
 
-                HomesMenu menu = new HomesMenu(player, homes, player.getName());
+                HomesMenu menu = new HomesMenu(player, homes, upgradeManager, homesManagers, false);
                 menu.open();
             } else if(name.equalsIgnoreCase("upgrade")) {
                 new UpgradeHomesMenu(player, upgradeManager, homesManagers).open();
