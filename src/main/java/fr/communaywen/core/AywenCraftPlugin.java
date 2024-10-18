@@ -400,6 +400,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         registerEvents(
                 new SettingsListener(this),
                 new QuestsListener(this),
+                new ParticleListener(this),
                 new HeadListener(this),
                 new JumpListener(this, jumpManager),
                 new LeaderboardListener(this, jumpManager),
@@ -485,31 +486,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        // - Particle
-        ParticleRegionManager.spawnParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.CHERRY_LEAVES, 50, 130);
-        ContestCache.initContestDataCache();
-        if (ContestCache.getPhaseCache() != 1) {
-            String camp1Color = ContestCache.getColor1Cache();
-            String camp2Color = ContestCache.getColor2Cache();
 
-            if (camp1Color == null || camp1Color.isEmpty()) {
-                camp1Color = "WHITE";
-            }
-
-            if (camp2Color == null || camp2Color.isEmpty()) {
-                camp2Color = "BLACK";
-            }
-
-            ChatColor color1 = ChatColor.valueOf(camp1Color);
-            ChatColor color2 = ChatColor.valueOf(camp2Color);
-
-            int[] rgb1 = ColorConvertor.getRGBFromChatColor(color1);
-            int[] rgb2 = ColorConvertor.getRGBFromChatColor(color2);
-
-            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb1[0], rgb1[1], rgb1[2]), 80);
-            ParticleRegionManager.spawnColoredParticlesInRegion(getConfig().getString("spawn.region"), Bukkit.getWorld(getConfig().getString("spawn.world")), Particle.ENTITY_EFFECT, 100, Color.fromRGB(rgb2[0], rgb2[1], rgb2[2]), 80);
-
-        }
     }
 
     @SneakyThrows

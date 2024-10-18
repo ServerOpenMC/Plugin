@@ -126,6 +126,17 @@ public class JumpManager extends DatabaseConnector {
         return jumpRecords;
     }
 
+    public boolean isPlayerInTop10(Player player) {
+        List<Map.Entry<UUID, Double>> topJumpTimes = getTopJumpTimes(10);
+
+        for (Map.Entry<UUID, Double> entry : topJumpTimes) {
+            if (entry.getKey().equals(player.getUniqueId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void updateActionBar(Player player, double time) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,

@@ -1,6 +1,7 @@
 package fr.communaywen.core.spawn.head;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.guideline.GuidelineManager;
 import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.constant.MessageManager;
@@ -59,6 +60,11 @@ public class HeadListener implements Listener {
                                 ItemStack luckyblock = LBUtils.getLuckyBlockItem();
                                 luckyblock.setAmount(2);
                                 event.getPlayer().getInventory().addItem(luckyblock);
+
+                                GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/1").grant(event.getPlayer());
+                                if (HeadManager.getNumberHeads(event.getPlayer()) == HeadManager.getMaxHeads()) {
+                                    GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/all").grant(event.getPlayer());
+                                }
                             } else {
                                 MessageManager.sendMessageType(event.getPlayer(), "§cVous avez déjà collecté cette tête", Prefix.HEAD, MessageType.ERROR, true);
                             }
