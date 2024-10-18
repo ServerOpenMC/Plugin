@@ -26,7 +26,7 @@ public class SendingLetter extends MailboxInv {
     private final OfflinePlayer receiver;
     private final AywenCraftPlugin plugin;
     private final TeamManager teamManager;
-	private final List<String> playerFriends;
+	private List<String> playerFriends;
     
     int mail_accept;
 
@@ -35,8 +35,14 @@ public class SendingLetter extends MailboxInv {
         this.receiver = receiver;
         this.plugin = plugin;
         this.teamManager = plugin.getManagers().getTeamManager();
-	    FriendsManager friendsManager = new FriendsManager(plugin.getManagers().getDatabaseManager(), this.plugin);
-        this.playerFriends = friendsManager.getFriends(player.getName());
+        FriendsManager friendsManager = new FriendsManager(plugin.getManagers().getDatabaseManager(), this.plugin);
+        friendsManager.getFriendsAsync(player.getName()).thenAccept(friends -> {
+            this.playerFriends = friends;
+            plugin.getLogger().info("Amis chargés pour " + player.getName());
+        }).exceptionally(ex -> {
+            plugin.getLogger().severe("Erreur lors du chargement des amis : " + ex.getMessage());
+            return null;
+        });
         this.mail_accept = SettingsCache.settingsMap.get(receiver.getUniqueId()).mail_accept();
         inventory = Bukkit.createInventory(this, 54, MailboxMenuManager.getInvTitle(INV_NAME));
         inventory.setItem(49, getHead(receiver));
