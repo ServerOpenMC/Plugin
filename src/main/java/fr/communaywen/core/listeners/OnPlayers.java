@@ -51,9 +51,6 @@ public class OnPlayers implements Listener {
         if (event.joinMessage() == null) { return; }
         Player player = event.getPlayer();
 
-        long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
-        LeaderboardManager.setTimePlayed(player, timePlayed);
-
         User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
         QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
 
@@ -71,6 +68,9 @@ public class OnPlayers implements Listener {
         }
 
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            LeaderboardManager.setTimePlayed(player, timePlayed);
+
             DraftAPI draftAPI = new DraftAPI();
 
             JSONObject data = null;
@@ -150,12 +150,15 @@ public class OnPlayers implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
-        LeaderboardManager.setTimePlayed(player, timePlayed);
+        Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            LeaderboardManager.setTimePlayed(player, timePlayed);
 
-        User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
-        QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+            User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
+            QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
 
-        event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
+            event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
+        });
     }
+
 }

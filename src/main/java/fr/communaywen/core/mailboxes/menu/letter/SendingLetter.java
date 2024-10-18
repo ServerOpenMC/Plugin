@@ -26,8 +26,8 @@ public class SendingLetter extends MailboxInv {
     private final OfflinePlayer receiver;
     private final AywenCraftPlugin plugin;
     private final TeamManager teamManager;
-	private final List<String> playerFriends;
-    
+    private List<String> playerFriends = new ArrayList<>();
+
     int mail_accept;
 
     public SendingLetter(Player player, OfflinePlayer receiver, AywenCraftPlugin plugin) throws SQLException {
@@ -45,6 +45,17 @@ public class SendingLetter extends MailboxInv {
         inventory.setItem(50, cancelBtn());
 
         for (int i = 0; i < 9; i++) inventory.setItem(i, transparentItem());
+
+        FriendsManager friendsManager = new FriendsManager(plugin.getManagers().getDatabaseManager(), this.plugin);
+        friendsManager.getFriendsAsync(player.getName()).thenAccept(friends -> {
+            this.playerFriends = friends;
+            plugin.getLogger().info("Amis chargés pour " + player.getName());
+        }).exceptionally(ex -> {
+            plugin.getLogger().severe("Erreur lors du chargement des amis : " + ex.getMessage());
+            return null;
+        });
+
+        this.mail_accept = plugin.getManagers().getSettingsManager().findPlayerSettingsByUUID(Objects.requireNonNull(receiver.getPlayer())).mail_accept();
     }
 
     @Override
@@ -69,36 +80,49 @@ public class SendingLetter extends MailboxInv {
             sendFailureMessage(player, "Vous ne pouvez pas envoyer de lettre vide");
             return;
         }
-        plugin.getLogger().info("Mail Accept" + mail_accept);
-        switch (mail_accept) {
-            case 0:
-                sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
-                break;
-                
-            case 1:
-                if (!playerFriends.contains(receiver.getName())) {
-                    sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
-                } else {
-                    if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
-                }
-                break;
-            
-            case 2:
-                String playerTeamName = teamManager.getTeamByPlayer(player.getUniqueId()).getName();
-                String receiverTeamName = teamManager.getTeamByPlayer(receiver.getUniqueId()).getName();
-                plugin.getLogger().info("Player team name : " + playerTeamName);
-                plugin.getLogger().info("Player receiver name : " + receiverTeamName);
-                if (!playerTeamName.equals(receiverTeamName)) {
-                    sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
-                } else {
-                    if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
-                }
-                break;
-            
-            default:
-                if (!MailboxManager.sendItems(player, receiver, items)) MailboxManager.givePlayerItems(player, items);
-                break;
-        }
+
+        plugin.getLogger().info("Mail Accept: " + mail_accept);
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            switch (mail_accept) {
+                case 0:
+                    Bukkit.getScheduler().runTask(plugin, () -> sendFailureMessage(player, "Ce joueur n'accepte pas les lettres"));
+                    break;
+
+                case 1:
+                    if (!playerFriends.contains(receiver.getName())) {
+                        Bukkit.getScheduler().runTask(plugin, () -> sendFailureMessage(player, "Ce joueur n'accepte pas les lettres"));
+                    } else {
+                        sendMailItems(player, receiver, items);
+                    }
+                    break;
+
+                case 2:
+                    String playerTeamName = teamManager.getTeamByPlayer(player.getUniqueId()).getName();
+                    String receiverTeamName = teamManager.getTeamByPlayer(receiver.getUniqueId()).getName();
+                    plugin.getLogger().info("Nom de l'équipe du joueur : " + playerTeamName);
+                    plugin.getLogger().info("Nom de l'équipe du destinataire : " + receiverTeamName);
+
+                    if (!playerTeamName.equals(receiverTeamName)) {
+                        Bukkit.getScheduler().runTask(plugin, () -> sendFailureMessage(player, "Ce joueur n'accepte pas les lettres"));
+                    } else {
+                        sendMailItems(player, receiver, items);
+                    }
+                    break;
+
+                default:
+                    sendMailItems(player, receiver, items);
+                    break;
+            }
+        });
+    }
+
+    private void sendMailItems(Player player, OfflinePlayer receiver, ItemStack[] items) {
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (!MailboxManager.sendItems(player, receiver, items)) {
+                MailboxManager.givePlayerItems(player, items);
+            }
+        });
     }
 
     public void giveItems() {

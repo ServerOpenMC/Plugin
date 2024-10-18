@@ -16,6 +16,7 @@ public class CustomFlagsEvents implements Listener {
     static AywenCraftPlugin plugin;
     public CustomFlagsEvents(AywenCraftPlugin plugins) {
         plugin = plugins;
+
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -25,6 +26,11 @@ public class CustomFlagsEvents implements Listener {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getPlayer().getLocation()));
+
+        if(event.getPlayer().hasPermission("essentials.fly")) {
+            event.setCancelled(false);
+            return;
+        }
 
         if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-fly"))) {
             event.setCancelled(false);
