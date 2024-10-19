@@ -132,11 +132,8 @@ public class LeaderboardManager extends DatabaseConnector {
         if (textDisplayTeamTop == null) return;
 
         List<Team> teamBalances = TeamManager.getTeams();
-        System.out.println("1 " + teamBalances);
 
         teamBalances.sort((a, b) -> Double.compare(b.getBalance(), a.getBalance()));
-
-        System.out.println("2 " + teamBalances);
 
         if (teamBalances.size() > 10) {
             teamBalances = teamBalances.subList(0, 10);
