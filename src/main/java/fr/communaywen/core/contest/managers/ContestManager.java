@@ -469,7 +469,7 @@ public class ContestManager extends DatabaseConnector {
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
                 ResultSet rs = statement.executeQuery();
                 if (rs.next()) {
-                    return rs.getInt("point_dep");
+                    return rs.getInt(column);
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -971,14 +971,16 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public void addPointPlayer(Integer points_dep, Player player) {
-        String sql = "UPDATE camps SET point_dep = ? WHERE minecraft_uuid = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, points_dep);
-            stmt.setString(2, player.getUniqueId().toString());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            String sql = "UPDATE camps SET point_dep = ? WHERE minecraft_uuid = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, points_dep);
+                stmt.setString(2, player.getUniqueId().toString());
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 
