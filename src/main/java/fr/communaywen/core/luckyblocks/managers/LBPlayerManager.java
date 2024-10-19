@@ -17,6 +17,7 @@ public class LBPlayerManager {
     }
 
     public boolean canClaimLuckyBlocks(UUID uuid) {
+        System.out.println(luckyBlocksCooldown);
         if (System.currentTimeMillis() - getLuckyBlocksCooldown(uuid) < timeToWait) {
             return false;
         }

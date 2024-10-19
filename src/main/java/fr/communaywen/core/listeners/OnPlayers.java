@@ -2,7 +2,8 @@ package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.cache.ContestCache;
-import fr.communaywen.core.contest.managers.ContestManager;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.utils.LBReminder;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.DraftAPI;
@@ -14,7 +15,6 @@ import net.luckperms.api.query.QueryOptions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Statistic;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -90,6 +90,11 @@ public class OnPlayers implements Listener {
                 player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
             }
 
+            LBPlayerManager playerManager = AywenCraftPlugin.getInstance().getManagers().getLbPlayerManager();
+            LBReminder reminder = new LBReminder(player, playerManager, AywenCraftPlugin.getInstance());
+
+            reminder.startReminder();
+
             if(ContestCache.getPhaseCache() == 2) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
@@ -153,6 +158,10 @@ public class OnPlayers implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
             long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
             LeaderboardManager.setTimePlayed(player, timePlayed);
+
+            LBReminder reminder = new LBReminder(player, AywenCraftPlugin.getInstance().getManagers().getLbPlayerManager(), AywenCraftPlugin.getInstance());
+
+            reminder.stopReminder();
 
             User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
             QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
