@@ -1,8 +1,6 @@
 package fr.communaywen.core.luckyblocks.managers;
 
 import fr.communaywen.core.contest.managers.ContestManager;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.events.bonus.*;
 import fr.communaywen.core.luckyblocks.events.malus.*;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;
@@ -20,8 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LuckyBlockManager {
 
     private final Random random = new Random();
