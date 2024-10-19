@@ -130,10 +130,13 @@ public class LeaderboardManager extends DatabaseConnector {
 
     public static void updateLeaderboardTeamTop() {
         if (textDisplayTeamTop == null) return;
-        List<Team> teamBalances = TeamManager.getTeams();
-        teamBalances.sort((a, b) -> a.getBalance().intValue() - b.getBalance().intValue());
 
-        teamBalances = teamBalances.reversed();
+        List<Team> teamBalances = TeamManager.getTeams();
+        System.out.println("1 " + teamBalances);
+
+        teamBalances.sort((a, b) -> Double.compare(b.getBalance(), a.getBalance()));
+
+        System.out.println("2 " + teamBalances);
 
         if (teamBalances.size() > 10) {
             teamBalances = teamBalances.subList(0, 10);
@@ -145,8 +148,7 @@ public class LeaderboardManager extends DatabaseConnector {
         int index = 1;
         for (Team team : teamBalances) {
             String teamName = team.getName();
-            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, ChatColor.DARK_PURPLE + EconomieTeam.getTeamBalances(team.getName()).toString()));
-
+            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, ChatColor.DARK_PURPLE + String.format("%.1f", EconomieTeam.getTeamBalances(team.getName()).doubleValue())));
             index++;
         }
 
