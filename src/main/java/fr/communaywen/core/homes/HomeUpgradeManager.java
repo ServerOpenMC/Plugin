@@ -41,7 +41,7 @@ public class HomeUpgradeManager {
         HomeUpgrade nextUpgrade = getNextUpgrade(currentHomes);
     
         if (nextUpgrade != null) {
-            double balance = plugin.getManagers().getEconomyManager().getBalance(player);
+            double balance = plugin.getManagers().getEconomyManager().getBalance(player.getUniqueId());
             int price = nextUpgrade.getPrice();
             HomesManagers homesManagers = plugin.getManagers().getHomesManagers();
 

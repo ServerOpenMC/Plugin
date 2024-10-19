@@ -33,14 +33,16 @@ public class UpgradeHomesMenu extends Menu {
         TITLE = PlaceholderAPI.setPlaceholders(owner, "§r§f%img_offset_-8%%img_omc_homes_menus_home_upgrade%");
     }
 
+    @Override
+    public @NotNull String getName() {
+        return TITLE;
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> items = new HashMap<>();
 
-        //int currentHomes = homesManagers.getHomeNamesByPlayer(getOwner().getUniqueId()).size();
-
-        int homesCount = homesManagers.getHomeNamesByPlayer(getOwner().getUniqueId()).size();
         int currentHomes = 0;
 
         for(HomeUpgrade upgrade : HomeUpgrade.values()) {
@@ -84,11 +86,5 @@ public class UpgradeHomesMenu extends Menu {
     }
 
     @Override
-    public @NotNull String getName() {
-        return TITLE;
-    }
-
-    @Override
-    public void onInventoryClick(InventoryClickEvent event) {
-    }
+    public void onInventoryClick(InventoryClickEvent event) {}
 }

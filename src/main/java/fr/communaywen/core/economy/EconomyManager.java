@@ -1,5 +1,6 @@
 package fr.communaywen.core.economy;
 
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.quests.PlayerQuests;
@@ -13,6 +14,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,8 +34,8 @@ public class EconomyManager {
         instance = this;
     }
 
-    public double getBalance(Player player) {
-        return balances.getOrDefault(player.getUniqueId(), 0.0);
+    public double getBalance(UUID player) {
+        return balances.getOrDefault(player, 0.0);
     }
 
     public static double getBalanceOffline(OfflinePlayer player) {
@@ -40,7 +45,7 @@ public class EconomyManager {
 
     public void addBalance(Player player, double amount) {
         UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player) + amount);
+        balances.put(uuid, getBalance(player.getUniqueId()) + amount);
 
         saveBalances(player);
         for(QUESTS quests : QUESTS.values()) {
@@ -55,7 +60,7 @@ public class EconomyManager {
 
     public void addBalance(Player player, double amount, String reason) {
         UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player) + amount);
+        balances.put(uuid, getBalance(player.getUniqueId()) + amount);
 
         new TransactionsManager().addTransaction(new Transaction(
                 player.getUniqueId().toString(),
@@ -84,7 +89,7 @@ public class EconomyManager {
 
     public boolean withdrawBalance(Player player, double amount) {
         UUID uuid = player.getUniqueId();
-        double balance = getBalance(player);
+        double balance = getBalance(player.getUniqueId());
         if (balance >= amount && amount > 0) {
             balances.put(uuid, balance - amount);
             saveBalances(player);
@@ -116,5 +121,14 @@ public class EconomyManager {
     }
     private static void saveBalancesOffline(OfflinePlayer player) {
         EconomyData.saveBalancesOffline(player, balances);
+    }
+
+    public String getFormattedBalance(UUID player) {
+        String balance = String.valueOf(getBalance(player));
+        Currency currency = Currency.getInstance("EUR");
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.UK);
+        formatter.setCurrency(currency);
+        BigDecimal bd = new BigDecimal(balance);
+        return formatter.format(bd);
     }
 }

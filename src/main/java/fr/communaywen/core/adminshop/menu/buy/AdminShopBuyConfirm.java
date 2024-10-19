@@ -67,7 +67,7 @@ public class AdminShopBuyConfirm extends Menu {
                 return;
             } else {
                 EconomyManager economy = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
-                double balance = economy.getBalance(getOwner());
+                double balance = economy.getBalance(getOwner().getUniqueId());
                 if(balance < (items.getPrize() * quantity)) {
                     getOwner().sendMessage(ChatColor.RED + "Vous n'avez pas assez d'argent pour acheter cette item.");
                 } else {

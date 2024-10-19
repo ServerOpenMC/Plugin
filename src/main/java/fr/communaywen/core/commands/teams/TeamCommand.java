@@ -237,7 +237,7 @@ public class TeamCommand {
         }
         EconomyManager economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
 
-        if(amount > 0 && economyManager.getBalance(player) >= amount) {
+        if(amount > 0 && economyManager.getBalance(player.getUniqueId()) >= amount) {
             AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player, amount);
             EconomieTeam.addBalance(team.getName(), amount);
             player.sendMessage("§aVous venez de transférer §e" + amount + "$ §adans la banque de votre team.");

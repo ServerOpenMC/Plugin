@@ -1,14 +1,19 @@
 package fr.communaywen.core.commands.economy;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.Managers;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.TransactionsMenu;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
@@ -31,8 +36,12 @@ public class MoneyCommand {
     }
 
     @DefaultFor("~")
-    public void balance(Player player) {
-        player.sendMessage("Balance: " + economyManager.getBalance(player));
+    public void balance(Player player, @Default("self") OfflinePlayer target) {
+        if(target == player) {
+            MessageManager.sendMessage(player, "§aVotre argent: §e" + economyManager.getFormattedBalance(target.getUniqueId()), Prefix.OPENMC, MessageType.INFO);
+            return;
+        }
+        MessageManager.sendMessage(player, "§aArgent de §2" + target.getName() + "§a: §e" + economyManager.getFormattedBalance(target.getUniqueId()), Prefix.OPENMC, MessageType.INFO);
     }
 
     @Subcommand("help")
