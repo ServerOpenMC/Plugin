@@ -57,7 +57,7 @@ public class ParticleListener implements Listener {
                         for (int i = 0; i < 100; i++) {
                             // COULEUR CAMP 1
                             double x = minLocation.getX() + random.nextDouble() * (maxLocation.getX() - minLocation.getX());
-                            double y = minLocation.getY() + random.nextDouble() * (85 - minLocation.getY());
+                            double y = minLocation.getY() + random.nextDouble() * (85 - 60);
                             double z = minLocation.getZ() + random.nextDouble() * (maxLocation.getZ() - minLocation.getZ());
 
                             Location particleLocation = new Location(world, x, y, z);
@@ -66,7 +66,7 @@ public class ParticleListener implements Listener {
 
                             // COULEUR CAMP 2
                             double x2 = minLocation.getX() + random.nextDouble() * (maxLocation.getX() - minLocation.getX());
-                            double y2 = minLocation.getY() + random.nextDouble() * (85 - minLocation.getY());
+                            double y2 = minLocation.getY() + random.nextDouble() * (85 - 60);
                             double z2 = minLocation.getZ() + random.nextDouble() * (maxLocation.getZ() - minLocation.getZ());
 
                             Location particleLocation2 = new Location(world, x2, y2, z2);
@@ -75,9 +75,9 @@ public class ParticleListener implements Listener {
                         }
                     } else {
                         // PARTICULE DU SPAWN PAR DEFAUT
-                        for (int i = 0; i < 80; i++) {
+                        for (int i = 0; i < 120; i++) {
                             double x = minLocation.getX() + random.nextDouble() * (maxLocation.getX() - minLocation.getX());
-                            double y = minLocation.getY() + random.nextDouble() * (130 - minLocation.getY());
+                            double y = minLocation.getY() + random.nextDouble() * (130 - 60);
                             double z = minLocation.getZ() + random.nextDouble() * (maxLocation.getZ() - minLocation.getZ());
 
                             Location particleLocation = new Location(world, x, y, z);
