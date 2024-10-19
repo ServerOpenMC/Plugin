@@ -97,7 +97,7 @@ public class ContestCommand {
     @Description("Permet d'ajouter des points a un membre")
     @CommandPermission("ayw.command.contest.addpoints")
     public void addpoints(Player player, Player target, Integer points) {
-        contestManager.addPointPlayer(points + contestManager.getPlayerPoints(target), target);
+        contestManager.addPointPlayer(points + contestManager.getPlayerPoints(target).join(), target);
 
         player.sendMessage("§aVous avez ajouté " + points + " §apoint(s) à " + target.getName());
     }

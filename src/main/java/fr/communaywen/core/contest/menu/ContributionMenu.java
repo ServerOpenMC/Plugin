@@ -122,8 +122,8 @@ public class ContributionMenu extends Menu {
                         }
                         if (ItemUtils.hasEnoughItems(getOwner(), shell_contest, shell)) {
                             ItemUtils.removeItemsFromInventory(getOwner(), shell_contest, shell);
-                            contestManager.addPointPlayer(shell + contestManager.getPlayerPoints(getOwner()), getOwner());
-                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), shell + contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner())));
+                            contestManager.addPointPlayer(shell + contestManager.getPlayerPoints(getOwner()).join(), getOwner());
+                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), shell + contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner())).join());
                             MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
                         } else {
                             MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
