@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -33,6 +34,7 @@ public class HeadListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
@@ -50,26 +52,28 @@ public class HeadListener implements Listener {
                         double posZ = (double) headData.get("posZ");
 
                         Location headLocation = new Location(clickedBlockLocation.getWorld(), posX, posY, posZ);
+
                         if (headLocation.equals(clickedBlockLocation)) {
-                            if (!HeadManager.hasFoundHead(event.getPlayer(), String.valueOf(headId))) {
-                                HeadManager.saveFoundHead(event.getPlayer(), String.valueOf(headId));
-                                HeadManager.initPlayerDataCache(event.getPlayer());
-                                MessageManager.sendMessageType(event.getPlayer(), "§7Vous avez trouvé une tête! (§d" + HeadManager.getNumberHeads(event.getPlayer()) + "§8/§d" + HeadManager.getMaxHeads() + "§7)", Prefix.HEAD, MessageType.SUCCESS, true);
-                                MessageManager.sendMessageType(event.getPlayer(), "§aVous avez collécté §62 LuckyBlock", Prefix.HEAD, MessageType.SUCCESS, true);
+                            if (!HeadManager.hasFoundHead(player, String.valueOf(headId))) {
+                                HeadManager.saveFoundHead(player, String.valueOf(headId));
+                                HeadManager.initPlayerDataCache(player);
+
+                                MessageManager.sendMessageType(player, "§7Vous avez trouvé une tête! (§d" + HeadManager.getNumberHeads(player) + "§8/§d" + HeadManager.getMaxHeads() + "§7)", Prefix.HEAD, MessageType.SUCCESS, true);
+
+                                MessageManager.sendMessageType(player, "§aVous avez collecté §62 LuckyBlock", Prefix.HEAD, MessageType.SUCCESS, true);
 
                                 ItemStack luckyblock = LBUtils.getLuckyBlockItem();
                                 luckyblock.setAmount(2);
-                                event.getPlayer().getInventory().addItem(luckyblock);
+                                player.getInventory().addItem(luckyblock);
 
-                                GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/1").grant(event.getPlayer());
-                                if (HeadManager.getNumberHeads(event.getPlayer()) == HeadManager.getMaxHeads()) {
-                                    GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/all").grant(event.getPlayer());
+                                GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/1").grant(player);
+
+                                if (HeadManager.getNumberHeads(player) == HeadManager.getMaxHeads()) {
+                                    GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/all").grant(player);
                                 }
                             } else {
-                                MessageManager.sendMessageType(event.getPlayer(), "§cVous avez déjà collecté cette tête", Prefix.HEAD, MessageType.ERROR, true);
+                                MessageManager.sendMessageType(player, "§cVous avez déjà collecté cette tête", Prefix.HEAD, MessageType.ERROR, true);
                             }
-
-                            break;
                         }
                     }
                 }

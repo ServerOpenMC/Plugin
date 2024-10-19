@@ -149,7 +149,7 @@ public class ContestCache extends DatabaseConnector {
                 if (result.next()) {
                     int points = result.getInt("point_dep");
                     int camp = result.getInt("camps");
-                    String color = ContestManager.getString("contest","color" + camp);
+                    String color = ContestManager.getString("contest","color" + camp).join();
                     ChatColor campColor = ChatColor.valueOf(color);
 
                     Bukkit.getScheduler().runTask(plugin, () -> {

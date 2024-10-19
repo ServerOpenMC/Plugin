@@ -28,14 +28,14 @@ public class TPACommand implements Listener {
 
     @Command("tpa")
     @CommandPermission("ayw.command.tpa")
-    public void onCommand(Player player, @Named("joueur") String targetName) {
+    public void onCommand(Player player, Player target) {
+        String targetName = target.getName();
         if (targetName == null || targetName.trim().isEmpty()) {
             player.sendMessage(Component.text("[TPA] ❌ Vous devez spécifier un joueur.")
                     .color(TextColor.color(255, 0, 0)));
             return;
         }
 
-        Player target = Bukkit.getPlayer(targetName);
         if (target == null) {
             player.sendMessage(Component.text("[TPA] ❌ Le joueur '" + targetName + "' n'est pas en ligne.")
                     .color(TextColor.color(255, 0, 0)));

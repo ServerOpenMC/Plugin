@@ -104,7 +104,7 @@ public class ScoreboardManager {
         objective.getScore("   ").setScore(9);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(8);
 
-        if (RegionsManager.isPlayerInRegion("spawn", Bukkit.getWorld("world"))) {
+        if (RegionsManager.isSpecifiedPlayerInRegion(player,"spawn")) {
             int heads = HeadManager.getHeadFoundIntCache(player);
             int maxHeads = HeadManager.getMaxHeads();
 

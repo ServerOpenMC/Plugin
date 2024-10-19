@@ -32,7 +32,7 @@ public class HeadCommand {
     @Cooldown(4)
     @DefaultFor("~")
     public void defaultCommand(Player player) {
-        MessageManager.sendMessageType(player, "§7Vous avez trouvé §d" + HeadManager.getNumberHeads(player) + "§8tête(s) sur §d" + HeadManager.getMaxHeads() + "§8têtes", Prefix.HEAD, MessageType.SUCCESS, true);
+        MessageManager.sendMessageType(player, "§7Vous avez trouvé §d" + HeadManager.getNumberHeads(player) + " §8tête(s) sur §d" + HeadManager.getMaxHeads() + " §8têtes", Prefix.HEAD, MessageType.SUCCESS, true);
     }
 
     @Subcommand("add")
