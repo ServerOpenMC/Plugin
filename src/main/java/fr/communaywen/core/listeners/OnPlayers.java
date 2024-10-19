@@ -155,6 +155,12 @@ public class OnPlayers implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
+        QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
+
+        event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
+
+
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
             long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
             LeaderboardManager.setTimePlayed(player, timePlayed);
@@ -163,10 +169,6 @@ public class OnPlayers implements Listener {
 
             reminder.stopReminder();
 
-            User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
-            QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
-
-            event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
         });
     }
 
