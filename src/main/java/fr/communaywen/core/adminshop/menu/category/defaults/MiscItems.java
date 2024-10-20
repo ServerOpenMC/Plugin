@@ -2,8 +2,6 @@ package fr.communaywen.core.adminshop.menu.category.defaults;
 
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import org.bukkit.Material;
 
 public enum MiscItems implements BaseItems {

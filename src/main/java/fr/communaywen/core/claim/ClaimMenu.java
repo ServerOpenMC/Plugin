@@ -4,8 +4,6 @@ import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.claim.ClaimDeleteConfirmationMenu;
-import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.teams.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
