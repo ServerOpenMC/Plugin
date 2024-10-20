@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.homes.HomeLimit;
 import fr.communaywen.core.homes.HomeUpgrade;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
@@ -43,13 +44,11 @@ public class UpgradeHomesMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> items = new HashMap<>();
 
-        int currentHomes = 0;
-
-        for(HomeUpgrade upgrade : HomeUpgrade.values()) {
-            if(upgradeManager.getCurrentUpgrade(getOwner()).equals(upgrade)) {
-                currentHomes = upgrade.getHomes();
-            }
-        }
+        int currentHomes = HomesManagers.homeLimits.stream()
+                .filter(homeLimit -> homeLimit.getPlayerUUID().equals(getOwner().getUniqueId()))
+                .map(HomeLimit::getLimit)
+                .findFirst()
+                .orElse(0);
 
         HomeUpgrade lastUpgrade = HomeUpgrade.valueOf("UPGRADE_" + HomeUpgrade.values().length);
 
@@ -61,7 +60,7 @@ public class UpgradeHomesMenu extends Menu {
         items.put(4, new ItemBuilder(this, CustomStack.getInstance("omc_homes:omc_homes_icon_upgrade").getItemStack(), itemMeta -> {
             itemMeta.setDisplayName("§8● §6Améliorer les homes §8(Click gauche)");
             List<String> lore = new ArrayList<>();
-            if (nextUpgrade.equals(lastUpgrade)) {
+            if (nextUpgrade.getHomes() == lastUpgrade.getHomes()) {
                 lore.add("§cVous avez atteint le nombre maximum de homes");
                 lore.add("§eNombre de home actuel: " + finalCurrentHomes);
             } else {

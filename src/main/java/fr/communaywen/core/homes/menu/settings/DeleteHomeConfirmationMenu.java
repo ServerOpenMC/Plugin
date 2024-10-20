@@ -12,6 +12,7 @@ import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -70,10 +71,14 @@ public class DeleteHomeConfirmationMenu extends Menu {
                 itemMeta -> {
                     itemMeta.setDisplayName("§a" + home.getName());
                     itemMeta.setLore(List.of(
-                            "§7Cliquez pour confirmer la suppression"
+                            ChatColor.GRAY + "■ §cClique §4gauche §cpour confirmer la suppression"
                     ));
                 }
-        ));
+        ).setOnClick(event -> {
+            homesManagers.removeHome(home);
+            MessageManager.sendMessageType(getOwner(), "§aHome §4" + home.getName() + " §asupprimé avec succès !", Prefix.HOME, MessageType.SUCCESS, true);
+            getOwner().closeInventory();
+        }));
 
         content.put(6, new ItemBuilder(
                 this,

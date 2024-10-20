@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.homes.Home;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -14,6 +15,10 @@ public class HomeMenuUtils {
 
     public static ItemStack getHomeButton(Home home) {
         String iconKey = getHomeIcon(home).getId();
+        if(iconKey == null) {
+            AywenCraftPlugin.getInstance().getLogger().warning("Icon key is null for home " + home.getName());
+            return new ItemStack(Material.GRASS_BLOCK);
+        }
         return CustomStack.getInstance(iconKey).getItemStack();
     }
 
@@ -23,12 +28,33 @@ public class HomeMenuUtils {
     }
 
     public static HomeIcons getHomeIcon(Home home) {
-        return home.getIcon() == HomeIcons.DEFAULT ? getDefaultHomeIcon(home) : home.getIcon();
+        try {
+            String homeName = home.getName().toLowerCase();
+            AywenCraftPlugin.getInstance().getLogger().info("Home icon:" + home.getIcon());
+            if(home.getIcon() == null) {
+                return HomeIcons.DEFAULT;
+            }
+            if (home.getIcon() != HomeIcons.DEFAULT) {
+                return home.getIcon();
+            }
+            for (HomeIcons icon : HomeIcons.values()) {
+                String[] usages = icon.getUsage().split("\\|");
+                for (String usage : usages) {
+                    if (homeName.contains(usage)) {
+                        return icon;
+                    }
+                }
+            }
+            return HomeIcons.DEFAULT;
+        } catch (Exception e) {
+            AywenCraftPlugin.getInstance().getLogger().warning("Error while getting home icon for home " + home.getName());
+            return HomeIcons.DEFAULT;
+        }
     }
 
-    public static HomeIcons getDefaultHomeIcon(Home home) {
+    public static HomeIcons getDefaultHomeIcon(String name) {
         return HOME_ICONS.stream()
-                .filter(entry -> home.getName().matches(".*" + entry.getUsage() + ".*"))
+                .filter(entry -> name.matches(".*" + entry.getUsage() + ".*"))
                 .findFirst()
                 .orElse(HomeIcons.DEFAULT);
     }

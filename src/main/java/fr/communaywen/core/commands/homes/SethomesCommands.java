@@ -11,6 +11,8 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomesManagers;
 
+import fr.communaywen.core.homes.menu.utils.HomeIcons;
+import fr.communaywen.core.homes.menu.utils.HomeMenuUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -85,7 +87,9 @@ public class SethomesCommands {
             }
         }
 
-        homesManagers.addHome(new Home(player.getUniqueId().toString(), name, location, null));
+        HomeIcons icon = HomeMenuUtils.getDefaultHomeIcon(name);
+
+        homesManagers.addHome(new Home(player.getUniqueId().toString(), name, location, icon));
         MessageManager.sendMessageType(player, "§aHome §e" + name + " §adéfini avec succès !", Prefix.HOME, MessageType.SUCCESS, true);
     }
     public static boolean isRegionConflict(Player player, Location location) {

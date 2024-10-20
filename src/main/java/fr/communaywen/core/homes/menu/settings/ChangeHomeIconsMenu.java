@@ -7,12 +7,16 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.homes.Home;
-import fr.communaywen.core.homes.HomesManagers;
-import fr.communaywen.core.homes.menu.UpgradeHomesMenu;
 import fr.communaywen.core.homes.menu.utils.HomeIcons;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -63,8 +67,21 @@ public class ChangeHomeIconsMenu extends PaginatedMenu {
 
         for(int i = 0; i < HomeIcons.values().length; i++) {
             HomeIcons homeIcon = HomeIcons.values()[i];
-            items.add(new ItemBuilder(this, CustomStack.getInstance(homeIcon.getId()).getItemStack()).setOnClick(event -> {
-                AywenCraftPlugin.getInstance().getManagers().getHomesManagers().changeIcon(home, homeIcon);
+            items.add(new ItemBuilder(this, CustomStack.getInstance(homeIcon.getId()).getItemStack(), itemMeta -> {
+                itemMeta.setDisplayName("§a" + homeIcon.getName());
+                itemMeta.setLore(List.of(
+                        ChatColor.GRAY + "■ §aClique §2gauche §apour changer l'icône"
+                ));
+
+                if(home.getIcon().equals(homeIcon)) {
+                    itemMeta.addEnchant(Enchantment.SHARPNESS, 5, false);
+                    itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+                }
+            }).setOnClick(event -> {
+                Bukkit.getScheduler().runTask(AywenCraftPlugin.getInstance(), () -> {
+                    AywenCraftPlugin.getInstance().getManagers().getHomesManagers().changeIcon(home, homeIcon);
+                    MessageManager.sendMessageType(getOwner(), "§aL'icône de votre home §2"+ home.getName() + " §achangée avec succès !", Prefix.HOME, MessageType.SUCCESS, true);
+                });
                 getOwner().closeInventory();
             }));
         }
@@ -80,14 +97,7 @@ public class ChangeHomeIconsMenu extends PaginatedMenu {
         map.put(48, new ItemBuilder(this, MailboxMenuManager.previousPageBtn()).setPreviousPageButton());
         map.put(49, new ItemBuilder(this, MailboxMenuManager.cancelBtn()).setCloseButton());
         map.put(50, new ItemBuilder(this, MailboxMenuManager.nextPageBtn()).setNextPageButton());
-        map.put(53, new ItemBuilder(this, CustomStack.getInstance("omc_homes:omc_homes_icon_upgrade").getItemStack(), itemMeta -> {
-            itemMeta.setDisplayName("§aSauvegarder");
-            itemMeta.setLore(List.of(
-                    "§6Cliquez pour sauvegarder l'icone de votre home"
-            ));
-        }).setOnClick(event -> {
-            getOwner().closeInventory();
-        }));
+        map.put(53, new ItemBuilder(this, CustomStack.getInstance("space:invisiblebtn").getItemStack()));
 
         return map;
     }

@@ -10,13 +10,9 @@ import java.util.stream.Collectors;
 
 import fr.communaywen.core.homes.menu.utils.HomeIcons;
 import fr.communaywen.core.homes.menu.utils.HomeMenuUtils;
-import fr.communaywen.core.utils.constant.MessageType;
 import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.utils.constant.Prefix;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 
 public class HomesManagers extends DatabaseConnector {
@@ -157,31 +153,50 @@ public class HomesManagers extends DatabaseConnector {
                 .filter(hl -> hl.getPlayerUUID().equals(playerId))
                 .findFirst()
                 .orElse(null);
-        if (homeLimit != null)
+        if (homeLimit != null) {
             homeLimit.setLimit(newLimit);
-        else
+        } else {
             homeLimits.add(new HomeLimit(playerId, newLimit));
+        }
     }
 
     public void saveHomesLimits() {
         try {
-            // Check if the player already has a limit
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE player = ?");
-            for (HomeLimit homeLimit : homeLimits) {
-                statement.setString(1, homeLimit.getPlayerUUID().toString());
-                ResultSet rs = statement.executeQuery();
+            connection.setAutoCommit(false);
+            PreparedStatement selectStmt = connection.prepareStatement("SELECT * FROM players WHERE player = ?");
+            PreparedStatement updateStmt = connection.prepareStatement("UPDATE players SET homes_limit = ? WHERE player = ?");
 
-                if (rs.next()) {
-                    statement = connection.prepareStatement("UPDATE players SET homes_limit = ? WHERE player = ?");
-                    statement.setInt(1, homeLimit.getLimit());
-                    statement.setString(2, homeLimit.getPlayerUUID().toString());
-                    statement.executeUpdate();
+            for(HomeLimit homeLimit : homeLimits) {
+                String playerUUID = homeLimit.getPlayerUUID().toString();
+                int limit = homeLimit.getLimit();
+
+                selectStmt.setString(1, playerUUID);
+                ResultSet rs = selectStmt.executeQuery();
+
+                if(rs.next()) {
+                    updateStmt.setInt(1, limit);
+                    updateStmt.setString(2, playerUUID);
+                    updateStmt.addBatch();
+                    AywenCraftPlugin.getInstance().getLogger().info("Updating homes limit for " + playerUUID + " to " + limit);
                 } else {
-                    createHomeLimit(homeLimit.getPlayerUUID(), homeLimit.getLimit());
+                    createHomeLimit(homeLimit.getPlayerUUID(), limit);
                 }
+                rs.close();
             }
+
+            updateStmt.executeBatch();
+            connection.commit();
+            connection.setAutoCommit(true);
+
+            selectStmt.close();
+            updateStmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                AywenCraftPlugin.getInstance().getLogger().severe("Error during rollback: " + rollbackEx.getMessage());
+            }
+            throw new RuntimeException(e);
         }
     }
 

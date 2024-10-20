@@ -12,6 +12,7 @@ import fr.communaywen.core.homes.menu.HomesMenu;
 import fr.communaywen.core.homes.menu.utils.HomeMenuUtils;
 import fr.communaywen.core.mailboxes.utils.MailboxMenuManager;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -48,20 +49,19 @@ public class HomeSettingsMenu extends Menu {
         content.put(4, home.getCustomIcon());
 
         content.put(20, new ItemBuilder(this, HomeMenuUtils.getRandomsIcons(), itemMeta -> {
-            itemMeta.setDisplayName("§aChanger l'icone");
-            itemMeta.setLore(List.of("§7Cliquez pour changer l'icone de votre home"));
+            itemMeta.setDisplayName("§aChanger l'icône");
+            itemMeta.setLore(List.of(ChatColor.GRAY + "■ §aClique §2gauche §apour changer l'icône de votre home"));
         }).setNextMenu(new ChangeHomeIconsMenu(getOwner(), home)));
 
         content.put(24, new ItemBuilder(this, CustomStack.getInstance("omc_homes:omc_homes_icon_bin_red").getItemStack(), itemMeta -> {
             itemMeta.setDisplayName(new FontImageWrapper("omc_homes:bin").getString() + " §cSupprimer le home");
-            itemMeta.setLore(List.of("§7Cliquez pour supprimer votre home"));
+            itemMeta.setLore(List.of(ChatColor.GRAY + "■ §cClique §4gauche §cpour supprimer votre home"));
         }).setNextMenu(new DeleteHomeConfirmationMenu(getOwner(), home)));
 
         content.put(36, new ItemBuilder(this, MailboxMenuManager.previousPageBtn()).setOnClick(event -> {
             new HomesMenu(getOwner(),
                     HomesManagers.getHomes(getOwner().getUniqueId()),
                     AywenCraftPlugin.getInstance().getManagers().getHomeUpgradeManager(),
-                    AywenCraftPlugin.getInstance().getManagers().getHomesManagers(),
                     false
             ).open();
         }));

@@ -24,4 +24,9 @@ public enum HomeIcons {
         this.id = id;
         this.usage = usage;
     }
+
+    public String getName() {
+        return usage.split("\\|")[0];
+    }
+
 }

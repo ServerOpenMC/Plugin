@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
@@ -40,10 +41,10 @@ public class HomesMenu extends PaginatedMenu {
     private final boolean wasTarget;
     private final String TITLE;
 
-    public HomesMenu(Player owner, List<Home> homes, HomeUpgradeManager upgradeManager, HomesManagers homesManagers, boolean wasTarget) {
+    public HomesMenu(Player owner, List<Home> homes, HomeUpgradeManager upgradeManager, boolean wasTarget) {
         super(owner);
         this.homes = homes;
-        this.homesManagers = homesManagers;
+        this.homesManagers = AywenCraftPlugin.getInstance().getManagers().getHomesManagers();
         this.upgradeManager = upgradeManager;
         this.wasTarget = wasTarget;
         TITLE = PlaceholderAPI.setPlaceholders(owner, "§r§f%img_offset_-8%%img_omc_homes_menus_home%");
@@ -79,7 +80,6 @@ public class HomesMenu extends PaginatedMenu {
                         ChatColor.GRAY + "■ §cCliquez §4droit §cpour configurer le home"
                 ));
             }).setOnClick(event -> {
-
                 MenuLib.setLastMenu(getOwner(), this);
 
                 if (event.getClick() == ClickType.LEFT) {
