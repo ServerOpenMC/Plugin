@@ -23,6 +23,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -73,6 +74,27 @@ public class JumpListener implements Listener {
                                 if (!RegionsManager.isSpecifiedPlayerInRegion(player, "spawn")) {
                                     jumpManager.endJump(player);
                                     MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez quitter le Spawn", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+                                if (player.isFlying()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+                                if (player.isGliding()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler avec des élytras durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+                                if (player.isRiptiding()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler avec un trident durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+                                if (player.eject()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous vous êtes fait éjécter durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+
+                                if (player.hasPotionEffect(PotionEffectType.LEVITATION)) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez un Effet de Lévitation durant le Jump\n§7TIPS : Buvez du lait de Courgette", Prefix.JUMP, MessageType.ERROR, true);
                                 }
                             }
                         }
