@@ -160,6 +160,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.registerFlags(new StateFlag("disable-builder-wand", false));
         this.registerFlags(new StateFlag("disable-fly", false));
         this.registerFlags(new StateFlag("disable-spawn-grave", false));
+        this.registerFlags(new StateFlag("disable-wind-charge", false));
     }
 
     @SneakyThrows

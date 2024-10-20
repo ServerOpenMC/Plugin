@@ -87,10 +87,6 @@ public class JumpListener implements Listener {
                                     jumpManager.endJump(player);
                                     MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler avec un trident durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
                                 }
-                                if (player.eject()) {
-                                    jumpManager.endJump(player);
-                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous vous êtes fait éjécter durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
-                                }
 
                                 if (player.hasPotionEffect(PotionEffectType.LEVITATION)) {
                                     jumpManager.endJump(player);
