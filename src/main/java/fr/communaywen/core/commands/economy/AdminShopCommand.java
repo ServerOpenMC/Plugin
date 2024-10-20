@@ -13,5 +13,4 @@ public class AdminShopCommand {
         AdminShopMenu menu = new AdminShopMenu(player);
         menu.open();
     }
-
 }

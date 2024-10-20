@@ -110,7 +110,7 @@ public final class TradeCommand {
         }
 
         if (!success) {
-            player.sendMessage("§6Tu n'as pas assez d'argent ! (" + plugin.getManagers().getEconomyManager().getBalance(player) + ")");
+            player.sendMessage("§6Tu n'as pas assez d'argent ! (" + plugin.getManagers().getEconomyManager().getFormattedBalance(player.getUniqueId()) + ")");
             return;
         }
 

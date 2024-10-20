@@ -16,6 +16,7 @@ public enum Prefix {
     // For gradient color: https://www.birdflop.com/resources/rgb/
     // Color format: §x§r§r§g§g§b§b§l
 
+    OPENMC("§x§F§F§4§5§7§3§l@§x§F§F§4§D§7§9§lᴏ§x§F§F§5§5§7§F§lᴘ§x§F§F§5§D§8§5§lᴇ§x§F§F§6§4§8§B§lɴ§x§F§F§6§C§9§1§lᴍ§x§F§F§7§4§9§7§lᴄ"),
     FREEZE("§x§1§9§5§0§E§E§l@§x§1§9§5§0§E§E§lꜰ§x§1§9§5§0§E§E§lʀ§x§1§9§5§0§E§E§lᴇ§x§1§9§5§0§E§E§lᴇ§x§1§9§5§0§E§E§lᴢ§x§1§9§5§0§E§E§lᴇ"),
     HOME("§x§0§8§F§B§5§D§l@§x§2§5§F§C§6§7§lʜ§x§4§1§F§D§7§0§lᴏ§x§5§E§F§E§7§A§lᴍ§x§7§A§F§F§8§3§lᴇ"),
     CLAIM("§x§4§5§9§5§F§F§l@§x§4§1§9§1§F§B§lᴄ§x§3§D§8§D§F§7§lʟ§x§3§9§8§A§F§4§lᴀ§x§3§5§8§6§F§0§lɪ§x§3§1§8§2§E§C§lᴍ"),

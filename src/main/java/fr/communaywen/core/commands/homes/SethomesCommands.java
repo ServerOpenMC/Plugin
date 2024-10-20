@@ -11,6 +11,8 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomesManagers;
 
+import fr.communaywen.core.homes.menu.utils.HomeIcons;
+import fr.communaywen.core.homes.menu.utils.HomeMenuUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
@@ -67,7 +69,7 @@ public class SethomesCommands {
         int currentHomes = (int) HomesManagers.homes.stream()
                 .filter(home -> home.getPlayer().equals(player.getUniqueId().toString()))
                 .count();
-        int homesLimit = homesManagers.getCurrentHomesLimit(player.getUniqueId());
+        int homesLimit = homesManagers.getHomeLimit(player.getUniqueId());
 
         if (currentHomes >= homesLimit) {
             MessageManager.sendMessageType(player, "§cTu as atteint ta limite de homes. Améliore ta limite pour en définir plus.", Prefix.HOME, MessageType.ERROR, true);
@@ -85,7 +87,9 @@ public class SethomesCommands {
             }
         }
 
-        homesManagers.addHome(new Home(player.getUniqueId().toString(), name, location));
+        HomeIcons icon = HomeMenuUtils.getDefaultHomeIcon(name);
+
+        homesManagers.addHome(new Home(player.getUniqueId().toString(), name, location, icon));
         MessageManager.sendMessageType(player, "§aHome §e" + name + " §adéfini avec succès !", Prefix.HOME, MessageType.SUCCESS, true);
     }
     public static boolean isRegionConflict(Player player, Location location) {

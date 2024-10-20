@@ -12,6 +12,7 @@ import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -69,8 +70,10 @@ public class QuestsManager extends DatabaseConnector {
         return playerQuests.get(player);
     }
 
-    public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
-        PlayerQuests pq = getPlayerQuests(player.getUniqueId());
+    public static void manageQuestsPlayer(UUID uuid, QUESTS quest, int amount, String actionBar) {
+        Player player = Bukkit.getPlayer(uuid);
+        if(!player.isConnected()) return;
+        PlayerQuests pq = getPlayerQuests(uuid);
         int currentTier = pq.getCurrentTier(quest);
 
         if (pq.isQuestCompleted(quest)) { return; }
@@ -203,7 +206,7 @@ public class QuestsManager extends DatabaseConnector {
                 player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(completedTier) + " " + ItemUtils.getDefaultItemName(player, quest.getRewardsMaterial())));
                 break;
             case MONEY:
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt(completedTier));
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), quest.getRewardsQt(completedTier));
 
                 new TransactionsManager().addTransaction(new Transaction(
                         player.getUniqueId().toString(),
@@ -236,7 +239,7 @@ public class QuestsManager extends DatabaseConnector {
                 player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(tier) + " " + quest.getRewardsMaterial().getType().name()));
                 break;
             case MONEY:
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt(tier));
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), quest.getRewardsQt(tier));
                 new TransactionsManager().addTransaction(new Transaction(
                         player.getUniqueId().toString(),
                         "CONSOLE",

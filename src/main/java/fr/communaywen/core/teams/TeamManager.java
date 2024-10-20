@@ -139,10 +139,6 @@ public class TeamManager extends DatabaseConnector {
         return null;
     }
 
-    public static List<Team> getTeams() {
-        return teams;
-    }
-
     public boolean invite(UUID player, Team team) {
         if (team.getPlayers().size() >= 20) {
             return false;

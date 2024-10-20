@@ -29,6 +29,6 @@ public class BedAdvDream extends MultiParentsAdvancement implements HiddenVisibi
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 1, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 1, "Advancement "+this.display.getTitle());
     }
 }
