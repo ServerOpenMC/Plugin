@@ -75,7 +75,7 @@ public class AdminShopBuyConfirm extends Menu {
                     int totalQuantity = quantity;
                     Material materials = Material.getMaterial((material == null) ? items.named() : (items.named() + "_" + material));
 
-                    economy.withdrawBalance(getOwner(), (items.getPrize() * totalQuantity));
+                    economy.withdrawBalance(getOwner().getUniqueId(), (items.getPrize() * totalQuantity));
 
                     transactionsManager.addTransaction(new Transaction(
                             "CONSOLE",

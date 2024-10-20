@@ -22,14 +22,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @Feature("Economie")
-@Credit("TheR0001")
+@Credit({"TheR0001", "Axeno"})
 public class EconomyManager {
-    @Getter
-    private static Map<UUID, Double> balances = Map.of();
-
+    @Getter private static Map<UUID, Double> balances = Map.of();
     @Getter static EconomyManager instance;
 
-    public EconomyManager(File dataFolder) {
+    public EconomyManager() {
         balances = EconomyData.loadBalances();
         instance = this;
     }
@@ -38,18 +36,12 @@ public class EconomyManager {
         return balances.getOrDefault(player, 0.0);
     }
 
-    public static double getBalanceOffline(OfflinePlayer player) {
-        return balances.getOrDefault(player.getUniqueId(), 0.0);
-    }
-
-
-    public void addBalance(Player player, double amount) {
-        UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player.getUniqueId()) + amount);
+    public void addBalance(UUID player, double amount) {
+        balances.put(player, getBalance(player) + amount);
 
         saveBalances(player);
         for(QUESTS quests : QUESTS.values()) {
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
+            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
                     QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
@@ -58,43 +50,34 @@ public class EconomyManager {
         }
     }
 
-    public void addBalance(Player player, double amount, String reason) {
-        UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player.getUniqueId()) + amount);
+    public void addBalance(UUID uuid, double amount, String reason) {
+        balances.put(uuid, getBalance(uuid) + amount);
 
         new TransactionsManager().addTransaction(new Transaction(
-                player.getUniqueId().toString(),
+                uuid.toString(),
                 "CONSOLE",
                 amount,
                 reason
         ));
 
-        saveBalances(player);
+        saveBalances(uuid);
         for(QUESTS quests : QUESTS.values()) {
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
+            PlayerQuests pq = QuestsManager.getPlayerQuests(uuid);
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
-                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+                    QuestsManager.manageQuestsPlayer(uuid, quests, (int) amount, " argents récoltés");
                 }
             }
         }
     }
 
-    public static void addBalanceOffline(OfflinePlayer player, double amount) {
-        UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalanceOffline(player) + amount);
-
-        saveBalancesOffline(player);
-    }
-
-    public boolean withdrawBalance(Player player, double amount) {
-        UUID uuid = player.getUniqueId();
-        double balance = getBalance(player.getUniqueId());
+    public boolean withdrawBalance(UUID uuid, double amount) {
+        double balance = getBalance(uuid);
         if (balance >= amount && amount > 0) {
             balances.put(uuid, balance - amount);
-            saveBalances(player);
+            saveBalances(uuid);
             for(QUESTS quests : QUESTS.values()) {
-                PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
+                PlayerQuests pq = QuestsManager.getPlayerQuests(uuid);
                 if(quests.getType() == TYPE.MONEY) {
                     if(!pq.isQuestCompleted(quests)) {
                         pq.removeProgress(quests, (int) amount);
@@ -107,7 +90,7 @@ public class EconomyManager {
         }
     }
 
-    public boolean transferBalance(Player from, Player to, double amount) {
+    public boolean transferBalance(UUID from, UUID to, double amount) {
         if (withdrawBalance(from, amount)) {
             addBalance(to, amount);
             return true;
@@ -116,11 +99,8 @@ public class EconomyManager {
         }
     }
 
-    private void saveBalances(Player player) {
+    private static void saveBalances(UUID player) {
         EconomyData.saveBalances(player, balances);
-    }
-    private static void saveBalancesOffline(OfflinePlayer player) {
-        EconomyData.saveBalancesOffline(player, balances);
     }
 
     public String getFormattedBalance(UUID player) {

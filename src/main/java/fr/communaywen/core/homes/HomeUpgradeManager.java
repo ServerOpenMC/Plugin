@@ -51,7 +51,7 @@ public class HomeUpgradeManager {
             }
             
             if (balance >= price) {
-                plugin.getManagers().getEconomyManager().withdrawBalance(player, price);
+                plugin.getManagers().getEconomyManager().withdrawBalance(player.getUniqueId(), price);
                 int newHomesLimit = nextUpgrade.getHomes();
                 homesManagers.updateHomeLimit(player.getUniqueId(), newHomesLimit);
     

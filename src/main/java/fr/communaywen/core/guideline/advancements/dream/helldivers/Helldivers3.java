@@ -30,6 +30,6 @@ public class Helldivers3 extends BaseAdvancement implements VanillaVisibility {
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 100, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 100, "Advancement "+this.display.getTitle());
     }
 }
