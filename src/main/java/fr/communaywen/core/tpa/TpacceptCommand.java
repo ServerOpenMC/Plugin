@@ -1,6 +1,9 @@
 package fr.communaywen.core.tpa;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.spawn.jump.JumpManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
@@ -25,6 +28,12 @@ public class TpacceptCommand {
 
         if (player.getWorld().getName().equals("dreamworld")) {
             player.sendMessage("§cVous ne pouvez pas vous téléportez dans un rêve");
+            return;
+        }
+
+        if(JumpManager.isJumping(requester)) {
+            player.sendMessage(Component.text("[TPA] ❌ La personne concerné est en Jump, impossible de le tp")
+                    .color(TextColor.color(255, 0, 0)));
             return;
         }
 
@@ -67,6 +76,20 @@ public class TpacceptCommand {
             if (requesterHasMoved()) {
                 requester.sendMessage("§cTéléportation annulée car vous avez bougé.");
                 target.sendMessage("§cTéléportation de " + requester.getName() + " annulée car il a bougé.");
+                cancel();
+                return;
+            }
+
+            if(JumpManager.isJumping(requester)) {
+                requester.sendMessage(Component.text("[TPA] ❌ Le destinataire est en Jump, impossible de vous tp")
+                        .color(TextColor.color(255, 0, 0)));
+                cancel();
+                return;
+            }
+
+            if(JumpManager.isJumping(target)) {
+                target.sendMessage(Component.text("[TPA] ❌ Vous êtes en Jump, impossible de vous tp")
+                        .color(TextColor.color(255, 0, 0)));
                 cancel();
                 return;
             }

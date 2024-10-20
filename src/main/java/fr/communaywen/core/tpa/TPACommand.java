@@ -3,6 +3,7 @@ package fr.communaywen.core.tpa;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.spawn.jump.JumpManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -59,6 +60,18 @@ public class TPACommand implements Listener {
 
         if (TPAQueue.INSTANCE.hasPendingRequest(player)) {
             player.sendMessage(Component.text("[TPA] ❌ Vous avez déjà une demande de téléportation en attente...")
+                    .color(TextColor.color(255, 0, 0)));
+            return;
+        }
+
+        if(JumpManager.isJumping(target)) {
+            player.sendMessage(Component.text("[TPA] ❌ Le destinataire est en Jump, impossible de vous tp")
+                    .color(TextColor.color(255, 0, 0)));
+            return;
+        }
+
+        if(JumpManager.isJumping(player)) {
+            player.sendMessage(Component.text("[TPA] ❌ Vous êtes en Jump, impossible de vous tp")
                     .color(TextColor.color(255, 0, 0)));
             return;
         }
