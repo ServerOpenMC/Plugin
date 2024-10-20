@@ -1,8 +1,5 @@
 package fr.communaywen.core.adminshop.menu.category.colored;
 
-import fr.communaywen.core.adminshop.shopinterfaces.ColoredShop;
-import org.bukkit.entity.Player;
-
 public enum BlockType {
     CONCRETE("Béton"),
     CONCRETE_POWDER("Béton poudreux"),

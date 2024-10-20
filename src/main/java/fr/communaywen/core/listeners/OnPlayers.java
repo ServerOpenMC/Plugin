@@ -56,17 +56,6 @@ public class OnPlayers implements Listener {
 
         event.setJoinMessage("§8[§a+§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
 
-        String regionId = AywenCraftPlugin.getInstance().getConfig().getString("spawn.region");
-        if (RegionsManager.isSpecifiedPlayerInRegion(player, regionId)) {
-            double x = AywenCraftPlugin.getInstance().getConfig().getDouble("spawn.x");
-            double y = AywenCraftPlugin.getInstance().getConfig().getInt("spawn.y");
-            double z = AywenCraftPlugin.getInstance().getConfig().getInt("spawn.z");
-            String WORLD = AywenCraftPlugin.getInstance().getConfig().getString("spawn.world");
-
-            Location spawn = new Location(player.getServer().getWorld(WORLD), x, y, z, 0, 0);
-            player.teleport(spawn);
-        }
-
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
             long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
             LeaderboardManager.setTimePlayed(player, timePlayed);

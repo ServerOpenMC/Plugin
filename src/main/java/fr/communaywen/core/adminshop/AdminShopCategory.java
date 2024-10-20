@@ -7,8 +7,6 @@ import fr.communaywen.core.adminshop.menu.category.defaults.MiscItems;
 import fr.communaywen.core.adminshop.menu.category.defaults.OresItems;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseShop;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

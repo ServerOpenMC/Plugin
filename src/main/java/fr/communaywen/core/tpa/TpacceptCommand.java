@@ -1,6 +1,12 @@
 package fr.communaywen.core.tpa;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.spawn.jump.JumpManager;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import revxrsal.commands.annotation.Command;
@@ -19,19 +25,24 @@ public class TpacceptCommand {
     public void onCommand(Player player) {
         Player requester = tpQueue.getRequester(player);
         if (requester == null) {
-            player.sendMessage("§cVous n'avez pas de demande de téléportation.");
+            MessageManager.sendMessageType(player, "§cVous n'avez pas de demande de téléportation.", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         if (player.getWorld().getName().equals("dreamworld")) {
-            player.sendMessage("§cVous ne pouvez pas vous téléportez dans un rêve");
+            MessageManager.sendMessageType(player, "§cVous ne pouvez pas vous téléportez dans un rêve", Prefix.TPA, MessageType.ERROR, true);
+            return;
+        }
+
+        if(JumpManager.isJumping(requester)) {
+            MessageManager.sendMessageType(player, "§cLa personne concerné est en Jump, impossible de le tp", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         tpQueue.removeRequest(player);
 
-        player.sendMessage("§a" + requester.getName() + " sera téléporté à vous dans 5 secondes. Ne bougez pas !");
-        requester.sendMessage("§aVous serez téléporté à " + player.getName() + " dans 5 secondes. Ne bougez pas !");
+        MessageManager.sendMessageType(player, "§a" + requester.getName() + " sera téléporté à vous dans 5 secondes. Ne bougez pas !", Prefix.TPA, MessageType.INFO, true);
+        MessageManager.sendMessageType(requester, "§aVous serez téléporté à " + player.getName() + " dans 5 secondes. Ne bougez pas !", Prefix.TPA, MessageType.INFO, true);
 
         new TeleportCountdown(plugin, requester, player).runTaskTimer(plugin, 0, 20);
     }
@@ -58,15 +69,27 @@ public class TpacceptCommand {
         public void run() {
             if (countdown <= 0) {
                 requester.teleport(target);
-                requester.sendMessage("§aTéléportation réussie !");
-                target.sendMessage("§a" + requester.getName() + " a été téléporté à vous.");
+                MessageManager.sendMessageType(requester, "§aTéléportation réussie !", Prefix.TPA, MessageType.SUCCESS, true);
+                MessageManager.sendMessageType(target, "§a" + requester.getName() + " a été téléporté à vous.", Prefix.TPA, MessageType.SUCCESS, true);
                 cancel();
                 return;
             }
 
             if (requesterHasMoved()) {
-                requester.sendMessage("§cTéléportation annulée car vous avez bougé.");
-                target.sendMessage("§cTéléportation de " + requester.getName() + " annulée car il a bougé.");
+                MessageManager.sendMessageType(requester, "§cTéléportation annulée car vous avez bougé.", Prefix.TPA, MessageType.ERROR, true);
+                MessageManager.sendMessageType(target, "§cTéléportation de " + requester.getName() + " annulée car il a bougé.", Prefix.TPA, MessageType.ERROR, true);
+                cancel();
+                return;
+            }
+
+            if(JumpManager.isJumping(requester)) {
+                MessageManager.sendMessageType(requester, "§cLe destinataire est en Jump, impossible de vous tp", Prefix.TPA, MessageType.ERROR, true);
+                cancel();
+                return;
+            }
+
+            if(JumpManager.isJumping(target)) {
+                MessageManager.sendMessageType(target, "§cVous êtes en Jump, impossible de vous tp", Prefix.TPA, MessageType.ERROR, true);
                 cancel();
                 return;
             }
