@@ -141,7 +141,7 @@ public class DatabaseManager {
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_jump (uuid VARCHAR(36), best_time DOUBLE)").executeUpdate();
 
         //Table pour le playtime
-        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS playtime (uuid VARCHAR(36), time LONG)").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS playtime (uuid VARCHAR(36), time INT(11))").executeUpdate();
 
         AywenCraftPlugin.getInstance().getLogger().info("\u001B[36m" + "Les tables ont été créées si besoin" + "\u001B[0m");
 

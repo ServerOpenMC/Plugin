@@ -45,6 +45,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static fr.communaywen.core.mailboxes.utils.MailboxUtils.*;
@@ -241,8 +242,8 @@ public class ContestManager extends DatabaseConnector {
         int totalvote = vote1 + vote2;
         int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
         int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
-        int points1 = getInt("contest", "points1");
-        int points2 = getInt("contest", "points2");
+        int points1 = getInt("contest", "points1").join();
+        int points2 = getInt("contest", "points2").join();
 
         int multiplicateurPoint = Math.abs(vote1Taux - vote2Taux)/16;
         multiplicateurPoint=Integer.valueOf(df.format(multiplicateurPoint));
@@ -449,30 +450,34 @@ public class ContestManager extends DatabaseConnector {
         System.out.println("[CONTEST] Fermeture du Contest");
     }
 
-    public static String getString(String table, String column) {
+    public static CompletableFuture<String> getString(String table, String column) {
+        return CompletableFuture.supplyAsync(() -> {
             try {
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
                 ResultSet rs = statement.executeQuery();
                 if (rs.next()) {
-                    return rs.getString(column);
+                   return rs.getString(column);
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        return "";
+            return null;
+        });
     }
 
-    public static int getInt(String table, String column) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(column);
+    public static CompletableFuture<Integer> getInt(String table, String column) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    return rs.getInt(column);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 999;
+            return -1;
+        });
     }
 
     public static String getTimeUntilNextMonday() {
@@ -489,33 +494,35 @@ public class ContestManager extends DatabaseConnector {
         return String.format("%dd %dh %dm", days, hours, minutes);
     }
 
-    public int getPlayerPoints(Player player) {
-        UUID playerUUID = player.getUniqueId();
+    public CompletableFuture<Integer> getPlayerPoints(Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            UUID playerUUID = player.getUniqueId();
 
-        String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, playerUUID.toString());
-            ResultSet result = states.executeQuery();
-            if (result.next()) {
-                int points = result.getInt("point_dep");
-
-                return points;
+            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, playerUUID.toString());
+                ResultSet result = states.executeQuery();
+                if (result.next()) {
+                    return result.getInt("point_dep");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
+            return -1;
+        });
     }
 
 
     public void updateColumnInt(String table, String column, int value) {
-        String sql = "UPDATE " + table + " SET " + column + " = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, value);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            String sql = "UPDATE " + table + " SET " + column + " = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, value);
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     // TRADE METHODE
@@ -595,7 +602,7 @@ public class ContestManager extends DatabaseConnector {
 
     public String getPlayerCampName(Player player) {
         Integer campInteger = ContestCache.getPlayerCampsCache(player);
-        String campName = getString("contest","camp" + campInteger);
+        String campName = getString("contest","camp" + campInteger).join();
         return campName;
     }
     public Integer getOfflinePlayerCamp(OfflinePlayer player) {
@@ -614,12 +621,12 @@ public class ContestManager extends DatabaseConnector {
 
     public String getOfflinePlayerCampName(OfflinePlayer player) {
         Integer campInteger = getOfflinePlayerCamp(player);
-        String campName = getString("contest","camp" + campInteger);
+        String campName = getString("contest","camp" + campInteger).join();;
         return campName;
     }
     public ChatColor getOfflinePlayerCampChatColor(OfflinePlayer player) {
         Integer campInteger = getOfflinePlayerCamp(player);
-        String color = getString("contest","color" + campInteger);
+        String color = getString("contest","color" + campInteger).join();;
         ChatColor campColor = ChatColor.valueOf(color);
         return campColor;
     }
@@ -966,14 +973,16 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public void addPointPlayer(Integer points_dep, Player player) {
-        String sql = "UPDATE camps SET point_dep = ? WHERE minecraft_uuid = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, points_dep);
-            stmt.setString(2, player.getUniqueId().toString());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            String sql = "UPDATE camps SET point_dep = ? WHERE minecraft_uuid = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, points_dep);
+                stmt.setString(2, player.getUniqueId().toString());
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 

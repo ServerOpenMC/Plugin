@@ -265,7 +265,7 @@ public class EventsManager implements Listener {
         System.out.println("\n\nEvent started\n\n");
                             
         Bukkit.broadcastMessage(ChatColor.GREEN + "Nouvel évènement en approche: " + ChatColor.BOLD + "Pêche Miraculeuse\n" + 
-                                ChatColor.RESET + ChatColor.GOLD + "Vous obtenez plus d'xp et de récompense en pêchat et en découvrant des coffres de structures");
+                                ChatColor.RESET + ChatColor.GOLD + "Vous obtenez plus d'xp et de récompenses en pêchant et en découvrant des coffres de structures");
         
         lastMiraculousFishing = System.currentTimeMillis();
 
