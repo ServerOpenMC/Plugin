@@ -114,23 +114,30 @@ public class ContributionMenu extends Menu {
                 }).setOnClick(inventoryClickEvent -> {
                     try {
                         ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
-                        int shell = 0;
-                        for (ItemStack is : getOwner().getInventory().getContents()) {
-                            if (is != null && is.isSimilar(shell_contestItem)) {
-                                shell = shell + is.getAmount();
-                            }
-                        }
-                        if (ItemUtils.hasEnoughItems(getOwner(), shell_contest, shell)) {
-                            ItemUtils.removeItemsFromInventory(getOwner(), shell_contest, shell);
-                            contestManager.addPointPlayer(shell + contestManager.getPlayerPoints(getOwner()), getOwner());
-                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), shell + contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner())));
-                            MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
+
+                        int shellCount = Arrays.stream(getOwner().getInventory().getContents()).filter(is -> is != null && is.isSimilar(shell_contestItem)).mapToInt(ItemStack::getAmount).sum();
+
+                        if (ItemUtils.hasEnoughItems(getOwner(), shell_contestItem.getType(), shellCount)) {
+                            ItemUtils.removeItemsFromInventory(getOwner(), shell_contestItem.getType(), shellCount);
+
+                            contestManager.getPlayerPoints(getOwner()).thenAccept(playerPoints -> {
+                                int newPlayerPoints = shellCount + playerPoints;
+
+                                contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()))
+                                        .thenAccept(campPoints -> {
+                                            int updatedCampPoints = shellCount + campPoints;
+
+                                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), updatedCampPoints);
+
+                                            MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shellCount + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
+                                        });
+                            });
                         } else {
                             MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
                         }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }));
             } else if(i==16) {
                 inventory.put(16, new ItemBuilder(this, Material.OMINOUS_TRIAL_KEY, itemMeta -> {

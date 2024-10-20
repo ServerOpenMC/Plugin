@@ -84,12 +84,12 @@ public class ContestCommand {
                 contestManager.deleteTableContest("camps");
                 contestManager.insertCustomContest(camp1, color1, camp2, color2);
 
-                player.sendMessage("§aLe Contest : " + camp1 + " VS " + camp2 + " a bien été sauvegarder\nMerci d'attendre que les données en cache s'actualise.");
+                MessageManager.sendMessageType(player, "§aLe Contest : " + camp1 + " VS " + camp2 + " a bien été sauvegarder\nMerci d'attendre que les données en cache s'actualise.", Prefix.STAFF, MessageType.SUCCESS, true);
             } else {
-                player.sendMessage("§c/contest setcontest <camp1> <color1> <camp2> <color2> et color doit comporter une couleur valide");
+                MessageManager.sendMessageType(player, "§c/contest setcontest <camp1> <color1> <camp2> <color2> et color doit comporter une couleur valide", Prefix.STAFF, MessageType.ERROR, true);
             }
         } else {
-            player.sendMessage("§cVous pouvez pas définir un contest lorsqu'il a commencé");
+            MessageManager.sendMessageType(player, "§cVous pouvez pas définir un contest lorsqu'il a commencé", Prefix.STAFF, MessageType.ERROR, true);
         }
     }
 
@@ -97,9 +97,9 @@ public class ContestCommand {
     @Description("Permet d'ajouter des points a un membre")
     @CommandPermission("ayw.command.contest.addpoints")
     public void addpoints(Player player, Player target, Integer points) {
-        contestManager.addPointPlayer(points + contestManager.getPlayerPoints(target), target);
+        contestManager.addPointPlayer(points + contestManager.getPlayerPoints(target).join(), target);
 
-        player.sendMessage("§aVous avez ajouté " + points + " §apoint(s) à " + target.getName());
+        MessageManager.sendMessageType(player, "§aVous avez ajouté " + points + " §apoint(s) à " + target.getName(), Prefix.STAFF, MessageType.SUCCESS, true);
     }
 
 }
