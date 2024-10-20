@@ -4,6 +4,9 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.spawn.jump.JumpManager;
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -32,19 +35,17 @@ public class TPACommand implements Listener {
     public void onCommand(Player player, Player target) {
         String targetName = target.getName();
         if (targetName == null || targetName.trim().isEmpty()) {
-            player.sendMessage(Component.text("[TPA] ❌ Vous devez spécifier un joueur.")
-                    .color(TextColor.color(255, 0, 0)));
+            MessageManager.sendMessageType(player, "§cVous devez spécifier un joueur.", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         if (target == null) {
-            player.sendMessage(Component.text("[TPA] ❌ Le joueur '" + targetName + "' n'est pas en ligne.")
-                    .color(TextColor.color(255, 0, 0)));
+            MessageManager.sendMessageType(player, "§cLe joueur '" + targetName + "' n'est pas en ligne.", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         if (target.getWorld().getName().equals("dreamworld")) {
-            player.sendMessage("Vous ne pouvez pas téléporter quelq'un dans la dimension");
+            MessageManager.sendMessageType(player, "§cVous ne pouvez pas téléporter quelqu'un dans la dimension", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
@@ -53,42 +54,33 @@ public class TPACommand implements Listener {
 
     public static void sendTPARequest(Player player, Player target, AywenCraftPlugin plugin) {
         if (player.equals(target)) {
-            player.sendMessage(Component.text("[TPA] ❌ Vous ne pouvez pas vous téléporter à vous-même.")
-                    .color(TextColor.color(255, 0, 0)));
+            MessageManager.sendMessageType(player, "§cVous ne pouvez pas vous téléporter à vous-même.", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         if (TPAQueue.INSTANCE.hasPendingRequest(player)) {
-            player.sendMessage(Component.text("[TPA] ❌ Vous avez déjà une demande de téléportation en attente...")
-                    .color(TextColor.color(255, 0, 0)));
+            MessageManager.sendMessageType(player, "§cVous avez déjà une demande de téléportation en attente...", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         if(JumpManager.isJumping(target)) {
-            player.sendMessage(Component.text("[TPA] ❌ Le destinataire est en Jump, impossible de vous tp")
-                    .color(TextColor.color(255, 0, 0)));
+            MessageManager.sendMessageType(player, "§cLe destinataire est en Jump, impossible de vous tp", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         if(JumpManager.isJumping(player)) {
-            player.sendMessage(Component.text("[TPA] ❌ Vous êtes en Jump, impossible de vous tp")
-                    .color(TextColor.color(255, 0, 0)));
+            MessageManager.sendMessageType(player, "§cVous êtes en Jump, impossible de vous tp", Prefix.TPA, MessageType.ERROR, true);
             return;
         }
 
         TPAQueue.INSTANCE.addRequest(player, target);
-        player.sendMessage(Component.text("[TPA] ✅ Demande de téléportation envoyée à ")
-                .color(TextColor.color(0, 255, 0))
-                .append(Component.text(target.getName())
-                        .color(TextColor.color(0, 255, 255)))
-                .append(Component.text(" ✅"))
-                .color(TextColor.color(0, 255, 0)));
+        MessageManager.sendMessageType(player, "§aDemande de téléportation envoyée à §e" + target.getName(), Prefix.TPA, MessageType.SUCCESS, true);
 
-        final Component message = Component.text(player.getName() + " vous a envoyé une demande de téléportation. Tapez /tpaccept pour accepter.")
-                .color(TextColor.color(0, 255, 255))
+        final Component message = Component.text("§eTapez /tpaccept pour accepter.")
                 .clickEvent(ClickEvent.runCommand("/tpaccept"))
-                .hoverEvent(HoverEvent.showText(Component.text("[TPA] §7[§aCliquez pour accepter§7]")));
+                .hoverEvent(HoverEvent.showText(Component.text("§7[§aCliquez pour accepter§7]")));
 
+        MessageManager.sendMessageType(target, "§a" + player.getName() + " vous a envoyé une demande de téléportation.", Prefix.TPA, MessageType.SUCCESS, true);
         plugin.getAdventure().player(target).sendMessage(message);
 
         new BukkitRunnable() {

@@ -1,5 +1,8 @@
 package fr.communaywen.core.tpa;
 
+import fr.communaywen.core.utils.constant.MessageManager;
+import fr.communaywen.core.utils.constant.MessageType;
+import fr.communaywen.core.utils.constant.Prefix;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +30,8 @@ public class TPAQueue {
         if (tpaRequests.containsKey(target.getUniqueId())) {
             long requestTime = tpaRequestTimes.get(player.getUniqueId());
             if (System.currentTimeMillis() - requestTime >= 120000) { // 2 minutes
-                player.sendMessage("§cVotre demande de téléportation à §f" + target.getName() + " §ca expiré.");
+                MessageManager.sendMessageType(player, "§cVotre demande de téléportation à §f" + target.getName() + " §ca expiré.", Prefix.TPA, MessageType.WARNING, true);
+
                 tpaRequests.remove(target.getUniqueId());
                 tpaRequestTimes.remove(player.getUniqueId());
             }
