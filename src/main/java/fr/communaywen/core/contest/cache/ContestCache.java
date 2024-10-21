@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,10 +17,8 @@ import java.util.UUID;
 
 public class ContestCache extends DatabaseConnector {
 
-    private ContestManager contestManager;
     private JavaPlugin plugin;
-    public ContestCache(AywenCraftPlugin plug, ContestManager manager) {
-        contestManager = manager;
+    public ContestCache(AywenCraftPlugin plug) {
         plugin = plug;
     }
 
@@ -30,19 +27,11 @@ public class ContestCache extends DatabaseConnector {
     // CONTEST DATA
     private ContestDataCache contestCache;
 
-
     public void initContestDataCache() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            Connection conn = null;
-            PreparedStatement states = null;
-            ResultSet result = null;
-
-            try {
-                conn = connection;
-                String sql = "SELECT * FROM contest WHERE 1";
-                states = conn.prepareStatement(sql);
-                result = states.executeQuery();
-
+            String sql = "SELECT * FROM contest WHERE 1";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                ResultSet result = states.executeQuery();
                 if (result.next()) {
                     String camp1 = result.getString("camp1");
                     String camp2 = result.getString("camp2");
@@ -55,18 +44,9 @@ public class ContestCache extends DatabaseConnector {
                         contestCache = new ContestDataCache(camp1, camp2, color1, color2, phase, startdate);
                     });
                 }
-
+                states.closeOnCompletion();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
-
-            } finally {
-                try {
-                    if (result != null) result.close();
-                    if (states != null) states.close();
-                    if (conn != null) conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
@@ -159,41 +139,25 @@ public class ContestCache extends DatabaseConnector {
     private Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
 
     public void initPlayerDataCache(Player player) {
-
+        UUID playerUUID = player.getUniqueId();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            Connection conn = null;
-            PreparedStatement states = null;
-            ResultSet result = null;
-
-            try {
-                conn = connection;
-                String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-                states = conn.prepareStatement(sql);
-                states.setString(1, player.getUniqueId().toString());
-                result = states.executeQuery();
-
+            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, playerUUID.toString());
+                ResultSet result = states.executeQuery();
                 if (result.next()) {
                     int points = result.getInt("point_dep");
                     int camp = result.getInt("camps");
-                    String color = ContestManager.getString("contest", "color" + camp).join();
+                    String color = ContestManager.getString("contest","color" + camp).join();
                     ChatColor campColor = ChatColor.valueOf(color);
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        playerCache.put(player.getUniqueId(), new ContestPlayerCache(points, camp, campColor));
+                        playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
                     });
                 }
-
+                states.closeOnCompletion();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
-
-            } finally {
-                try {
-                    if (result != null) result.close();
-                    if (states != null) states.close();
-                    if (conn != null) conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
@@ -253,4 +217,5 @@ public class ContestCache extends DatabaseConnector {
     public void clearPlayerCache(Player player) {
         playerCache.remove(player.getUniqueId());
     }
+
 }

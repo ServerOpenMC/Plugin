@@ -58,7 +58,7 @@ public class ContestManager extends DatabaseConnector {
     private final ContestCache contestCache;
 
     private final ArrayList<String> colorContest = new ArrayList<>();
-    public ContestManager(AywenCraftPlugin plugin) {
+    public ContestManager(AywenCraftPlugin plugin, ContestCache managerCache) {
         config = plugin.getConfig();
         plugins = plugin;
         colorContest.add("WHITE");
@@ -77,7 +77,7 @@ public class ContestManager extends DatabaseConnector {
         colorContest.add("DARK_GREEN");
         colorContest.add("DARK_BLUE");
         colorContest.add("BLACK");
-        this.contestCache=plugin.getManagers().getContestCache();
+        this.contestCache=managerCache;
     }
 
 
