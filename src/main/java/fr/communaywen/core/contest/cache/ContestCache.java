@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,11 +30,19 @@ public class ContestCache extends DatabaseConnector {
     // CONTEST DATA
     private ContestDataCache contestCache;
 
+
     public void initContestDataCache() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            String sql = "SELECT * FROM contest WHERE 1";
-            try (PreparedStatement states = connection.prepareStatement(sql)) {
-                ResultSet result = states.executeQuery();
+            Connection conn = null;
+            PreparedStatement states = null;
+            ResultSet result = null;
+
+            try {
+                conn = connection;
+                String sql = "SELECT * FROM contest WHERE 1";
+                states = conn.prepareStatement(sql);
+                result = states.executeQuery();
+
                 if (result.next()) {
                     String camp1 = result.getString("camp1");
                     String camp2 = result.getString("camp2");
@@ -46,8 +55,18 @@ public class ContestCache extends DatabaseConnector {
                         contestCache = new ContestDataCache(camp1, camp2, color1, color2, phase, startdate);
                     });
                 }
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+
+            } finally {
+                try {
+                    if (result != null) result.close();
+                    if (states != null) states.close();
+                    if (conn != null) conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -137,27 +156,44 @@ public class ContestCache extends DatabaseConnector {
     }
 
     // CONTEST PLAYER DATA
-    private final Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
+    private Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
 
     public void initPlayerDataCache(Player player) {
-        UUID playerUUID = player.getUniqueId();
+
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
-            try (PreparedStatement states = connection.prepareStatement(sql)) {
-                states.setString(1, playerUUID.toString());
-                ResultSet result = states.executeQuery();
+            Connection conn = null;
+            PreparedStatement states = null;
+            ResultSet result = null;
+
+            try {
+                conn = connection;
+                String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+                states = conn.prepareStatement(sql);
+                states.setString(1, player.getUniqueId().toString());
+                result = states.executeQuery();
+
                 if (result.next()) {
                     int points = result.getInt("point_dep");
                     int camp = result.getInt("camps");
-                    String color = ContestManager.getString("contest","color" + camp).join();
+                    String color = ContestManager.getString("contest", "color" + camp).join();
                     ChatColor campColor = ChatColor.valueOf(color);
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
+                        playerCache.put(player.getUniqueId(), new ContestPlayerCache(points, camp, campColor));
                     });
                 }
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+
+            } finally {
+                try {
+                    if (result != null) result.close();
+                    if (states != null) states.close();
+                    if (conn != null) conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -204,5 +240,17 @@ public class ContestCache extends DatabaseConnector {
             }
             return null;
         }
+    }
+
+    public void clearContestCache() {
+        contestCache = null;
+    }
+
+    public void clearPlayerContestCache() {
+        playerCache = null;
+    }
+
+    public void clearPlayerCache(Player player) {
+        playerCache.remove(player.getUniqueId());
     }
 }

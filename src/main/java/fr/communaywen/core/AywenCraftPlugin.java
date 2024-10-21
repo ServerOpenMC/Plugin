@@ -490,6 +490,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onDisable() {
+        // VIDER LES DONNEES
+        this.getManagers().getContestCache().clearContestCache();
+        this.getManagers().getContestCache().clearPlayerContestCache();
+
         // Remove Leaderboard
         LeaderboardManager.removeLeaderboardBalTop();
         LeaderboardManager.removeLeaderboardTeamTop();

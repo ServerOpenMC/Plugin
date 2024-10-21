@@ -144,6 +144,9 @@ public class OnPlayers implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        // vider le cache du joueur parti
+        AywenCraftPlugin.getInstance().getManagers().getContestCache().clearPlayerCache(player);
+
         User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
         QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
 

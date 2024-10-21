@@ -55,7 +55,7 @@ public class ContestManager extends DatabaseConnector {
     private static final Logger log = LoggerFactory.getLogger(ContestManager.class);
     FileConfiguration config;
     AywenCraftPlugin plugins;
-    private ContestCache contestCache;
+    private final ContestCache contestCache;
 
     private final ArrayList<String> colorContest = new ArrayList<>();
     public ContestManager(AywenCraftPlugin plugin) {
