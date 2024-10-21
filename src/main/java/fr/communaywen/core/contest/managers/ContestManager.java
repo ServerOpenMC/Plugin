@@ -254,9 +254,13 @@ public class ContestManager extends DatabaseConnector {
         multiplicateurPoint=Integer.valueOf(df.format(multiplicateurPoint));
 
         if (vote1Taux > vote2Taux) {
-            points2*=multiplicateurPoint;
+            if (points2<points1) {
+                points2 *= multiplicateurPoint;
+            }
         } else if (vote1Taux < vote2Taux) {
-            points1*=multiplicateurPoint;
+            if (points1<points2) {
+                points1 *= multiplicateurPoint;
+            }
         }
 
         int totalpoint = points1 + points2;
