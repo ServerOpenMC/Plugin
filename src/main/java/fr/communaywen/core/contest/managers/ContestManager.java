@@ -214,7 +214,8 @@ public class ContestManager extends DatabaseConnector {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
         updateColumnInt("contest", "phase", 4);
-        Component message = Component.text("Procédure de Fin du Contest", NamedTextColor.DARK_RED);
+        Component message = Component.text("Procédure de Fin du Contest", NamedTextColor.RED)
+                .append(Component.text("Cela devrait prendre quelques minutes", NamedTextColor.DARK_GRAY));
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.kick(message, PlayerKickEvent.Cause.PLUGIN);
