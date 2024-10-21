@@ -73,7 +73,7 @@ public class BuilderWand extends CustomItems implements CustomItemsEvents {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
-        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-builder-wand"))) {
+        if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-builder-wand"))) {
             event.setCancelled(false);
             if (event.getHand() == null) {
                 return;
