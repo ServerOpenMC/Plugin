@@ -163,7 +163,7 @@ public class ClaimListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();
