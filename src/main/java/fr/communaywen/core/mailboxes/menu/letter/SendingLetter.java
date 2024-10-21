@@ -33,7 +33,7 @@ public class SendingLetter extends MailboxInv {
 //		this.teamManager = plugin.getManagers().getTeamManager();
 //		FriendsManager friendsManager = plugin.getManagers().getFriendsManager();
 //		playerFriends = (List<String>) friendsManager.getFriendsAsync(player.getName());
-		this.mail_accept = SettingsCache.settingsMap.get(receiver.getUniqueId()).mail_accept();
+		this.mail_accept = SettingsCache.settingsMap.get(receiver.getUniqueId().toString()).mail_accept();
 		inventory = Bukkit.createInventory(this, 54, MailboxMenuManager.getInvTitle(INV_NAME));
 		inventory.setItem(49, getHead(receiver));
 		inventory.setItem(45, homeBtn());
@@ -69,6 +69,7 @@ public class SendingLetter extends MailboxInv {
 		switch (mail_accept) {
 			case 0:
 				sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
+				for (ItemStack item : items) player.getWorld().dropItemNaturally(player.getLocation(), item);
 				break;
 
 //			case 1:
