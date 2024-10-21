@@ -447,7 +447,7 @@ public class ContestManager extends DatabaseConnector {
 
 
         region.setFlag(Flags.TIME_LOCK, null);
-        region.setFlag(Flags.WEATHER_LOCK, null);
+        region.setFlag(Flags.WEATHER_LOCK, WeatherType.REGISTRY.get("clear"));
 
         try {
             regions.save();
