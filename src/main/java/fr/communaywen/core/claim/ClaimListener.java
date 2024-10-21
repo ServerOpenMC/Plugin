@@ -41,7 +41,7 @@ public class ClaimListener implements Listener {
         if (!GamePlayer.gamePlayers.containsKey(event.getPlayer().getName())) new GamePlayer(event.getPlayer().getName());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         checkRegion(event.getPlayer(), event.getBlock(), event);
     }
