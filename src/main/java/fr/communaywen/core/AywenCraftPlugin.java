@@ -94,7 +94,7 @@ import java.util.List;
 import java.util.*;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+    @Getter public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
     @Getter
     private static AywenCraftPlugin instance;
@@ -114,7 +114,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private BukkitCommandHandler handler;
     @Getter
     private TabList tabList;
-    private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
+    @Getter private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
 
     /**
      * Format a permission with the permission prefix.
@@ -524,16 +524,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
             }
         }
     }
-    public HashMap<Class<?>, HashMap<String, Flag<?>>> getCustomFlags() {
-        return flags;
-    }
-
-    public ArrayList<Player> getFrozenPlayers() {
-        return frozenPlayers;
-    }
-
-
-    // Farine pour fabriquer du pain
 
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
