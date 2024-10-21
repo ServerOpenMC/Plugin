@@ -60,10 +60,9 @@ public class HeadListener implements Listener {
 
                                 MessageManager.sendMessageType(player, "§7Vous avez trouvé une tête! (§d" + HeadManager.getNumberHeads(player) + "§8/§d" + HeadManager.getMaxHeads() + "§7)", Prefix.HEAD, MessageType.SUCCESS, true);
 
-                                MessageManager.sendMessageType(player, "§aVous avez collecté §62 LuckyBlock", Prefix.HEAD, MessageType.SUCCESS, true);
+                                MessageManager.sendMessageType(player, "§aVous avez collecté §61 LuckyBlock", Prefix.HEAD, MessageType.SUCCESS, true);
 
                                 ItemStack luckyblock = LBUtils.getLuckyBlockItem();
-                                luckyblock.setAmount(2);
                                 player.getInventory().addItem(luckyblock);
 
                                 GuidelineManager.getAPI().getAdvancement("openmc:spawn/head/1").grant(player);
