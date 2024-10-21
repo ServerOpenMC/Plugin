@@ -8,6 +8,7 @@ import fr.communaywen.core.utils.Queue;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -64,7 +65,7 @@ public class TeamManager extends DatabaseConnector {
         } catch (Exception e){
             e.printStackTrace();
             plugin.getLogger().severe("Impossible de charger les teams :'(");
-            plugin.getPluginLoader().disablePlugin(plugin);
+            Bukkit.getPluginManager().disablePlugin(plugin);
         }
     }
 
