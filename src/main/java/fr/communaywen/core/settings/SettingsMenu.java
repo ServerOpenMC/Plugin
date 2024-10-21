@@ -1,5 +1,6 @@
 package fr.communaywen.core.settings;
 
+import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
@@ -12,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -61,18 +61,15 @@ public class SettingsMenu extends Menu {
 	public @NotNull Map<Integer, ItemStack> getContent() {
 		Map<Integer, ItemStack> map = new HashMap<>();
 		
-		map.put(22, new ItemBuilder(this, Material.PAPER, itemMeta -> {
+		map.put(22, new ItemBuilder(this, CustomStack.getInstance("settings:mailbox_settings_btn").getItemStack(), itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GOLD + "Mailbox");
-			itemMeta.setCustomModelData(8000);
 			itemMeta.setLore(List.of(SettingsUtils.getMailStatus(this.mail_accept)));
 		}).setNextMenu(new MailboxManagerMenu(owner, this)));
-		map.put(45, new ItemBuilder(this, Material.BARRIER, itemMeta -> {
+		map.put(45, new ItemBuilder(this, CustomStack.getInstance("settings:close_btn").getItemStack(), itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Fermer");
-			itemMeta.setCustomModelData(8100);
 		}).setCloseButton());
-		map.put(53, new ItemBuilder(this, Material.PAPER, itemMeta -> {
+		map.put(53, new ItemBuilder(this, CustomStack.getInstance("settings:save_btn").getItemStack(), itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
-			itemMeta.setCustomModelData(8001);
 		}).setOnClick(inventoryClickEvent -> {
 				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
 			MessageManager.sendMessageType(owner, "Settings enregistrés", Prefix.SETTINGS, MessageType.INFO, false);

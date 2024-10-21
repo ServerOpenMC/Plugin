@@ -25,27 +25,26 @@ import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
 import fr.communaywen.core.commands.homes.*;
-import fr.communaywen.core.commands.spawn.head.HeadCommand;
-import fr.communaywen.core.commands.spawn.jump.JumpCommand;
-import fr.communaywen.core.commands.spawn.leaderboard.LeaderboardCommand;
-import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
 import fr.communaywen.core.commands.socials.DiscordCommand;
 import fr.communaywen.core.commands.socials.GithubCommand;
+import fr.communaywen.core.commands.spawn.head.HeadCommand;
+import fr.communaywen.core.commands.spawn.jump.JumpCommand;
+import fr.communaywen.core.commands.spawn.leaderboard.LeaderboardCommand;
+import fr.communaywen.core.commands.staff.FreezeCommand;
+import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.commands.staff.ReportCommands;
 import fr.communaywen.core.commands.teams.TeamAdminCommand;
+import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.contest.cache.ContestCache;
-import fr.communaywen.core.contest.cache.ContestDataCache;
 import fr.communaywen.core.contest.listeners.ContestIntractEvents;
 import fr.communaywen.core.contest.listeners.ContestListener;
 import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
-import fr.communaywen.core.contest.managers.ColorConvertor;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
@@ -54,9 +53,9 @@ import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
-import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomesManagers;
+import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
@@ -68,26 +67,24 @@ import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
-import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
-import fr.communaywen.core.quests.qenum.QUESTS;
-import fr.communaywen.core.commands.staff.FreezeCommand;
-import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.settings.SettingsListener;
 import fr.communaywen.core.space.moon.MoonListener;
 import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.spawn.head.HeadListener;
-import fr.communaywen.core.spawn.jump.JumpListener;
 import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
-import fr.communaywen.core.utils.*;
+import fr.communaywen.core.utils.DiscordWebhook;
+import fr.communaywen.core.utils.LinkerAPI;
+import fr.communaywen.core.utils.MOTDChanger;
+import fr.communaywen.core.utils.PermissionCategory;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -115,8 +112,9 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Locale;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -402,7 +400,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsListener(this),
                 new ParticleListener(this),
                 new HeadListener(this),
-                new JumpListener(this, jumpManager),
+                //new JumpListener(this, jumpManager),
                 new LeaderboardListener(this, jumpManager),
                 new RocketListener(),
                 new MoonListener(),
@@ -420,7 +418,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
-                new Dream(this),
+                //new Dream(this),
                 new VpnListener(this),
                 new ThorHammer(this),
                 new FriendsListener(managers.getFriendsManager()),
@@ -469,38 +467,38 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         // BETTER SPAWN
         // - Leaderboard
-        LeaderboardManager.createLeaderboardBalTop();
-        LeaderboardManager.updateLeaderboardBalTop();
-        LeaderboardManager.createLeaderboardTeamTop();
-        LeaderboardManager.updateLeaderboardTeamTop();
-        LeaderboardManager.createLeaderboardPlayTime();
-        LeaderboardManager.updateLeaderboardPlayTime();
-        jumpManager.createDisplayJumpStart();
-        jumpManager.createDisplayJumpEnd();
-        jumpManager.createLeaderboardLeaderboardRecord();
-        jumpManager.updateLeaderboardLeaderboardRecord();
-        jumpManager.createDisplayJumpEnd();
-        LeaderboardManager.createLeaderboardContribution();
-        try {
-            LeaderboardManager.updateLeaderboardContribution();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        LeaderboardManager.createLeaderboardBalTop();
+//        LeaderboardManager.updateLeaderboardBalTop();
+//        LeaderboardManager.createLeaderboardTeamTop();
+//        LeaderboardManager.updateLeaderboardTeamTop();
+//        LeaderboardManager.createLeaderboardPlayTime();
+//        LeaderboardManager.updateLeaderboardPlayTime();
+//        jumpManager.createDisplayJumpStart();
+//        jumpManager.createDisplayJumpEnd();
+//        jumpManager.createLeaderboardLeaderboardRecord();
+//        jumpManager.updateLeaderboardLeaderboardRecord();
+//        jumpManager.createDisplayJumpEnd();
+//        LeaderboardManager.createLeaderboardContribution();
+//        try {
+//            LeaderboardManager.updateLeaderboardContribution();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 
     @SneakyThrows
     @Override
     public void onDisable() {
-        // Remove Leaderboard
-        LeaderboardManager.removeLeaderboardBalTop();
-        LeaderboardManager.removeLeaderboardTeamTop();
-        jumpManager.removeLeaderboardLeaderboardRecord();
-        LeaderboardManager.removeLeaderboardContribution();
-        LeaderboardManager.removeLeaderboardPlayTime();
-
-        jumpManager.removeDisplayJumpStart();
-        jumpManager.removeDisplayJumpEnd();
+//        // Remove Leaderboard
+//        LeaderboardManager.removeLeaderboardBalTop();
+//        LeaderboardManager.removeLeaderboardTeamTop();
+//        jumpManager.removeLeaderboardLeaderboardRecord();
+//        LeaderboardManager.removeLeaderboardContribution();
+//        LeaderboardManager.removeLeaderboardPlayTime();
+//
+//        jumpManager.removeDisplayJumpStart();
+//        jumpManager.removeDisplayJumpEnd();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
