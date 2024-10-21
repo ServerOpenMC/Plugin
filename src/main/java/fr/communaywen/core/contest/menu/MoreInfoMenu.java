@@ -2,6 +2,7 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -16,10 +17,12 @@ import java.util.*;
 
 public class MoreInfoMenu extends Menu {
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public MoreInfoMenu(Player owner, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
+        this.contestCache = AywenCraftPlugin.getInstance().getManagers().getContestCache();
     }
 
     @Override
@@ -57,7 +60,7 @@ public class MoreInfoMenu extends Menu {
         lore2.add("§7Sera élu. Et des récompenses sont attribué");
         lore2.add("§7A chacun.");
 
-        int phase = ContestCache.getPhaseCache();
+        int phase = contestCache.getPhaseCache();
 
         boolean ench0;
         boolean ench1;

@@ -28,10 +28,12 @@ import java.util.*;
 public class ContributionMenu extends Menu {
     private final AywenCraftPlugin plugin;
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public ContributionMenu(Player owner, AywenCraftPlugin plugin, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
+        this.contestCache = plugin.getManagers().getContestCache();
         this.plugin = plugin;
     }
 
@@ -54,7 +56,7 @@ public class ContributionMenu extends Menu {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
         String campName = contestManager.getPlayerCampName(getOwner());
-        ChatColor campColor = ContestCache.getPlayerColorCache(getOwner());
+        ChatColor campColor = contestCache.getPlayerColorCache(getOwner());
         Material m = ColorConvertor.getMaterialFromColor(campColor);
 
         List<String> loreinfo = new ArrayList<String>();
@@ -92,7 +94,7 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
         lore_rang.add(campColor + contestManager.getRankContest(getOwner()) + campName);
-        lore_rang.add("§7Progression §8: " + campColor + ContestCache.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
+        lore_rang.add("§7Progression §8: " + campColor + contestCache.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
         lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
 
                 inventory.put(8, new ItemBuilder(this, Material.GOLD_BLOCK, itemMeta -> {
@@ -122,11 +124,11 @@ public class ContributionMenu extends Menu {
                             contestManager.getPlayerPoints(getOwner()).thenAccept(playerPoints -> {
                                 int newPlayerPoints = shellCount + playerPoints;
 
-                                contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()))
+                                contestManager.getInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()))
                                         .thenAccept(campPoints -> {
                                             int updatedCampPoints = shellCount + campPoints;
 
-                                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), updatedCampPoints);
+                                            contestManager.updateColumnInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()), updatedCampPoints);
 
                                             MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shellCount + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
                                         });

@@ -2,6 +2,7 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -22,12 +23,14 @@ public class ConfirmMenu extends Menu {
     private final String getCampName;
     private final String getColor;
     private final ContestManager contestManager;
+    private final AywenCraftPlugin plugin;
 
-    public ConfirmMenu(Player owner, String camp, String color, ContestManager manager) {
+    public ConfirmMenu(Player owner, AywenCraftPlugin plugins, String camp, String color, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
         this.getCampName = camp;
         this.getColor = color;
+        this.plugin= plugins;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ConfirmMenu extends Menu {
                     itemMeta.setDisplayName("§r§cAnnuler");
                     itemMeta.setLore(lore0);
                 }).setOnClick(inventoryClickEvent -> {
-                    VoteMenu menu = new VoteMenu(getOwner(), contestManager);
+                    VoteMenu menu = new VoteMenu(getOwner(), plugin, contestManager);
                     menu.open();
                 }));
 

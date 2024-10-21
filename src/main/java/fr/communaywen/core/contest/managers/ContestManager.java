@@ -55,6 +55,7 @@ public class ContestManager extends DatabaseConnector {
     private static final Logger log = LoggerFactory.getLogger(ContestManager.class);
     FileConfiguration config;
     AywenCraftPlugin plugins;
+    private ContestCache contestCache;
 
     private final ArrayList<String> colorContest = new ArrayList<>();
     public ContestManager(AywenCraftPlugin plugin) {
@@ -76,6 +77,7 @@ public class ContestManager extends DatabaseConnector {
         colorContest.add("DARK_GREEN");
         colorContest.add("DARK_BLUE");
         colorContest.add("BLACK");
+        this.contestCache=plugin.getManagers().getContestCache();
     }
 
 
@@ -116,7 +118,7 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        ContestCache.initContestDataCache();
+        contestCache.initContestDataCache();
         System.out.println("[CONTEST] Ouverture des votes");
     }
     //PHASE 2
@@ -206,7 +208,7 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        ContestCache.initContestDataCache();
+        contestCache.initContestDataCache();
         System.out.println("[CONTEST] Ouverture des trades");
     }
     //PHASE 3
@@ -222,12 +224,12 @@ public class ContestManager extends DatabaseConnector {
         }
 
         // GET GLOBAL CONTEST INFORMATION
-        String camp1Color = ContestCache.getColor1Cache();
-        String camp2Color = ContestCache.getColor2Cache();
+        String camp1Color = contestCache.getColor1Cache();
+        String camp2Color = contestCache.getColor2Cache();
         ChatColor color1 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp1Color));
         ChatColor color2 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp2Color));
-        String camp1Name = ContestCache.getCamp1Cache();
-        String camp2Name = ContestCache.getCamp2Cache();
+        String camp1Name = contestCache.getCamp1Cache();
+        String camp2Name = contestCache.getCamp2Cache();
 
         //CREATE PART OF BOOK
         ItemStack baseBook = new ItemStack(Material.WRITTEN_BOOK);
@@ -371,7 +373,7 @@ public class ContestManager extends DatabaseConnector {
 
         //EXECUTER LES REQUETES SQL DANS UN AUTRE THREAD
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    addOneToLastContest(ContestCache.getCamp1Cache());
+                    addOneToLastContest(contestCache.getCamp1Cache());
                     deleteTableContest("contest");
                     deleteTableContest("camps");
                     selectRandomlyContest();
@@ -435,7 +437,7 @@ public class ContestManager extends DatabaseConnector {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
-            ContestCache.initPlayerDataCache(player);
+            contestCache.initPlayerDataCache(player);
         }
 
         World world = Bukkit.getWorld(worldsName);
@@ -455,7 +457,7 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        ContestCache.initContestDataCache();
+        contestCache.initContestDataCache();
         System.out.println("[CONTEST] Fermeture du Contest");
     }
 
@@ -610,7 +612,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getPlayerCampName(Player player) {
-        Integer campInteger = ContestCache.getPlayerCampsCache(player);
+        Integer campInteger = contestCache.getPlayerCampsCache(player);
         String campName = getString("contest","camp" + campInteger).join();
         return campName;
     }
@@ -665,7 +667,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getRankContest(Player player) {
-        int points = ContestCache.getPlayerPointsCache(player);
+        int points = contestCache.getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return "Dictateur en  ";
@@ -693,7 +695,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public int getRepPointsToRank(Player player) {
-        int points = ContestCache.getPlayerPointsCache(player);
+        int points = contestCache.getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return 0;
