@@ -26,9 +26,9 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.connection = DriverManager.getConnection(this.url, this.user, this.password);
-            AywenCraftPlugin.getInstance().getLogger().info("\u001B[32m" + "Connexion à la base de données réussie");
+            AywenCraftPlugin.getInstance().getLogger().info("\u001B[32m" + "Connexion à la base de données réussie\u001B[0m");
         } catch (SQLException | ClassNotFoundException e) {
-            AywenCraftPlugin.getInstance().getLogger().warning("\u001B[31m" + "Connexion à la base de données échouée");
+            AywenCraftPlugin.getInstance().getLogger().warning("\u001B[31m" + "Connexion à la base de données échouée\u001B[0m");
             throw new RuntimeException(e);
         }
     }

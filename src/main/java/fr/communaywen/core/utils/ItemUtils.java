@@ -98,15 +98,18 @@ public class ItemUtils {
             }
         }
     }
-    public static String getDefaultItemName(Player localPlayer, ItemStack itemStack) {
-        Material material = itemStack.getType();
-        String translationKey = material.getTranslationKey();
-
+    public static String getDefaultItemName(Player localPlayer, Material material) {
+        String translationKey = material.translationKey();
         TranslatableComponent translatable = Component.translatable(translationKey);
 
-        Component translated = GlobalTranslator.render(translatable, Locale.of(localPlayer.getLocale()));
+        Component translated = GlobalTranslator.render(translatable, Locale.of(localPlayer.locale().toString()));
 
         return PlainTextComponentSerializer.plainText().serialize(translated);
+
+    }
+
+    public static String getDefaultItemName(Player localPlayer, ItemStack itemStack) {
+        return getDefaultItemName(localPlayer, itemStack.getType());
 
     }
 }

@@ -49,7 +49,7 @@ public class CorpseListener implements Listener {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(e.getPlayer().getLocation()));
-        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-spawn-grave"))) {
+        if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-spawn-grave"))) {
             Player player = e.getEntity();
 
             if (player.getWorld().getName().equals("dreamworld")) { return; }

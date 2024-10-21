@@ -2,6 +2,7 @@ package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -26,7 +27,7 @@ public class DatabaseManager {
         }
         if (plugin.getConfig().getString("database.url") == null) {
             plugin.getLogger().severe("\n\nPlease, add the database configuration in the config.yml file !\n\n");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            Bukkit.getPluginManager().disablePlugin(plugin);
             return;
         }
         this.connection = new DatabaseConnection(plugin.getConfig().getString("database.url"),

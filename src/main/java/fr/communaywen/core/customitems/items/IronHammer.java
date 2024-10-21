@@ -60,7 +60,7 @@ public class IronHammer extends CustomItems implements CustomItemsEvents {
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getBlock().getLocation()));
 
-        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-hammer"))) {
+        if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-hammer"))) {
             event.setCancelled(false);
             Block brokenBlock = event.getBlock();
             CustomBlock customBlock = CustomBlock.byAlreadyPlaced(brokenBlock);
