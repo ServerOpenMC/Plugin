@@ -5,6 +5,7 @@ import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ColorConvertor;
 import fr.communaywen.core.contest.managers.ContestManager;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public class VoteMenu extends Menu {
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Les Votes";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
@@ -96,8 +97,6 @@ public class VoteMenu extends Menu {
         loreinfo.add("§7Le déroulement..., Les résultats, ...");
         loreinfo.add("§e§lCLIQUEZ ICI POUR EN VOIR PLUS!");
 
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
-            if(i==camp1Slot) {
                 inventory.put(camp1Slot, new ItemBuilder(this, m1, itemMeta -> {
                     itemMeta.setDisplayName("§r" + color1 + camp1Name);
                     itemMeta.setLore(lore1);
@@ -108,7 +107,7 @@ public class VoteMenu extends Menu {
                         menu.open();
                     }
                 }));
-            } else if(i==camp2Slot) {
+
                 inventory.put(camp2Slot, new ItemBuilder(this, m2, itemMeta -> {
                     itemMeta.setDisplayName("§r" + color2 + camp2Name);
                     itemMeta.setLore(lore2);
@@ -119,15 +118,10 @@ public class VoteMenu extends Menu {
                         menu.open();
                     }
                 }));
-            } else if(i==35) {
                 inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
-                    itemMeta.setLore(loreinfo);
-                }).setNextMenu(new MoreInfoMenu(getOwner(), contestManager)));
-            } else {
-                inventory.put(i, new ItemBuilder(this, Material.GRAY_STAINED_GLASS_PANE, itemMeta -> itemMeta.setDisplayName(" ")));
-            }
-        }
+                    itemMeta.setLore(loreinfo);}).setNextMenu(new MoreInfoMenu(getOwner(), contestManager)));
+
         return inventory;
     }
 }

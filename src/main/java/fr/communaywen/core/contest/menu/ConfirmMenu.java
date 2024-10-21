@@ -6,6 +6,7 @@ import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -31,12 +32,12 @@ public class ConfirmMenu extends Menu {
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Confirmation";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
     public @NotNull InventorySize getInventorySize() {
-        return InventorySize.NORMAL;
+        return InventorySize.LARGE;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ConfirmMenu extends Menu {
 
         List<String> lore0 = new ArrayList<String>();
         lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campNameFinal);
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
+
                 inventory.put(11, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§cAnnuler");
                     itemMeta.setLore(lore0);
@@ -64,6 +65,7 @@ public class ConfirmMenu extends Menu {
                     VoteMenu menu = new VoteMenu(getOwner(), contestManager);
                     menu.open();
                 }));
+
                 inventory.put(15, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§aConfirmer");
                     itemMeta.setLore(lore1);
@@ -74,7 +76,6 @@ public class ConfirmMenu extends Menu {
                     MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + contestManager.getString("contest", getCampName).join(), Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
-        }
-        return inventory;
+                return inventory;
     }
 }

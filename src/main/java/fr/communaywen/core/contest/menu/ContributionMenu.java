@@ -12,6 +12,7 @@ import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,7 +37,7 @@ public class ContributionMenu extends Menu {
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Les Contributions";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
@@ -94,20 +95,18 @@ public class ContributionMenu extends Menu {
         lore_rang.add("§7Progression §8: " + campColor + ContestCache.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
         lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
 
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
-            if(i==8) {
                 inventory.put(8, new ItemBuilder(this, Material.GOLD_BLOCK, itemMeta -> {
                     itemMeta.setDisplayName("§6§lVotre Grade");
                     itemMeta.setLore(lore_rang);
                 }));
-            }
-            if(i==10) {
+
+
                 inventory.put(10, new ItemBuilder(this, shell_contest, itemMeta -> {
                     itemMeta.setDisplayName("§7Les Trades");
                     itemMeta.setLore(lore_trade);
                     itemMeta.setCustomModelData(10000);
                 }).setNextMenu(new TradeMenu(getOwner(), contestManager)));
-            } else if(i==13) {
+
                 inventory.put(13, new ItemBuilder(this, m, itemMeta -> {
                     itemMeta.setDisplayName("§r§7Contribuer pour la"+ campColor+ " Team " + campName);
                     itemMeta.setLore(lore_contribute);
@@ -139,18 +138,16 @@ public class ContributionMenu extends Menu {
                         throw new RuntimeException(e);
                     }
                 }));
-            } else if(i==16) {
+
                 inventory.put(16, new ItemBuilder(this, Material.OMINOUS_TRIAL_KEY, itemMeta -> {
                     itemMeta.setDisplayName("§r§1Boost d'Evenement!");
                     itemMeta.setLore(lore_randomevent);
                 }));
-            } else if(i==35) {
+
                 inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
                     itemMeta.setLore(loreinfo);
                 }).setNextMenu(new MoreInfoMenu(getOwner(), contestManager)));
-            }
-        }
 
         return inventory;
     }
