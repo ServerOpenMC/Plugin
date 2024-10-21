@@ -4,6 +4,7 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import dev.xernas.menulib.Menu;
@@ -23,12 +24,12 @@ public class MoreInfoMenu extends Menu {
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Déroulement";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
     public @NotNull InventorySize getInventorySize() {
-        return InventorySize.NORMAL;
+        return InventorySize.LARGE;
     }
 
     @Override
@@ -86,7 +87,7 @@ public class MoreInfoMenu extends Menu {
                     itemMeta.setDisplayName("§r§eLes Résultats - Lundi");
                     itemMeta.setLore(lore2);
                 }));
-                inventory.put(18, new ItemBuilder(this, Material.ARROW, itemMeta -> {
+                inventory.put(35, new ItemBuilder(this, Material.ARROW, itemMeta -> {
                     itemMeta.setDisplayName("§r§aRetour");
                 }).setBackButton());
         return inventory;

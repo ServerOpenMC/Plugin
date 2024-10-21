@@ -33,6 +33,7 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -213,6 +214,12 @@ public class ContestManager extends DatabaseConnector {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
         updateColumnInt("contest", "phase", 4);
+        Component message = Component.text("Procédure de Fin du Contest", NamedTextColor.RED)
+                .append(Component.text("\nCela devrait prendre quelques minutes", NamedTextColor.DARK_GRAY));
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.kick(message, PlayerKickEvent.Cause.PLUGIN);
+        }
 
         // GET GLOBAL CONTEST INFORMATION
         String camp1Color = ContestCache.getColor1Cache();
@@ -247,9 +254,13 @@ public class ContestManager extends DatabaseConnector {
         multiplicateurPoint=Integer.valueOf(df.format(multiplicateurPoint));
 
         if (vote1Taux > vote2Taux) {
-            points2*=multiplicateurPoint;
+            if (points2<points1) {
+                points2 *= multiplicateurPoint;
+            }
         } else if (vote1Taux < vote2Taux) {
-            points1*=multiplicateurPoint;
+            if (points1<points2) {
+                points1 *= multiplicateurPoint;
+            }
         }
 
         int totalpoint = points1 + points2;
@@ -415,12 +426,12 @@ public class ContestManager extends DatabaseConnector {
                         "§7\n" +
                         "§8§m                                                     §r"
         );
-        Component message = Component.text("Vous avez reçu la lettre du Contest", NamedTextColor.DARK_GREEN)
+        Component message_mail = Component.text("Vous avez reçu la lettre du Contest", NamedTextColor.DARK_GREEN)
                 .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
                 .clickEvent(getRunCommand("mail"))
                 .hoverEvent(getHoverEvent("Ouvrir la mailbox"))
                 .append(Component.text(" pour ouvrir la mailbox", NamedTextColor.GOLD));
-        Bukkit.broadcast(message);
+        Bukkit.broadcast(message_mail);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
@@ -436,7 +447,7 @@ public class ContestManager extends DatabaseConnector {
 
 
         region.setFlag(Flags.TIME_LOCK, null);
-        region.setFlag(Flags.WEATHER_LOCK, null);
+        region.setFlag(Flags.WEATHER_LOCK, WeatherType.REGISTRY.get("clear"));
 
         try {
             regions.save();

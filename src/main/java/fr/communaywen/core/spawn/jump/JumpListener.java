@@ -110,8 +110,8 @@ public class JumpListener implements Listener {
 
                     if (System.currentTimeMillis() - jumpRewardsCooldown.getOrDefault(player.getUniqueId(), 0L) > jumpCooldownRewards) {
                         ItemStack luckyblock = LBUtils.getLuckyBlockItem();
-                        luckyblock.setAmount(4);
-                        MessageManager.sendMessageType(player, "§aVous avez collécté §64 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
+                        luckyblock.setAmount(2);
+                        MessageManager.sendMessageType(player, "§aVous avez collécté §62 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
 
                         player.getInventory().addItem(luckyblock);
                         EconomyManager.addBalanceOffline(player, 1000);
