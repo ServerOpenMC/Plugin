@@ -131,7 +131,7 @@ public class QuestsListener implements Listener {
 
 
         if ((blockX != from.getBlockX() || blockZ != from.getBlockZ()) && !AywenCraftPlugin.frozenPlayers.contains(player))
-            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
         if (blockX != from.getBlockX() || blockZ != from.getBlockZ())
             QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
 
