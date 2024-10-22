@@ -54,11 +54,13 @@ public class ContestManager extends DatabaseConnector {
     private static final Logger log = LoggerFactory.getLogger(ContestManager.class);
     FileConfiguration config;
     AywenCraftPlugin plugins;
+    EconomyManager economyManager;
 
     private final ArrayList<String> colorContest = new ArrayList<>();
     public ContestManager(AywenCraftPlugin plugin) {
         config = plugin.getConfig();
         plugins = plugin;
+        economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
         colorContest.add("WHITE");
         colorContest.add("YELLOW");
         colorContest.add("LIGHT_PURPLE");
@@ -309,7 +311,7 @@ public class ContestManager extends DatabaseConnector {
                     moneyMax = (int) (moneyMax * multi);
 
                     money = giveRandomly(moneyMin, moneyMax);
-                    EconomyManager.addBalanceOffline(player, money);
+                    economyManager.addBalance(player.getUniqueId(), money);
 
                     int luckyMin = 3;
                     int luckyMax = 6;
@@ -328,7 +330,7 @@ public class ContestManager extends DatabaseConnector {
                     moneyMax = (int) (moneyMax * multi);
 
                     money = giveRandomly(moneyMin, moneyMax);
-                    EconomyManager.addBalanceOffline(player, money);
+                    economyManager.addBalance(player.getUniqueId(), money);
 
                     int luckyMin = 1;
                     int luckyMax = 3;

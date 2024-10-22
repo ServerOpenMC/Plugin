@@ -29,6 +29,6 @@ public class OnionAdvDream extends BaseAdvancement implements VanillaVisibility 
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 500, "Advancement "+this.display.getTitle());
     }
 }
