@@ -2,8 +2,10 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import dev.xernas.menulib.Menu;
@@ -15,20 +17,22 @@ import java.util.*;
 
 public class MoreInfoMenu extends Menu {
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public MoreInfoMenu(Player owner, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
+        this.contestCache = AywenCraftPlugin.getInstance().getManagers().getContestCache();
     }
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Déroulement";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
     public @NotNull InventorySize getInventorySize() {
-        return InventorySize.NORMAL;
+        return InventorySize.LARGE;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class MoreInfoMenu extends Menu {
         lore2.add("§7Sera élu. Et des récompenses sont attribué");
         lore2.add("§7A chacun.");
 
-        int phase = ContestCache.getPhaseCache();
+        int phase = contestCache.getPhaseCache();
 
         boolean ench0;
         boolean ench1;
@@ -86,7 +90,7 @@ public class MoreInfoMenu extends Menu {
                     itemMeta.setDisplayName("§r§eLes Résultats - Lundi");
                     itemMeta.setLore(lore2);
                 }));
-                inventory.put(18, new ItemBuilder(this, Material.ARROW, itemMeta -> {
+                inventory.put(35, new ItemBuilder(this, Material.ARROW, itemMeta -> {
                     itemMeta.setDisplayName("§r§aRetour");
                 }).setBackButton());
         return inventory;

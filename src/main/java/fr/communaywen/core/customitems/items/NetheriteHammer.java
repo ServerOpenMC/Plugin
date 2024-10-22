@@ -18,13 +18,19 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @Feature("Netherite Hammer")
 @Getter
@@ -52,6 +58,7 @@ public class NetheriteHammer extends CustomItems implements CustomItemsEvents {
     }
 
     @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
 
         // WorldGuard
@@ -83,33 +90,5 @@ public class NetheriteHammer extends CustomItems implements CustomItemsEvents {
         } else {
             event.setCancelled(true);
         }
-    }
-
-    @Override
-    public void onAnvil(PrepareAnvilEvent event) {
-
-        ItemStack item0 = event.getInventory().getItem(0);
-
-        if (item0 == null) {
-            return;
-        }
-
-        ItemStack result = event.getResult();
-
-        if (result == null) {
-            return;
-        }
-
-        CustomStack customStack = CustomStack.byItemStack(result);
-
-        if (customStack == null) {
-            return;
-        }
-
-        if (!customStack.getNamespacedID().equals(getNamespacedID())) {
-            return;
-        }
-
-        event.setResult(null);
     }
 }

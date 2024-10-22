@@ -14,15 +14,17 @@ import java.util.*;
 public class ContestListener implements Listener {
     private BukkitRunnable eventRunnable;
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public ContestListener(AywenCraftPlugin plugin, FileConfiguration eventConfig, ContestManager manager) {
         this.contestManager = manager;
+        this.contestCache = plugin.getManagers().getContestCache();
         eventRunnable = new BukkitRunnable() {
             @Override
             public void run() {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
-                DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestCache.getStartDateCache()));
-                int phase = ContestCache.getPhaseCache();
+                DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(contestCache.getStartDateCache()));
+                int phase = contestCache.getPhaseCache();
 
                 if (phase == 1 && contestManager.getCurrentDayOfWeek().getValue() == dayStartContestOfWeek.getValue()) {
                     contestManager.initPhase1();

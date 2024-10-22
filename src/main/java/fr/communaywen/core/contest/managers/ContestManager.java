@@ -33,6 +33,7 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,10 +55,12 @@ public class ContestManager extends DatabaseConnector {
     private static final Logger log = LoggerFactory.getLogger(ContestManager.class);
     FileConfiguration config;
     AywenCraftPlugin plugins;
+
+    private final ContestCache contestCache;
     EconomyManager economyManager;
 
     private final ArrayList<String> colorContest = new ArrayList<>();
-    public ContestManager(AywenCraftPlugin plugin) {
+    public ContestManager(AywenCraftPlugin plugin, ContestCache managerCache) {
         config = plugin.getConfig();
         plugins = plugin;
         economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
@@ -77,6 +80,7 @@ public class ContestManager extends DatabaseConnector {
         colorContest.add("DARK_GREEN");
         colorContest.add("DARK_BLUE");
         colorContest.add("BLACK");
+        this.contestCache=managerCache;
     }
 
 
@@ -117,7 +121,7 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        ContestCache.initContestDataCache();
+        contestCache.initContestDataCache();
         System.out.println("[CONTEST] Ouverture des votes");
     }
     //PHASE 2
@@ -207,7 +211,7 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        ContestCache.initContestDataCache();
+        contestCache.initContestDataCache();
         System.out.println("[CONTEST] Ouverture des trades");
     }
     //PHASE 3
@@ -215,14 +219,20 @@ public class ContestManager extends DatabaseConnector {
         String worldsName = (String) config.get("contest.config.worldName");
         String regionsName = (String) config.get("contest.config.spawnRegionName");
         updateColumnInt("contest", "phase", 4);
+        Component message = Component.text("Procédure de Fin du Contest", NamedTextColor.RED)
+                .append(Component.text("\nCela devrait prendre quelques minutes", NamedTextColor.DARK_GRAY));
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.kick(message, PlayerKickEvent.Cause.PLUGIN);
+        }
 
         // GET GLOBAL CONTEST INFORMATION
-        String camp1Color = ContestCache.getColor1Cache();
-        String camp2Color = ContestCache.getColor2Cache();
+        String camp1Color = contestCache.getColor1Cache();
+        String camp2Color = contestCache.getColor2Cache();
         ChatColor color1 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp1Color));
         ChatColor color2 = ColorConvertor.getReadableColor(ChatColor.valueOf(camp2Color));
-        String camp1Name = ContestCache.getCamp1Cache();
-        String camp2Name = ContestCache.getCamp2Cache();
+        String camp1Name = contestCache.getCamp1Cache();
+        String camp2Name = contestCache.getCamp2Cache();
 
         //CREATE PART OF BOOK
         ItemStack baseBook = new ItemStack(Material.WRITTEN_BOOK);
@@ -249,9 +259,13 @@ public class ContestManager extends DatabaseConnector {
         multiplicateurPoint=Integer.valueOf(df.format(multiplicateurPoint));
 
         if (vote1Taux > vote2Taux) {
-            points2*=multiplicateurPoint;
+            if (points2<points1) {
+                points2 *= multiplicateurPoint;
+            }
         } else if (vote1Taux < vote2Taux) {
-            points1*=multiplicateurPoint;
+            if (points1<points2) {
+                points1 *= multiplicateurPoint;
+            }
         }
 
         int totalpoint = points1 + points2;
@@ -362,7 +376,7 @@ public class ContestManager extends DatabaseConnector {
 
         //EXECUTER LES REQUETES SQL DANS UN AUTRE THREAD
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    addOneToLastContest(ContestCache.getCamp1Cache());
+                    addOneToLastContest(contestCache.getCamp1Cache());
                     deleteTableContest("contest");
                     deleteTableContest("camps");
                     selectRandomlyContest();
@@ -417,16 +431,16 @@ public class ContestManager extends DatabaseConnector {
                         "§7\n" +
                         "§8§m                                                     §r"
         );
-        Component message = Component.text("Vous avez reçu la lettre du Contest", NamedTextColor.DARK_GREEN)
+        Component message_mail = Component.text("Vous avez reçu la lettre du Contest", NamedTextColor.DARK_GREEN)
                 .append(Component.text("\nCliquez-ici", NamedTextColor.YELLOW))
                 .clickEvent(getRunCommand("mail"))
                 .hoverEvent(getHoverEvent("Ouvrir la mailbox"))
                 .append(Component.text(" pour ouvrir la mailbox", NamedTextColor.GOLD));
-        Bukkit.broadcast(message);
+        Bukkit.broadcast(message_mail);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0F, 2F);
-            ContestCache.initPlayerDataCache(player);
+            contestCache.initPlayerDataCache(player);
         }
 
         World world = Bukkit.getWorld(worldsName);
@@ -438,7 +452,7 @@ public class ContestManager extends DatabaseConnector {
 
 
         region.setFlag(Flags.TIME_LOCK, null);
-        region.setFlag(Flags.WEATHER_LOCK, null);
+        region.setFlag(Flags.WEATHER_LOCK, WeatherType.REGISTRY.get("clear"));
 
         try {
             regions.save();
@@ -446,7 +460,7 @@ public class ContestManager extends DatabaseConnector {
             throw new RuntimeException(e);
         }
 
-        ContestCache.initContestDataCache();
+        contestCache.initContestDataCache();
         System.out.println("[CONTEST] Fermeture du Contest");
     }
 
@@ -601,7 +615,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getPlayerCampName(Player player) {
-        Integer campInteger = ContestCache.getPlayerCampsCache(player);
+        Integer campInteger = contestCache.getPlayerCampsCache(player);
         String campName = getString("contest","camp" + campInteger).join();
         return campName;
     }
@@ -656,7 +670,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public String getRankContest(Player player) {
-        int points = ContestCache.getPlayerPointsCache(player);
+        int points = contestCache.getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return "Dictateur en  ";
@@ -684,7 +698,7 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public int getRepPointsToRank(Player player) {
-        int points = ContestCache.getPlayerPointsCache(player);
+        int points = contestCache.getPlayerPointsCache(player);
 
         if(points >= 10000) {
             return 0;

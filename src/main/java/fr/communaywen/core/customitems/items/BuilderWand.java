@@ -25,6 +25,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -68,6 +70,7 @@ public class BuilderWand extends CustomItems implements CustomItemsEvents {
     }
 
     @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onInteract(PlayerInteractEvent event) {
     // WorldGuard
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();

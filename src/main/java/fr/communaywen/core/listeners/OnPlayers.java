@@ -29,7 +29,7 @@ public class OnPlayers implements Listener {
 
     private LuckPerms luckPerms;
     private LinkerAPI linkerAPI;
-
+    private ContestCache contestCache = AywenCraftPlugin.getInstance().getManagers().getContestCache();
     public void setLuckPerms(LuckPerms luckPerms) {
         this.luckPerms = luckPerms;
     }
@@ -84,7 +84,7 @@ public class OnPlayers implements Listener {
 
             reminder.startReminder();
 
-            if(ContestCache.getPhaseCache() == 2) {
+            if(contestCache.getPhaseCache() == 2) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -96,7 +96,7 @@ public class OnPlayers implements Listener {
                 );
                 return;
             }
-            if(ContestCache.getPhaseCache() == 3) {
+            if(contestCache.getPhaseCache() == 3) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -143,6 +143,9 @@ public class OnPlayers implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+
+        // vider le cache du joueur parti
+        AywenCraftPlugin.getInstance().getManagers().getContestCache().clearPlayerCache(player);
 
         User userlp = AywenCraftPlugin.getInstance().api.getUserManager().getUser(player.getUniqueId());
         QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());

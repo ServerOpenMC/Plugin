@@ -13,6 +13,7 @@ import fr.communaywen.core.spawn.jump.JumpManager;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.util.Random;
@@ -24,6 +25,7 @@ public class ParticleListener implements Listener {
     private BukkitRunnable eventRunnable;
 
     public ParticleListener(AywenCraftPlugin plugin) {
+        ContestCache contestCache = plugin.getManagers().getContestCache();
 
         World world = Bukkit.getWorld(plugin.getConfig().getString("spawn.world"));
         String regionId = plugin.getConfig().getString("spawn.region");
@@ -46,10 +48,10 @@ public class ParticleListener implements Listener {
                 if (RegionsManager.isPlayerInRegion(regionId, world) && Bukkit.getOnlinePlayers().size() >= 1) {
                     Random random = new Random();
 
-                    if (ContestCache.getPhaseCache() != 1) {
+                    if (contestCache.getPhaseCache() != 1) {
                         //PARTICULE POUR CONTEST
-                        ChatColor color1 = ChatColor.valueOf(ContestCache.getColor1Cache());
-                        ChatColor color2 = ChatColor.valueOf(ContestCache.getColor2Cache());
+                        ChatColor color1 = ChatColor.valueOf(contestCache.getColor1Cache());
+                        ChatColor color2 = ChatColor.valueOf(contestCache.getColor2Cache());
 
                         int[] rgb1 = ColorConvertor.getRGBFromChatColor(color1);
                         int[] rgb2 = ColorConvertor.getRGBFromChatColor(color2);
