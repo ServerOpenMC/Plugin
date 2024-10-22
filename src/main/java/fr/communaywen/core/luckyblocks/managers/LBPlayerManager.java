@@ -25,6 +25,14 @@ public class LBPlayerManager {
         return true;
     }
 
+    public boolean canCheckClaimLuckyBlocks(UUID uuid) {
+        if (System.currentTimeMillis() - getLuckyBlocksCooldown(uuid) < timeToWait) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public int getRemainingHours(UUID uuid) {
         return (int) ((timeToWait - (System.currentTimeMillis() - getLuckyBlocksCooldown(uuid))) / 3600000);
     }

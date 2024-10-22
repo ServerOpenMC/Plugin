@@ -131,21 +131,23 @@ public class LeaderboardManager extends DatabaseConnector {
     public static void updateLeaderboardTeamTop() {
         if (textDisplayTeamTop == null) return;
 
-        List<Team> teamBalances = TeamManager.getTeams();
-
-        teamBalances.sort((a, b) -> Double.compare(b.getBalance(), a.getBalance()));
-
-        if (teamBalances.size() > 10) {
-            teamBalances = teamBalances.subList(0, 10);
-        }
+        List<Map.Entry<UUID, Long>> topTeam = getTopTeam(10);
 
         List<String> lines = new ArrayList<>();
         lines.add("§dLes §f10 §dTeams les plus riches sur le serveur");
 
         int index = 1;
-        for (Team team : teamBalances) {
-            String teamName = team.getName();
-            lines.add(MessageFormat.format("{0}# {1}: {2}", getColor(index) + index, ChatColor.GRAY + teamName, ChatColor.DARK_PURPLE + String.format("%.1f", EconomieTeam.getTeamBalances(team.getName()).doubleValue())));
+        for (Map.Entry<UUID, Long> entry : topTeam) {
+            UUID playerUUID = entry.getKey();
+            long balance = entry.getValue();
+
+            String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
+
+            lines.add(MessageFormat.format("{0}# {1}: {2}",
+                    getColor(index) + index,
+                    ChatColor.GRAY + playerName,
+                    ChatColor.DARK_PURPLE + balance));
+
             index++;
         }
 
