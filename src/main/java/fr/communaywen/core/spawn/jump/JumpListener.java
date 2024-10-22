@@ -114,7 +114,7 @@ public class JumpListener implements Listener {
                         MessageManager.sendMessageType(player, "§aVous avez collécté §62 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
 
                         player.getInventory().addItem(luckyblock);
-                        EconomyManager.addBalanceOffline(player, 1000);
+                        EconomyManager.getInstance().addBalance(player.getUniqueId(), 1000);
                     }
 
                     GuidelineManager.getAPI().getAdvancement("openmc:spawn/jump/firstjump").grant(event.getPlayer());
