@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import fr.communaywen.core.AywenCraftPlugin;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -30,6 +31,11 @@ public class CustomFlagsEvents implements Listener {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getPlayer().getLocation()));
+
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            event.setCancelled(false);
+            return;
+        }
 
         if(event.getPlayer().hasPermission("essentials.fly")) {
             event.setCancelled(false);
