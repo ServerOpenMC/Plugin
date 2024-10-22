@@ -131,22 +131,20 @@ public class LeaderboardManager extends DatabaseConnector {
     public static void updateLeaderboardTeamTop() {
         if (textDisplayTeamTop == null) return;
 
-        List<Map.Entry<UUID, Long>> topTeam = getTopTeam(10);
+        List<Map.Entry<String, Long>> topTeam = getTopTeam(10);
 
         List<String> lines = new ArrayList<>();
         lines.add("§dLes §f10 §dTeams les plus riches sur le serveur");
 
         int index = 1;
-        for (Map.Entry<UUID, Long> entry : topTeam) {
-            UUID playerUUID = entry.getKey();
+        for (Map.Entry<String, Long> entry : topTeam) {
+            String teamName = entry.getKey();
             long balance = entry.getValue();
-
-            String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
 
             lines.add(MessageFormat.format("{0}# {1}: {2}",
                     getColor(index) + index,
-                    ChatColor.GRAY + playerName,
-                    ChatColor.DARK_PURPLE + balance));
+                    ChatColor.GRAY + teamName,
+                    "§5" + balance));
 
             index++;
         }
@@ -315,6 +313,26 @@ public class LeaderboardManager extends DatabaseConnector {
             e.printStackTrace();
         }
         return playTime;
+    }
+
+    private static List<Map.Entry<String, Long>> getTopTeam(int limit) {
+        List<Map.Entry<String, Long>> teams = new ArrayList<>();
+        String sql = "SELECT teamName, balance FROM teams ORDER BY balance DESC LIMIT ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, limit);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                String teamName = rs.getString("teamName");
+                long money = rs.getLong("balance");
+
+                teams.add(new AbstractMap.SimpleEntry<>(teamName, money));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return teams;
     }
 
     public static String convertTime(long ticks) {
