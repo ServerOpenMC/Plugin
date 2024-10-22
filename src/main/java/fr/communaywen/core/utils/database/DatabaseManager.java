@@ -2,6 +2,7 @@ package fr.communaywen.core.utils.database;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -26,7 +27,7 @@ public class DatabaseManager {
         }
         if (plugin.getConfig().getString("database.url") == null) {
             plugin.getLogger().severe("\n\nPlease, add the database configuration in the config.yml file !\n\n");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            Bukkit.getPluginManager().disablePlugin(plugin);
             return;
         }
         this.connection = new DatabaseConnection(plugin.getConfig().getString("database.url"),
@@ -141,7 +142,7 @@ public class DatabaseManager {
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spawn_jump (uuid VARCHAR(36), best_time DOUBLE)").executeUpdate();
 
         //Table pour le playtime
-        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS playtime (uuid VARCHAR(36), time LONG)").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS playtime (uuid VARCHAR(36), time INT(11))").executeUpdate();
 
         AywenCraftPlugin.getInstance().getLogger().info("\u001B[36m" + "Les tables ont été créées si besoin" + "\u001B[0m");
 

@@ -92,7 +92,7 @@ public class Trade implements Listener {
     }
 
     public boolean setMoney1(double value) {
-        boolean success = plugin.getManagers().getEconomyManager().withdrawBalance(player1, value - money1);
+        boolean success = plugin.getManagers().getEconomyManager().withdrawBalance(player1.getUniqueId(), value - money1);
 
         if (!success) {
             return false;
@@ -103,7 +103,7 @@ public class Trade implements Listener {
     }
 
     public boolean setMoney2(double value) {
-        boolean success = plugin.getManagers().getEconomyManager().withdrawBalance(player2, value - money1);
+        boolean success = plugin.getManagers().getEconomyManager().withdrawBalance(player2.getUniqueId(), value - money1);
 
         if (!success) {
             return false;
@@ -114,8 +114,8 @@ public class Trade implements Listener {
     }
 
     public void cancel() {
-        plugin.getManagers().getEconomyManager().addBalance(player1, money1);
-        plugin.getManagers().getEconomyManager().addBalance(player2, money2);
+        plugin.getManagers().getEconomyManager().addBalance(player1.getUniqueId(), money1);
+        plugin.getManagers().getEconomyManager().addBalance(player2.getUniqueId(), money2);
 
         World player1World = player1.getWorld();
         Location player1Location = player1.getLocation();
@@ -126,7 +126,7 @@ public class Trade implements Listener {
                         stack
                 ).values();
 
-                if (leftItems.size() > 0) {
+                if (!leftItems.isEmpty()) {
                     for (ItemStack leftStack : leftItems) {
                         player1World.dropItemNaturally(player1Location, leftStack);
                     }
@@ -144,7 +144,7 @@ public class Trade implements Listener {
                         stack
                 ).values();
 
-                if (leftItems.size() > 0) {
+                if (!leftItems.isEmpty()) {
                     for (ItemStack leftStack : leftItems) {
                         player2World.dropItemNaturally(player2Location, leftStack);
                     }
@@ -173,8 +173,8 @@ public class Trade implements Listener {
     }
 
     public void conclude() {
-        plugin.getManagers().getEconomyManager().addBalance(player2, money1);
-        plugin.getManagers().getEconomyManager().addBalance(player1, money2);
+        plugin.getManagers().getEconomyManager().addBalance(player2.getUniqueId(), money1);
+        plugin.getManagers().getEconomyManager().addBalance(player1.getUniqueId(), money2);
 
 
         World player1World = player1.getWorld();
@@ -186,7 +186,7 @@ public class Trade implements Listener {
                         stack
                 ).values();
 
-                if (leftItems.size() > 0) {
+                if (!leftItems.isEmpty()) {
                     for (ItemStack leftStack : leftItems) {
                         player1World.dropItemNaturally(player1Location, leftStack);
                     }
@@ -204,7 +204,7 @@ public class Trade implements Listener {
                         stack
                 ).values();
 
-                if (leftItems.size() > 0) {
+                if (!leftItems.isEmpty()) {
                     for (ItemStack leftStack : leftItems) {
                         player2World.dropItemNaturally(player2Location, leftStack);
                     }
@@ -235,7 +235,6 @@ public class Trade implements Listener {
         tradesPlayer2.remove(player2);
     }
 
-    // On object destroy
     @Override
     protected void finalize() {
         if (inventory1 != null && inventory2 != null) {

@@ -48,7 +48,7 @@ public class ThorHammer implements Listener {
                 RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
                 RegionQuery query = container.createQuery();
                 ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
-                if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-thor-hammer"))) {
+                if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-thor-hammer"))) {
                     event.setCancelled(false);
                     useThorHammer(player, event.getClickedBlock().getLocation());
 

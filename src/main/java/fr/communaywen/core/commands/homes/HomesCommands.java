@@ -91,7 +91,7 @@ public class HomesCommands {
                     return;
                 }
 
-                HomesMenu menu = new HomesMenu(player, homes, target.getName());
+                HomesMenu menu = new HomesMenu(player, homes, upgradeManager, true);
                 menu.open();
 
                 MessageManager.sendMessage(player, "§aHome de §e" + target.getName() + "§a: " + homes.stream().map(Home::getName).collect(Collectors.joining(", ")), Prefix.HOME, MessageType.INFO);
@@ -107,7 +107,7 @@ public class HomesCommands {
                     return;
                 }
 
-                HomesMenu menu = new HomesMenu(player, homes, player.getName());
+                HomesMenu menu = new HomesMenu(player, homes, upgradeManager, false);
                 menu.open();
             } else if(name.equalsIgnoreCase("upgrade")) {
                 new UpgradeHomesMenu(player, upgradeManager, homesManagers).open();

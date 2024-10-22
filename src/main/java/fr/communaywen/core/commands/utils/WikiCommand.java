@@ -3,13 +3,15 @@ package fr.communaywen.core.commands.utils;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TranslatableComponent;
+import fr.communaywen.core.utils.ItemUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
@@ -32,41 +34,36 @@ public class WikiCommand {
     public void onCommand(Player player, @Named("featureName") @Optional String itemArg) {
 
         if (itemArg != null) {
-            player.spigot().sendMessage(getOpenMCWikiChatComponent(itemArg, itemArg));
+            player.sendMessage(getOpenMCWikiChatComponent(itemArg, itemArg));
             return;
         }
-
 
         if (player.getInventory().getItemInMainHand().getItemMeta() != null) {
             CustomStack customStack = CustomStack.byItemStack(player.getInventory().getItemInMainHand());
             if (customStack != null) {
-                player.spigot().sendMessage(getOpenMCWikiChatComponent(customStack.getId(), customStack.getDisplayName()));
+                player.sendMessage(getOpenMCWikiChatComponent(customStack.getId(), customStack.getDisplayName()));
             } else {
                 String link = "https://minecraft.wiki/w/" + player.getInventory().getItemInMainHand().getType().name().toLowerCase();
-                TranslatableComponent itemName = new TranslatableComponent(player.getInventory().getItemInMainHand().getType().getTranslationKey());
-                BaseComponent[] component =
-                        new ComponentBuilder("§eVoici le lien du wiki de l'item ").append(itemName).color(ChatColor.GOLD).append(" §e: §6Minecraft Wiki")
-                                .event(new ClickEvent(ClickEvent.Action.OPEN_URL, link))
-                                .create();
-                player.spigot().sendMessage(component);
+                Material item = player.getInventory().getItemInMainHand().getType();
+                player.sendMessage(Component.text("Voici le lien du wiki de l'item ").color(NamedTextColor.YELLOW)
+                        .append(ItemUtils.getDefaultItemName(item))
+                        .append(Component.text(" : ")
+                        .append(Component.text("Cliquez ici").color(NamedTextColor.GOLD).clickEvent(ClickEvent.openUrl(link)))));
             }
         } else {
             player.sendMessage("§cVous devez tenir un item en main ou spécifier une feature pour utiliser cette commande.");
         }
-
-
     }
 
-    public BaseComponent[] getOpenMCWikiChatComponent(String name, String displayName) {
+    public Component getOpenMCWikiChatComponent(String name, String displayName) {
         String link = wikiConfig.getString(name);
         if (link == null) {
-            return new ComponentBuilder("§cLe lien du wiki de cet item ou feature n'est pas encore disponible.").create();
+            return Component.text("Le lien du wiki de cet item ou feature n'est pas encore disponible.").color(NamedTextColor.RED);
         }
 
-        BaseComponent[] component =
-                new ComponentBuilder("§eVoici le lien du wiki de l'item ou de la feature ").append(displayName).color(ChatColor.GOLD).append(" §e: §6OpenMC Wiki")
-                        .event(new ClickEvent(ClickEvent.Action.OPEN_URL, link))
-                        .create();
-        return component;
+        return Component.text("Voici le lien du wiki de l'item ou de la feature ").color(NamedTextColor.YELLOW)
+                .append(Component.text(displayName)
+                .append(Component.text(" : ")
+                .append(Component.text("Cliquez ici").color(NamedTextColor.GOLD).clickEvent(ClickEvent.openUrl(link)))));
     }
 }

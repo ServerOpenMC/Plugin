@@ -12,6 +12,7 @@ import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,16 +28,18 @@ import java.util.*;
 public class ContributionMenu extends Menu {
     private final AywenCraftPlugin plugin;
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public ContributionMenu(Player owner, AywenCraftPlugin plugin, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
+        this.contestCache = plugin.getManagers().getContestCache();
         this.plugin = plugin;
     }
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Les Contributions";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
@@ -53,7 +56,7 @@ public class ContributionMenu extends Menu {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
         String campName = contestManager.getPlayerCampName(getOwner());
-        ChatColor campColor = ContestCache.getPlayerColorCache(getOwner());
+        ChatColor campColor = contestCache.getPlayerColorCache(getOwner());
         Material m = ColorConvertor.getMaterialFromColor(campColor);
 
         List<String> loreinfo = new ArrayList<String>();
@@ -91,59 +94,62 @@ public class ContributionMenu extends Menu {
         lore_trade.add("§e§lCliquez pour acceder au Menu des trades");
 
         lore_rang.add(campColor + contestManager.getRankContest(getOwner()) + campName);
-        lore_rang.add("§7Progression §8: " + campColor + ContestCache.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
+        lore_rang.add("§7Progression §8: " + campColor + contestCache.getPlayerPointsCache(getOwner()) + "§8/" + campColor + contestManager.getRepPointsToRank(getOwner()));
         lore_rang.add("§e§lAUGMENTER DE RANG POUR VOIR DES RECOMPENSES MEILLEURES");
 
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
-            if(i==8) {
                 inventory.put(8, new ItemBuilder(this, Material.GOLD_BLOCK, itemMeta -> {
                     itemMeta.setDisplayName("§6§lVotre Grade");
                     itemMeta.setLore(lore_rang);
                 }));
-            }
-            if(i==10) {
+
+
                 inventory.put(10, new ItemBuilder(this, shell_contest, itemMeta -> {
                     itemMeta.setDisplayName("§7Les Trades");
                     itemMeta.setLore(lore_trade);
                     itemMeta.setCustomModelData(10000);
                 }).setNextMenu(new TradeMenu(getOwner(), contestManager)));
-            } else if(i==13) {
+
                 inventory.put(13, new ItemBuilder(this, m, itemMeta -> {
                     itemMeta.setDisplayName("§r§7Contribuer pour la"+ campColor+ " Team " + campName);
                     itemMeta.setLore(lore_contribute);
                 }).setOnClick(inventoryClickEvent -> {
                     try {
                         ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
-                        int shell = 0;
-                        for (ItemStack is : getOwner().getInventory().getContents()) {
-                            if (is != null && is.isSimilar(shell_contestItem)) {
-                                shell = shell + is.getAmount();
-                            }
-                        }
-                        if (ItemUtils.hasEnoughItems(getOwner(), shell_contest, shell)) {
-                            ItemUtils.removeItemsFromInventory(getOwner(), shell_contest, shell);
-                            contestManager.addPointPlayer(shell + contestManager.getPlayerPoints(getOwner()), getOwner());
-                            contestManager.updateColumnInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner()), shell + contestManager.getInt("contest", "points" + ContestCache.getPlayerCampsCache(getOwner())));
-                            MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shell + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
+
+                        int shellCount = Arrays.stream(getOwner().getInventory().getContents()).filter(is -> is != null && is.isSimilar(shell_contestItem)).mapToInt(ItemStack::getAmount).sum();
+
+                        if (ItemUtils.hasEnoughItems(getOwner(), shell_contestItem.getType(), shellCount)) {
+                            ItemUtils.removeItemsFromInventory(getOwner(), shell_contestItem.getType(), shellCount);
+
+                            contestManager.getPlayerPoints(getOwner()).thenAccept(playerPoints -> {
+                                int newPlayerPoints = shellCount + playerPoints;
+
+                                contestManager.getInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()))
+                                        .thenAccept(campPoints -> {
+                                            int updatedCampPoints = shellCount + campPoints;
+
+                                            contestManager.updateColumnInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()), updatedCampPoints);
+
+                                            MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shellCount + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
+                                        });
+                            });
                         } else {
                             MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
                         }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }));
-            } else if(i==16) {
+
                 inventory.put(16, new ItemBuilder(this, Material.OMINOUS_TRIAL_KEY, itemMeta -> {
                     itemMeta.setDisplayName("§r§1Boost d'Evenement!");
                     itemMeta.setLore(lore_randomevent);
                 }));
-            } else if(i==35) {
+
                 inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                     itemMeta.setDisplayName("§r§aPlus d'info !");
                     itemMeta.setLore(loreinfo);
                 }).setNextMenu(new MoreInfoMenu(getOwner(), contestManager)));
-            }
-        }
 
         return inventory;
     }

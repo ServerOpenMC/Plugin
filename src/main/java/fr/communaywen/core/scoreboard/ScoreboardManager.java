@@ -22,19 +22,23 @@ import java.util.*;
 public class ScoreboardManager {
 
     private final AywenCraftPlugin plugin;
+
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
+
     private final LuckPerms luckPerms;
     private final TeamManager teamManager;
     private final GlobalTeamManager globalTeamManager;
     private final Map<UUID, Scoreboard> playerScoreboards;
     public List<UUID> disabledPlayers = new ArrayList<>();
 
-    public ScoreboardManager(AywenCraftPlugin plugin, ContestManager manager) {
+    public ScoreboardManager(AywenCraftPlugin plugin) {
         this.plugin = plugin;
         this.luckPerms = plugin.api;
         this.teamManager = plugin.getManagers().getTeamManager();
         this.playerScoreboards = new HashMap<>();
-        this.contestManager = manager;
+        this.contestManager = plugin.getManagers().getContestManager();
+        this.contestCache=plugin.getManagers().getContestCache();
 
         this.globalTeamManager = new GlobalTeamManager(plugin, playerScoreboards);
 
@@ -100,11 +104,11 @@ public class ScoreboardManager {
         }
 
         objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(11);
-        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(10);
+        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getFormattedBalance(player.getUniqueId())).setScore(10);
         objective.getScore("   ").setScore(9);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(8);
 
-        if (RegionsManager.isPlayerInRegion("spawn", Bukkit.getWorld("world"))) {
+        if (RegionsManager.isSpecifiedPlayerInRegion(player,"spawn")) {
             int heads = HeadManager.getHeadFoundIntCache(player);
             int maxHeads = HeadManager.getMaxHeads();
 
@@ -112,11 +116,11 @@ public class ScoreboardManager {
             objective.getScore("§8• §fHeads§7: §d" + heads + "§8/§d"+ maxHeads).setScore(6);
         }
 
-        int phase = ContestCache.getPhaseCache();
+        int phase = contestCache.getPhaseCache();
         if(phase != 1) {
             objective.getScore(" ").setScore(5);
             objective.getScore("§8• §6§lCONTEST!").setScore(4);
-            objective.getScore(ChatColor.valueOf(ContestCache.getColor1Cache()) + ContestCache.getCamp1Cache() + " §8VS " + ChatColor.valueOf(ContestCache.getColor2Cache())  + ContestCache.getCamp2Cache()).setScore(3);
+            objective.getScore(ChatColor.valueOf(contestCache.getColor1Cache()) + contestCache.getCamp1Cache() + " §8VS " + ChatColor.valueOf(contestCache.getColor2Cache())  + contestCache.getCamp2Cache()).setScore(3);
             objective.getScore("§cFin dans " + contestManager.getTimeUntilNextMonday()).setScore(2);
         }
 

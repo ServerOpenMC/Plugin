@@ -1,13 +1,8 @@
 package fr.communaywen.core.luckyblocks.managers;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
-
 import java.util.HashMap;
 import java.util.UUID;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBPlayerManager {
 
     private final long timeToWait = 86400000; // = 1 jour

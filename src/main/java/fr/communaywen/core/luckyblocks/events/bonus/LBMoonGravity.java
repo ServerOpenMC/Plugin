@@ -1,8 +1,6 @@
 package fr.communaywen.core.luckyblocks.events.bonus;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockListeners;
@@ -14,8 +12,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListeners {
 
     public LBMoonGravity() {

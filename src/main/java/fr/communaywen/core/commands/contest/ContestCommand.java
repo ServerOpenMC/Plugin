@@ -27,9 +27,11 @@ public class ContestCommand {
     private final AywenCraftPlugin plugin;
     private final FileConfiguration eventConfig;
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public ContestCommand(AywenCraftPlugin plugins, FileConfiguration eventConfigs, ContestManager manager) {
         this.contestManager = manager;
+        this.contestCache = plugins.getManagers().getContestCache();
         plugin = plugins;
         eventConfig = eventConfigs;
     }
@@ -37,13 +39,13 @@ public class ContestCommand {
     @Cooldown(4)
     @DefaultFor("~")
     public void defaultCommand(Player player) {
-        int phase = ContestCache.getPhaseCache();
-        int camp = ContestCache.getPlayerCampsCache(player);
+        int phase = contestCache.getPhaseCache();
+        int camp = contestCache.getPlayerCampsCache(player);
         if (phase==2) {
-            VoteMenu menu = new VoteMenu(player, contestManager);
+            VoteMenu menu = new VoteMenu(player, plugin, contestManager);
             menu.open();
         } else if (phase==3 && camp <= 0) {
-            VoteMenu menu = new VoteMenu(player, contestManager);
+            VoteMenu menu = new VoteMenu(player, plugin, contestManager);
             menu.open();
         } else if (phase==3) {
             ContributionMenu menu = new ContributionMenu(player, plugin, contestManager);
@@ -51,7 +53,7 @@ public class ContestCommand {
 
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
-            DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestCache.getStartDateCache()));
+            DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(contestCache.getStartDateCache()));
 
             int days = (dayStartContestOfWeek.getValue() - contestManager.getCurrentDayOfWeek().getValue() + 7) % 7;
 
@@ -77,19 +79,19 @@ public class ContestCommand {
     @CommandPermission("ayw.command.contest.setcontest")
     @AutoComplete("@colorContest")
     public void setcontest(Player player, String camp1, @Named("colorContest") String color1, String camp2, @Named("colorContest") String color2) {
-        int phase = ContestCache.getPhaseCache();
+        int phase = contestCache.getPhaseCache();
         if (phase == 1) {
             if (contestManager.getColorContestList().contains(color1) || contestManager.getColorContestList().contains(color2)) {
                 contestManager.deleteTableContest("contest");
                 contestManager.deleteTableContest("camps");
                 contestManager.insertCustomContest(camp1, color1, camp2, color2);
 
-                player.sendMessage("§aLe Contest : " + camp1 + " VS " + camp2 + " a bien été sauvegarder\nMerci d'attendre que les données en cache s'actualise.");
+                MessageManager.sendMessageType(player, "§aLe Contest : " + camp1 + " VS " + camp2 + " a bien été sauvegarder\nMerci d'attendre que les données en cache s'actualise.", Prefix.STAFF, MessageType.SUCCESS, true);
             } else {
-                player.sendMessage("§c/contest setcontest <camp1> <color1> <camp2> <color2> et color doit comporter une couleur valide");
+                MessageManager.sendMessageType(player, "§c/contest setcontest <camp1> <color1> <camp2> <color2> et color doit comporter une couleur valide", Prefix.STAFF, MessageType.ERROR, true);
             }
         } else {
-            player.sendMessage("§cVous pouvez pas définir un contest lorsqu'il a commencé");
+            MessageManager.sendMessageType(player, "§cVous pouvez pas définir un contest lorsqu'il a commencé", Prefix.STAFF, MessageType.ERROR, true);
         }
     }
 
@@ -97,9 +99,9 @@ public class ContestCommand {
     @Description("Permet d'ajouter des points a un membre")
     @CommandPermission("ayw.command.contest.addpoints")
     public void addpoints(Player player, Player target, Integer points) {
-        contestManager.addPointPlayer(points + contestManager.getPlayerPoints(target), target);
+        contestManager.addPointPlayer(points + contestManager.getPlayerPoints(target).join(), target);
 
-        player.sendMessage("§aVous avez ajouté " + points + " §apoint(s) à " + target.getName());
+        MessageManager.sendMessageType(player, "§aVous avez ajouté " + points + " §apoint(s) à " + target.getName(), Prefix.STAFF, MessageType.SUCCESS, true);
     }
 
 }

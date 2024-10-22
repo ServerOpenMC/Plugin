@@ -23,6 +23,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -74,6 +75,23 @@ public class JumpListener implements Listener {
                                     jumpManager.endJump(player);
                                     MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez quitter le Spawn", Prefix.JUMP, MessageType.ERROR, true);
                                 }
+                                if (player.isFlying()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+                                if (player.isGliding()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler avec des élytras durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+                                if (player.isRiptiding()) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez voler avec un trident durant le Jump", Prefix.JUMP, MessageType.ERROR, true);
+                                }
+
+                                if (player.hasPotionEffect(PotionEffectType.LEVITATION)) {
+                                    jumpManager.endJump(player);
+                                    MessageManager.sendMessageType(player, "§7Le Jump s'est §carreté §7car vous avez un Effet de Lévitation durant le Jump\n§7TIPS : Buvez du lait de Courgette", Prefix.JUMP, MessageType.ERROR, true);
+                                }
                             }
                         }
                     };
@@ -92,11 +110,11 @@ public class JumpListener implements Listener {
 
                     if (System.currentTimeMillis() - jumpRewardsCooldown.getOrDefault(player.getUniqueId(), 0L) > jumpCooldownRewards) {
                         ItemStack luckyblock = LBUtils.getLuckyBlockItem();
-                        luckyblock.setAmount(4);
-                        MessageManager.sendMessageType(player, "§aVous avez collécté §64 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
+                        luckyblock.setAmount(2);
+                        MessageManager.sendMessageType(player, "§aVous avez collécté §62 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
 
                         player.getInventory().addItem(luckyblock);
-                        EconomyManager.addBalanceOffline(player, 1000);
+                        EconomyManager.getInstance().addBalance(player.getUniqueId(), 1000);
                     }
 
                     GuidelineManager.getAPI().getAdvancement("openmc:spawn/jump/firstjump").grant(event.getPlayer());
@@ -107,8 +125,8 @@ public class JumpListener implements Listener {
 
                     jumpRewardsCooldown.put(player.getUniqueId(), System.currentTimeMillis());
 
-                    Location spawn = new Location(player.getServer().getWorld(plugin.getConfig().getString("spawn.world")), plugin.getConfig().getDouble("spawn.x"), plugin.getConfig().getDouble("spawn.y"), plugin.getConfig().getDouble("spawn.z"), 0, 0);
-                    player.teleport(spawn);
+                    Location spawn_jump = new Location(player.getServer().getWorld(plugin.getConfig().getString("jump.world")), plugin.getConfig().getDouble("jump.start.posX") - 2, plugin.getConfig().getDouble("jump.start.posY"), plugin.getConfig().getDouble("jump.start.posZ") - 2, 0, 0);
+                    player.teleport(spawn_jump);
                 }
             }
         }

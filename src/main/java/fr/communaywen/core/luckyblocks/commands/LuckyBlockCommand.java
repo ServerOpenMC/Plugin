@@ -1,8 +1,6 @@
 package fr.communaywen.core.luckyblocks.commands;
 
 import dev.xernas.menulib.Menu;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.guis.LuckyBlockGUI;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
@@ -19,8 +17,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 import java.util.Random;
 import java.util.UUID;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 @Command({"luckyblock", "lb"})
 public class LuckyBlockCommand {
 

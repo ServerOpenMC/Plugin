@@ -1,7 +1,5 @@
 package fr.communaywen.core.luckyblocks.events.malus;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockListeners;
@@ -16,8 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBSpawnBob extends LuckyBlockEvent implements LuckyBlockListeners {
 
     public LBSpawnBob() {

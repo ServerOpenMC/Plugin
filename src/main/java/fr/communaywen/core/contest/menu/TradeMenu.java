@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.mailboxes.MailboxManager;
@@ -11,6 +12,7 @@ import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,14 +30,16 @@ import static fr.communaywen.core.utils.ItemUtils.splitAmountIntoStack;
 
 public class TradeMenu extends Menu {
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
         public TradeMenu(Player owner, ContestManager manager) {
             super(owner);
+            this.contestCache = AywenCraftPlugin.getInstance().getManagers().getContestCache();
             this.contestManager = manager;
         }
 
         @Override
         public @NotNull String getName() {
-            return "Le Contest - Les Trades";
+            return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
         }
 
         @Override
@@ -50,9 +54,9 @@ public class TradeMenu extends Menu {
         @Override
         public @NotNull Map<Integer, ItemStack> getContent() {
             Map<Integer, ItemStack> inventory = new HashMap<>();
-            if (getOwner().getOpenInventory().getTitle()!="Le Contest - Les Trades") {
+            if (getOwner().getOpenInventory().getTitle()!="§r§f%img_offset_-48%%img_contest_menu%") {
                 String campName = contestManager.getPlayerCampName(getOwner());
-                ChatColor campColor = ContestCache.getPlayerColorCache(getOwner());
+                ChatColor campColor = contestCache.getPlayerColorCache(getOwner());
                 Material shell_contest = CustomStack.getInstance("contest:contest_shell").getItemStack().getType();
 
                 List<String> loreinfo = new ArrayList<String>();
