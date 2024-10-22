@@ -19,7 +19,7 @@ public class PayCommands {
     public void payCommands(Player player, @Named("joueur") Player target, @Named("montant") int amount) {
         EconomyManager economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
         if(!player.equals(target)) {
-            if (economyManager.transferBalance(player, target, amount)) {
+            if (economyManager.transferBalance(player.getUniqueId(), target.getUniqueId(), amount)) {
                 player.sendMessage("§aVous venez de transférer §e" + amount + "$ §aà §e" + target.getName());
                 target.sendMessage("§aVous venez de recevoir §e" + amount + "$ §ade la part de §e" + player.getName());
 

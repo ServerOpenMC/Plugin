@@ -138,7 +138,7 @@ public class Managers {
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
-        economyManager = new EconomyManager(plugin.getDataFolder());
+        economyManager = new EconomyManager();
         friendsManager = new FriendsManager(databaseManager, plugin);
         corpseManager = new CorpseManager();
         fbeManager = new FallingBlocksExplosionManager();
@@ -162,6 +162,7 @@ public class Managers {
         homeManager.init();
         moonDimManager.init();
         homesManagers.loadHomes();
+        homesManagers.loadHomeLimits();
         disabledWorldHome.loadConfig();
     }
 

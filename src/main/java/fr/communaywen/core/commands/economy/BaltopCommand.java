@@ -9,10 +9,10 @@ import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.text.NumberFormat;
+import java.util.*;
 
 @Feature("baltop")
 @Credit("ddemile")
@@ -47,7 +47,7 @@ public class BaltopCommand {
             } else if (Bukkit.getOfflinePlayer(playerBalance.playerId) != null) {
                 playerName = Bukkit.getOfflinePlayer(playerBalance.playerId).getName();
             }
-            lines.add(MessageFormat.format("{0}. {1}: {2}", getColor(index) + index, ChatColor.GRAY + playerName, ChatColor.GREEN + playerBalance.balance.toString()));
+            lines.add(MessageFormat.format("{0}. {1}: {2}", getColor(index) + index, ChatColor.GRAY + playerName, ChatColor.GREEN + playerBalance.getFormattedBalance()));
 
             index++;
         }
@@ -83,6 +83,15 @@ public class BaltopCommand {
         public PlayerBalance(UUID playerId, Double balance) {
             this.playerId = playerId;
             this.balance = balance;
+        }
+
+        public String getFormattedBalance() {
+            String balance = String.valueOf(this.balance);
+            Currency currency = Currency.getInstance("EUR");
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.UK);
+            formatter.setCurrency(currency);
+            BigDecimal bd = new BigDecimal(balance);
+            return formatter.format(bd);
         }
     }
 }

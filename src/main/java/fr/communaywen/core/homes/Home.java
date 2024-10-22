@@ -1,19 +1,28 @@
 package fr.communaywen.core.homes;
 
+import fr.communaywen.core.homes.menu.utils.HomeIcons;
+import fr.communaywen.core.homes.menu.utils.HomeMenuUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
 
+@Getter
 public class Home {
-    @Getter private final String player;
-    @Getter @Setter private String name;
+    private final String player;
+    @Setter private String name;
     private final Location location;
+    @Getter @Setter private HomeIcons icon;
 
-    public Home(String playerUUID, String name, Location location) {
+    public Home(String playerUUID, String name, Location location, HomeIcons icon) {
         this.player = playerUUID;
         this.name = name;
         this.location = location;
+        this.icon = icon;
     }
 
     public String serializeLocation() {
@@ -37,7 +46,18 @@ public class Home {
         );
     }
 
-    public Location getLocation() {
-        return location;
+    public ItemStack getCustomIcon() {
+        ItemStack icons = HomeMenuUtils.getHomeButton(this);
+        ItemMeta meta = icons.getItemMeta();
+        meta.setDisplayName("§a" + name);
+        meta.setLore(List.of(
+                "§6Position:",
+                "§6  W: §e" + location.getWorld().getName(),
+                "§6  X: §e" + location.getBlockX(),
+                "§6  Y: §e" + location.getBlockY(),
+                "§6  Z: §e" + location.getBlockZ()
+        ));
+        icons.setItemMeta(meta);
+        return icons;
     }
 }
