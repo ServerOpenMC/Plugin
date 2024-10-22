@@ -2,6 +2,7 @@ package fr.communaywen.core.quests;
 
 import fr.communaywen.core.quests.qenum.QUESTS;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +10,8 @@ import java.util.Map;
 @Getter
 public class PlayerQuests {
 
-    private final Map<QUESTS, Integer> questsProgress;
-    public final Map<QUESTS, Integer> questsTier;
+    @NotNull private final Map<QUESTS, Integer> questsProgress;
+    @NotNull public final Map<QUESTS, Integer> questsTier;
 
     public PlayerQuests() {
         this.questsProgress = new HashMap<>();
@@ -21,19 +22,19 @@ public class PlayerQuests {
         }
     }
 
-    public int getProgress(QUESTS quest) {
+    public int getProgress(@NotNull QUESTS quest) {
         return questsProgress.getOrDefault(quest, 0);
     }
 
-    public int getCurrentTier(QUESTS quest) {
+    public int getCurrentTier(@NotNull QUESTS quest) {
         return questsTier.getOrDefault(quest, 0);
     }
 
-    public void setCurrentTier(QUESTS quests, int tier) {
+    public void setCurrentTier(@NotNull QUESTS quests, int tier) {
         questsTier.put(quests, tier);
     }
 
-    public void setProgress(QUESTS quest, int progress) {
+    public void setProgress(@NotNull QUESTS quest, int progress) {
         questsProgress.put(quest, progress);
         int tier = 0;
         for (int i = 0; i < quest.getQtTiers().length; i++) {
@@ -46,7 +47,7 @@ public class PlayerQuests {
         }
     }
 
-    public void addProgress(QUESTS quest, int amount) {
+    public void addProgress(@NotNull QUESTS quest, int amount) {
         int currentTier = getCurrentTier(quest);
         if(currentTier < 0 || currentTier >= quest.getQtTiers().length)
             throw new IllegalArgumentException("Invalid tier for quest " + quest.name());
@@ -58,12 +59,12 @@ public class PlayerQuests {
         }
     }
 
-    public boolean isQuestCompleted(QUESTS quest) {
+    public boolean isQuestCompleted(@NotNull QUESTS quest) {
         int currentTier = getCurrentTier(quest);
         return currentTier >= quest.getQtTiers().length - 1 && getProgress(quest) >= quest.getQt(quest.getQtTiers().length - 1);
     }
 
-    public void removeProgress(QUESTS quest, int amount) {
+    public void removeProgress(@NotNull QUESTS quest, int amount) {
         int currentProgress = questsProgress.getOrDefault(quest, 0);
         int newProgress = Math.max(0, currentProgress - amount);
         questsProgress.put(quest, newProgress);
@@ -79,7 +80,7 @@ public class PlayerQuests {
         }
     }
 
-    public void resetProgress(QUESTS quest) {
+    public void resetProgress(@NotNull QUESTS quest) {
         questsProgress.put(quest, 0);
         setCurrentTier(quest, 0);
     }
