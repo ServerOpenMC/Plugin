@@ -30,7 +30,6 @@ public class HomeMenuUtils {
     public static HomeIcons getHomeIcon(Home home) {
         try {
             String homeName = home.getName().toLowerCase();
-            AywenCraftPlugin.getInstance().getLogger().info("Home icon:" + home.getIcon());
             if(home.getIcon() == null) {
                 return HomeIcons.DEFAULT;
             }

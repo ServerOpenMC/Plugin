@@ -109,7 +109,7 @@ public class EventsManager implements Listener {
             }
         };
 
-        if (enabledEvents.size() == 0) {
+        if (enabledEvents.isEmpty()) {
             return;
         }
 

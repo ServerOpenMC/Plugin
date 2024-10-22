@@ -177,7 +177,6 @@ public class HomesManagers extends DatabaseConnector {
                     updateStmt.setInt(1, limit);
                     updateStmt.setString(2, playerUUID);
                     updateStmt.addBatch();
-                    AywenCraftPlugin.getInstance().getLogger().info("Updating homes limit for " + playerUUID + " to " + limit);
                 } else {
                     createHomeLimit(homeLimit.getPlayerUUID(), limit);
                 }
