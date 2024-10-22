@@ -67,6 +67,7 @@ import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
+import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
@@ -75,6 +76,7 @@ import fr.communaywen.core.settings.SettingsListener;
 import fr.communaywen.core.space.moon.MoonListener;
 import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.spawn.head.HeadListener;
+import fr.communaywen.core.spawn.jump.JumpListener;
 import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
@@ -400,7 +402,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsListener(this),
                 new ParticleListener(this),
                 new HeadListener(this),
-                //new JumpListener(this, jumpManager),
+                new JumpListener(this, jumpManager),
                 new LeaderboardListener(this, jumpManager),
                 new RocketListener(),
                 new MoonListener(),
@@ -418,7 +420,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
-                //new Dream(this),
+                new Dream(this),
                 new VpnListener(this),
                 new ThorHammer(this),
                 new FriendsListener(managers.getFriendsManager()),
@@ -467,23 +469,23 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         // BETTER SPAWN
         // - Leaderboard
-//        LeaderboardManager.createLeaderboardBalTop();
-//        LeaderboardManager.updateLeaderboardBalTop();
-//        LeaderboardManager.createLeaderboardTeamTop();
-//        LeaderboardManager.updateLeaderboardTeamTop();
-//        LeaderboardManager.createLeaderboardPlayTime();
-//        LeaderboardManager.updateLeaderboardPlayTime();
-//        jumpManager.createDisplayJumpStart();
-//        jumpManager.createDisplayJumpEnd();
-//        jumpManager.createLeaderboardLeaderboardRecord();
-//        jumpManager.updateLeaderboardLeaderboardRecord();
-//        jumpManager.createDisplayJumpEnd();
-//        LeaderboardManager.createLeaderboardContribution();
-//        try {
-//            LeaderboardManager.updateLeaderboardContribution();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        LeaderboardManager.createLeaderboardBalTop();
+        LeaderboardManager.updateLeaderboardBalTop();
+        LeaderboardManager.createLeaderboardTeamTop();
+        LeaderboardManager.updateLeaderboardTeamTop();
+        LeaderboardManager.createLeaderboardPlayTime();
+        LeaderboardManager.updateLeaderboardPlayTime();
+        jumpManager.createDisplayJumpStart();
+        jumpManager.createDisplayJumpEnd();
+        jumpManager.createLeaderboardLeaderboardRecord();
+        jumpManager.updateLeaderboardLeaderboardRecord();
+        jumpManager.createDisplayJumpEnd();
+        LeaderboardManager.createLeaderboardContribution();
+        try {
+            LeaderboardManager.updateLeaderboardContribution();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -491,14 +493,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 //        // Remove Leaderboard
-//        LeaderboardManager.removeLeaderboardBalTop();
-//        LeaderboardManager.removeLeaderboardTeamTop();
-//        jumpManager.removeLeaderboardLeaderboardRecord();
-//        LeaderboardManager.removeLeaderboardContribution();
-//        LeaderboardManager.removeLeaderboardPlayTime();
-//
-//        jumpManager.removeDisplayJumpStart();
-//        jumpManager.removeDisplayJumpEnd();
+        LeaderboardManager.removeLeaderboardBalTop();
+        LeaderboardManager.removeLeaderboardTeamTop();
+        jumpManager.removeLeaderboardLeaderboardRecord();
+        LeaderboardManager.removeLeaderboardContribution();
+        LeaderboardManager.removeLeaderboardPlayTime();
+
+        jumpManager.removeDisplayJumpStart();
+        jumpManager.removeDisplayJumpEnd();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress

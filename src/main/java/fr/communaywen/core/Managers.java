@@ -12,6 +12,7 @@ import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
 import fr.communaywen.core.guideline.GuidelineManager;
+import fr.communaywen.core.guideline.advancements.dream.DreamTabManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.homes.world.DisabledWorldHome;
@@ -123,18 +124,18 @@ public class Managers {
 		}
 		// Database
 
-//        jumpManager = new JumpManager(plugin);
+        jumpManager = new JumpManager(plugin);
 		headManager = new HeadManager(plugin);
-//        leader    boardManager = new LeaderboardManager(plugin);
-//        dreamdimManager = new DimensionManager(plugin);
+        leaderboardManager = new LeaderboardManager(plugin);
+        dreamdimManager = new DimensionManager(plugin);
 		moonDimManager = new MoonDimensionManager(plugin);
-//        guidelineManager = new GuidelineManager(plugin);
+        guidelineManager = new GuidelineManager(plugin);
 		contestManager = new ContestManager(plugin);
 		contestCache = new ContestCache(plugin, contestManager);
 		this.teamManager = new TeamManager(plugin);
 		scoreboardManager = new ScoreboardManager(plugin, contestManager);
 		homeManager = new HomeManager(plugin);
-		//quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
+		quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
 		economyManager = new EconomyManager(plugin.getDataFolder());
 		friendsManager = new FriendsManager(databaseManager, plugin);
 		corpseManager = new CorpseManager();
@@ -155,7 +156,7 @@ public class Managers {
 		LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 		LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
 
-//        dreamdimManager.init();
+        dreamdimManager.init();
 		homeManager.init();
 		moonDimManager.init();
 		homesManagers.loadHomes();
@@ -165,14 +166,14 @@ public class Managers {
 	
 	public void cleanup() {
 		/* Besoin de la db */
-//        reportManager.saveReports();
-//        DreamTabManager.close();
+        reportManager.saveReports();
+        DreamTabManager.close();
 		
 		/* Plus besoin de la db */
-//        databaseManager.close();
+        databaseManager.close();
 
-//        dreamdimManager.close();
-		//quizManager.close();
+        dreamdimManager.close();
+		quizManager.close();
 		corpseManager.removeAll();
 		teamManager.getTeamCache().saveAllTeamsToDatabase();
 		disabledWorldHome.saveConfig();
