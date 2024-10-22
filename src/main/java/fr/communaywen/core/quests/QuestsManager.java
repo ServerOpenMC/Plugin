@@ -17,6 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.*;
@@ -57,8 +58,6 @@ public class QuestsManager extends DatabaseConnector {
 
         playerQuests.put(playerId, pq);
         for (QUESTS quest : QUESTS.values()) {
-            int progress = pq.getProgress(quest);
-            int tier = pq.getCurrentTier(quest);
             StringBuilder tierInfo = new StringBuilder();
             for (int i = 0; i < quest.getQtTiers().length; i++) {
                 tierInfo.append("Tier ").append(i).append(": ").append(quest.getQt(i)).append(", ");
@@ -72,11 +71,9 @@ public class QuestsManager extends DatabaseConnector {
 
     public static void manageQuestsPlayer(UUID uuid, QUESTS quest, int amount, String actionBar) {
         Player player = Bukkit.getPlayer(uuid);
-        if(!player.isConnected()) return;
-        PlayerQuests pq = getPlayerQuests(uuid);
+        @NotNull PlayerQuests pq = getPlayerQuests(uuid);
         int currentTier = pq.getCurrentTier(quest);
-
-        if (pq.isQuestCompleted(quest)) { return; }
+        if (!player.isConnected() || pq == null || pq.isQuestCompleted(quest)) { return; }
 
         if (currentTier < 0 || currentTier >= quest.getQtTiers().length) {
             return;
