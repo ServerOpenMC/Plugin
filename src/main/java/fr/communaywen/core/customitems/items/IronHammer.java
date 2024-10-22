@@ -90,32 +90,4 @@ public class IronHammer extends CustomItems implements CustomItemsEvents {
         }
 
     }
-
-    @Override
-    public void onAnvil(PrepareAnvilEvent event) {
-
-        ItemStack item0 = event.getInventory().getItem(0);
-
-        if (item0 == null) {
-            return;
-        }
-
-        ItemStack result = event.getResult();
-
-        if (result == null) {
-            return;
-        }
-
-        CustomStack customStack = CustomStack.byItemStack(result);
-
-        if (customStack == null) {
-            return;
-        }
-
-        if (!customStack.getNamespacedID().equals(getNamespacedID())) {
-            return;
-        }
-
-        event.setResult(null);
-    }
 }
