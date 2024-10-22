@@ -46,9 +46,9 @@ public class WikiCommand {
                 String link = "https://minecraft.wiki/w/" + player.getInventory().getItemInMainHand().getType().name().toLowerCase();
                 Material item = player.getInventory().getItemInMainHand().getType();
                 player.sendMessage(Component.text("Voici le lien du wiki de l'item ").color(NamedTextColor.YELLOW)
-                        .append(Component.text(ItemUtils.getDefaultItemName(player, item))
+                        .append(ItemUtils.getDefaultItemName(item))
                         .append(Component.text(" : ")
-                        .append(Component.text("Cliquez ici").color(NamedTextColor.GOLD).clickEvent(ClickEvent.openUrl(link))))));
+                        .append(Component.text("Cliquez ici").color(NamedTextColor.GOLD).clickEvent(ClickEvent.openUrl(link)))));
             }
         } else {
             player.sendMessage("§cVous devez tenir un item en main ou spécifier une feature pour utiliser cette commande.");
