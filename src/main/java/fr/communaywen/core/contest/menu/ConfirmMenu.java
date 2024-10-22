@@ -2,10 +2,12 @@ package fr.communaywen.core.contest.menu;
 
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
+import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -21,22 +23,24 @@ public class ConfirmMenu extends Menu {
     private final String getCampName;
     private final String getColor;
     private final ContestManager contestManager;
+    private final AywenCraftPlugin plugin;
 
-    public ConfirmMenu(Player owner, String camp, String color, ContestManager manager) {
+    public ConfirmMenu(Player owner, AywenCraftPlugin plugins, String camp, String color, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
         this.getCampName = camp;
         this.getColor = color;
+        this.plugin= plugins;
     }
 
     @Override
     public @NotNull String getName() {
-        return "Le Contest - Confirmation";
+        return PlaceholderAPI.setPlaceholders(getOwner(), "§r§f%img_offset_-48%%img_contest_menu%");
     }
 
     @Override
     public @NotNull InventorySize getInventorySize() {
-        return InventorySize.NORMAL;
+        return InventorySize.LARGE;
     }
 
     @Override
@@ -46,8 +50,8 @@ public class ConfirmMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String campNameFinal = contestManager.getString("contest", getCampName);
-        String campColor = contestManager.getString("contest", getColor);
+        String campNameFinal = contestManager.getString("contest", getCampName).join();;
+        String campColor = contestManager.getString("contest", getColor).join();;
         ChatColor colorFinal = ChatColor.valueOf(campColor);
 
         List<String> lore1 = new ArrayList<String>();
@@ -56,14 +60,15 @@ public class ConfirmMenu extends Menu {
 
         List<String> lore0 = new ArrayList<String>();
         lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campNameFinal);
-        for(int i = 0; i < getInventorySize().getSize(); i++) {
+
                 inventory.put(11, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§cAnnuler");
                     itemMeta.setLore(lore0);
                 }).setOnClick(inventoryClickEvent -> {
-                    VoteMenu menu = new VoteMenu(getOwner(), contestManager);
+                    VoteMenu menu = new VoteMenu(getOwner(), plugin, contestManager);
                     menu.open();
                 }));
+
                 inventory.put(15, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§aConfirmer");
                     itemMeta.setLore(lore1);
@@ -71,10 +76,9 @@ public class ConfirmMenu extends Menu {
                     String substring = this.getCampName.substring(this.getCampName.length() - 1);
                     contestManager.insertChoicePlayer(getOwner(), Integer.valueOf(substring));
                     getOwner().playSound(getOwner().getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1.0F, 0.2F);
-                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + contestManager.getString("contest", getCampName), Prefix.CONTEST, MessageType.SUCCESS, false);
+                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + contestManager.getString("contest", getCampName).join(), Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
-        }
-        return inventory;
+                return inventory;
     }
 }

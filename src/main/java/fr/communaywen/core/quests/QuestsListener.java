@@ -48,7 +48,7 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onEnchantItem(EnchantItemEvent event) {
-        QuestsManager.manageQuestsPlayer(event.getEnchanter(), QUESTS.ENCHANT_FIRST_ITEM, 1, "Objet enchanté");
+        QuestsManager.manageQuestsPlayer(event.getEnchanter().getUniqueId(), QUESTS.ENCHANT_FIRST_ITEM, 1, "Objet enchanté");
     }
 
     @EventHandler
@@ -66,14 +66,14 @@ public class QuestsListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if ((event.getBlock().getType().equals(Material.DIAMOND_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_DIAMOND_ORE))) {
-            QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_DIAMOND, 1, "diamants(s) miné(s)");
+            QuestsManager.manageQuestsPlayer(event.getPlayer().getUniqueId(), QUESTS.BREAK_DIAMOND, 1, "diamants(s) miné(s)");
         } else if ((event.getBlock().getType().equals(Material.STONE) || event.getBlock().getType().equals(Material.DEEPSLATE))) {
-            QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.BREAK_STONE, 1, "stone(s) cassé(s)");
+            QuestsManager.manageQuestsPlayer(event.getPlayer().getUniqueId(), QUESTS.BREAK_STONE, 1, "stone(s) cassé(s)");
         }
     }
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        QuestsManager.manageQuestsPlayer(event.getPlayer(), QUESTS.PLACE_BLOCK, 1, "block placés.");
+        QuestsManager.manageQuestsPlayer(event.getPlayer().getUniqueId(), QUESTS.PLACE_BLOCK, 1, "block placés.");
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -83,7 +83,7 @@ public class QuestsListener implements Listener {
 
         // tree grown with bonemeal
         if (player != null) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.SAVE_THE_EARTH, 1, "arbre.s planté.s");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.SAVE_THE_EARTH, 1, "arbre.s planté.s");
         }
     }
 
@@ -97,7 +97,7 @@ public class QuestsListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         if(event.getEntity().getKiller() instanceof Player killer) {
-            QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+            QuestsManager.manageQuestsPlayer(killer.getUniqueId(), QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
         }
     }
 
@@ -106,14 +106,14 @@ public class QuestsListener implements Listener {
         Player player = event.getEntity().getKiller();
         if (player == null) return;
         if (event.getEntity().getType().equals(EntityType.WARDEN)) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_WARDENS, 1, "warden tué");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.KILL_WARDENS, 1, "warden tué");
         } else if (event.getEntity() instanceof Creeper){
             Creeper creeper = (Creeper) event.getEntity();
             if(creeper.isPowered()){
-                QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_SUPER_CREEPER, 1, "Creeper super chargé tué");
+                QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.KILL_SUPER_CREEPER, 1, "Creeper super chargé tué");
             }
         }else if (event.getEntity().getType().equals(EntityType.ZOMBIE)){
-            QuestsManager.manageQuestsPlayer(player, QUESTS.KILL_ZOMBIE, 1, "zombie tué.");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.KILL_ZOMBIE, 1, "zombie tué.");
         }
     }
 
@@ -132,6 +132,8 @@ public class QuestsListener implements Listener {
 
         if ((blockX != from.getBlockX() || blockZ != from.getBlockZ()) && !AywenCraftPlugin.frozenPlayers.contains(player))
             QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+        if (blockX != from.getBlockX() || blockZ != from.getBlockZ())
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
 
 //        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ())
 //            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
@@ -142,13 +144,13 @@ public class QuestsListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (getItemsName(event.getRecipe().getResult()).equals("wand:rtpwand")) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_RTP_WAND, 1, "RTP WAND crafté");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.CRAFT_RTP_WAND, 1, "RTP WAND crafté");
         } else if (getItemsName(event.getRecipe().getResult()).equals("aywen:kebab")) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.CRAFT_KEBAB, 1, "kebab crafté");
         } else if (getItemsName(event.getRecipe().getResult()).equals("minecraft:cake")) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_CAKE, 1, "gateau crafté.");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.CRAFT_CAKE, 1, "gateau crafté.");
         } else if (getItemsName(event.getRecipe().getResult()).equals("gexary:elevator")) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.CRAFT_ELEVATOR, 1, "Elevator crafté");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.CRAFT_ELEVATOR, 1, "Elevator crafté");
         }
 
     }
@@ -159,7 +161,7 @@ public class QuestsListener implements Listener {
         Player player = event.getPlayer();
 
         if (getItemsName(event.getItem()).equals("aywen:kebab")) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.EAT_KEBAB, 1, "kebab mangé");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.EAT_KEBAB, 1, "kebab mangé");
         }
     }
 
@@ -170,7 +172,7 @@ public class QuestsListener implements Listener {
         ItemStack iron = new ItemStack(Material.IRON_INGOT);
 
         if (extractedItem.equals(iron)) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.SMELT_IRON, event.getItemAmount(), "fer(s) cuit(s)");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.SMELT_IRON, event.getItemAmount(), "fer(s) cuit(s)");
         }
     }
 
@@ -184,7 +186,7 @@ public class QuestsListener implements Listener {
         ItemStack fishedItem = caught.getItemStack();
 
         if (fishedItem.getType() == Material.BREAD && fishedItem.getCustomModelData() == 42) {
-            QuestsManager.manageQuestsPlayer(player, QUESTS.HOLY_BREAD, 1, "relique du pain sacré pêchée");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.HOLY_BREAD, 1, "relique du pain sacré pêchée");
         }
     }
 

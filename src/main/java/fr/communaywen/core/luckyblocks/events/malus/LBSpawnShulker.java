@@ -1,7 +1,5 @@
 package fr.communaywen.core.luckyblocks.events.malus;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
@@ -10,8 +8,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBSpawnShulker extends LuckyBlockEvent {
 
     public LBSpawnShulker() {

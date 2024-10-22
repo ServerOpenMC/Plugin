@@ -1,4 +1,4 @@
-package fr.communaywen.core;
+package fr.communaywen.core.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +13,7 @@ public class AntiTrampling implements Listener {
     @EventHandler
     public void onEntityInteract(EntityInteractEvent event) {
         Block block = event.getBlock();
-        if (block != null && block.getType() == Material.FARMLAND) {
+        if (block.getType() == Material.FARMLAND) {
             event.setCancelled(true);
         }
     }
@@ -21,6 +21,7 @@ public class AntiTrampling implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.PHYSICAL) {
+            if (event.getClickedBlock() == null) return;
             if (event.getClickedBlock().getType() == Material.FARMLAND) {
                 event.setCancelled(true);
             }

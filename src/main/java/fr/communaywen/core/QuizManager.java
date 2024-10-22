@@ -27,9 +27,11 @@ public class QuizManager {
     public FileConfiguration config;
     private final AywenCraftPlugin plugin;
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public QuizManager(AywenCraftPlugin plugin, FileConfiguration config, ContestManager manager) {
         this.contestManager = manager;
+        this.contestCache = plugin.getManagers().getContestCache();
         this.plugin = plugin;
         this.config = config;
         this.quizzes = new ArrayList<>();
@@ -89,7 +91,7 @@ public class QuizManager {
         int points = 10;
         // make a config file
 
-        if (ContestCache.getPhaseCache() == 3) {
+        if (contestCache.getPhaseCache() == 3) {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +
                             "§7\n" +
@@ -101,9 +103,9 @@ public class QuizManager {
             );
 
 
-            contestManager.addPointPlayer(points + contestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
-            String playerCamp = "points" + ContestCache.getPlayerCampsCache(event.getPlayer());
-            contestManager.updateColumnInt("contest", playerCamp, points + contestManager.getInt("contest", playerCamp));
+            contestManager.addPointPlayer(points + contestManager.getPlayerPoints(event.getPlayer()).join(), event.getPlayer());
+            String playerCamp = "points" + contestCache.getPlayerCampsCache(event.getPlayer());
+            contestManager.updateColumnInt("contest", playerCamp, points + contestManager.getInt("contest", playerCamp).join());
           
         } else {
             Bukkit.broadcastMessage(
@@ -118,7 +120,7 @@ public class QuizManager {
         }
 
         event.setCancelled(true);
-        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
+        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer().getUniqueId(), money);
         currentQuiz = null;
         this.timeoutExecutor.shutdownNow();
         this.timeoutExecutor = Executors.newScheduledThreadPool(1);

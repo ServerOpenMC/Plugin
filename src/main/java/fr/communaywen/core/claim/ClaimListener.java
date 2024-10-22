@@ -1,24 +1,13 @@
 package fr.communaywen.core.claim;
 
-import java.sql.SQLException;
 import java.util.*;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Container;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.*;
@@ -42,11 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
-import org.bukkit.material.RedstoneTorch;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import static org.bukkit.event.EventPriority.HIGH;
-import static org.bukkit.event.EventPriority.LOWEST;
 
 public class ClaimListener implements Listener {
     public static final Map<UUID, ClaimParticleTask> activeParticleTasks = new HashMap<>();
@@ -56,7 +41,7 @@ public class ClaimListener implements Listener {
         if (!GamePlayer.gamePlayers.containsKey(event.getPlayer().getName())) new GamePlayer(event.getPlayer().getName());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         checkRegion(event.getPlayer(), event.getBlock(), event);
     }
@@ -178,7 +163,7 @@ public class ClaimListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();

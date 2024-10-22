@@ -25,39 +25,41 @@ public class HeadManager extends DatabaseConnector  {
     }
 
     public static void saveFoundHead(Player player, String headId) {
-        try {
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT heads FROM spawn_head WHERE uuid = ?");
-            selectStatement.setString(1, player.getUniqueId().toString());
-            ResultSet rs = selectStatement.executeQuery();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                PreparedStatement selectStatement = connection.prepareStatement("SELECT heads FROM spawn_head WHERE uuid = ?");
+                selectStatement.setString(1, player.getUniqueId().toString());
+                ResultSet rs = selectStatement.executeQuery();
 
-            JSONArray headsArray = new JSONArray();
+                JSONArray headsArray = new JSONArray();
 
-            if (rs.next()) {
-                String heads = rs.getString("heads");
-                if (heads != null && !heads.isEmpty()) {
-                    headsArray = new JSONArray(heads);
+                if (rs.next()) {
+                    String heads = rs.getString("heads");
+                    if (heads != null && !heads.isEmpty()) {
+                        headsArray = new JSONArray(heads);
+                    }
+                } else {
+                    PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO spawn_head (uuid, heads) VALUES (?, ?)");
+                    insertStatement.setString(1, player.getUniqueId().toString());
+                    insertStatement.setString(2, "[]");
+                    insertStatement.executeUpdate();
                 }
-            } else {
-                PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO spawn_head (uuid, heads) VALUES (?, ?)");
-                insertStatement.setString(1, player.getUniqueId().toString());
-                insertStatement.setString(2, "[]");
-                insertStatement.executeUpdate();
-            }
 
-            if (!headsArray.toList().contains(headId)) {
-                headsArray.put(headId);
+                if (!headsArray.toList().contains(headId)) {
+                    headsArray.put(headId);
 
-                String sql = "UPDATE spawn_head SET heads = ? WHERE uuid = ?";
-                try (PreparedStatement updateStatement = connection.prepareStatement(sql)) {
-                    updateStatement.setString(1, headsArray.toString());
-                    updateStatement.setString(2, player.getUniqueId().toString());
-                    updateStatement.executeUpdate();
+                    String sql = "UPDATE spawn_head SET heads = ? WHERE uuid = ?";
+                    try (PreparedStatement updateStatement = connection.prepareStatement(sql)) {
+                        updateStatement.setString(1, headsArray.toString());
+                        updateStatement.setString(2, player.getUniqueId().toString());
+                        updateStatement.executeUpdate();
+                    }
                 }
-            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private static final Map<UUID, HeadPlayerCache> playerCache = new HashMap<>();
