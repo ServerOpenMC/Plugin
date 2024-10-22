@@ -101,8 +101,6 @@ public class HomesCommands {
                     .filter(home -> home.getPlayer().equals(player.getUniqueId().toString()))
                     .toList();
 
-            AywenCraftPlugin.getInstance().getLogger().info("Homes: " + homes);
-
             if(name.equals("~")) {
                 if(homes.isEmpty()) {
                     MessageManager.sendMessageType(player, "§cTu n'as pas de home.", Prefix.HOME, MessageType.ERROR, true);
