@@ -15,11 +15,11 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import dev.xernas.menulib.Menu;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class ConfirmMenu extends Menu {
     private final String getCampName;
@@ -27,12 +27,15 @@ public class ConfirmMenu extends Menu {
     private final ContestManager contestManager;
     private final AywenCraftPlugin plugin;
 
+    private Map<Integer, ItemStack> inventory;
+    private boolean isInventoryPrepared = false; // Flag pour vérifier si l'inventaire est prêt
+
     public ConfirmMenu(Player owner, AywenCraftPlugin plugins, String camp, String color, ContestManager manager) {
         super(owner);
         this.contestManager = manager;
         this.getCampName = camp;
         this.getColor = color;
-        this.plugin= plugins;
+        this.plugin = plugins;
     }
 
     @Override
@@ -48,24 +51,28 @@ public class ConfirmMenu extends Menu {
     @Override
     public void onInventoryClick(InventoryClickEvent click) {}
 
+
     @Override
     public @NotNull Map<Integer, ItemStack> getContent() {
-        Map<Integer, ItemStack> inventory = new HashMap<>();
+
+        if (isInventoryPrepared) {
+            return inventory;
+        }
+
+        inventory = new HashMap<>();
+        isInventoryPrepared = true;
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-
             String campName = ContestManager.getString("contest", getCampName);
-
             String campColor = ContestManager.getString("contest", getColor);
 
-            ChatColor colorFinal = ChatColor.valueOf(campColor);
-
             Bukkit.getScheduler().runTask(plugin, () -> {
-                List<String> lore1 = new ArrayList<String>();
+                ChatColor colorFinal = ChatColor.valueOf(campColor);
+                List<String> lore1 = new ArrayList<>();
                 lore1.add("§7Vous allez rejoindre " + colorFinal + "La Team " + campName);
                 lore1.add("§c§lATTENTION! Vous ne pourrez changer de choix !");
 
-                List<String> lore0 = new ArrayList<String>();
+                List<String> lore0 = new ArrayList<>();
                 lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campName);
 
                 inventory.put(11, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> {
@@ -86,8 +93,11 @@ public class ConfirmMenu extends Menu {
                     MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : " + colorFinal + "La Team " + campName, Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
+
+                getOwner().openInventory(getInventory());
             });
         });
+
         return inventory;
     }
 }
