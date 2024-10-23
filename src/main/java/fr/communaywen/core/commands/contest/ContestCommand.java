@@ -17,7 +17,9 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Feature("Contest")
 @Credit("iambibi_")
@@ -92,6 +94,33 @@ public class ContestCommand {
             }
         } else {
             MessageManager.sendMessageType(player, "§cVous pouvez pas définir un contest lorsqu'il a commencé", Prefix.STAFF, MessageType.ERROR, true);
+        }
+    }
+
+    @Subcommand("settrade")
+    @Description("Permet de définir un Trade")
+    @CommandPermission("ayw.command.contest.settrade")
+    @AutoComplete("@trade")
+    public void settrade(Player player, @Named("trade") String trade, int amount, int amount_shell) {
+        FileConfiguration config = plugin.getConfig();
+        List<Map<?, ?>> trades = config.getMapList("contest.contestTrades");
+
+        boolean tradeFound = false;
+
+        for (Map<?, ?> tradeEntry : trades) {
+            if (tradeEntry.get("ress").equals(trade)) {
+                ((Map<String, Object>) tradeEntry).put("amount", amount);
+                ((Map<String, Object>) tradeEntry).put("amount_shell", amount_shell);
+                tradeFound = true;
+                break;
+            }
+        }
+
+        if (tradeFound) {
+            plugin.saveConfig();
+            MessageManager.sendMessageType(player, "Le trade de " + trade + " a été mis à jour avec " + amount + " pour " + amount_shell + " coquillages de contest.", Prefix.STAFF, MessageType.SUCCESS, true);
+        } else {
+            MessageManager.sendMessageType(player, "Le trade n'existe pas.\n/contest settrade <mat> <amount> <amount_shell>", Prefix.STAFF, MessageType.ERROR, true);
         }
     }
 

@@ -175,7 +175,7 @@ contest:
     - ress: HONEYCOMB
       amount: 2
       amount_shell: 1
-      selected: falseD
+      selected: false
   contestList:
     - camp1: "Mayonnaise"
       color1: "YELLOW"

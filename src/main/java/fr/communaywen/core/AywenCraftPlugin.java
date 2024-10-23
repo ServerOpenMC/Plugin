@@ -268,6 +268,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
         this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(managers.getContestManager().getColorContestList()));
+        this.handler.getAutoCompleter().registerSuggestion("trade", SuggestionProvider.of(managers.getContestManager().getRessListFromConfig()));
         this.handler.getAutoCompleter().registerSuggestion("listLeaderboard", SuggestionProvider.of(managers.getLeaderboardManager().getLbList()));
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
 

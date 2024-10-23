@@ -901,6 +901,19 @@ public class ContestManager extends DatabaseConnector {
 
     //END CONTEST METHODE
 
+    public List<String> getRessListFromConfig() {
+        FileConfiguration config = plugins.getConfig();
+        List<Map<?, ?>> trades = config.getMapList("contest.contestTrades");
+        List<String> ressList = new ArrayList<>();
+
+        for (Map<?, ?> tradeEntry : trades) {
+            if (tradeEntry.containsKey("ress")) {
+                ressList.add(tradeEntry.get("ress").toString());
+            }
+        }
+        return ressList;
+    }
+
     private void updateSelected(String camp) {
         List<Map<?, ?>> contestList = config.getMapList("contest.contestList");
         List<Map<String, Object>> updatedContestList = new ArrayList<>();
