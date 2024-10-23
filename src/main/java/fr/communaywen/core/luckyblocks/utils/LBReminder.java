@@ -47,8 +47,4 @@ public class LBReminder {
             }
         }, 0L, 5 * 60 * 20L);
     }
-
-    public void stopReminder() {
-        Bukkit.getScheduler().cancelTasks(plugin);
-    }
 }
