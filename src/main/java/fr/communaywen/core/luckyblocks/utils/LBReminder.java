@@ -36,7 +36,7 @@ public class LBReminder {
                 return;
             }
 
-            if (playerManager.canClaimLuckyBlocks(playerUUID)) {
+            if (playerManager.canCheckClaimLuckyBlocks(playerUUID)) {
                 MessageManager.sendMessageType(player, "Vous pouvez réclamer vos Lucky Block Quotidien!", Prefix.LUCKYBLOCK, MessageType.INFO, true);
                 Component message = Component.text("", NamedTextColor.GRAY)
                         .append(Component.text("Cliquez-ici", NamedTextColor.GRAY))
