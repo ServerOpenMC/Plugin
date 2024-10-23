@@ -8,6 +8,7 @@ import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class ConfirmMenu extends Menu {
     private final String getCampName;
@@ -50,16 +52,21 @@ public class ConfirmMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String campNameFinal = ContestManager.getString("contest", getCampName).join();;
-        String campColor = ContestManager.getString("contest", getColor).join();;
-        ChatColor colorFinal = ChatColor.valueOf(campColor);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 
-        List<String> lore1 = new ArrayList<String>();
-        lore1.add("§7Vous allez rejoindre " + colorFinal + "La Team " + campNameFinal);
-        lore1.add("§c§lATTENTION! Vous ne pourrez changer de choix !");
+            String campName = ContestManager.getString("contest", getCampName);
 
-        List<String> lore0 = new ArrayList<String>();
-        lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campNameFinal);
+            String campColor = ContestManager.getString("contest", getColor);
+
+            ChatColor colorFinal = ChatColor.valueOf(campColor);
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                List<String> lore1 = new ArrayList<String>();
+                lore1.add("§7Vous allez rejoindre " + colorFinal + "La Team " + campName);
+                lore1.add("§c§lATTENTION! Vous ne pourrez changer de choix !");
+
+                List<String> lore0 = new ArrayList<String>();
+                lore0.add("§7Vous allez annuler votre choix : " + colorFinal + "La Team " + campName);
 
                 inventory.put(11, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> {
                     itemMeta.setDisplayName("§r§cAnnuler");
@@ -76,9 +83,11 @@ public class ConfirmMenu extends Menu {
                     String substring = this.getCampName.substring(this.getCampName.length() - 1);
                     contestManager.insertChoicePlayer(getOwner(), Integer.valueOf(substring));
                     getOwner().playSound(getOwner().getEyeLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1.0F, 0.2F);
-                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : "+ colorFinal + "La Team " + contestManager.getString("contest", getCampName).join(), Prefix.CONTEST, MessageType.SUCCESS, false);
+                    MessageManager.sendMessageType(getOwner(), "§7Vous avez bien rejoint : " + colorFinal + "La Team " + campName, Prefix.CONTEST, MessageType.SUCCESS, false);
                     getOwner().closeInventory();
                 }));
-                return inventory;
+            });
+        });
+        return inventory;
     }
 }

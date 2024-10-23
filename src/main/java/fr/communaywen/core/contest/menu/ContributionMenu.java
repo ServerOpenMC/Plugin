@@ -13,6 +13,7 @@ import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -113,32 +114,35 @@ public class ContributionMenu extends Menu {
                     itemMeta.setDisplayName("§r§7Contribuer pour la"+ campColor+ " Team " + campName);
                     itemMeta.setLore(lore_contribute);
                 }).setOnClick(inventoryClickEvent -> {
-                    try {
-                        ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        try {
+                            ItemStack shell_contestItem = CustomStack.getInstance("contest:contest_shell").getItemStack();
 
-                        int shellCount = Arrays.stream(getOwner().getInventory().getContents()).filter(is -> is != null && is.isSimilar(shell_contestItem)).mapToInt(ItemStack::getAmount).sum();
+                            int shellCount = Arrays.stream(getOwner().getInventory().getContents()).filter(is -> is != null && is.isSimilar(shell_contestItem)).mapToInt(ItemStack::getAmount).sum();
 
-                        if (ItemUtils.hasEnoughItems(getOwner(), shell_contestItem.getType(), shellCount)) {
-                            ItemUtils.removeItemsFromInventory(getOwner(), shell_contestItem.getType(), shellCount);
+                            if (ItemUtils.hasEnoughItems(getOwner(), shell_contestItem.getType(), shellCount)) {
+                                ItemUtils.removeItemsFromInventory(getOwner(), shell_contestItem.getType(), shellCount);
 
-                            contestManager.getPlayerPoints(getOwner()).thenAccept(playerPoints -> {
-                                int newPlayerPoints = shellCount + playerPoints;
+                                    int newPlayerPoints = shellCount + contestManager.getPlayerPoints(getOwner());
+                                    int updatedCampPoints = shellCount + contestManager.getInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()));
 
-                                contestManager.getInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()))
-                                        .thenAccept(campPoints -> {
-                                            int updatedCampPoints = shellCount + campPoints;
 
-                                            contestManager.updateColumnInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()), updatedCampPoints);
+                                contestManager.addPointPlayer(newPlayerPoints, getOwner());
 
-                                            MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shellCount + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
-                                        });
-                            });
-                        } else {
-                            MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
+                                contestManager.updateColumnInt("contest", "points" + contestCache.getPlayerCampsCache(getOwner()), updatedCampPoints);
+
+                                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                                        MessageManager.sendMessageType(getOwner(), "§7Vous avez déposé§b " + shellCount + " Coquillage(s) de Contest§7 pour votre Team!", Prefix.CONTEST, MessageType.SUCCESS, true);
+                                    });
+                            } else {
+                                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                                    MessageManager.sendMessageType(getOwner(), "§cVous n'avez pas de Coquillage(s) de Contest§7", Prefix.CONTEST, MessageType.ERROR, true);
+                                });
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
                         }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    });
                 }));
 
                 inventory.put(16, new ItemBuilder(this, Material.OMINOUS_TRIAL_KEY, itemMeta -> {
