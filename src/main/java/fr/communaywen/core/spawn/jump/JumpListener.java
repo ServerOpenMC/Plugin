@@ -110,8 +110,8 @@ public class JumpListener implements Listener {
 
                     if (System.currentTimeMillis() - jumpRewardsCooldown.getOrDefault(player.getUniqueId(), 0L) > jumpCooldownRewards) {
                         ItemStack luckyblock = LBUtils.getLuckyBlockItem();
-                        luckyblock.setAmount(4);
-                        MessageManager.sendMessageType(player, "§aVous avez collécté §64 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
+                        luckyblock.setAmount(2);
+                        MessageManager.sendMessageType(player, "§aVous avez collécté §62 LuckyBlock§a et §61000$§a", Prefix.JUMP, MessageType.SUCCESS, true);
 
                         player.getInventory().addItem(luckyblock);
                         EconomyManager.getInstance().addBalance(player.getUniqueId(), 1000);
@@ -125,8 +125,8 @@ public class JumpListener implements Listener {
 
                     jumpRewardsCooldown.put(player.getUniqueId(), System.currentTimeMillis());
 
-                    Location spawn = new Location(player.getServer().getWorld(plugin.getConfig().getString("spawn.world")), plugin.getConfig().getDouble("spawn.x"), plugin.getConfig().getDouble("spawn.y"), plugin.getConfig().getDouble("spawn.z"), 0, 0);
-                    player.teleport(spawn);
+                    Location spawn_jump = new Location(player.getServer().getWorld(plugin.getConfig().getString("jump.world")), plugin.getConfig().getDouble("jump.start.posX") - 2, plugin.getConfig().getDouble("jump.start.posY"), plugin.getConfig().getDouble("jump.start.posZ") - 2, 0, 0);
+                    player.teleport(spawn_jump);
                 }
             }
         }

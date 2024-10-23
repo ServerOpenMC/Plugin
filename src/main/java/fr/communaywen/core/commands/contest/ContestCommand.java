@@ -27,9 +27,11 @@ public class ContestCommand {
     private final AywenCraftPlugin plugin;
     private final FileConfiguration eventConfig;
     private final ContestManager contestManager;
+    private final ContestCache contestCache;
 
     public ContestCommand(AywenCraftPlugin plugins, FileConfiguration eventConfigs, ContestManager manager) {
         this.contestManager = manager;
+        this.contestCache = plugins.getManagers().getContestCache();
         plugin = plugins;
         eventConfig = eventConfigs;
     }
@@ -37,13 +39,13 @@ public class ContestCommand {
     @Cooldown(4)
     @DefaultFor("~")
     public void defaultCommand(Player player) {
-        int phase = ContestCache.getPhaseCache();
-        int camp = ContestCache.getPlayerCampsCache(player);
+        int phase = contestCache.getPhaseCache();
+        int camp = contestCache.getPlayerCampsCache(player);
         if (phase==2) {
-            VoteMenu menu = new VoteMenu(player, contestManager);
+            VoteMenu menu = new VoteMenu(player, plugin, contestManager);
             menu.open();
         } else if (phase==3 && camp <= 0) {
-            VoteMenu menu = new VoteMenu(player, contestManager);
+            VoteMenu menu = new VoteMenu(player, plugin, contestManager);
             menu.open();
         } else if (phase==3) {
             ContributionMenu menu = new ContributionMenu(player, plugin, contestManager);
@@ -51,7 +53,7 @@ public class ContestCommand {
 
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", Locale.FRENCH);
-            DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(ContestCache.getStartDateCache()));
+            DayOfWeek dayStartContestOfWeek = DayOfWeek.from(formatter.parse(contestCache.getStartDateCache()));
 
             int days = (dayStartContestOfWeek.getValue() - contestManager.getCurrentDayOfWeek().getValue() + 7) % 7;
 
@@ -77,7 +79,7 @@ public class ContestCommand {
     @CommandPermission("ayw.command.contest.setcontest")
     @AutoComplete("@colorContest")
     public void setcontest(Player player, String camp1, @Named("colorContest") String color1, String camp2, @Named("colorContest") String color2) {
-        int phase = ContestCache.getPhaseCache();
+        int phase = contestCache.getPhaseCache();
         if (phase == 1) {
             if (contestManager.getColorContestList().contains(color1) || contestManager.getColorContestList().contains(color2)) {
                 contestManager.deleteTableContest("contest");

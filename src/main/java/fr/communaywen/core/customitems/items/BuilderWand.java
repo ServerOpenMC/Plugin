@@ -25,6 +25,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -68,12 +70,13 @@ public class BuilderWand extends CustomItems implements CustomItemsEvents {
     }
 
     @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onInteract(PlayerInteractEvent event) {
     // WorldGuard
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getClickedBlock().getLocation()));
-        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-builder-wand"))) {
+        if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-builder-wand"))) {
             event.setCancelled(false);
             if (event.getHand() == null) {
                 return;

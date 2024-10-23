@@ -36,7 +36,7 @@ public class CustomFlagsEvents implements Listener {
             return;
         }
 
-        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-fly"))) {
+        if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-fly"))) {
             event.setCancelled(false);
         } else {
             event.setCancelled(true);
@@ -53,7 +53,7 @@ public class CustomFlagsEvents implements Listener {
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(player.getLocation()));
 
         if (event.getMaterial() == Material.WIND_CHARGE) {
-            if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-wind-charge"))) {
+            if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-wind-charge"))) {
                 event.setCancelled(false);
             } else {
                 event.setCancelled(true);

@@ -10,6 +10,7 @@ import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.database.TransactionsManager;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -200,7 +201,7 @@ public class QuestsManager extends DatabaseConnector {
         switch (quest.getReward()) {
             case ITEMS:
                 player.getInventory().addItem(new ItemStack(quest.getRewardsMaterial().getType(), quest.getRewardsQt(completedTier)));
-                player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(completedTier) + " " + ItemUtils.getDefaultItemName(player, quest.getRewardsMaterial())));
+                player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(completedTier) + " " + GlobalTranslator.render(ItemUtils.getDefaultItemName(quest.getRewardsMaterial()), player.locale())));
                 break;
             case MONEY:
                 AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), quest.getRewardsQt(completedTier));

@@ -31,7 +31,15 @@ public class TablistListener implements Listener {
     }
 
     private void updateTab(Player player) {
-        String header = PlaceholderAPI.setPlaceholders(player, "\n\n\n\n\n\n"+PlaceholderAPI.setPlaceholders(player, "%img_openmc%")+"\n\n  §eJoueurs en ligne §7: §6%server_online%§7/§e%server_max_players%  \n");
+        int visible_online_player = 0;
+
+        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+            if (player.canSee(onlinePlayer)) {
+                visible_online_player++;
+            }
+        }
+
+        String header = PlaceholderAPI.setPlaceholders(player, "\n\n\n\n\n\n"+PlaceholderAPI.setPlaceholders(player, "%img_openmc%")+"\n\n  §eJoueurs en ligne §7: §6"+visible_online_player+"§7/§e%server_max_players%  \n");
         String footer = "\n§dplay.openmc.fr\n";
 
         plugin.getTabList().updateHeaderFooter(player, header, footer);

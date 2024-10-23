@@ -19,6 +19,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
@@ -53,13 +55,14 @@ public class DiamondHammer extends CustomItems implements CustomItemsEvents {
     }
 
     @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
 
         // WorldGuard
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getBlock().getLocation()));
-        if (!set.testState(null, (StateFlag) plugin.getCustomFlags().get(StateFlag.class).get("disable-hammer"))) {
+        if (!set.testState(null, (StateFlag) plugin.getFlags().get(StateFlag.class).get("disable-hammer"))) {
             event.setCancelled(false);
             Block brokenBlock = event.getBlock();
             CustomBlock customBlock = CustomBlock.byAlreadyPlaced(brokenBlock);
@@ -85,33 +88,5 @@ public class DiamondHammer extends CustomItems implements CustomItemsEvents {
             event.setCancelled(true);
         }
 
-    }
-
-    @Override
-    public void onAnvil(PrepareAnvilEvent event) {
-
-        ItemStack item0 = event.getInventory().getItem(0);
-
-        if (item0 == null) {
-            return;
-        }
-
-        ItemStack result = event.getResult();
-
-        if (result == null) {
-            return;
-        }
-
-        CustomStack customStack = CustomStack.byItemStack(result);
-
-        if (customStack == null) {
-            return;
-        }
-
-        if (!customStack.getNamespacedID().equals(getNamespacedID())) {
-            return;
-        }
-
-        event.setResult(null);
     }
 }

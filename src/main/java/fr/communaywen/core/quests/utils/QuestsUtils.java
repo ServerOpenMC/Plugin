@@ -4,6 +4,7 @@ import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.constant.MessageManager;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -50,7 +51,7 @@ public class QuestsUtils {
             List<String> lore = new ArrayList<>();
             lore.add(MessageManager.textToSmall("§7Description") + ": §f" + quest.getDesc(currentTier));
             lore.add(MessageManager.textToSmall("§7Récompense") + ": §f" + (quest.getRewardsMaterial() != null
-                    ? "x" + quest.getRewardsQt(currentTier) + " " + ItemUtils.getDefaultItemName(player, quest.getRewardsMaterial())
+                    ? "x" + quest.getRewardsQt(currentTier) + " " + GlobalTranslator.render(ItemUtils.getDefaultItemName(quest.getRewardsMaterial()), player.locale())
                     : quest.getRewardsQt(currentTier) + "$"));
             if(pq.isQuestCompleted(quest)) {
                 lore.add(MessageManager.textToSmall("§a§lQuête complétée !"));

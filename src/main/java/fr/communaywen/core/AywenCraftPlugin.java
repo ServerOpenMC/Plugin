@@ -13,44 +13,32 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
-import fr.communaywen.core.commands.contest.ContestCommand;
-import fr.communaywen.core.commands.corpse.CorpseCommand;
-import fr.communaywen.core.commands.credits.CreditCommand;
-import fr.communaywen.core.commands.credits.FeatureCommand;
-import fr.communaywen.core.commands.economy.AdminShopCommand;
-import fr.communaywen.core.commands.economy.BaltopCommand;
-import fr.communaywen.core.commands.economy.MoneyCommand;
-import fr.communaywen.core.commands.economy.PayCommands;
-import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
-import fr.communaywen.core.commands.explosion.FBoomCommand;
+
+import fr.communaywen.core.commands.contest.*;
+import fr.communaywen.core.commands.corpse.*;
+import fr.communaywen.core.commands.credits.*;
+import fr.communaywen.core.commands.economy.*;
+import fr.communaywen.core.commands.explosion.*;
 import fr.communaywen.core.commands.fun.*;
 import fr.communaywen.core.commands.homes.*;
-import fr.communaywen.core.commands.spawn.head.HeadCommand;
-import fr.communaywen.core.commands.spawn.jump.JumpCommand;
-import fr.communaywen.core.commands.spawn.leaderboard.LeaderboardCommand;
-import fr.communaywen.core.commands.teams.TeamClaim;
-import fr.communaywen.core.commands.link.LinkCommand;
-import fr.communaywen.core.commands.link.ManualLinkCommand;
-import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
-import fr.communaywen.core.commands.socials.DiscordCommand;
-import fr.communaywen.core.commands.socials.GithubCommand;
-import fr.communaywen.core.commands.staff.ReportCommands;
-import fr.communaywen.core.commands.teams.TeamAdminCommand;
-import fr.communaywen.core.commands.teams.TeamCommand;
-import fr.communaywen.core.commands.teleport.RTPCommand;
-import fr.communaywen.core.commands.teleport.SpawnCommand;
+import fr.communaywen.core.commands.link.*;
+import fr.communaywen.core.commands.randomEvents.*;
+import fr.communaywen.core.commands.socials.*;
+import fr.communaywen.core.commands.spawn.head.*;
+import fr.communaywen.core.commands.spawn.jump.*;
+import fr.communaywen.core.commands.spawn.leaderboard.*;
+import fr.communaywen.core.commands.staff.*;
+import fr.communaywen.core.commands.teams.*;
+import fr.communaywen.core.commands.teleport.*;
 import fr.communaywen.core.commands.utils.*;
-import fr.communaywen.core.contest.cache.ContestCache;
-import fr.communaywen.core.contest.cache.ContestDataCache;
-import fr.communaywen.core.contest.listeners.ContestIntractEvents;
-import fr.communaywen.core.contest.listeners.ContestListener;
-import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
-import fr.communaywen.core.contest.managers.ColorConvertor;
+
+
+import fr.communaywen.core.contest.listeners.*;
+import fr.communaywen.core.customitems.listeners.*;
+import fr.communaywen.core.listeners.*;
+
 import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
-import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
-import fr.communaywen.core.customitems.listeners.CIEnchantListener;
-import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
@@ -59,33 +47,21 @@ import fr.communaywen.core.homes.Home;
 import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
-import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
-import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
-import fr.communaywen.core.luckyblocks.listeners.LBEntityDeathListener;
-import fr.communaywen.core.luckyblocks.listeners.LBPlayerInteractListener;
-import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
+import fr.communaywen.core.luckyblocks.listeners.*;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.HSCommand;
-import fr.communaywen.core.quests.PlayerQuests;
-import fr.communaywen.core.quests.QuestsListener;
-import fr.communaywen.core.quests.QuestsManager;
-import fr.communaywen.core.quests.qenum.QUESTS;
-import fr.communaywen.core.commands.staff.FreezeCommand;
-import fr.communaywen.core.commands.staff.PlayersCommand;
+import fr.communaywen.core.quests.*;
 import fr.communaywen.core.space.moon.MoonListener;
 import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.spawn.head.HeadListener;
-import fr.communaywen.core.spawn.jump.JumpListener;
-import fr.communaywen.core.spawn.jump.JumpManager;
+import fr.communaywen.core.spawn.jump.*;
 import fr.communaywen.core.tab.TabList;
 import fr.communaywen.core.tpa.*;
-import fr.communaywen.core.trade.TradeAcceptCommand;
-import fr.communaywen.core.trade.TradeCommand;
-import fr.communaywen.core.trade.TradeListener;
+import fr.communaywen.core.trade.*;
 import fr.communaywen.core.utils.*;
 import fr.communaywen.core.utils.command.InteractiveHelpMenu;
 import lombok.Getter;
@@ -118,7 +94,7 @@ import java.util.List;
 import java.util.*;
 
 public final class AywenCraftPlugin extends JavaPlugin {
-    public static ArrayList<Player> frozenPlayers = new ArrayList<>();
+    @Getter public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
     @Getter
     private static AywenCraftPlugin instance;
@@ -138,7 +114,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private BukkitCommandHandler handler;
     @Getter
     private TabList tabList;
-    private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
+    @Getter private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
 
     /**
      * Format a permission with the permission prefix.
@@ -177,7 +153,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
             api = provider.getProvider();
         } else {
             getLogger().severe("LuckPerms not found !");
-            getServer().getPluginManager().disablePlugin(this);
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -490,6 +466,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onDisable() {
+        // VIDER LES DONNEES
+        this.getManagers().getContestCache().clearContestCache();
+        this.getManagers().getContestCache().clearPlayerContestCache();
+
         // Remove Leaderboard
         LeaderboardManager.removeLeaderboardBalTop();
         LeaderboardManager.removeLeaderboardTeamTop();
@@ -548,16 +528,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
             }
         }
     }
-    public HashMap<Class<?>, HashMap<String, Flag<?>>> getCustomFlags() {
-        return flags;
-    }
-
-    public ArrayList<Player> getFrozenPlayers() {
-        return frozenPlayers;
-    }
-
-
-    // Farine pour fabriquer du pain
 
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
