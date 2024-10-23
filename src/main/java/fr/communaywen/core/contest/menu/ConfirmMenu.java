@@ -50,8 +50,8 @@ public class ConfirmMenu extends Menu {
     public @NotNull Map<Integer, ItemStack> getContent() {
         Map<Integer, ItemStack> inventory = new HashMap<>();
 
-        String campNameFinal = contestManager.getString("contest", getCampName).join();;
-        String campColor = contestManager.getString("contest", getColor).join();;
+        String campNameFinal = ContestManager.getString("contest", getCampName).join();;
+        String campColor = ContestManager.getString("contest", getColor).join();;
         ChatColor colorFinal = ChatColor.valueOf(campColor);
 
         List<String> lore1 = new ArrayList<String>();

@@ -564,17 +564,17 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public void insertChoicePlayer(Player player, Integer camp) {
-
-        String sql = "INSERT INTO camps (minecraft_uuid, name, camps, point_dep) VALUES (?, ?, ?, 0)";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, player.getUniqueId().toString());
-            states.setString(2, player.getName());
-            states.setInt(3, camp);
-            states.addBatch();
-            states.executeBatch();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            String sql = "INSERT INTO camps (minecraft_uuid, name, camps, point_dep) VALUES (?, ?, ?, 0)";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, player.getUniqueId().toString());
+                states.setString(2, player.getName());
+                states.setInt(3, camp);
+                states.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public DayOfWeek getCurrentDayOfWeek() {
