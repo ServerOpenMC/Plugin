@@ -124,7 +124,6 @@ public class Managers {
         }
         // Database
 
-       // leaderboardManager = new LeaderboardManager(plugin);          // desactivé de base
         jumpManager = new JumpManager(plugin);
         headManager = new HeadManager(plugin);
         leaderboardManager = new LeaderboardManager(plugin);

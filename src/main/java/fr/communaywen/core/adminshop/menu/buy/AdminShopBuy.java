@@ -20,7 +20,7 @@ public class AdminShopBuy extends Menu {
     BaseItems items;
     private final AtomicInteger number;
     private final AtomicDouble prize;
-    private static final int MAX_ITEMS = 2048;
+    private static final int MAX_ITEMS = 256;
     private String material = null;
 
     public AdminShopBuy(Player player, BaseItems items) {

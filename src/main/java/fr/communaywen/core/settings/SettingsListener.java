@@ -22,15 +22,10 @@ public class SettingsListener implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-			String uuid = e.getPlayer().getUniqueId().toString();
-			
-			Bukkit.getScheduler().runTask(this.plugin, () -> {
-				if (SettingsCache.settingsMap.get(uuid) == null) {
-					SettingsCache.settingsMap.put(uuid, new PlayerSettings(uuid, 3, 3, 3));
-					MessageManager.sendMessageType(e.getPlayer(), "Settings créés", Prefix.SETTINGS, MessageType.INFO, false);
-				}
-			});
-		});
+		String uuid = e.getPlayer().getUniqueId().toString();
+		if (SettingsCache.settingsMap.get(uuid) == null) {
+			SettingsCache.settingsMap.put(uuid, new PlayerSettings(uuid, 3, 3, 3));
+			MessageManager.sendMessageType(e.getPlayer(), "Settings créés", Prefix.SETTINGS, MessageType.INFO, false);
+		}
 	}
 }
