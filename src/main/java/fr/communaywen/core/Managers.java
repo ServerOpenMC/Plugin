@@ -163,6 +163,7 @@ public class Managers {
         homesManagers.loadHomes();
         homesManagers.loadHomeLimits();
         disabledWorldHome.loadConfig();
+        settingsManager.init();
     }
 
     public void cleanup() {
@@ -178,6 +179,6 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
         disabledWorldHome.saveConfig();
-
+        settingsManager.saveSettings();
     }
 }
