@@ -124,7 +124,7 @@ public class Managers {
         }
         // Database
 
-       // leaderboardManager = new LeaderboardManager(plugin);          // desactivé de base
+        economyManager = new EconomyManager();
         jumpManager = new JumpManager(plugin);
         headManager = new HeadManager(plugin);
         leaderboardManager = new LeaderboardManager(plugin);
@@ -138,7 +138,6 @@ public class Managers {
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
-        economyManager = new EconomyManager();
         friendsManager = new FriendsManager(databaseManager, plugin);
         corpseManager = new CorpseManager();
         fbeManager = new FallingBlocksExplosionManager();
