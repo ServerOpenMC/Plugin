@@ -168,6 +168,7 @@ public class Managers {
     public void cleanup() {
         /* Besoin de la db */
         reportManager.saveReports();
+        homesManagers.saveHomesLimits();
         DreamTabManager.close();
 
         /* Plus besoin de la db */
