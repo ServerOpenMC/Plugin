@@ -15,6 +15,8 @@ public enum Prefix {
     // Font: https://lingojam.com/MinecraftSmallFont
     // For gradient color: https://www.birdflop.com/resources/rgb/
     // Color format: §x§r§r§g§g§b§b§l
+    
+    SETTINGS("§x§c§1§1§9§e§e§lѕ§x§c§1§1§9§e§e§lᴇ§x§c§1§1§9§e§e§lᴛ§x§c§1§1§9§e§e§lᴛ§x§c§1§1§9§e§e§lɪ§x§c§1§1§9§e§e§lɴ§x§c§1§1§9§e§e§lɢ§x§c§1§1§9§e§e§lѕ"),
 
     OPENMC("§x§F§F§4§5§7§3§l@§x§F§F§4§D§7§9§lᴏ§x§F§F§5§5§7§F§lᴘ§x§F§F§5§D§8§5§lᴇ§x§F§F§6§4§8§B§lɴ§x§F§F§6§C§9§1§lᴍ§x§F§F§7§4§9§7§lᴄ"),
     FREEZE("§x§1§9§5§0§E§E§l@§x§1§9§5§0§E§E§lꜰ§x§1§9§5§0§E§E§lʀ§x§1§9§5§0§E§E§lᴇ§x§1§9§5§0§E§E§lᴇ§x§1§9§5§0§E§E§lᴢ§x§1§9§5§0§E§E§lᴇ"),
