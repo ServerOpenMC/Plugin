@@ -77,4 +77,14 @@ public class LeaderboardCommand {
             MessageManager.sendMessageType(player, "§cVous devez mettre un nom de leaderboard valable", Prefix.STAFF, MessageType.ERROR, true);
         }
     }
+    @Subcommand("updateall")
+    @Description("Met a jour les leaderboard")
+    @CommandPermission("ayw.command.leaderboard.updateall")
+    public void update(Player player) throws IOException {
+        LeaderboardManager.updateLeaderboardBalTop();
+        LeaderboardManager.updateLeaderboardTeamTop();
+        LeaderboardManager.updateLeaderboardContribution();
+        LeaderboardManager.updateLeaderboardPlayTime();
+        jumpManager.updateLeaderboardLeaderboardRecord();
+    }
 }

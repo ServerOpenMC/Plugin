@@ -102,11 +102,11 @@ public class QuizManager {
                             "§8§m                                                     §r"
             );
 
-
-            contestManager.addPointPlayer(points + contestManager.getPlayerPoints(event.getPlayer()).join(), event.getPlayer());
-            String playerCamp = "points" + contestCache.getPlayerCampsCache(event.getPlayer());
-            contestManager.updateColumnInt("contest", playerCamp, points + contestManager.getInt("contest", playerCamp).join());
-          
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                contestManager.addPointPlayer(points + contestManager.getPlayerPoints(event.getPlayer()), event.getPlayer());
+                String playerCamp = "points" + contestCache.getPlayerCampsCache(event.getPlayer());
+                contestManager.updateColumnInt("contest", playerCamp, points + contestManager.getInt("contest", playerCamp));
+            });
         } else {
             Bukkit.broadcastMessage(
                     "§8§m                                                     §r\n" +

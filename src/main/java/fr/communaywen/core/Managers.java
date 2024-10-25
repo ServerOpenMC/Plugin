@@ -124,6 +124,7 @@ public class Managers {
         }
         // Database
 
+        economyManager = new EconomyManager();
         jumpManager = new JumpManager(plugin);
         headManager = new HeadManager(plugin);
         leaderboardManager = new LeaderboardManager(plugin);
@@ -137,7 +138,6 @@ public class Managers {
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig, contestManager);
-        economyManager = new EconomyManager();
         friendsManager = new FriendsManager(databaseManager, plugin);
         corpseManager = new CorpseManager();
         fbeManager = new FallingBlocksExplosionManager();
@@ -169,6 +169,7 @@ public class Managers {
     public void cleanup() {
         /* Besoin de la db */
         reportManager.saveReports();
+        homesManagers.saveHomesLimits();
         DreamTabManager.close();
 
         /* Plus besoin de la db */

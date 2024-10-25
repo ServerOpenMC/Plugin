@@ -252,8 +252,8 @@ public class ContestManager extends DatabaseConnector {
         int totalvote = vote1 + vote2;
         int vote1Taux = (int) (((double) vote1 / totalvote) * 100);
         int vote2Taux = (int) (((double) vote2 / totalvote) * 100);
-        int points1 = getInt("contest", "points1").join();
-        int points2 = getInt("contest", "points2").join();
+        int points1 = getInt("contest", "points1");
+        int points2 = getInt("contest", "points2");
 
         int multiplicateurPoint = Math.abs(vote1Taux - vote2Taux)/16;
         multiplicateurPoint=Integer.valueOf(df.format(multiplicateurPoint));
@@ -464,8 +464,7 @@ public class ContestManager extends DatabaseConnector {
         System.out.println("[CONTEST] Fermeture du Contest");
     }
 
-    public static CompletableFuture<String> getString(String table, String column) {
-        return CompletableFuture.supplyAsync(() -> {
+    public static String getString(String table, String column) {
             try {
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + table);
                 ResultSet rs = statement.executeQuery();
@@ -476,11 +475,9 @@ public class ContestManager extends DatabaseConnector {
                 throw new RuntimeException(e);
             }
             return null;
-        });
     }
 
-    public static CompletableFuture<Integer> getInt(String table, String column) {
-        return CompletableFuture.supplyAsync(() -> {
+    public static Integer getInt(String table, String column) {
             try {
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+table);
                 ResultSet rs = statement.executeQuery();
@@ -491,7 +488,6 @@ public class ContestManager extends DatabaseConnector {
                 throw new RuntimeException(e);
             }
             return -1;
-        });
     }
 
     public static String getTimeUntilNextMonday() {
@@ -508,8 +504,7 @@ public class ContestManager extends DatabaseConnector {
         return String.format("%dd %dh %dm", days, hours, minutes);
     }
 
-    public CompletableFuture<Integer> getPlayerPoints(Player player) {
-        return CompletableFuture.supplyAsync(() -> {
+    public Integer getPlayerPoints(Player player) {
             UUID playerUUID = player.getUniqueId();
 
             String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
@@ -523,7 +518,6 @@ public class ContestManager extends DatabaseConnector {
                 throw new RuntimeException(e);
             }
             return -1;
-        });
     }
 
 
@@ -564,17 +558,17 @@ public class ContestManager extends DatabaseConnector {
     }
 
     public void insertChoicePlayer(Player player, Integer camp) {
-
-        String sql = "INSERT INTO camps (minecraft_uuid, name, camps, point_dep) VALUES (?, ?, ?, 0)";
-        try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, player.getUniqueId().toString());
-            states.setString(2, player.getName());
-            states.setInt(3, camp);
-            states.addBatch();
-            states.executeBatch();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            String sql = "INSERT INTO camps (minecraft_uuid, name, camps, point_dep) VALUES (?, ?, ?, 0)";
+            try (PreparedStatement states = connection.prepareStatement(sql)) {
+                states.setString(1, player.getUniqueId().toString());
+                states.setString(2, player.getName());
+                states.setInt(3, camp);
+                states.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public DayOfWeek getCurrentDayOfWeek() {
@@ -616,7 +610,7 @@ public class ContestManager extends DatabaseConnector {
 
     public String getPlayerCampName(Player player) {
         Integer campInteger = contestCache.getPlayerCampsCache(player);
-        String campName = getString("contest","camp" + campInteger).join();
+        String campName = getString("contest","camp" + campInteger);
         return campName;
     }
     public Integer getOfflinePlayerCamp(OfflinePlayer player) {
@@ -635,12 +629,12 @@ public class ContestManager extends DatabaseConnector {
 
     public String getOfflinePlayerCampName(OfflinePlayer player) {
         Integer campInteger = getOfflinePlayerCamp(player);
-        String campName = getString("contest","camp" + campInteger).join();;
+        String campName = getString("contest","camp" + campInteger);;
         return campName;
     }
     public ChatColor getOfflinePlayerCampChatColor(OfflinePlayer player) {
         Integer campInteger = getOfflinePlayerCamp(player);
-        String color = getString("contest","color" + campInteger).join();;
+        String color = getString("contest","color" + campInteger);;
         ChatColor campColor = ChatColor.valueOf(color);
         return campColor;
     }
@@ -906,6 +900,19 @@ public class ContestManager extends DatabaseConnector {
     }
 
     //END CONTEST METHODE
+
+    public List<String> getRessListFromConfig() {
+        FileConfiguration config = plugins.getConfig();
+        List<Map<?, ?>> trades = config.getMapList("contest.contestTrades");
+        List<String> ressList = new ArrayList<>();
+
+        for (Map<?, ?> tradeEntry : trades) {
+            if (tradeEntry.containsKey("ress")) {
+                ressList.add(tradeEntry.get("ress").toString());
+            }
+        }
+        return ressList;
+    }
 
     private void updateSelected(String camp) {
         List<Map<?, ?>> contestList = config.getMapList("contest.contestList");

@@ -12,7 +12,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class HelldiversManager extends DatabaseConnector implements Listener {
@@ -80,19 +82,40 @@ public class HelldiversManager extends DatabaseConnector implements Listener {
 
     private void saveAdvancementData(HashMap<UUID, Integer> advancements, String advancementType) {
         AywenCraftPlugin.getInstance().getLogger().warning("Saving " + advancementType + " advancements");
-        for (UUID player : advancements.keySet()) {
-            try {
-                PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO advancements (player, advancement, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value = ?");
-                statement.setString(1, player.toString());
+        try {
+            // Disable auto-commit for batch processing
+            connection.setAutoCommit(false);
+
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO advancements (player, advancement, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value = ?");
+
+            // Add all entries to batch
+            for (Map.Entry<UUID, Integer> entry : advancements.entrySet()) {
+                statement.setString(1, entry.getKey().toString());
                 statement.setString(2, advancementType);
-                statement.setInt(3, advancements.get(player));
-                statement.setInt(4, advancements.get(player));
-                statement.executeUpdate();
-            } catch (Exception e) {
-                e.printStackTrace();
-                AywenCraftPlugin.getInstance().getLogger().severe("Unable to save " + advancementType + " advancements");
+                statement.setInt(3, entry.getValue());
+                statement.setInt(4, entry.getValue());
+                statement.addBatch();
             }
+
+            // Execute batch and commit
+            statement.executeBatch();
+            connection.commit();
+
+            // Reset auto-commit to true
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            try {
+                // Rollback in case of error
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+                AywenCraftPlugin.getInstance().getLogger().severe("Failed to rollback transaction for " + advancementType + " advancements");
+            }
+            e.printStackTrace();
+            AywenCraftPlugin.getInstance().getLogger().severe("Unable to save " + advancementType + " advancements");
         }
     }
 
