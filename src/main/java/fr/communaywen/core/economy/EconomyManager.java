@@ -10,6 +10,7 @@ import fr.communaywen.core.quests.qenum.TYPE;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -40,11 +41,13 @@ public class EconomyManager {
         balances.put(player, getBalance(player) + amount);
 
         saveBalances(player);
-        for(QUESTS quests : QUESTS.values()) {
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
-            if(quests.getType() == TYPE.MONEY) {
-                if(!pq.isQuestCompleted(quests)) {
-                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+        if (Bukkit.getPlayer(player).isOnline()) {
+            for (QUESTS quests : QUESTS.values()) {
+                PlayerQuests pq = QuestsManager.getPlayerQuests(player);
+                if (quests.getType() == TYPE.MONEY) {
+                    if (!pq.isQuestCompleted(quests)) {
+                        QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+                    }
                 }
             }
         }
