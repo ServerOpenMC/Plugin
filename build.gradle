@@ -10,7 +10,7 @@ repositories {
     mavenCentral()
     maven { url = "https://nexus.frengor.com/repository/public/" }
     maven { url = "https://repo.purpurmc.org/snapshots" }
-    maven { url = "https://mvn.coolcraft.ovh/releases" }
+    maven { url = "https://mvn.mathiasd.fr/releases" }
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
     maven { url = "https://maven.enginehub.org/repo/" }
     maven { url = "https://repo.onarandombox.com/content/groups/public/" }
