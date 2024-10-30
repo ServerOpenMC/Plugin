@@ -41,7 +41,7 @@ public class EconomyManager {
         balances.put(player, getBalance(player) + amount);
 
         saveBalances(player);
-        if (Bukkit.getPlayer(player).isOnline()) {
+        if (Bukkit.getOfflinePlayer(player).isOnline()) {
             for (QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player);
                 if (quests.getType() == TYPE.MONEY) {
