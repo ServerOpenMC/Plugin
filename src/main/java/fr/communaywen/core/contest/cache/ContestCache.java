@@ -26,11 +26,17 @@ public class ContestCache extends DatabaseConnector {
 
     // CONTEST DATA
     private ContestDataCache contestCache;
+    private boolean isContestCacheLoading = false;
 
     public void initContestDataCache() {
+
+        if (isContestCacheLoading) {
+            return;
+        }
+        isContestCacheLoading = true;
+
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            String sql = "SELECT * FROM contest WHERE 1";
-            try (PreparedStatement states = connection.prepareStatement(sql)) {
+            try (PreparedStatement states = connection.prepareStatement("SELECT * FROM contest WHERE 1")) {
                 ResultSet result = states.executeQuery();
                 if (result.next()) {
                     String camp1 = result.getString("camp1");
@@ -42,10 +48,11 @@ public class ContestCache extends DatabaseConnector {
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         contestCache = new ContestDataCache(camp1, camp2, color1, color2, phase, startdate);
+                        isContestCacheLoading = false;
                     });
                 }
-                states.closeOnCompletion();
             } catch (SQLException e) {
+                isContestCacheLoading = false;
                 throw new RuntimeException(e);
             }
         });
@@ -137,9 +144,16 @@ public class ContestCache extends DatabaseConnector {
 
     // CONTEST PLAYER DATA
     private Map<UUID, ContestPlayerCache> playerCache = new HashMap<>();
+    private Map<UUID, Boolean> isPlayerCacheLoading = new HashMap<>();
 
     public void initPlayerDataCache(Player player) {
         UUID playerUUID = player.getUniqueId();
+        if (isPlayerCacheLoading.getOrDefault(playerUUID, false)) {
+            return;
+        }
+
+        isPlayerCacheLoading.put(playerUUID, true);
+
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
             try (PreparedStatement states = connection.prepareStatement(sql)) {
@@ -153,10 +167,11 @@ public class ContestCache extends DatabaseConnector {
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         playerCache.put(playerUUID, new ContestPlayerCache(points, camp, campColor));
+                        isPlayerCacheLoading.put(playerUUID, false);
                     });
                 }
-                states.closeOnCompletion();
             } catch (SQLException e) {
+                isPlayerCacheLoading.put(playerUUID, false);
                 throw new RuntimeException(e);
             }
         });
