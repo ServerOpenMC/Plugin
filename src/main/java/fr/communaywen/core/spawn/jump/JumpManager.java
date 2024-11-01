@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static fr.communaywen.core.commands.economy.BaltopCommand.getColor;
 
@@ -106,35 +107,44 @@ public class JumpManager extends DatabaseConnector {
         }
     }
 
-    public List<Map.Entry<UUID, Double>> getTopJumpTimes(int limit) {
-        List<Map.Entry<UUID, Double>> jumpRecords = new ArrayList<>();
-        String sql = "SELECT uuid, best_time FROM spawn_jump ORDER BY best_time ASC LIMIT ?";
+    public void getTopJumpTimes(int limit, Consumer<List<Map.Entry<UUID, Double>>> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            List<Map.Entry<UUID, Double>> jumpRecords = new ArrayList<>();
+            String sql = "SELECT uuid, best_time FROM spawn_jump ORDER BY best_time ASC LIMIT ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, limit);
-            ResultSet rs = statement.executeQuery();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, limit);
+                ResultSet rs = statement.executeQuery();
 
-            while (rs.next()) {
-                UUID playerUUID = UUID.fromString(rs.getString("uuid"));
-                double bestTime = rs.getDouble("best_time");
+                while (rs.next()) {
+                    UUID playerUUID = UUID.fromString(rs.getString("uuid"));
+                    double bestTime = rs.getDouble("best_time");
 
-                jumpRecords.add(new AbstractMap.SimpleEntry<>(playerUUID, bestTime));
+                    jumpRecords.add(new AbstractMap.SimpleEntry<>(playerUUID, bestTime));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return jumpRecords;
+
+            List<Map.Entry<UUID, Double>> finalResult = jumpRecords;
+            Bukkit.getScheduler().runTask(plugin, () -> callback.accept(finalResult));
+
+        });
     }
 
-    public boolean isPlayerInTop10(Player player) {
-        List<Map.Entry<UUID, Double>> topJumpTimes = getTopJumpTimes(10);
+    public void isPlayerInTop10(Player player, Consumer<Boolean> callback) {
 
-        for (Map.Entry<UUID, Double> entry : topJumpTimes) {
-            if (entry.getKey().equals(player.getUniqueId())) {
-                return true;
+        getTopJumpTimes(10, topJumpTimes -> {
+
+            for (Map.Entry<UUID, Double> entry : topJumpTimes) {
+                if (entry.getKey().equals(player.getUniqueId())) {
+                    Boolean finalResult = true;
+                    callback.accept(finalResult);
+                }
             }
-        }
-        return false;
+            Boolean finalResult = false;
+            callback.accept(finalResult);
+        });
     }
 
 
@@ -223,29 +233,30 @@ public class JumpManager extends DatabaseConnector {
     public void updateLeaderboardLeaderboardRecord() {
         if (textDisplayLeaderboardRecord == null) return;
 
-        List<Map.Entry<UUID, Double>> topJumpTimes = getTopJumpTimes(10);
+        getTopJumpTimes(10, topJumpTimes -> {
 
-        List<String> lines = new ArrayList<>();
-        lines.add("§dLes §f10 §dMeilleurs Temps sur le Jump");
+            List<String> lines = new ArrayList<>();
+            lines.add("§dLes §f10 §dMeilleurs Temps sur le Jump");
 
-        int index = 1;
-        for (Map.Entry<UUID, Double> entry : topJumpTimes) {
-            UUID playerUUID = entry.getKey();
-            double bestTime = entry.getValue();
+            int index = 1;
+            for (Map.Entry<UUID, Double> entry : topJumpTimes) {
+                UUID playerUUID = entry.getKey();
+                double bestTime = entry.getValue();
 
-            String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
+                String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
 
-            lines.add(MessageFormat.format("{0}# {1}: {2} secondes",
-                    getColor(index) + index,
-                    ChatColor.GRAY + playerName,
-                    ChatColor.DARK_PURPLE + String.format("%.2f", bestTime)));
+                lines.add(MessageFormat.format("{0}# {1}: {2} secondes",
+                        getColor(index) + index,
+                        ChatColor.GRAY + playerName,
+                        ChatColor.DARK_PURPLE + String.format("%.2f", bestTime)));
 
-            index++;
-        }
+                index++;
+            }
 
-        String leaderboardText = String.join("\n", lines);
+            String leaderboardText = String.join("\n", lines);
 
-        textDisplayLeaderboardRecord.setText(Component.text(leaderboardText).content());
+            textDisplayLeaderboardRecord.setText(Component.text(leaderboardText).content());
+        });
     }
 
     public void removeLeaderboardLeaderboardRecord() {
