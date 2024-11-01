@@ -119,9 +119,11 @@ public class JumpListener implements Listener {
 
                     GuidelineManager.getAPI().getAdvancement("openmc:spawn/jump/firstjump").grant(event.getPlayer());
 
-                    if (jumpManager.isPlayerInTop10(player)) {
+                    jumpManager.isPlayerInTop10(player, bool -> {
+                    if (bool) {
                         GuidelineManager.getAPI().getAdvancement("openmc:spawn/jump/top10jump").grant(event.getPlayer());
                     }
+                    });
 
                     jumpRewardsCooldown.put(player.getUniqueId(), System.currentTimeMillis());
 
