@@ -30,16 +30,16 @@ public class SettingsMenu extends Menu {
 	
 	@Getter
 	@Setter
-	private int mail_accept, trade_accept, tpa_accept;
+	private int mailAccept, tradeAccept, tpaAccept;
 	
 	public SettingsMenu(AywenCraftPlugin plugin, Player owner, SettingsManager manager) {
 		super(owner);
 		this.plugin = plugin;
 		this.owner = owner;
 		this.manager = manager;
-		this.mail_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).mail_accept();
-		this.trade_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).trade_accept();
-		this.tpa_accept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).tpa_accept();
+		mailAccept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).mailAccept();
+		tradeAccept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).tradeAccept();
+		tpaAccept = SettingsCache.settingsMap.get(owner.getUniqueId().toString()).tpaAccept();
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ public class SettingsMenu extends Menu {
 		
 		map.put(22, new ItemBuilder(this, CustomStack.getInstance("settings:mailbox_settings_btn").getItemStack(), itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GOLD + "Mailbox");
-			itemMeta.setLore(List.of(SettingsUtils.getMailStatus(this.mail_accept)));
+			itemMeta.setLore(List.of(SettingsUtils.getMailStatus(mailAccept)));
 		}).setNextMenu(new MailboxManagerMenu(owner, this)));
 		map.put(45, new ItemBuilder(this, CustomStack.getInstance("settings:close_btn").getItemStack(), itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Fermer");
@@ -71,7 +71,7 @@ public class SettingsMenu extends Menu {
 		map.put(53, new ItemBuilder(this, CustomStack.getInstance("settings:save_btn").getItemStack(), itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Sauvegarder");
 		}).setOnClick(inventoryClickEvent -> {
-				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept));
+				SettingsCache.settingsMap.replace(owner.getUniqueId().toString(), new PlayerSettings(owner.getUniqueId().toString(), mailAccept, tradeAccept, tpaAccept));
 			MessageManager.sendMessageType(owner, "Settings enregistrés", Prefix.SETTINGS, MessageType.INFO, false);
 		}));
 		return map;

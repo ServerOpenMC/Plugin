@@ -39,7 +39,7 @@ import java.util.StringJoiner;
  *     }</pre>
  *     </li>
  *     <li>Create the commands that you would like to display the help menu in. Send the help
- *     menu using {@link InteractiveHelpMenu#sendInteractiveMenu(Audience, CommandHelp, int, ExecutableCommand)}.
+ *     menu using @link InteractiveHelpMenu#sendInteractiveMenu(Audience, CommandHelp, int, ExecutableCommand).
  *     All the parameters should be parameters in the help method, and Lamp will resolve them automatically
  *     to the appropriate values.
  *         <pre>{@code
@@ -74,7 +74,7 @@ import java.util.StringJoiner;
  *     <li>/foo bar help: Lists all commands in /foo bar</li>
  *     <li>/foo buzz bar help: Lists all commands in /foo buzz bar</li>
  * </ul>
- * This is why {@link #sendInteractiveMenu(Audience, CommandHelp, int, ExecutableCommand)} requires
+ * This is why @link #sendInteractiveMenu(Audience, CommandHelp, int, ExecutableCommand) requires
  * an {@link ExecutableCommand}, as it uses it to resolve sibling commands that should be
  * listed in the help menu.
  */

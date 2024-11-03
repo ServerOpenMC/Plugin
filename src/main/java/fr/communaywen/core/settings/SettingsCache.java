@@ -5,6 +5,6 @@ import java.util.Map;
 
 public class SettingsCache {
 	
-	public static Map<String, PlayerSettings> settingsMap = new HashMap<>();
+	public static Map<String, PlayerSettings> settingsMap = new HashMap<>(); // UUID; PlayerSettings
 	
 }

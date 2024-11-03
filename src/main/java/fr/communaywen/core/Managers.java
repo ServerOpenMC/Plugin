@@ -132,7 +132,7 @@ public class Managers {
         guidelineManager = new GuidelineManager(plugin);
         contestCache = new ContestCache(plugin);
         contestManager = new ContestManager(plugin, contestCache);
-        this.teamManager = new TeamManager(plugin);
+        teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);

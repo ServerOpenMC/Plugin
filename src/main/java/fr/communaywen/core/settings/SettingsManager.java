@@ -50,9 +50,9 @@ public class SettingsManager extends DatabaseConnector {
 			String sql = "INSERT INTO settings (player, mail_accept, trade_accept, tpa_accept) VALUES (?, ?, ?, ?)";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, settings.uuid());
-			statement.setInt(2, settings.mail_accept());
-			statement.setInt(3, settings.trade_accept());
-			statement.setInt(4, settings.tpa_accept());
+			statement.setInt(2, settings.mailAccept());
+			statement.setInt(3, settings.tradeAccept());
+			statement.setInt(4, settings.tpaAccept());
 			
 			statement.executeUpdate();
 			statement.close();

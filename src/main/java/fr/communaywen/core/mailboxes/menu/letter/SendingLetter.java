@@ -24,7 +24,7 @@ public class SendingLetter extends MailboxInv {
 //	private final TeamManager teamManager;
 //	private final List<String> playerFriends;   -> Temporaire
 	
-	int mail_accept;
+	int mailAccept;
 	
 	public SendingLetter(Player player, OfflinePlayer receiver, AywenCraftPlugin plugin) {
 		super(player);
@@ -33,7 +33,7 @@ public class SendingLetter extends MailboxInv {
 //		this.teamManager = plugin.getManagers().getTeamManager();
 //		FriendsManager friendsManager = plugin.getManagers().getFriendsManager();
 //		playerFriends = (List<String>) friendsManager.getFriendsAsync(player.getName());
-		this.mail_accept = SettingsCache.settingsMap.get(receiver.getUniqueId().toString()).mail_accept();
+		mailAccept = SettingsCache.settingsMap.get(receiver.getUniqueId().toString()).mailAccept();
 		inventory = Bukkit.createInventory(this, 54, MailboxMenuManager.getInvTitle(INV_NAME));
 		inventory.setItem(49, getHead(receiver));
 		inventory.setItem(45, homeBtn());
@@ -45,7 +45,7 @@ public class SendingLetter extends MailboxInv {
 	
 	@Override
 	public void openInventory() {
-		player.openInventory(this.inventory);
+		player.openInventory(inventory);
 	}
 	
 	public ItemStack[] getItems() {
@@ -65,8 +65,8 @@ public class SendingLetter extends MailboxInv {
 			sendFailureMessage(player, "Vous ne pouvez pas envoyer de lettre vide");
 			return;
 		}
-		plugin.getLogger().info("Mail Accept" + mail_accept);
-		switch (mail_accept) {
+		plugin.getLogger().info("Mail Accept" + mailAccept);
+		switch (mailAccept) {
 			case 0:
 				sendFailureMessage(player, "Ce joueur n'accepte pas les lettres");
 				for (ItemStack item : items) player.getWorld().dropItemNaturally(player.getLocation(), item);
