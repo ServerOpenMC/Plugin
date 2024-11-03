@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static fr.communaywen.core.commands.economy.BaltopCommand.getColor;
 
@@ -131,27 +132,28 @@ public class LeaderboardManager extends DatabaseConnector {
     public static void updateLeaderboardTeamTop() {
         if (textDisplayTeamTop == null) return;
 
-        List<Map.Entry<String, Long>> topTeam = getTopTeam(10);
+        getTopTeam(10, topTeam -> {
 
-        List<String> lines = new ArrayList<>();
-        lines.add("§dLes §f10 §dTeams les plus riches sur le serveur");
+            List<String> lines = new ArrayList<>();
+            lines.add("§dLes §f10 §dTeams les plus riches sur le serveur");
 
-        int index = 1;
-        for (Map.Entry<String, Long> entry : topTeam) {
-            String teamName = entry.getKey();
-            long balance = entry.getValue();
+            int index = 1;
+            for (Map.Entry<String, Long> entry : topTeam) {
+                String teamName = entry.getKey();
+                long balance = entry.getValue();
 
-            lines.add(MessageFormat.format("{0}# {1}: {2}",
-                    getColor(index) + index,
-                    ChatColor.GRAY + teamName,
-                    "§5" + balance));
+                lines.add(MessageFormat.format("{0}# {1}: {2}",
+                        getColor(index) + index,
+                        ChatColor.GRAY + teamName,
+                        "§5" + balance));
 
-            index++;
-        }
+                index++;
+            }
 
-        String leaderboardText = String.join("\n", lines);
+            String leaderboardText = String.join("\n", lines);
 
-        textDisplayTeamTop.setText(Component.text(leaderboardText).content());
+            textDisplayTeamTop.setText(Component.text(leaderboardText).content());
+        });
     }
 
     public static void removeLeaderboardTeamTop() {
@@ -235,29 +237,29 @@ public class LeaderboardManager extends DatabaseConnector {
     public static void updateLeaderboardPlayTime() {
         if (textDisplayPlayTime == null) return;
 
-        List<Map.Entry<UUID, Long>> topPlayTime = getTopPlayTime(10);
+        getTopPlayTime(10, topPlayTime -> {
+            List<String> lines = new ArrayList<>();
+            lines.add("§dLes §f10 §dMeilleurs Temps de Jeu des Joueurs");
 
-        List<String> lines = new ArrayList<>();
-        lines.add("§dLes §f10 §dMeilleurs Temps de Jeu des Joueurs");
+            int index = 1;
+            for (Map.Entry<UUID, Long> entry : topPlayTime) {
+                UUID playerUUID = entry.getKey();
+                long time = entry.getValue();
 
-        int index = 1;
-        for (Map.Entry<UUID, Long> entry : topPlayTime) {
-            UUID playerUUID = entry.getKey();
-            long time = entry.getValue();
+                String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
 
-            String playerName = Bukkit.getOfflinePlayer(playerUUID).getName();
+                lines.add(MessageFormat.format("{0}# {1}: {2}",
+                        getColor(index) + index,
+                        ChatColor.GRAY + playerName,
+                        ChatColor.DARK_PURPLE + convertTime(time)));
 
-            lines.add(MessageFormat.format("{0}# {1}: {2}",
-                    getColor(index) + index,
-                    ChatColor.GRAY + playerName,
-                    ChatColor.DARK_PURPLE + convertTime(time)));
+                index++;
+            }
 
-            index++;
-        }
+            String leaderboardText = String.join("\n", lines);
 
-        String leaderboardText = String.join("\n", lines);
-
-        textDisplayPlayTime.setText(Component.text(leaderboardText).content());
+            textDisplayPlayTime.setText(Component.text(leaderboardText).content());
+        });
     }
 
     public static void removeLeaderboardPlayTime() {
@@ -295,44 +297,52 @@ public class LeaderboardManager extends DatabaseConnector {
         }
     }
 
-    private static List<Map.Entry<UUID, Long>> getTopPlayTime(int limit) {
-        List<Map.Entry<UUID, Long>> playTime = new ArrayList<>();
-        String sql = "SELECT uuid, time FROM playtime ORDER BY time DESC LIMIT ?";
+    private static void getTopPlayTime(int limit, Consumer<List<Map.Entry<UUID, Long>>> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            List<Map.Entry<UUID, Long>> playTime = new ArrayList<>();
+            String sql = "SELECT uuid, time FROM playtime ORDER BY time DESC LIMIT ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, limit);
-            ResultSet rs = statement.executeQuery();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, limit);
+                ResultSet rs = statement.executeQuery();
 
-            while (rs.next()) {
-                UUID playerUUID = UUID.fromString(rs.getString("uuid"));
-                long time = rs.getLong("time");
+                while (rs.next()) {
+                    UUID playerUUID = UUID.fromString(rs.getString("uuid"));
+                    long time = rs.getLong("time");
 
-                playTime.add(new AbstractMap.SimpleEntry<>(playerUUID, time));
+                    playTime.add(new AbstractMap.SimpleEntry<>(playerUUID, time));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return playTime;
+
+            List<Map.Entry<UUID, Long>> finalResult = playTime;
+            Bukkit.getScheduler().runTask(plugins, () -> callback.accept(finalResult));
+        });
     }
 
-    private static List<Map.Entry<String, Long>> getTopTeam(int limit) {
-        List<Map.Entry<String, Long>> teams = new ArrayList<>();
-        String sql = "SELECT teamName, balance FROM teams ORDER BY balance DESC LIMIT ?";
+    private static void getTopTeam(int limit, Consumer<List<Map.Entry<String, Long>>> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugins, () -> {
+            List<Map.Entry<String, Long>> teams = new ArrayList<>();
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, limit);
-            ResultSet rs = statement.executeQuery();
+            String sql = "SELECT teamName, balance FROM teams ORDER BY balance DESC LIMIT ?";
 
-            while (rs.next()) {
-                String teamName = rs.getString("teamName");
-                long money = rs.getLong("balance");
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, limit);
+                ResultSet rs = statement.executeQuery();
 
-                teams.add(new AbstractMap.SimpleEntry<>(teamName, money));
+                while (rs.next()) {
+                    String teamName = rs.getString("teamName");
+                    long money = rs.getLong("balance");
+
+                    teams.add(new AbstractMap.SimpleEntry<>(teamName, money));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return teams;
+            List<Map.Entry<String, Long>> finalResult = teams;
+            Bukkit.getScheduler().runTask(plugins, () -> callback.accept(finalResult));
+        });
     }
 
     public static String convertTime(long ticks) {
