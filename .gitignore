@@ -138,7 +138,6 @@ gradle-app.setting
 ### Project ###
 
 /builds/
-
 bin/
-
 /server/
+!.idea/icon.png

@@ -156,11 +156,6 @@ public class OnPlayers implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
             long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
             LeaderboardManager.setTimePlayed(player, timePlayed);
-
-            LBReminder reminder = new LBReminder(player, AywenCraftPlugin.getInstance().getManagers().getLbPlayerManager(), AywenCraftPlugin.getInstance());
-
-            reminder.stopReminder();
-
         });
     }
 
