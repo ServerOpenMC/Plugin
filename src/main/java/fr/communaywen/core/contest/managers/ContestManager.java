@@ -312,7 +312,7 @@ public class ContestManager extends DatabaseConnector {
                 String playerCampName = getOfflinePlayerCampName(player);
                 ChatColor playerCampColor = ColorConvertor.getReadableColor(getOfflinePlayerCampChatColor(player));
 
-                bookMetaPlayer.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor + playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + getRankPlayerInContest(player) + "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
+                bookMetaPlayer.addPage("§8§lStatistiques Personnelles\n§0Votre camp : " + playerCampColor + playerCampName + "\n§0Votre Grade sur Le Contest §8: " + playerCampColor + getRankContestFroOffline(player) + playerCampName + "\n§0Votre Rang sur Le Contest : §8#" + getRankPlayerInContest(rs1.getInt("point_dep")) + "\n§0Points Déposés : §b" + rs1.getString("point_dep"));
 
                 int money = 0;
                 int lucky = 0;
@@ -507,7 +507,7 @@ public class ContestManager extends DatabaseConnector {
     public Integer getPlayerPoints(Player player) {
             UUID playerUUID = player.getUniqueId();
 
-            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ?";
+            String sql = "SELECT * FROM camps WHERE minecraft_uuid = ? LIMIT 1";
             try (PreparedStatement states = connection.prepareStatement(sql)) {
                 states.setString(1, playerUUID.toString());
                 ResultSet result = states.executeQuery();
@@ -639,10 +639,10 @@ public class ContestManager extends DatabaseConnector {
         return campColor;
     }
 
-    public Integer getRankPlayerInContest(OfflinePlayer player) {
-        String sql = "SELECT COUNT(*) AS rank FROM camps WHERE point_dep > (SELECT point_dep FROM camps WHERE minecraft_uuid = ?);";
+    public Integer getRankPlayerInContest(Integer pointsDep) {
+        String sql = "SELECT COUNT(*) AS rank FROM camps WHERE point_dep > ?";
         try (PreparedStatement states = connection.prepareStatement(sql)) {
-            states.setString(1, player.getUniqueId().toString());
+            states.setInt(1, pointsDep);
             ResultSet result = states.executeQuery();
             if (result.next()) {
                 return result.getInt("rank") + 1;
