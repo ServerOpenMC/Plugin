@@ -41,8 +41,8 @@ public class CubeManager {
         World world = Bukkit.getWorld("world");
         if (world == null) return;
 
-        int startX = plugin.getManagers().getKevinConfig().getInt("posX", 279);
-        int startZ = plugin.getManagers().getKevinConfig().getInt("posZ", 139);
+        int startX = plugin.getManagers().getKevinConfig().getInt("posX", -126);
+        int startZ = plugin.getManagers().getKevinConfig().getInt("posZ", -87);
         int startY = world.getHighestBlockYAt(startX, startZ);
 
         currentLocation = new Location(world, startX, startY, startZ);
