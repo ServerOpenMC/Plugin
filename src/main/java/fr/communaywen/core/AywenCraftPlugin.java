@@ -35,6 +35,8 @@ import fr.communaywen.core.commands.utils.*;
 
 import fr.communaywen.core.contest.listeners.*;
 import fr.communaywen.core.customitems.listeners.*;
+import fr.communaywen.core.event.CubeListener;
+import fr.communaywen.core.event.CubeManager;
 import fr.communaywen.core.listeners.*;
 
 import fr.communaywen.core.contest.managers.ContestManager;
@@ -375,6 +377,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new CubeListener(),
                 new ParticleListener(this),
                 new HeadListener(this),
                 new JumpListener(this, jumpManager),
@@ -441,6 +444,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
 
+        new CubeManager(this);
 
         // BETTER SPAWN
         // - Leaderboard
@@ -480,6 +484,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         jumpManager.removeDisplayJumpStart();
         jumpManager.removeDisplayJumpEnd();
+
+        CubeManager.saveCubeLocation();
+        CubeManager.clearCube();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
