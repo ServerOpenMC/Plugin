@@ -34,7 +34,7 @@ dependencies {
     compileOnly "net.luckperms:api:5.4" // LuckPerms
     compileOnly "com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14" // ItemsAdder
     compileOnly "me.clip:placeholderapi:2.11.6" // PlaceholderAPI
-    compileOnly "com.github.dmulloy2:ProtocolLib:5.3.0" // ProtocolLib
+    compileOnly "com.github.dmulloy2:ProtocolLib:-SNAPSHOT" // ProtocolLib
     compileOnly "commons-codec:commons-codec:1.16.1"
     compileOnly "com.onarandombox.multiversecore:Multiverse-Core:4.3.+" // Multiverse Core
     compileOnly "com.sk89q.worldedit:worldedit-bukkit:7+" // WorldEdit
