@@ -84,6 +84,7 @@ public class Managers {
     private FileConfiguration levelsConfig;
     private FileConfiguration quizzesConfig;
     private FileConfiguration customItemsConfig;
+    private FileConfiguration kevinConfig;
 
     public void initConfig(AywenCraftPlugin plugin) {
         plugin.saveDefaultConfig();
@@ -93,6 +94,7 @@ public class Managers {
         levelsConfig = ConfigUtils.loadConfig(plugin, "levels.yml");
         quizzesConfig = ConfigUtils.loadConfig(plugin, "quizzes.yml");
         customItemsConfig = ConfigUtils.loadConfig(plugin, "customitems.yml");
+        kevinConfig = ConfigUtils.loadConfig(plugin, "cube.yml");
     }
 
     public void init(AywenCraftPlugin plugin) {
