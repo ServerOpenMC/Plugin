@@ -1,9 +1,7 @@
 package fr.communaywen.core.settings;
 
-
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.utils.database.DatabaseConnector;
-import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,46 +15,49 @@ public class SettingsManager extends DatabaseConnector {
 		this.plugin = plugin;
 	}
 	
-	public PlayerSettings findPlayerSettingsByUUID(Player player) throws SQLException {
-		String sql = "SELECT * FROM settings WHERE player = ?";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setString(1, player.getUniqueId().toString());
-		ResultSet results = statement.executeQuery();
-		if (results.next()) {
-			int mail_accept = results.getInt("mail_accept");
-			int trade_accept = results.getInt("trade_accept");
-			int tpa_accept = results.getInt("tpa_accept");
-			PlayerSettings playerSettings = new PlayerSettings(player.getUniqueId().toString(), mail_accept, trade_accept, tpa_accept);
-			statement.close();
-			return playerSettings;
+	public void init() {
+		try {
+			String sql = "SELECT * FROM settings";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet results = statement.executeQuery();
+			while (results.next()) {
+				PlayerSettings playerSettings = new PlayerSettings(
+						results.getString("player"),
+						results.getInt("mail_accept"),
+						results.getInt("trade_accept"),
+						results.getInt("tpa_accept"));
+				SettingsCache.settingsMap.put(playerSettings.uuid(), playerSettings);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		statement.close();
-		return null;
 	}
 	
-	public void createPlayerSettings(PlayerSettings settings) throws SQLException {
-		
-		String sql = "INSERT INTO settings ( player, mail_accept, trade_accept, tpa_accept ) VALUES (?, ?, ?, ?)";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setString(1, settings.uuid());
-		statement.setInt(2, settings.mail_accept());
-		statement.setInt(3, settings.trade_accept());
-		statement.setInt(4, settings.tpa_accept());
-		
-		statement.executeUpdate();
-		statement.close();
+	public void saveSettings() {
+		try {
+			PreparedStatement clearAllStatement = plugin.getManagers().getDatabaseManager().getConnection().prepareStatement("DELETE FROM settings");
+			clearAllStatement.executeUpdate();
+			for (PlayerSettings settings : SettingsCache.settingsMap.values()) {
+				createPlayerSettings(settings);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void updatePlayerSettings(PlayerSettings settings) throws SQLException {
-		
-		String sql = "UPDATE settings SET mail_accept = ?, trade_accept = ?, tpa_accept = ? WHERE player = ?";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, settings.mail_accept());
-		statement.setInt(2, settings.trade_accept());
-		statement.setInt(3, settings.tpa_accept());
-		statement.setString(4, settings.uuid());
-		
-		statement.executeUpdate();
-		statement.close();
+	public void createPlayerSettings(PlayerSettings settings) {
+		try {
+			String sql = "INSERT INTO settings (player, mail_accept, trade_accept, tpa_accept) VALUES (?, ?, ?, ?)";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, settings.uuid());
+			statement.setInt(2, settings.mailAccept());
+			statement.setInt(3, settings.tradeAccept());
+			statement.setInt(4, settings.tpaAccept());
+			
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -22,7 +22,7 @@ public class MailboxManagerMenu extends Menu {
 	
 	public MailboxManagerMenu(Player owner, SettingsMenu settingsMenu) {
 		super(owner);
-		this.player = owner;
+		player = owner;
 		this.settingsMenu = settingsMenu;
 	}
 	
@@ -47,30 +47,30 @@ public class MailboxManagerMenu extends Menu {
 		
 		map.put(1, new ItemBuilder(this, Material.RED_WOOL, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.DARK_RED + "Personne");
-			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 0);
+			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMailAccept() == 0);
 		}).setOnClick(inventoryClickEvent -> {
-			settingsMenu.setMail_accept(0);
+			settingsMenu.setMailAccept(0);
 			back();
 		}));
 //		map.put(3, new ItemBuilder(this, Material.ORANGE_WOOL, itemMeta -> {
 //			itemMeta.setDisplayName(ChatColor.GOLD + "Amis seulement");
-//			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 1);
+//			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMailAccept() == 1);
 //		}).setOnClick(inventoryClickEvent -> {
-//			settingsMenu.setMail_accept(1);
+//			settingsMenu.setMailAccept(1);
 //			back();
 //		}));
 //		map.put(5, new ItemBuilder(this, Material.YELLOW_WOOL, itemMeta -> {
 //			itemMeta.setDisplayName(ChatColor.YELLOW + "Team seulement");
-//			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 2);
+//			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMaiLAccept() == 2);
 //		}).setOnClick(inventoryClickEvent -> {
-//			settingsMenu.setMail_accept(2);
+//			settingsMenu.setMailAccept(2);
 //			back();
 //		}));
 		map.put(7, new ItemBuilder(this, Material.GREEN_WOOL, itemMeta -> {
 			itemMeta.setDisplayName(ChatColor.GREEN + "Tout le monde");
-			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMail_accept() == 3);
+			itemMeta.setEnchantmentGlintOverride(settingsMenu.getMailAccept() == 3);
 		}).setOnClick(inventoryClickEvent -> {
-			settingsMenu.setMail_accept(3);
+			settingsMenu.setMailAccept(3);
 			back();
 		}));
 		return map;

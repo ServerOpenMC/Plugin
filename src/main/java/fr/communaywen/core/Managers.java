@@ -7,22 +7,22 @@ import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
-import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
+import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.friends.FriendsManager;
-import fr.communaywen.core.guideline.advancements.dream.DreamTabManager;
-import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.guideline.GuidelineManager;
+import fr.communaywen.core.guideline.advancements.dream.DreamTabManager;
 import fr.communaywen.core.homes.HomeUpgradeManager;
 import fr.communaywen.core.homes.HomesManagers;
+import fr.communaywen.core.homes.world.DisabledWorldHome;
 import fr.communaywen.core.levels.LevelsDataManager;
 import fr.communaywen.core.levels.LevelsManager;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.Home;
 import fr.communaywen.core.personalhome.HomeManager;
-import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
-import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.scoreboard.ScoreboardManager;
 import fr.communaywen.core.settings.SettingsManager;
 import fr.communaywen.core.space.moon.MoonDimensionManager;
@@ -46,7 +46,7 @@ import java.sql.SQLException;
 @Credit("Xernas")
 @Getter
 public class Managers {
-
+	
     private AywenCraftPlugin plugin;
     private JumpManager jumpManager;
     private HeadManager headManager;
@@ -135,7 +135,7 @@ public class Managers {
         guidelineManager = new GuidelineManager(plugin);
         contestCache = new ContestCache(plugin);
         contestManager = new ContestManager(plugin, contestCache);
-        this.teamManager = new TeamManager(plugin);
+        teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
@@ -165,6 +165,7 @@ public class Managers {
         homesManagers.loadHomes();
         homesManagers.loadHomeLimits();
         disabledWorldHome.loadConfig();
+        settingsManager.init();
     }
 
     public void cleanup() {
@@ -181,6 +182,6 @@ public class Managers {
         corpseManager.removeAll();
         teamManager.getTeamCache().saveAllTeamsToDatabase();
         disabledWorldHome.saveConfig();
-
+        settingsManager.saveSettings();
     }
 }

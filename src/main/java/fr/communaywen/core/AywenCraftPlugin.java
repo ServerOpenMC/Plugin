@@ -117,7 +117,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     @Getter
     private TabList tabList;
     @Getter private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
-
+    
     /**
      * Format a permission with the permission prefix.
      *
@@ -127,10 +127,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
      * @see PermissionCategory #PERMISSION_PREFIX
      */
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
-            final @NotNull String suffix) {
+                                                   final @NotNull String suffix) {
         return category.formatPermission(suffix);
     }
-
+    
     @Override
     public void onLoad() {
         this.registerFlags(new StateFlag("disable-thor-hammer", false));
@@ -140,16 +140,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.registerFlags(new StateFlag("disable-spawn-grave", false));
         this.registerFlags(new StateFlag("disable-wind-charge", false));
     }
-
+    
     @SneakyThrows
     @Override
     public void onEnable() {
         // Logs
         super.getLogger().info("Hello le monde, ici le plugin AywenCraft !");
-
+        
         // Gardez les au début sinon ça pète tout
         instance = this;
-
+        
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
@@ -158,55 +158,55 @@ public final class AywenCraftPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
+        
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
         jumpManager = managers.getJumpManager();
         contestManager = managers.getContestManager();
         ClaimConfigDataBase.loadAllClaimsData();
-
+        
         eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
-
+        
         mvCore = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
-
+        
         LinkerAPI linkerAPI = new LinkerAPI(managers.getDatabaseManager());
-
+        
         OnPlayers onPlayers = new OnPlayers();
         onPlayers.setLinkerAPI(linkerAPI);
         onPlayers.setLuckPerms(api);
-
+        
         MOTDChanger motdChanger = new MOTDChanger();
         motdChanger.startMOTDChanger(this);
-
+        
         this.adventure = BukkitAudiences.create(this);
-
+        
         this.regions = new ArrayList<>();
-
+        
         this.tabList = new TabList();
-
+        
         /* ----- */
-
+        
         String webhookUrl = getConfig().getString("discord.webhookURL");
         String botName = getConfig().getString("discord.webhookName");
         String botAvatarUrl = getConfig().getString("discord.webhookIconURL");
         DiscordWebhook discordWebhook = new DiscordWebhook(webhookUrl, botName, botAvatarUrl);
-
+        
         /*  COMMANDS  */
-
+        
         this.handler = BukkitCommandHandler.create(this);
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
         this.handler.getTranslator().setLocale(Locale.FRENCH);
-
+        
         this.handler.getAutoCompleter().registerSuggestion("homes", (args, sender, command) -> {
             Player player = Bukkit.getPlayer(sender.getUniqueId());
             List<String> suggestions = new ArrayList<>();
-
+            
             if(command.getName().equals("home")) {
                 suggestions.add("upgrade");
             }
-
+            
             assert player != null;
             if(!command.equals("renamehome")) {
                 if(args.isEmpty()) {
@@ -215,16 +215,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
                                 .map(OfflinePlayer::getName)
                                 .map(name -> name + ":")
                                 .toList());
-
+                        
                     }
                     suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
                 } else {
                     String arg = args.getFirst();
-
+                    
                     if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
                         String[] parts = arg.split(":", 2);
                         Player target = Bukkit.getPlayer(parts[0]);
-
+                        
                         if(target != null) {
                             String prefix = parts[0] + ":";
                             suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
@@ -240,16 +240,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
                                     .map(name -> name + ":")
                                     .toList());
                         }
-
+                        
                         suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
                                 .stream()
                                 .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
                                 .toList());
                     }
-
+                    
                     return suggestions;
                 }
-
+                
                 if(player.hasPermission("ayw.home.teleport.others")) {
                     suggestions.addAll(Bukkit.getOnlinePlayers().stream()
                             .map(OfflinePlayer::getName)
@@ -257,48 +257,48 @@ public final class AywenCraftPlugin extends JavaPlugin {
                             .toList());
                 }
             }
-
+            
             suggestions.addAll(HomesManagers.homes.stream()
                     .filter(home -> home.getPlayer().equals(sender.getUniqueId().toString()))
                     .map(Home::getName)
                     .toList());
-
+            
             suggestions.add("upgrade");
             return suggestions;
         });
-
+        
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
         this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
         this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(managers.getContestManager().getColorContestList()));
         this.handler.getAutoCompleter().registerSuggestion("trade", SuggestionProvider.of(managers.getContestManager().getRessListFromConfig()));
         this.handler.getAutoCompleter().registerSuggestion("listLeaderboard", SuggestionProvider.of(managers.getLeaderboardManager().getLbList()));
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsAdd", (args, sender, command) -> {
-
+            
             List<String> allWorlds = new ArrayList<>(Bukkit.getWorlds().stream().map(World::getName).toList());
             allWorlds.removeAll(managers.getDisabledWorldHome().getDisabledWorlds());
-
+            
             return allWorlds;
         });
         this.handler.getAutoCompleter().registerSuggestion("homeWorldsRemove", (args, sender, command) -> {
             DisabledWorldHome disabledWorldHome = managers.getDisabledWorldHome();
-
+            
             return (List<String>) new ArrayList<String>(disabledWorldHome.getDisabledWorlds());
         });
-
+        
         this.handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
             OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
             List<String> playerNames = new ArrayList<>();
-
+            
             for (OfflinePlayer player : offlinePlayers) {
                 String playerName = player.getName();
                 if (playerName != null) {
                     playerNames.add(playerName);
                 }
             }
-
+            
             return playerNames;
         }));
-
+        
         this.handler.register(
                 new LeaderboardCommand(this, jumpManager),
                 new SettingsCommand(this),
@@ -358,9 +358,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new RenameHomeCommands(managers.getHomesManagers()),
                 new HomeDisabledWorldCommand(managers.getDisabledWorldHome())
         );
-
+        
         /*  --------  */
-
+        
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -372,9 +372,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 0L, 100L);
-
+        
         new CompassClockTask().runTaskTimer(this, 0L, 5L);
-
+        
         /* LISTENERS */
         registerEvents(
                 new CubeListener(),
@@ -424,28 +424,26 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LBPlayerInteractListener(managers.getLuckyBlockManager()),
                 new LBEntityDeathListener(managers.getLuckyBlockManager())
         );
-
+        
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
-
+        
         /* --------- */
-
+        
         saveDefaultConfig();
-
+        
         createSandRecipe();
         createFarineRecipe();
         createCrazyPotion();
-
+        
         for (Player player : Bukkit.getOnlinePlayers()) {
             new GamePlayer(player.getName());
             QuestsManager.loadPlayerData(player);
         }
-
+        
         QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
-
         new CubeManager(this);
-
         // BETTER SPAWN
         // - Leaderboard
         LeaderboardManager.createLeaderboardBalTop();
@@ -465,29 +463,27 @@ public final class AywenCraftPlugin extends JavaPlugin {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        
     }
-
+    
     @SneakyThrows
     @Override
     public void onDisable() {
         // VIDER LES DONNEES
         this.getManagers().getContestCache().clearContestCache();
         this.getManagers().getContestCache().clearPlayerContestCache();
-
+        
         // Remove Leaderboard
         LeaderboardManager.removeLeaderboardBalTop();
         LeaderboardManager.removeLeaderboardTeamTop();
         jumpManager.removeLeaderboardLeaderboardRecord();
         LeaderboardManager.removeLeaderboardContribution();
         LeaderboardManager.removeLeaderboardPlayTime();
-
+        
         jumpManager.removeDisplayJumpStart();
         jumpManager.removeDisplayJumpEnd();
-
         CubeManager.saveCubeLocation();
         CubeManager.clearCube();
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
             QuestsManager.savePlayerQuestProgress(player, pq); // Save quest progress
@@ -499,16 +495,16 @@ public final class AywenCraftPlugin extends JavaPlugin {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        
         managers.cleanup();
     }
-
+    
     public void registerEvents(Listener... args) {
         for (Listener listener : args) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
     }
-
+    
     private void registerFlags(Flag<?> flag) {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         if (this.flags == null) {
@@ -536,61 +532,61 @@ public final class AywenCraftPlugin extends JavaPlugin {
             }
         }
     }
-
+    
     public int getBanDuration() {
         return getConfig().getInt("deco_freeze_nombre_de_jours_ban", 30);
     }
-
+    
     private void createFarineRecipe() {
         ItemStack farine = new ItemStack(Material.SUGAR);
         ItemMeta meta = farine.getItemMeta();
         assert meta != null;
         meta.setDisplayName("Farine");
         farine.setItemMeta(meta);
-
+        
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "farine"), farine);
         recipe.shape(" A ", " B ", "   ");
         recipe.setIngredient('A', Material.GUNPOWDER);
         recipe.setIngredient('B', Material.WHEAT);
-
+        
         Bukkit.addRecipe(recipe);
     }
-
+    
     private void createCrazyPotion() {
         ItemStack crazyPotion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
-
+        
         meta.setDisplayName("§k NEW §r §4 Mining Potion §r §k NEW");
         meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
         meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 55), true);
-
+        
         crazyPotion.setItemMeta(meta);
-
+        
         NamespacedKey nmKey = new NamespacedKey(this, "crazypotion_craft");
         ShapedRecipe recipe = new ShapedRecipe(nmKey, crazyPotion);
-
+        
         recipe.shape("BBB", "WGW", "IEI");
-
+        
         recipe.setIngredient('B', Material.DIAMOND_BLOCK);
         recipe.setIngredient('G', Material.GLASS_BOTTLE);
         recipe.setIngredient('W', Material.WATER_BUCKET);
         recipe.setIngredient('E', Material.ENDER_PEARL);
         recipe.setIngredient('I', Material.IRON_INGOT);
-
+        
         getServer().addRecipe(recipe);
-
+        
     }
-
+    
     private void createSandRecipe() {
         ItemStack sand = new ItemStack(Material.SAND, 4);
-
+        
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "sand_craft"), sand);
         recipe.shape("A");
         recipe.setIngredient('A', Material.SANDSTONE);
-
+        
         Bukkit.addRecipe(recipe);
     }
-
+    
     private Menu hasMenuOpened(Player player) {
         Inventory inv = player.getOpenInventory().getTopInventory();
         if (inv.getHolder() instanceof Menu invMenu) {
@@ -598,7 +594,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
         return null;
     }
-
+    
     // TODO: include to Managers.java
     private FileConfiguration loadEventsManager() {
         File eventsFile = new File(getDataFolder(), "events.yml");
