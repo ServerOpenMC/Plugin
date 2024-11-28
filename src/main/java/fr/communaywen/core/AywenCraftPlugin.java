@@ -57,6 +57,7 @@ import fr.communaywen.core.managers.ChunkListManager;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.*;
+import fr.communaywen.core.settings.SettingsListener;
 import fr.communaywen.core.space.moon.MoonListener;
 import fr.communaywen.core.space.rocket.RocketListener;
 import fr.communaywen.core.spawn.head.HeadListener;
@@ -377,6 +378,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         
         /* LISTENERS */
         registerEvents(
+                new SettingsListener(this),
                 new CubeListener(),
                 new ParticleListener(this),
                 new HeadListener(this),
