@@ -51,7 +51,7 @@ public final class ProutCommand {
 
         // Make the player jump
         final Vector currentVelocity = player.getVelocity();
-        currentVelocity.setY(0.55d);
+        currentVelocity.setY(10d);
 
         player.setVelocity(currentVelocity);
 
