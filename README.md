@@ -1,3 +1,5 @@
+> [!WARNING]  
+> Repo archivé en faveur du [plugin v2](https://github.com/ServerOpenMC/PluginV2).
 # Plugin OpenMC
 Plugin collaboratif pour un serveur : VOTRE serveur !
 
